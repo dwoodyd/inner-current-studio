@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAppState } from '@/lib/AppContext';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
