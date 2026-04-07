@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Sparkles, ArrowRight, Users } from 'lucide-react';
@@ -330,9 +331,9 @@ export default function Auth() {
 
             {/* Privacy links */}
             <div className="flex items-center justify-center gap-3 pt-2">
-              <a href="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Privacy Policy</a>
+              <Link to="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Privacy Policy</Link>
               <span className="text-[10px] text-muted-foreground/20">·</span>
-              <a href="/terms" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Terms of Service</a>
+              <Link to="/terms" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Terms of Service</Link>
             </div>
           </motion.div>
         )}

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Heart, Shield, Zap, Waves, Eye, Leaf } from 'lucide-react';
 
 const stagger = {
@@ -155,10 +155,15 @@ export default function About() {
             </div>
             <h2 className="font-heading text-base font-medium text-foreground">The SoulCurrent Philosophy</h2>
           </div>
-          <blockquote className="font-heading text-base text-foreground/80 italic leading-relaxed border-l-2 border-primary/20 pl-4">
+          <motion.blockquote
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="font-heading text-base text-foreground/80 italic leading-relaxed border-l-2 border-primary/20 pl-4"
+          >
             "You are not broken. You are not behind. You are simply a human being, being human.
             Sometimes the next clear thought is only one breath away."
-          </blockquote>
+          </motion.blockquote>
           <p className="text-xs text-muted-foreground leading-relaxed">
             We don't believe in toxic positivity or aggressive motivation. SoulCurrent meets you
             where you are — with softness, with honesty, and with tools that actually work.
@@ -172,13 +177,13 @@ export default function About() {
             Crafted with intention. All content is original.
           </p>
           <div className="flex items-center justify-center gap-3">
-            <a href="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline transition-colors">
+            <Link to="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline transition-colors">
               Privacy Policy
-            </a>
+            </Link>
             <span className="text-[10px] text-muted-foreground/20">·</span>
-            <a href="/terms" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline transition-colors">
+            <Link to="/terms" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </motion.div>
       </motion.div>
