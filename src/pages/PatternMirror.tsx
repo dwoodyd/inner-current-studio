@@ -5,21 +5,20 @@ import { ArrowLeft } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 import type { EmotionalState } from '@/lib/types';
 
-const STATE_ORDER: EmotionalState[] = ['tense', 'restless', 'flat', 'open', 'flowing'];
-const STATE_LABELS: Record<EmotionalState, string> = {
-  tense: 'Contracted',
-  restless: 'Restless',
-  flat: 'Still',
-  open: 'Opening',
-  flowing: 'Flowing',
-};
-const STATE_COLORS: Record<EmotionalState, string> = {
-  tense: 'bg-soul-dim',
-  restless: 'bg-soul-blue',
-  flat: 'bg-muted-foreground/30',
-  open: 'bg-soul-violet',
-  flowing: 'bg-primary',
-};
+const STATE_BUCKETS: { key: string; label: string; color: string; states: EmotionalState[] }[] = [
+  { key: 'contracted', label: 'Contracted', color: 'bg-soul-dim', states: ['shut-down', 'raw', 'tense', 'discouraged'] },
+  { key: 'restless', label: 'Restless', color: 'bg-soul-blue', states: ['scattered', 'doubtful', 'restless'] },
+  { key: 'still', label: 'Still', color: 'bg-muted-foreground/30', states: ['flat', 'neutral'] },
+  { key: 'opening', label: 'Opening', color: 'bg-soul-violet', states: ['open', 'steady', 'hopeful'] },
+  { key: 'flowing', label: 'Flowing', color: 'bg-primary', states: ['uplifted', 'clear', 'energized', 'flowing'] },
+];
+
+function bucketIndex(s: EmotionalState): number {
+  for (let i = 0; i < STATE_BUCKETS.length; i++) {
+    if (STATE_BUCKETS[i].states.includes(s)) return i;
+  }
+  return 2;
+}
 
 export default function PatternMirror() {
   const navigate = useNavigate();
@@ -29,10 +28,10 @@ export default function PatternMirror() {
     const checkIns = state.checkIns;
     if (checkIns.length === 0) return null;
 
-    // Frequency
+    // Frequency by bucket
     const freq: Record<string, number> = {};
-    STATE_ORDER.forEach(s => (freq[s] = 0));
-    checkIns.forEach(c => { freq[c.state] = (freq[c.state] || 0) + 1; });
+    STATE_BUCKETS.forEach(b => (freq[b.key] = 0));
+    checkIns.forEach(c => { const bi = bucketIndex(c.state); freq[STATE_BUCKETS[bi].key]++; });
     const maxFreq = Math.max(...Object.values(freq), 1);
 
     // Weekly pattern (last 7 days)
