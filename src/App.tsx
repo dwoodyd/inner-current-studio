@@ -14,6 +14,17 @@ import Reset from "@/pages/Reset";
 import StateLadder from "@/pages/StateLadder";
 import ContrastReset from "@/pages/ContrastReset";
 import StillnessTimer from "@/pages/StillnessTimer";
+import ResistanceRelease from "@/pages/ResistanceRelease";
+import QuietMind from "@/pages/QuietMind";
+import PresentMoment from "@/pages/PresentMoment";
+import ResistanceScan from "@/pages/ResistanceScan";
+import AnalyticalOfframp from "@/pages/AnalyticalOfframp";
+import ThoughtShiftLadder from "@/pages/ThoughtShiftLadder";
+import MentalClarity from "@/pages/MentalClarity";
+import PatternSoftener from "@/pages/PatternSoftener";
+import HigherView from "@/pages/HigherView";
+import SituationPacks from "@/pages/SituationPacks";
+import NoProgressSupport from "@/pages/NoProgressSupport";
 import Reflect from "@/pages/Reflect";
 import FuturePages from "@/pages/FuturePages";
 import ImagineIf from "@/pages/ImagineIf";
@@ -55,6 +66,17 @@ function AppRoutes() {
         <Route path="/reset/ladder" element={<StateLadder />} />
         <Route path="/reset/contrast" element={<ContrastReset />} />
         <Route path="/reset/stillness" element={<StillnessTimer />} />
+        <Route path="/reset/resistance" element={<ResistanceRelease />} />
+        <Route path="/reset/quiet" element={<QuietMind />} />
+        <Route path="/reset/quiet/present" element={<PresentMoment />} />
+        <Route path="/reset/quiet/scan" element={<ResistanceScan />} />
+        <Route path="/reset/quiet/offramp" element={<AnalyticalOfframp />} />
+        <Route path="/reset/quiet/shift" element={<ThoughtShiftLadder />} />
+        <Route path="/reset/quiet/clarity" element={<MentalClarity />} />
+        <Route path="/reset/quiet/patterns" element={<PatternSoftener />} />
+        <Route path="/reset/quiet/higher" element={<HigherView />} />
+        <Route path="/reset/quiet/situations" element={<SituationPacks />} />
+        <Route path="/reset/quiet/support" element={<NoProgressSupport />} />
         <Route path="/reflect" element={<Reflect />} />
         <Route path="/reflect/future-pages" element={<FuturePages />} />
         <Route path="/reflect/imagine-if" element={<ImagineIf />} />

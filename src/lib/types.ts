@@ -9,6 +9,23 @@ export type BelievabilityLevel = 'forced' | 'possible' | 'believable' | 'true' |
 
 export type VibeCheck = 'expansive' | 'mixed' | 'heavy';
 
+export type ChargeLevel = 'intense' | 'active' | 'softening' | 'lighter' | 'open';
+
+export type ResistanceTrigger =
+  | 'fear' | 'urgency' | 'doubt' | 'shame' | 'disappointment'
+  | 'control' | 'pressure' | 'comparison' | 'impatience'
+  | 'heaviness' | 'mental-noise' | 'emotional-charge';
+
+export type BodyLocation =
+  | 'thoughts' | 'chest' | 'throat' | 'belly' | 'jaw'
+  | 'shoulders' | 'hands' | 'everywhere';
+
+export type ClearingMode = 'breathe' | 'soften-thought' | 'let-it-be' | 'move-energy';
+
+export type ChargeType =
+  | 'fearful' | 'urgent' | 'ashamed' | 'controlling'
+  | 'disappointed' | 'defeated' | 'scattered';
+
 export interface CheckIn {
   id: string;
   state: EmotionalState;
@@ -84,6 +101,27 @@ export interface CustomRitual {
   createdAt: string;
 }
 
+export interface ResistanceEntry {
+  id: string;
+  triggerType: ResistanceTrigger;
+  bodyLocation: BodyLocation;
+  chargeBefore: ChargeLevel;
+  chargeAfter: ChargeLevel;
+  clearingMode: ClearingMode;
+  softenedStatement?: string;
+  createdAt: string;
+}
+
+export interface ThoughtShift {
+  id: string;
+  originalThought: string;
+  chargeType: ChargeType;
+  softerStatement: string;
+  believableStatement: string;
+  supportStatement: string;
+  createdAt: string;
+}
+
 export interface TodayFlow {
   morningRitual: boolean;
   resetUsed: boolean;
@@ -109,6 +147,8 @@ export interface AppState {
   imagineIfEntries: ImagineIfEntry[];
   overflowEntries: OverflowEntry[];
   customRituals: CustomRitual[];
+  resistanceEntries: ResistanceEntry[];
+  thoughtShifts: ThoughtShift[];
   todayFlow: TodayFlow;
   lastVisit: string;
 }
