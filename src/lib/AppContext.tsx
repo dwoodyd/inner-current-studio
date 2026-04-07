@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { AppState, CheckIn, TodayFlow, Wheel, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual } from './types';
+import { AppState, CheckIn, TodayFlow, Wheel, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift } from './types';
 import {
   loadState, generateId,
   addCheckIn as storeAddCheckIn,
@@ -12,6 +12,8 @@ import {
   addImagineIfEntry as storeAddImagineIfEntry,
   addOverflowEntry as storeAddOverflowEntry,
   addCustomRitual as storeAddCustomRitual,
+  addResistanceEntry as storeAddResistanceEntry,
+  addThoughtShift as storeAddThoughtShift,
 } from './store';
 
 interface AppContextType {
@@ -27,6 +29,8 @@ interface AppContextType {
   saveImagineIfEntry: (entry: Omit<ImagineIfEntry, 'id' | 'createdAt'>) => void;
   saveOverflowEntry: (entry: Omit<OverflowEntry, 'id' | 'createdAt'>) => void;
   saveCustomRitual: (ritual: Omit<CustomRitual, 'id' | 'createdAt'>) => void;
+  saveResistanceEntry: (entry: Omit<ResistanceEntry, 'id' | 'createdAt'>) => void;
+  saveThoughtShift: (shift: Omit<ThoughtShift, 'id' | 'createdAt'>) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -77,11 +81,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setState(storeAddCustomRitual(ritual));
   }, []);
 
+  const saveResistanceEntry = useCallback((entry: Omit<ResistanceEntry, 'id' | 'createdAt'>) => {
+    setState(storeAddResistanceEntry(entry));
+  }, []);
+
+  const saveThoughtShift = useCallback((shift: Omit<ThoughtShift, 'id' | 'createdAt'>) => {
+    setState(storeAddThoughtShift(shift));
+  }, []);
+
   return (
     <AppContext.Provider value={{
       state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
       saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
       saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
+      saveResistanceEntry, saveThoughtShift,
     }}>
       {children}
     </AppContext.Provider>

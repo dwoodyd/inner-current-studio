@@ -1,4 +1,4 @@
-import { AppState, CheckIn, TodayFlow, Wheel, WheelSegment, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual } from './types';
+import { AppState, CheckIn, TodayFlow, Wheel, WheelSegment, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift } from './types';
 
 const STORAGE_KEY = 'soulcurrent_state';
 
@@ -20,6 +20,8 @@ const defaultState: AppState = {
   imagineIfEntries: [],
   overflowEntries: [],
   customRituals: [],
+  resistanceEntries: [],
+  thoughtShifts: [],
   todayFlow: defaultTodayFlow,
   lastVisit: new Date().toISOString(),
 };
@@ -28,16 +30,17 @@ export function loadState(): AppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...defaultState };
-    const parsed = JSON.parse(raw) as AppState;
-    const lastDate = new Date(parsed.lastVisit).toDateString();
+    const parsed = JSON.parse(raw) as Partial<AppState>;
+    const state: AppState = { ...defaultState, ...parsed };
+    const lastDate = new Date(state.lastVisit).toDateString();
     const today = new Date().toDateString();
     if (lastDate !== today) {
-      parsed.todayFlow = { ...defaultTodayFlow, returnCount: 0 };
+      state.todayFlow = { ...defaultTodayFlow, returnCount: 0 };
     }
-    parsed.todayFlow.returnCount += 1;
-    parsed.lastVisit = new Date().toISOString();
-    saveState(parsed);
-    return parsed;
+    state.todayFlow.returnCount += 1;
+    state.lastVisit = new Date().toISOString();
+    saveState(state);
+    return state;
   } catch {
     return { ...defaultState };
   }
@@ -113,6 +116,20 @@ export function addCustomRitual(ritual: Omit<CustomRitual, 'id' | 'createdAt'>) 
   return updateState(s => ({
     ...s,
     customRituals: [{ ...ritual, id: generateId(), createdAt: new Date().toISOString() }, ...s.customRituals],
+  }));
+}
+
+export function addResistanceEntry(entry: Omit<ResistanceEntry, 'id' | 'createdAt'>) {
+  return updateState(s => ({
+    ...s,
+    resistanceEntries: [{ ...entry, id: generateId(), createdAt: new Date().toISOString() }, ...(s.resistanceEntries || [])],
+  }));
+}
+
+export function addThoughtShift(shift: Omit<ThoughtShift, 'id' | 'createdAt'>) {
+  return updateState(s => ({
+    ...s,
+    thoughtShifts: [{ ...shift, id: generateId(), createdAt: new Date().toISOString() }, ...(s.thoughtShifts || [])],
   }));
 }
 

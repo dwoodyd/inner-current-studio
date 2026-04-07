@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { BarChart3, RefreshCw, Timer } from 'lucide-react';
+import { BarChart3, RefreshCw, Timer, Shield, BrainCircuit } from 'lucide-react';
 
 const tools = [
   {
@@ -18,6 +18,20 @@ const tools = [
     color: 'text-soul-blue',
   },
   {
+    icon: Shield,
+    title: 'Resistance Release',
+    description: 'Identify, soften, and clear resistance without forcing positivity.',
+    to: '/reset/resistance',
+    color: 'text-soul-gold',
+  },
+  {
+    icon: BrainCircuit,
+    title: 'Quiet the Mind',
+    description: 'Tools for mental noise, thought loops, and inner overactivity.',
+    to: '/reset/quiet',
+    color: 'text-soul-green',
+  },
+  {
     icon: Timer,
     title: 'Stillness Timer',
     description: 'Simple premium breathing and stillness ritual.',
@@ -33,7 +47,7 @@ export default function Reset() {
     <div className="mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6">
       <div className="text-center space-y-2">
         <h1 className="font-heading text-2xl font-semibold text-foreground">Reset</h1>
-        <p className="text-sm text-muted-foreground">Fast emotional reset and self-location</p>
+        <p className="text-sm text-muted-foreground">Locate, interrupt, soften, and clear resistance.</p>
       </div>
 
       <div className="space-y-3">
@@ -42,7 +56,7 @@ export default function Reset() {
             key={title}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
+            transition={{ delay: i * 0.06 }}
             onClick={() => navigate(to)}
             className="soul-card w-full text-left flex items-start gap-4 transition-colors hover:bg-muted/20 active:scale-[0.98]"
           >
