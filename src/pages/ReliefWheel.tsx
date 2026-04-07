@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, ChevronRight, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useAppState } from '@/lib/AppContext';
 import type { BelievabilityLevel, WheelSegment } from '@/lib/types';
 
@@ -41,45 +40,47 @@ export default function ReliefWheel() {
   const next = () => {
     if (step < 5) setStep(step + 1);
     else {
-      saveWheel({
-        title: 'Relief Wheel',
-        centerText: 'Finding relief',
-        segments,
-        type: 'relief',
-        completionStatus: 'complete',
-      });
+      saveWheel({ title: 'Relief Wheel', centerText: 'Finding relief', segments, type: 'relief', completionStatus: 'complete' });
       setDone(true);
     }
   };
 
   if (done) {
     return (
-      <div className="mx-auto max-w-lg px-4 pt-20 pb-6 text-center space-y-8">
-        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.8 }}>
-          <div className="w-28 h-28 mx-auto rounded-full soul-gradient-violet opacity-80 flex items-center justify-center soul-glow-violet">
-            <Heart size={36} className="text-foreground" />
+      <div className="mx-auto max-w-lg px-4 pt-20 pb-6 text-center space-y-8 soul-ambient-violet overflow-hidden">
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+          <div className="soul-completion-ring w-28 h-28" style={{
+            background: 'linear-gradient(135deg, hsl(265 25% 45% / 0.12), hsl(265 25% 45% / 0.06))',
+            borderColor: 'hsl(265 25% 45% / 0.15)',
+            boxShadow: '0 0 40px hsl(265 25% 45% / 0.1), 0 0 80px hsl(265 25% 45% / 0.04)',
+          }}>
+            <Heart size={36} className="text-soul-violet" />
           </div>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="space-y-3">
           <h2 className="font-heading text-2xl text-foreground">Relief Found</h2>
-          <p className="text-sm text-muted-foreground">You gave yourself permission to soften. That's enough.</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">You gave yourself permission to soften. That's enough.</p>
         </motion.div>
-        <Button onClick={() => navigate('/align')} className="w-full">Return to Align</Button>
+        <button onClick={() => navigate('/align')} className="soul-btn-primary w-full">Return to Align</button>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-6">
+    <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-6 soul-ambient-violet overflow-hidden">
       <div className="flex items-center gap-3">
-        <button onClick={() => navigate('/align')} className="text-muted-foreground p-2 -ml-2"><ArrowLeft size={20} /></button>
+        <button onClick={() => navigate('/align')} className="text-muted-foreground p-2 -ml-2 hover:text-foreground transition-colors"><ArrowLeft size={20} /></button>
         <h1 className="font-heading text-lg font-semibold text-foreground">Relief Wheel</h1>
       </div>
 
       {/* Progress dots */}
       <div className="flex justify-center gap-2">
         {RELIEF_PROMPTS.map((_, i) => (
-          <div key={i} className={`w-2 h-2 rounded-full transition-all ${i === step ? 'bg-primary scale-125' : i < step ? 'bg-secondary' : 'bg-muted'}`} />
+          <motion.div
+            key={i}
+            animate={{ scale: i === step ? 1.3 : 1 }}
+            className={`w-2 h-2 rounded-full transition-colors ${i === step ? 'bg-soul-violet' : i < step ? 'bg-soul-violet/40' : 'bg-muted'}`}
+          />
         ))}
       </div>
 
@@ -89,23 +90,24 @@ export default function ReliefWheel() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -15 }}
-          className="soul-card space-y-4"
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="soul-glass-elevated rounded-2xl p-5 space-y-4"
         >
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Step {step + 1} of 6</p>
-          <p className="font-heading text-base text-primary italic leading-relaxed">{current.prompt}</p>
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60">Step {step + 1} of 6</p>
+          <p className="font-heading text-base text-soul-violet italic leading-relaxed">{current.prompt}</p>
           <textarea
             value={current.response}
             onChange={e => update('response', e.target.value)}
             placeholder="Whatever comes…"
-            className="w-full bg-transparent border-0 border-b border-border/50 text-foreground text-sm resize-none focus:outline-none focus:border-primary/50 min-h-[70px] placeholder:text-muted-foreground/40"
+            className="soul-textarea min-h-[70px]"
           />
           <div className="flex flex-wrap gap-1.5">
             {BELIEVABILITY.map(({ value, label }) => (
               <button
                 key={value}
                 onClick={() => update('believability', value)}
-                className={`text-[11px] px-2.5 py-1 rounded-full transition-all ${
-                  current.believability === value ? 'bg-primary/20 text-primary ring-1 ring-primary/40' : 'bg-muted/30 text-muted-foreground'
+                className={`soul-chip text-[11px] px-3 py-1.5 ${
+                  current.believability === value ? 'soul-chip-active' : 'soul-chip-idle'
                 }`}
               >
                 {label}
@@ -115,9 +117,9 @@ export default function ReliefWheel() {
         </motion.div>
       </AnimatePresence>
 
-      <Button onClick={next} className="w-full" disabled={!current.response.trim()}>
+      <button onClick={next} disabled={!current.response.trim()} className="soul-btn-primary w-full flex items-center justify-center gap-2">
         {step === 5 ? <><Check size={16} /> Complete</> : <>Continue <ChevronRight size={16} /></>}
-      </Button>
+      </button>
     </div>
   );
 }

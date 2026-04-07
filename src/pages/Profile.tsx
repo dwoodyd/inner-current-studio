@@ -1,11 +1,13 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAppState } from '@/lib/AppContext';
-import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut } from 'lucide-react';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { state } = useAppState();
+  const { user, signOut } = useAuth();
   const totalCheckIns = state.checkIns.length;
   const totalReturns = state.todayFlow.returnCount;
 
@@ -77,7 +79,19 @@ export default function Profile() {
         ))}
       </div>
 
-      <div className="text-center pt-4 space-y-1">
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        onClick={signOut}
+        className="w-full flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm text-destructive/70 hover:text-destructive hover:bg-destructive/5 transition-all"
+      >
+        <LogOut size={16} />
+        Sign Out
+      </motion.button>
+
+      <div className="text-center pt-2 space-y-1">
+        <p className="text-[10px] text-muted-foreground/40 truncate">{user?.email}</p>
         <p className="text-xs text-muted-foreground/50">SoulCurrent v1.0</p>
         <p className="text-xs text-muted-foreground/40 font-heading italic">Return to your inner current</p>
       </div>
