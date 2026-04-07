@@ -400,7 +400,7 @@ export function useAppState() {
 
 // Migrate local data to cloud
 async function migrateToCloud(userId: string, local: AppState) {
-  const promises: Promise<any>[] = [];
+  const promises: PromiseLike<any>[] = [];
 
   if (local.onboarding.completed) {
     promises.push(
@@ -409,61 +409,61 @@ async function migrateToCloud(userId: string, local: AppState) {
         onboarding_reason: local.onboarding.reason,
         onboarding_style: local.onboarding.style,
         onboarding_challenge: local.onboarding.challenge,
-      }).eq('user_id', userId)
+      }).eq('user_id', userId).select()
     );
   }
 
   for (const c of local.checkIns) {
-    promises.push(supabase.from('check_ins').insert({ user_id: userId, state: c.state, note: c.note }));
+    promises.push(supabase.from('check_ins').insert({ user_id: userId, state: c.state, note: c.note }).select());
   }
   for (const w of local.wheels) {
     promises.push(supabase.from('wheels').insert({
       user_id: userId, title: w.title, center_text: w.centerText,
       segments: w.segments as any, type: w.type, completion_status: w.completionStatus,
-    }));
+    }).select());
   }
   for (const s of local.gatheredSequences) {
     promises.push(supabase.from('gathered_sequences').insert({
       user_id: userId, title: s.title, lines: s.lines as any, playback_settings: s.playbackSettings as any,
-    }));
+    }).select());
   }
   for (const m of local.momentumSessions) {
     promises.push(supabase.from('momentum_sessions').insert({
       user_id: userId, phrase: m.phrase, duration: m.duration, completed: m.completed,
-    }));
+    }).select());
   }
   for (const f of local.futurePages) {
     promises.push(supabase.from('future_pages').insert({
       user_id: userId, title: f.title, template: f.template, content: f.content, vibe_check: f.vibeCheck,
-    }));
+    }).select());
   }
   for (const e of local.imagineIfEntries) {
-    promises.push(supabase.from('imagine_if_entries').insert({ user_id: userId, category: e.category, text: e.text }));
+    promises.push(supabase.from('imagine_if_entries').insert({ user_id: userId, category: e.category, text: e.text }).select());
   }
   for (const e of local.overflowEntries) {
     promises.push(supabase.from('overflow_entries').insert({
       user_id: userId, mode: e.mode, resource_amount: e.resourceAmount,
       entry_text: e.entryText, feeling_text: e.feelingText, resistance_note: e.resistanceNote,
-    }));
+    }).select());
   }
   for (const r of local.customRituals) {
     promises.push(supabase.from('custom_rituals').insert({
       user_id: userId, name: r.name, steps: r.steps as any, duration_estimate: r.durationEstimate,
-    }));
+    }).select());
   }
   for (const r of (local.resistanceEntries || [])) {
     promises.push(supabase.from('resistance_entries').insert({
       user_id: userId, trigger_type: r.triggerType, body_location: r.bodyLocation,
       charge_before: r.chargeBefore, charge_after: r.chargeAfter,
       clearing_mode: r.clearingMode, softened_statement: r.softenedStatement,
-    }));
+    }).select());
   }
   for (const t of (local.thoughtShifts || [])) {
     promises.push(supabase.from('thought_shifts').insert({
       user_id: userId, original_thought: t.originalThought, charge_type: t.chargeType,
       softer_statement: t.softerStatement, believable_statement: t.believableStatement,
       support_statement: t.supportStatement,
-    }));
+    }).select());
   }
 
   await Promise.allSettled(promises);
