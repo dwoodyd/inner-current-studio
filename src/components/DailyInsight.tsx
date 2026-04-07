@@ -1,3 +1,5 @@
+import React from 'react';
+
 const insights = [
   "What you resist persists. What you allow, moves.",
   "Relief is not the absence of challenge. It's the presence of steadiness.",
@@ -16,7 +18,7 @@ const insights = [
   "What feels heavy right now won't always feel this way.",
 ];
 
-export default function DailyInsight() {
+const DailyInsight = React.memo(function DailyInsight() {
   const dayOfYear = Math.floor(
     (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
   );
@@ -29,4 +31,6 @@ export default function DailyInsight() {
       </p>
     </div>
   );
-}
+});
+
+export default DailyInsight;

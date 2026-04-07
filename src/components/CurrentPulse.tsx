@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { QuickState } from '@/lib/types';
 
@@ -29,7 +30,7 @@ const breathSpeeds: Record<QuickState, number> = {
   flowing: 3.5,
 };
 
-export default function CurrentPulse({ quickState = 'flat' }: CurrentPulseProps) {
+const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: CurrentPulseProps) {
   const colors = stateColors[quickState];
   const speed = breathSpeeds[quickState];
 
@@ -101,4 +102,6 @@ export default function CurrentPulse({ quickState = 'flat' }: CurrentPulseProps)
       </motion.p>
     </div>
   );
-}
+});
+
+export default CurrentPulse;
