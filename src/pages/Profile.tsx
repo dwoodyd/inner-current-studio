@@ -14,7 +14,7 @@ export default function Profile() {
     { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns' },
     { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', to: '/profile/insights' },
     { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals' },
-    { icon: Bell, label: 'Notifications', description: 'Gentle reminders' },
+    { icon: Bell, label: 'Notifications', description: 'Gentle reminders', to: '/profile/notifications' },
     { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
     { icon: Volume2, label: 'Audio', description: 'Sound and haptic settings' },
     { icon: CreditCard, label: 'Subscription', description: 'Manage your plan' },
