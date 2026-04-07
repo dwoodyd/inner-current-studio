@@ -1,12 +1,31 @@
 import { useState, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { Sparkles, ArrowRight } from 'lucide-react';
 
-const RATE_LIMIT_WINDOW = 60_000; // 1 minute
+const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
 
+/* ── Act 2: "Aha Moment" sample reframes shown before signup ── */
+const REFRAME_STEPS = [
+  {
+    pain: '"I can\'t stop overthinking everything."',
+    reframe: 'What if your mind isn\'t broken — it\'s just unsupervised? SoulCurrent gives your thoughts a softer track to run on.',
+  },
+  {
+    pain: '"I feel stuck but I don\'t know why."',
+    reframe: 'You don\'t need to name the fog to move through it. Sometimes the next clear thought is only one breath away.',
+  },
+  {
+    pain: '"I want to feel lighter but nothing works."',
+    reframe: 'Relief doesn\'t arrive through effort. It arrives when you stop gripping. Let\'s practice that together.',
+  },
+];
+
 export default function Auth() {
+  const [phase, setPhase] = useState<'landing' | 'aha' | 'auth'>('landing');
+  const [ahaStep, setAhaStep] = useState(0);
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -60,81 +79,232 @@ export default function Auth() {
     }
   };
 
+  const advanceAha = () => {
+    if (ahaStep < REFRAME_STEPS.length - 1) {
+      setAhaStep(s => s + 1);
+    } else {
+      setMode('signup');
+      setPhase('auth');
+    }
+  };
+
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center px-6 py-12 bg-background relative overflow-hidden">
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full opacity-30"
-          style={{ background: 'radial-gradient(circle, hsl(42 65% 58% / 0.08), transparent 70%)' }} />
-        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, hsl(265 25% 45% / 0.06), transparent 70%)' }} />
+        <motion.div
+          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full"
+          style={{ background: 'radial-gradient(circle, hsl(42 65% 58% / 0.08), transparent 70%)' }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.4, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] rounded-full"
+          style={{ background: 'radial-gradient(circle, hsl(265 25% 45% / 0.06), transparent 70%)' }}
+          animate={{ scale: [1, 1.08, 1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full max-w-sm space-y-8"
-      >
-        {/* Logo */}
-        <div className="flex flex-col items-center gap-6 text-center">
+      <AnimatePresence mode="wait">
+        {/* ── ACT 1: Landing / Problem ── */}
+        {phase === 'landing' && (
           <motion.div
-            className="h-20 w-20 rounded-full soul-glow-gold"
-            style={{
-              background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.3), hsl(42 65% 58% / 0.08))',
-            }}
-            animate={{ scale: [1, 1.06, 1] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <div className="space-y-2">
-            <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
-            <p className="font-heading text-base font-light italic text-muted-foreground">
-              {mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
-            </p>
-          </div>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-3">
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Email"
-              required
-              className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              minLength={6}
-              className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20"
+            key="landing"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full max-w-sm flex flex-col items-center text-center gap-8"
           >
-            {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
-          </button>
-        </form>
+            <motion.div
+              className="h-24 w-24 rounded-full soul-glow-gold flex items-center justify-center"
+              style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.3), hsl(42 65% 58% / 0.08))' }}
+              animate={{ scale: [1, 1.06, 1] }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <Sparkles size={28} className="text-primary/60" />
+            </motion.div>
 
-        {/* Toggle */}
-        <div className="text-center">
-          <button
-            onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            <div className="space-y-3">
+              <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
+              <p className="font-heading text-lg text-muted-foreground italic leading-relaxed">
+                When your mind won't quiet,<br />your emotions feel heavy,<br />or you've lost your center —
+              </p>
+              <p className="text-sm text-muted-foreground/70 max-w-[18rem] mx-auto">
+                this is your place to return.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3 w-full">
+              <motion.button
+                onClick={() => setPhase('aha')}
+                className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2"
+                whileTap={{ scale: 0.98 }}
+              >
+                Show me how it works
+                <ArrowRight size={15} />
+              </motion.button>
+              <button
+                onClick={() => { setMode('login'); setPhase('auth'); }}
+                className="text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors py-2"
+              >
+                I already have an account
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── ACT 2: Aha Moment — Sample Reframes ── */}
+        {phase === 'aha' && (
+          <motion.div
+            key={`aha-${ahaStep}`}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full max-w-sm flex flex-col items-center text-center gap-8"
           >
-            {mode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
-          </button>
-        </div>
-      </motion.div>
+            {/* Progress dots */}
+            <div className="flex gap-2">
+              {REFRAME_STEPS.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                    i === ahaStep ? 'w-6 bg-primary' : i < ahaStep ? 'w-1.5 bg-primary/40' : 'w-1.5 bg-muted-foreground/20'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Pain point */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="soul-glass-elevated rounded-2xl px-6 py-5 w-full"
+            >
+              <p className="text-xs text-muted-foreground/50 uppercase tracking-widest mb-3">You might say…</p>
+              <p className="font-heading text-base text-foreground/80 italic leading-relaxed">
+                {REFRAME_STEPS[ahaStep].pain}
+              </p>
+            </motion.div>
+
+            {/* Reframe */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="soul-glass rounded-2xl px-6 py-5 w-full border border-primary/10"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center">
+                  <Sparkles size={10} className="text-primary" />
+                </div>
+                <p className="text-xs text-primary/60 uppercase tracking-widest">SoulCurrent responds…</p>
+              </div>
+              <p className="text-sm text-foreground/85 leading-relaxed">
+                {REFRAME_STEPS[ahaStep].reframe}
+              </p>
+            </motion.div>
+
+            <motion.button
+              onClick={advanceAha}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2"
+              whileTap={{ scale: 0.98 }}
+            >
+              {ahaStep < REFRAME_STEPS.length - 1 ? 'Show me another' : 'Start my practice'}
+              <ArrowRight size={15} />
+            </motion.button>
+
+            <button
+              onClick={() => { setMode('login'); setPhase('auth'); }}
+              className="text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+            >
+              Skip — I already have an account
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── ACT 3: Auth Form (Paywall / Commitment) ── */}
+        {phase === 'auth' && (
+          <motion.div
+            key="auth"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full max-w-sm space-y-8"
+          >
+            {/* Logo */}
+            <div className="flex flex-col items-center gap-6 text-center">
+              <motion.div
+                className="h-20 w-20 rounded-full soul-glow-gold"
+                style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.3), hsl(42 65% 58% / 0.08))' }}
+                animate={{ scale: [1, 1.06, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <div className="space-y-2">
+                <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
+                <p className="font-heading text-base font-light italic text-muted-foreground">
+                  {mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="Email"
+                  required
+                  className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
+                />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Password"
+                  required
+                  minLength={6}
+                  className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20"
+              >
+                {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
+              </button>
+            </form>
+
+            {/* Toggle */}
+            <div className="text-center">
+              <button
+                onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {mode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
+              </button>
+            </div>
+
+            {/* Privacy links */}
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <a href="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Privacy Policy</a>
+              <span className="text-[10px] text-muted-foreground/20">·</span>
+              <a href="/terms" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Terms of Service</a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
