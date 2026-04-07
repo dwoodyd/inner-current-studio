@@ -22,6 +22,8 @@ import MyCurrent from "@/pages/MyCurrent";
 import Profile from "@/pages/Profile";
 import CurrentInsights from "@/pages/CurrentInsights";
 import MyRituals from "@/pages/MyRituals";
+import CurrentGuide from "@/pages/CurrentGuide";
+import PatternMirror from "@/pages/PatternMirror";
 import Onboarding from "@/pages/Onboarding";
 import NotFound from "@/pages/NotFound";
 
@@ -60,6 +62,8 @@ function AppRoutes() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
         <Route path="/profile/rituals" element={<MyRituals />} />
+        <Route path="/profile/guide" element={<CurrentGuide />} />
+        <Route path="/profile/patterns" element={<PatternMirror />} />
       </Route>
       <Route path="/onboarding" element={<Navigate to="/" replace />} />
       <Route path="*" element={<NotFound />} />
