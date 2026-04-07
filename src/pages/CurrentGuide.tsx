@@ -138,6 +138,7 @@ export default function CurrentGuide() {
 
   const doSend = async (text: string) => {
     if (!text.trim() || isLoading) return;
+    const userMsg: Msg = { role: 'user', content: text.trim() };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput('');

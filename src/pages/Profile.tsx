@@ -41,13 +41,13 @@ export default function Profile() {
     setDeleting(true);
     try {
       // Delete user data from all tables
-      const tables = [
+      const tables: Array<keyof typeof supabase extends never ? string : string> = [
         'check_ins', 'custom_rituals', 'future_pages', 'gathered_sequences',
         'imagine_if_entries', 'momentum_sessions', 'overflow_entries',
         'resistance_entries', 'thought_shifts', 'today_flow', 'wheels', 'profiles',
-      ];
+      ] as const;
       for (const table of tables) {
-        await supabase.from(table).delete().eq('user_id', user!.id);
+        await (supabase.from as any)(table).delete().eq('user_id', user!.id);
       }
       // Sign out (actual auth.users deletion requires admin/edge function)
       await signOut();
