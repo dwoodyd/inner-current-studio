@@ -1,8 +1,21 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAppState } from '@/lib/AppContext';
 import { useAuth } from '@/hooks/useAuth';
-import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, ChevronRight } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const stagger = {
   hidden: {},
@@ -18,9 +31,34 @@ export default function Profile() {
   const navigate = useNavigate();
   const { state } = useAppState();
   const { user, signOut } = useAuth();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const totalCheckIns = state.checkIns.length;
   const totalReturns = state.todayFlow.returnCount;
   const totalRituals = state.wheels.length + state.momentumSessions.length;
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      // Delete user data from all tables
+      const tables: Array<keyof typeof supabase extends never ? string : string> = [
+        'check_ins', 'custom_rituals', 'future_pages', 'gathered_sequences',
+        'imagine_if_entries', 'momentum_sessions', 'overflow_entries',
+        'resistance_entries', 'thought_shifts', 'today_flow', 'wheels', 'profiles',
+      ] as const;
+      for (const table of tables) {
+        await (supabase.from as any)(table).delete().eq('user_id', user!.id);
+      }
+      // Sign out (actual auth.users deletion requires admin/edge function)
+      await signOut();
+      toast.success('Account data deleted. You have been signed out.');
+    } catch {
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setDeleting(false);
+      setShowDeleteDialog(false);
+    }
+  };
 
   const sections = [
     { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
@@ -115,18 +153,56 @@ export default function Profile() {
         <motion.button
           variants={fadeUp}
           onClick={signOut}
-          className="w-full soul-glass rounded-2xl flex items-center justify-center gap-2 px-4 py-3.5 text-sm text-destructive/70 hover:text-destructive hover:bg-destructive/5 transition-all active:scale-[0.98]"
+          className="w-full soul-glass rounded-2xl flex items-center justify-center gap-2 px-4 py-3.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/10 transition-all active:scale-[0.98]"
         >
           <LogOut size={15} />
           Sign Out
+        </motion.button>
+
+        {/* Delete Account */}
+        <motion.button
+          variants={fadeUp}
+          onClick={() => setShowDeleteDialog(true)}
+          className="w-full soul-glass rounded-2xl flex items-center justify-center gap-2 px-4 py-3.5 text-sm text-destructive/60 hover:text-destructive hover:bg-destructive/5 transition-all active:scale-[0.98]"
+        >
+          <Trash2 size={15} />
+          Delete Account
         </motion.button>
 
         {/* Footer */}
         <motion.div variants={fadeUp} className="text-center pt-2 space-y-1.5">
           <p className="text-[10px] text-muted-foreground/40 truncate">{user?.email}</p>
           <p className="text-xs text-muted-foreground/50">SoulCurrent v1.0</p>
+          <div className="flex items-center justify-center gap-3 pt-1">
+            <a href="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Privacy Policy</a>
+            <span className="text-[10px] text-muted-foreground/20">·</span>
+            <a href="/terms" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Terms of Service</a>
+          </div>
           <p className="text-xs text-muted-foreground/30 font-heading italic">Return to your inner current</p>
         </motion.div>
+
+        {/* Delete Account Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent className="soul-glass border-border/20">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="font-heading text-foreground">Delete your account?</AlertDialogTitle>
+              <AlertDialogDescription className="text-muted-foreground text-sm leading-relaxed">
+                This will permanently remove all your check-ins, rituals, reflections, and personal data.
+                This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="border-border/20">Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDeleteAccount}
+                disabled={deleting}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deleting ? 'Deleting…' : 'Delete Everything'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </motion.div>
     </div>
   );
