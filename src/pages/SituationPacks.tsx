@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Package } from 'lucide-react';
 
 interface Pack {
   title: string;
@@ -31,13 +31,14 @@ export default function SituationPacks() {
   const [selected, setSelected] = useState<Pack | null>(null);
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-8 pb-6 space-y-6">
-      <button onClick={() => navigate('/reset/quiet')} className="flex items-center gap-1.5 text-muted-foreground text-sm active:scale-95">
+    <div className="mx-auto max-w-lg px-5 pt-8 pb-8 space-y-7 soul-ambient-gold">
+      <button onClick={() => navigate('/reset/quiet')} className="flex items-center gap-1.5 text-muted-foreground text-sm active:scale-95 transition-transform">
         <ArrowLeft size={16} /> Quiet the Mind
       </button>
 
-      <div className="text-center space-y-2">
-        <h1 className="font-heading text-xl font-semibold">Situation Packs</h1>
+      <div className="text-center space-y-3">
+        <Package size={22} className="text-soul-warm mx-auto" strokeWidth={1.5} />
+        <h1 className="font-heading text-xl font-semibold tracking-tight">Situation Packs</h1>
         <p className="text-sm text-muted-foreground">Choose what you're working through.</p>
       </div>
 
@@ -45,42 +46,42 @@ export default function SituationPacks() {
         {!selected ? (
           <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">
             {PACKS.map((p, i) => (
-              <motion.button key={p.title} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
+              <motion.button key={p.title} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.03, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 onClick={() => setSelected(p)}
-                className="soul-card w-full text-left active:scale-[0.98]">
-                <h3 className="font-heading text-sm font-medium">{p.title}</h3>
-                <p className="text-xs text-muted-foreground">{p.trigger}</p>
+                className="soul-glass-elevated w-full text-left p-4 rounded-2xl active:scale-[0.98] transition-all">
+                <h3 className="font-heading text-sm font-medium tracking-tight">{p.title}</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">{p.trigger}</p>
               </motion.button>
             ))}
           </motion.div>
         ) : (
-          <motion.div key="detail" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-            <button onClick={() => setSelected(null)} className="text-xs text-muted-foreground hover:text-foreground">← All packs</button>
+          <motion.div key="detail" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="space-y-4">
+            <button onClick={() => setSelected(null)} className="text-xs text-muted-foreground hover:text-foreground transition-colors">← All packs</button>
             <h2 className="font-heading text-xl font-semibold">{selected.title}</h2>
 
-            <div className="soul-card space-y-3">
+            <div className="soul-glass-elevated p-5 rounded-2xl space-y-3">
               <div><span className="text-xs text-muted-foreground">Common trigger</span><p className="text-sm">{selected.trigger}</p></div>
-              <div><span className="text-xs text-muted-foreground">Common loop</span><p className="text-sm italic">{selected.loop}</p></div>
+              <div><span className="text-xs text-muted-foreground">Common loop</span><p className="text-sm italic font-heading">{selected.loop}</p></div>
               <div><span className="text-xs text-muted-foreground">Body cue</span><p className="text-sm">{selected.bodyCue}</p></div>
             </div>
 
-            <div className="soul-card-raised space-y-2">
+            <div className="soul-card-raised space-y-2 py-5">
               <span className="text-xs text-muted-foreground">Softer angle</span>
               <p className="text-sm text-primary/90">{selected.softer}</p>
             </div>
 
-            <div className="soul-card space-y-2">
+            <div className="soul-glass-elevated p-5 rounded-2xl space-y-2">
               <span className="text-xs text-muted-foreground">Quick reset</span>
               <p className="text-sm">{selected.quickReset}</p>
             </div>
 
-            <div className="soul-card space-y-2">
+            <div className="soul-glass-elevated p-5 rounded-2xl space-y-2">
               <span className="text-xs text-muted-foreground">Journal prompt</span>
-              <p className="text-sm italic">{selected.journalPrompt}</p>
+              <p className="text-sm italic font-heading">{selected.journalPrompt}</p>
             </div>
 
             <button onClick={() => navigate(selected.ritualTo)}
-              className="w-full py-3 rounded-xl bg-primary/15 text-primary font-medium text-sm active:scale-95">
+              className="w-full soul-btn-primary">
               Try {selected.ritualName} →
             </button>
           </motion.div>

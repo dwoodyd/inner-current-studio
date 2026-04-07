@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Scan } from 'lucide-react';
 
 const CATEGORIES = [
   { value: 'mental', label: 'Mental resistance', desc: 'Looping thoughts, analysis, trying to figure it out' },
@@ -25,7 +25,7 @@ const RITUAL_MAP: Record<string, { name: string; to: string }> = {
   fear: { name: 'Soften the Thought (Resistance Release)', to: '/reset/resistance' },
 };
 
-const fadeUp = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -6 } };
+const fadeUp = { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -10 }, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } };
 
 export default function ResistanceScan() {
   const navigate = useNavigate();
@@ -34,38 +34,39 @@ export default function ResistanceScan() {
   const result = selected ? RITUAL_MAP[selected] : null;
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-8 pb-6 space-y-6">
-      <button onClick={() => navigate('/reset/quiet')} className="flex items-center gap-1.5 text-muted-foreground text-sm active:scale-95">
+    <div className="mx-auto max-w-lg px-5 pt-8 pb-8 space-y-7 soul-ambient-violet">
+      <button onClick={() => navigate('/reset/quiet')} className="flex items-center gap-1.5 text-muted-foreground text-sm active:scale-95 transition-transform">
         <ArrowLeft size={16} /> Quiet the Mind
       </button>
 
-      <div className="text-center space-y-2">
-        <h1 className="font-heading text-xl font-semibold">Resistance Scan</h1>
+      <div className="text-center space-y-3">
+        <Scan size={22} className="text-soul-violet mx-auto" strokeWidth={1.5} />
+        <h1 className="font-heading text-xl font-semibold tracking-tight">Resistance Scan</h1>
         <p className="text-sm text-muted-foreground">What type of resistance is active right now?</p>
       </div>
 
-      <div className="space-y-2">
-        {CATEGORIES.map(c => (
-          <button
+      <div className="space-y-2.5">
+        {CATEGORIES.map((c, i) => (
+          <motion.button
             key={c.value}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.04, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             onClick={() => setSelected(c.value)}
-            className={`soul-card w-full text-left transition-all active:scale-[0.98] ${selected === c.value ? 'ring-1 ring-primary/40' : ''}`}
+            className={`soul-glass-elevated w-full text-left p-4 rounded-2xl transition-all active:scale-[0.98] ${selected === c.value ? 'ring-1 ring-primary/30' : ''}`}
           >
-            <h3 className="font-heading text-sm font-medium">{c.label}</h3>
-            <p className="text-xs text-muted-foreground">{c.desc}</p>
-          </button>
+            <h3 className="font-heading text-sm font-medium tracking-tight">{c.label}</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">{c.desc}</p>
+          </motion.button>
         ))}
       </div>
 
       <AnimatePresence>
         {result && (
-          <motion.div {...fadeUp} className="soul-card-raised text-center space-y-3">
-            <p className="text-sm text-muted-foreground">Suggested first action</p>
+          <motion.div {...fadeUp} className="soul-card-raised text-center space-y-4 py-6">
+            <p className="text-xs text-muted-foreground tracking-wide uppercase">Suggested first action</p>
             <h3 className="font-heading text-lg font-medium text-foreground">{result.name}</h3>
-            <button
-              onClick={() => navigate(result.to)}
-              className="px-6 py-2.5 rounded-full bg-primary/15 text-primary font-medium text-sm active:scale-95"
-            >
+            <button onClick={() => navigate(result.to)} className="soul-btn-primary">
               Start →
             </button>
           </motion.div>

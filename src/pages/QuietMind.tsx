@@ -18,28 +18,39 @@ export default function QuietMind() {
   const navigate = useNavigate();
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-8 pb-6 space-y-6">
-      <button onClick={() => navigate('/reset')} className="flex items-center gap-1.5 text-muted-foreground text-sm active:scale-95">
+    <div className="mx-auto max-w-lg px-5 pt-8 pb-8 space-y-7 soul-ambient-violet">
+      <button onClick={() => navigate('/reset')} className="flex items-center gap-1.5 text-muted-foreground text-sm active:scale-95 transition-transform">
         <ArrowLeft size={16} /> Reset
       </button>
-      <div className="text-center space-y-2">
-        <h1 className="font-heading text-2xl font-semibold">Quiet the Mind</h1>
-        <p className="text-sm text-muted-foreground">Tools for mental noise, thought loops, and inner overactivity.</p>
+
+      <div className="text-center space-y-3">
+        <motion.div
+          className="w-14 h-14 rounded-full mx-auto flex items-center justify-center soul-glass-elevated"
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <BrainCircuit size={20} className="text-soul-violet" strokeWidth={1.5} />
+        </motion.div>
+        <h1 className="font-heading text-2xl font-semibold tracking-tight">Quiet the Mind</h1>
+        <p className="text-sm text-muted-foreground max-w-[280px] mx-auto">Tools for mental noise, thought loops, and inner overactivity.</p>
       </div>
+
       <div className="space-y-2.5">
         {modules.map(({ icon: Icon, title, desc, to, color }, i) => (
           <motion.button
             key={title}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.04 }}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.04, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             onClick={() => navigate(to)}
-            className="soul-card w-full text-left flex items-start gap-3.5 hover:bg-muted/20 active:scale-[0.98] transition-all"
+            className="soul-glass-elevated w-full text-left flex items-start gap-4 p-4 rounded-2xl hover:bg-muted/10 active:scale-[0.98] transition-all"
           >
-            <Icon size={20} className={`mt-0.5 ${color}`} strokeWidth={1.5} />
-            <div className="flex-1">
-              <h3 className="font-heading text-sm font-medium">{title}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+            <div className="w-9 h-9 rounded-xl bg-muted/30 flex items-center justify-center shrink-0">
+              <Icon size={17} className={color} strokeWidth={1.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-heading text-sm font-medium tracking-tight">{title}</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{desc}</p>
             </div>
           </motion.button>
         ))}
