@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { AppState, CheckIn, TodayFlow, Wheel, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift } from './types';
 import { loadState, saveState, generateId } from './store';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,6 +22,13 @@ interface AppContextType {
 }
 
 const AppContext = createContext<AppContextType | null>(null);
+
+// Debounced localStorage save to avoid blocking the main thread on every mutation
+let saveTimer: ReturnType<typeof setTimeout> | null = null;
+function debouncedSave(state: AppState) {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveState(state), 300);
+}
 
 // Helper: upsert today_flow for current user
 async function upsertTodayFlow(userId: string, updates: Partial<TodayFlow>) {
@@ -58,18 +65,8 @@ async function upsertTodayFlow(userId: string, updates: Partial<TodayFlow>) {
 async function loadCloudState(userId: string): Promise<AppState | null> {
   try {
     const [
-      profileRes,
-      checkInsRes,
-      wheelsRes,
-      seqRes,
-      momRes,
-      fpRes,
-      iiRes,
-      ofRes,
-      crRes,
-      reRes,
-      tsRes,
-      tfRes,
+      profileRes, checkInsRes, wheelsRes, seqRes, momRes,
+      fpRes, iiRes, ofRes, crRes, reRes, tsRes, tfRes,
     ] = await Promise.all([
       supabase.from('profiles').select('*').eq('user_id', userId).maybeSingle(),
       supabase.from('check_ins').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
@@ -95,7 +92,7 @@ async function loadCloudState(userId: string): Promise<AppState | null> {
       returnCount: (tfRes.data.return_count || 0) + 1,
     } : { morningRitual: false, resetUsed: false, reflectionCompleted: false, momentumCompleted: false, returnCount: 1 };
 
-    // Bump return count
+    // Bump return count (fire-and-forget)
     upsertTodayFlow(userId, todayFlow);
 
     return {
@@ -165,8 +162,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     loadCloudState(user.id).then(cloudState => {
       if (cloudState) {
         setState(cloudState);
-        // Also persist locally as cache
-        saveState(cloudState);
+        debouncedSave(cloudState);
       }
       setCloudLoaded(true);
     });
@@ -180,10 +176,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     const local = loadState();
     if (local.checkIns.length > 0 || local.wheels.length > 0) {
-      // Migrate local data to cloud in background
       migrateToCloud(user.id, local).then(() => {
         localStorage.setItem('soulcurrent_migrated_' + user.id, 'true');
-        // Reload from cloud
         loadCloudState(user.id).then(s => { if (s) setState(s); });
       });
     } else {
@@ -203,7 +197,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const checkIn: CheckIn = { id: generateId(), state: emotionalState, note, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, checkIns: [checkIn, ...prev.checkIns] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -214,7 +208,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const completeOnboarding = useCallback((data: { reason: string; style: string; challenge: string }) => {
     setState(prev => {
       const next = { ...prev, onboarding: { ...data, completed: true } };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -227,16 +221,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
+  // FIX: use functional setState to avoid stale closure over state.todayFlow
   const updateTodayFlow = useCallback((updates: Partial<TodayFlow>) => {
     setState(prev => {
-      const next = { ...prev, todayFlow: { ...prev.todayFlow, ...updates } };
-      saveState(next);
+      const merged = { ...prev.todayFlow, ...updates };
+      const next = { ...prev, todayFlow: merged };
+      debouncedSave(next);
+      // Fire-and-forget cloud sync with the merged value
+      if (user) upsertTodayFlow(user.id, merged);
       return next;
     });
-    if (user) {
-      upsertTodayFlow(user.id, { ...state.todayFlow, ...updates });
-    }
-  }, [user, state.todayFlow]);
+  }, [user]);
 
   const saveWheel = useCallback((wheel: Omit<Wheel, 'id' | 'createdAt' | 'updatedAt'>) => {
     const now = new Date().toISOString();
@@ -244,7 +239,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full: Wheel = { ...wheel, id, createdAt: now, updatedAt: now };
     setState(prev => {
       const next = { ...prev, wheels: [full, ...prev.wheels] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -260,7 +255,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full = { ...seq, id, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, gatheredSequences: [full, ...prev.gatheredSequences] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -276,7 +271,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full = { ...session, id, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, momentumSessions: [full, ...prev.momentumSessions] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -291,7 +286,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full = { ...page, id, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, futurePages: [full, ...prev.futurePages] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -307,7 +302,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full = { ...entry, id, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, imagineIfEntries: [full, ...prev.imagineIfEntries] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -320,7 +315,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full = { ...entry, id, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, overflowEntries: [full, ...prev.overflowEntries] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -336,7 +331,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full = { ...ritual, id, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, customRituals: [full, ...prev.customRituals] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -351,7 +346,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full = { ...entry, id, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, resistanceEntries: [full, ...(prev.resistanceEntries || [])] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -368,7 +363,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const full = { ...shift, id, createdAt: new Date().toISOString() };
     setState(prev => {
       const next = { ...prev, thoughtShifts: [full, ...(prev.thoughtShifts || [])] };
-      saveState(next);
+      debouncedSave(next);
       return next;
     });
     if (user) {
@@ -380,13 +375,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
+  // Memoize context value to prevent re-renders when callbacks haven't changed
+  const contextValue = useMemo(() => ({
+    state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
+    saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
+    saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
+    saveResistanceEntry, saveThoughtShift,
+  }), [
+    state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
+    saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
+    saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
+    saveResistanceEntry, saveThoughtShift,
+  ]);
+
   return (
-    <AppContext.Provider value={{
-      state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
-      saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
-      saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
-      saveResistanceEntry, saveThoughtShift,
-    }}>
+    <AppContext.Provider value={contextValue}>
       {children}
     </AppContext.Provider>
   );
@@ -398,7 +401,7 @@ export function useAppState() {
   return ctx;
 }
 
-// Migrate local data to cloud
+// Batch migrate local data to cloud (eliminates N+1 individual inserts)
 async function migrateToCloud(userId: string, local: AppState) {
   const promises: PromiseLike<any>[] = [];
 
@@ -413,57 +416,78 @@ async function migrateToCloud(userId: string, local: AppState) {
     );
   }
 
-  for (const c of local.checkIns) {
-    promises.push(supabase.from('check_ins').insert({ user_id: userId, state: c.state, note: c.note }).select());
+  // Batch inserts: collect rows per table and insert in one call each
+  if (local.checkIns.length > 0) {
+    promises.push(supabase.from('check_ins').insert(
+      local.checkIns.map(c => ({ user_id: userId, state: c.state, note: c.note }))
+    ));
   }
-  for (const w of local.wheels) {
-    promises.push(supabase.from('wheels').insert({
-      user_id: userId, title: w.title, center_text: w.centerText,
-      segments: w.segments as any, type: w.type, completion_status: w.completionStatus,
-    }).select());
+  if (local.wheels.length > 0) {
+    promises.push(supabase.from('wheels').insert(
+      local.wheels.map(w => ({
+        user_id: userId, title: w.title, center_text: w.centerText,
+        segments: w.segments as any, type: w.type, completion_status: w.completionStatus,
+      }))
+    ));
   }
-  for (const s of local.gatheredSequences) {
-    promises.push(supabase.from('gathered_sequences').insert({
-      user_id: userId, title: s.title, lines: s.lines as any, playback_settings: s.playbackSettings as any,
-    }).select());
+  if (local.gatheredSequences.length > 0) {
+    promises.push(supabase.from('gathered_sequences').insert(
+      local.gatheredSequences.map(s => ({
+        user_id: userId, title: s.title, lines: s.lines as any, playback_settings: s.playbackSettings as any,
+      }))
+    ));
   }
-  for (const m of local.momentumSessions) {
-    promises.push(supabase.from('momentum_sessions').insert({
-      user_id: userId, phrase: m.phrase, duration: m.duration, completed: m.completed,
-    }).select());
+  if (local.momentumSessions.length > 0) {
+    promises.push(supabase.from('momentum_sessions').insert(
+      local.momentumSessions.map(m => ({
+        user_id: userId, phrase: m.phrase, duration: m.duration, completed: m.completed,
+      }))
+    ));
   }
-  for (const f of local.futurePages) {
-    promises.push(supabase.from('future_pages').insert({
-      user_id: userId, title: f.title, template: f.template, content: f.content, vibe_check: f.vibeCheck,
-    }).select());
+  if (local.futurePages.length > 0) {
+    promises.push(supabase.from('future_pages').insert(
+      local.futurePages.map(f => ({
+        user_id: userId, title: f.title, template: f.template, content: f.content, vibe_check: f.vibeCheck,
+      }))
+    ));
   }
-  for (const e of local.imagineIfEntries) {
-    promises.push(supabase.from('imagine_if_entries').insert({ user_id: userId, category: e.category, text: e.text }).select());
+  if (local.imagineIfEntries.length > 0) {
+    promises.push(supabase.from('imagine_if_entries').insert(
+      local.imagineIfEntries.map(e => ({ user_id: userId, category: e.category, text: e.text }))
+    ));
   }
-  for (const e of local.overflowEntries) {
-    promises.push(supabase.from('overflow_entries').insert({
-      user_id: userId, mode: e.mode, resource_amount: e.resourceAmount,
-      entry_text: e.entryText, feeling_text: e.feelingText, resistance_note: e.resistanceNote,
-    }).select());
+  if (local.overflowEntries.length > 0) {
+    promises.push(supabase.from('overflow_entries').insert(
+      local.overflowEntries.map(e => ({
+        user_id: userId, mode: e.mode, resource_amount: e.resourceAmount,
+        entry_text: e.entryText, feeling_text: e.feelingText, resistance_note: e.resistanceNote,
+      }))
+    ));
   }
-  for (const r of local.customRituals) {
-    promises.push(supabase.from('custom_rituals').insert({
-      user_id: userId, name: r.name, steps: r.steps as any, duration_estimate: r.durationEstimate,
-    }).select());
+  if (local.customRituals.length > 0) {
+    promises.push(supabase.from('custom_rituals').insert(
+      local.customRituals.map(r => ({
+        user_id: userId, name: r.name, steps: r.steps as any, duration_estimate: r.durationEstimate,
+      }))
+    ));
   }
-  for (const r of (local.resistanceEntries || [])) {
-    promises.push(supabase.from('resistance_entries').insert({
-      user_id: userId, trigger_type: r.triggerType, body_location: r.bodyLocation,
-      charge_before: r.chargeBefore, charge_after: r.chargeAfter,
-      clearing_mode: r.clearingMode, softened_statement: r.softenedStatement,
-    }).select());
+  if ((local.resistanceEntries || []).length > 0) {
+    promises.push(supabase.from('resistance_entries').insert(
+      (local.resistanceEntries || []).map(r => ({
+        user_id: userId, trigger_type: r.triggerType, body_location: r.bodyLocation,
+        charge_before: r.chargeBefore, charge_after: r.chargeAfter,
+        clearing_mode: r.clearingMode, softened_statement: r.softenedStatement,
+      }))
+    ));
   }
-  for (const t of (local.thoughtShifts || [])) {
-    promises.push(supabase.from('thought_shifts').insert({
-      user_id: userId, original_thought: t.originalThought, charge_type: t.chargeType,
-      softer_statement: t.softerStatement, believable_statement: t.believableStatement,
-      support_statement: t.supportStatement,
-    }).select());
+  if ((local.thoughtShifts || []).length > 0) {
+    promises.push(supabase.from('thought_shifts').insert(
+      (local.thoughtShifts || []).map(t => ({
+        user_id: userId, original_thought: t.originalThought, charge_type: t.chargeType,
+        softer_statement: t.softerStatement, believable_statement: t.believableStatement,
+        support_statement: t.supportStatement,
+      }))
+    ));
   }
 
   await Promise.allSettled(promises);
