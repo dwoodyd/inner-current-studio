@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Compass, RefreshCw, Timer, Sparkles, BookOpen, Play } from 'lucide-react';
 
@@ -10,7 +11,7 @@ const cards = [
   { label: 'Stillness Timer', icon: Timer, to: '/reset/stillness', color: 'text-muted-foreground' },
 ];
 
-export default function QuickLaunchCards() {
+const QuickLaunchCards = React.memo(function QuickLaunchCards() {
   const navigate = useNavigate();
 
   return (
@@ -28,4 +29,6 @@ export default function QuickLaunchCards() {
       ))}
     </div>
   );
-}
+});
+
+export default QuickLaunchCards;
