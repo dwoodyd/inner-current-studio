@@ -1,15 +1,17 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useAppState } from '@/lib/AppContext';
 import { BarChart3, Layers, Bell, Palette, Volume2, CreditCard, Download } from 'lucide-react';
 
 export default function Profile() {
+  const navigate = useNavigate();
   const { state } = useAppState();
   const totalCheckIns = state.checkIns.length;
   const totalReturns = state.todayFlow.returnCount;
 
   const sections = [
-    { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', premium: true },
-    { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', premium: true },
+    { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', to: '/profile/insights' },
+    { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals' },
     { icon: Bell, label: 'Notifications', description: 'Gentle reminders' },
     { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
     { icon: Volume2, label: 'Audio', description: 'Sound and haptic settings' },
@@ -24,7 +26,6 @@ export default function Profile() {
         <p className="text-sm text-muted-foreground">Your practice, your way</p>
       </div>
 
-      {/* Stats summary */}
       <div className="grid grid-cols-3 gap-3">
         {[
           { label: 'Check-ins', value: totalCheckIns },
@@ -39,24 +40,19 @@ export default function Profile() {
       </div>
 
       <div className="space-y-1.5">
-        {sections.map(({ icon: Icon, label, description, premium }, i) => (
+        {sections.map(({ icon: Icon, label, description, to }, i) => (
           <motion.button
             key={label}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
+            onClick={() => to && navigate(to)}
             className="w-full flex items-center gap-4 rounded-xl px-4 py-3.5 transition-colors hover:bg-muted/20 active:scale-[0.98]"
           >
             <Icon size={18} className="text-muted-foreground" strokeWidth={1.5} />
             <div className="flex-1 text-left">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground">{label}</span>
-                {premium && (
-                  <span className="text-[9px] uppercase tracking-wider text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">
-                    Premium
-                  </span>
-                )}
-              </div>
+              <span className="text-sm font-medium text-foreground">{label}</span>
+              <br />
               <span className="text-xs text-muted-foreground">{description}</span>
             </div>
           </motion.button>

@@ -8,28 +8,28 @@ const modules = [
     title: 'Alignment Wheel',
     description: 'A guided thought-shift ritual from resistance toward resonance.',
     color: 'text-soul-gold',
-    premium: true,
+    to: '/align/wheel',
   },
   {
     icon: Sparkles,
     title: 'Relief Wheel',
     description: 'A gentler version for low-capacity moments.',
     color: 'text-soul-violet',
-    premium: true,
+    to: '/align/relief',
   },
   {
     icon: Play,
     title: 'Gather Flow',
     description: 'Build and play sequences of supportive, believable thoughts.',
     color: 'text-soul-green',
-    premium: true,
+    to: '/align/gather',
   },
   {
     icon: Target,
     title: 'Momentum Ring',
     description: 'A timed state-holding ritual to lock in your shift.',
     color: 'text-soul-blue',
-    premium: true,
+    to: '/align/momentum',
   },
 ];
 
@@ -44,26 +44,20 @@ export default function Align() {
       </div>
 
       <div className="space-y-3">
-        {modules.map(({ icon: Icon, title, description, color, premium }, i) => (
+        {modules.map(({ icon: Icon, title, description, color, to }, i) => (
           <motion.button
             key={title}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
+            onClick={() => navigate(to)}
             className="soul-card w-full text-left flex items-start gap-4 transition-colors hover:bg-muted/20 active:scale-[0.98]"
           >
             <div className={`mt-0.5 ${color}`}>
               <Icon size={22} strokeWidth={1.5} />
             </div>
             <div className="flex-1 space-y-1">
-              <div className="flex items-center gap-2">
-                <h3 className="font-heading text-base font-medium text-foreground">{title}</h3>
-                {premium && (
-                  <span className="text-[9px] uppercase tracking-wider text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full">
-                    Premium
-                  </span>
-                )}
-              </div>
+              <h3 className="font-heading text-base font-medium text-foreground">{title}</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
             </div>
           </motion.button>
