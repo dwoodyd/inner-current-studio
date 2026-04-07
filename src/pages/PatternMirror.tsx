@@ -45,20 +45,20 @@ export default function PatternMirror() {
         return t >= dayStart && t < dayEnd;
       });
       const avgPos = dayCheckins.length > 0
-        ? dayCheckins.reduce((s, c) => s + STATE_ORDER.indexOf(c.state), 0) / dayCheckins.length
+        ? dayCheckins.reduce((s, c) => s + bucketIndex(c.state), 0) / dayCheckins.length
         : -1;
       return { label, avgPos, count: dayCheckins.length };
     });
 
     // Trend
-    const recent5 = checkIns.slice(0, 5).map(c => STATE_ORDER.indexOf(c.state));
-    const older5 = checkIns.slice(5, 10).map(c => STATE_ORDER.indexOf(c.state));
+    const recent5 = checkIns.slice(0, 5).map(c => bucketIndex(c.state));
+    const older5 = checkIns.slice(5, 10).map(c => bucketIndex(c.state));
     const recentAvg = recent5.length > 0 ? recent5.reduce((a, b) => a + b, 0) / recent5.length : 2;
     const olderAvg = older5.length > 0 ? older5.reduce((a, b) => a + b, 0) / older5.length : 2;
     const trend = recentAvg > olderAvg + 0.3 ? 'rising' : recentAvg < olderAvg - 0.3 ? 'settling' : 'steady';
 
-    // Most common
-    const mostCommon = STATE_ORDER.reduce((a, b) => (freq[a] >= freq[b] ? a : b));
+    // Most common bucket
+    const mostCommon = STATE_BUCKETS.reduce((a, b) => (freq[a.key] >= freq[b.key] ? a : b)).key;
 
     return { freq, maxFreq, weekData, trend, mostCommon, total: checkIns.length };
   }, [state.checkIns]);
@@ -115,26 +115,26 @@ export default function PatternMirror() {
           >
             <p className="text-xs text-muted-foreground uppercase tracking-wider">Where You've Been</p>
             <div className="space-y-3">
-              {STATE_ORDER.map((s, i) => {
-                const pct = (analysis.freq[s] / analysis.maxFreq) * 100;
+              {STATE_BUCKETS.map((bucket, i) => {
+                const pct = (analysis.freq[bucket.key] / analysis.maxFreq) * 100;
                 return (
                   <motion.div
-                    key={s}
+                    key={bucket.key}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.15 + i * 0.06 }}
                     className="flex items-center gap-3"
                   >
-                    <span className="text-[10px] text-muted-foreground w-16 text-right">{STATE_LABELS[s]}</span>
+                    <span className="text-[10px] text-muted-foreground w-16 text-right">{bucket.label}</span>
                     <div className="flex-1 h-3 bg-muted/20 rounded-full overflow-hidden">
                       <motion.div
-                        className={`h-full rounded-full ${STATE_COLORS[s]}`}
+                        className={`h-full rounded-full ${bucket.color}`}
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.max(pct, 3)}%` }}
                         transition={{ duration: 0.8, delay: 0.2 + i * 0.08, ease: 'easeOut' }}
                       />
                     </div>
-                    <span className="text-[10px] text-muted-foreground/60 w-6">{analysis.freq[s]}</span>
+                    <span className="text-[10px] text-muted-foreground/60 w-6">{analysis.freq[bucket.key]}</span>
                   </motion.div>
                 );
               })}
