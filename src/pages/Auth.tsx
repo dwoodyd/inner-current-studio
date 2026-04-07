@@ -13,7 +13,12 @@ export default function Auth() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) return;
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    if (!trimmedEmail || !trimmedPassword) return;
+    if (trimmedPassword.length < 6) { toast.error('Password must be at least 6 characters.'); return; }
+    if (trimmedPassword.length > 128) { toast.error('Password is too long.'); return; }
+    if (trimmedEmail.length > 255) { toast.error('Email is too long.'); return; }
     setLoading(true);
 
     try {
