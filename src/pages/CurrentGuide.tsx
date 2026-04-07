@@ -1,13 +1,25 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Send, Sparkles } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, Shield } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAppState } from '@/lib/AppContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
+
+const AI_CONSENT_KEY = 'soulcurrent_ai_consent';
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/current-guide`;
 
@@ -89,7 +101,11 @@ export default function CurrentGuide() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showConsent, setShowConsent] = useState(false);
+  const [pendingText, setPendingText] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const hasConsented = localStorage.getItem(AI_CONSENT_KEY) === 'true';
 
   const recentStates = state.checkIns.slice(0, 5).map(c => c.state).join(', ');
   const emotionalContext = recentStates
@@ -102,7 +118,26 @@ export default function CurrentGuide() {
 
   const send = async (text: string) => {
     if (!text.trim() || isLoading) return;
-    const userMsg: Msg = { role: 'user', content: text.trim() };
+    // Check AI consent before first message
+    if (!hasConsented && messages.length === 0) {
+      setPendingText(text);
+      setShowConsent(true);
+      return;
+    }
+    await doSend(text);
+  };
+
+  const handleConsentAccepted = () => {
+    localStorage.setItem(AI_CONSENT_KEY, 'true');
+    setShowConsent(false);
+    if (pendingText) {
+      doSend(pendingText);
+      setPendingText('');
+    }
+  };
+
+  const doSend = async (text: string) => {
+    if (!text.trim() || isLoading) return;
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput('');
