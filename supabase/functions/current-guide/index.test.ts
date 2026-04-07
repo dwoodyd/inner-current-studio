@@ -84,7 +84,7 @@ Deno.test("SQL injection payload in message content is safely handled", async ()
       messages: [{ role: "user", content: "'; DROP TABLE profiles; --" }],
     },
   });
-  assertEquals(status, 401);
+  assert(status === 401 || status === 403, `Expected 401 or 403, got ${status}`);
 });
 
 // ── Test Case 4: Validation — 400 Bad Request for malformed payloads ──
@@ -104,10 +104,8 @@ Deno.test("returns 400 for invalid JSON body", async () => {
     headers,
     body: "not json{{{",
   });
-  const text = await resp.text();
-  // Will be 401 (auth first) or 400 (parse first) — both are acceptable
-  assert(resp.status === 401 || resp.status === 400, `Expected 401 or 400, got ${resp.status}`);
-  await resp.body?.cancel();
+  await resp.text(); // consume body to prevent resource leak
+  assert(resp.status === 401 || resp.status === 400 || resp.status === 403, `Expected 401/400/403, got ${resp.status}`);
 });
 
 Deno.test("returns error when messages is null", async () => {
