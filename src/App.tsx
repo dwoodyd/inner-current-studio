@@ -39,6 +39,7 @@ import PatternMirror from "@/pages/PatternMirror";
 import Notifications from "@/pages/Notifications";
 import Onboarding from "@/pages/Onboarding";
 import Auth from "@/pages/Auth";
+import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -110,6 +111,7 @@ function AppRoutes() {
         <Route path="/profile/guide" element={<CurrentGuide />} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
+        <Route path="/about" element={<About />} />
       </Route>
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />

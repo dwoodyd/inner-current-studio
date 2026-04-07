@@ -5,7 +5,7 @@ import { useAppState } from '@/lib/AppContext';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight } from 'lucide-react';
+import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,6 +70,7 @@ export default function Profile() {
     { icon: Volume2, label: 'Audio', description: 'Sound and haptic settings' },
     { icon: CreditCard, label: 'Subscription', description: 'Manage your plan' },
     { icon: Download, label: 'Export & Backup', description: 'Save your data' },
+    { icon: Info, label: 'About SoulCurrent', description: 'Our mission & philosophy', to: '/about' },
   ];
 
   return (
