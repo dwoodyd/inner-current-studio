@@ -18,12 +18,12 @@ const quickToEmotional: Record<QuickState, EmotionalState> = {
 
 const stagger = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.1 } },
 };
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export default function Home() {
@@ -40,39 +40,69 @@ export default function Home() {
   };
 
   return (
-    <motion.div
-      variants={stagger}
-      initial="hidden"
-      animate="show"
-      className="mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6"
-    >
-      <motion.div variants={fadeUp} className="text-center space-y-1">
-        <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
-        <p className="text-xs text-muted-foreground font-light tracking-wide">Return to your inner current</p>
-      </motion.div>
+    <div className="relative">
+      {/* Ambient background orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full"
+          style={{ background: 'radial-gradient(circle, hsl(42 65% 58% / 0.06), transparent 70%)' }}
+          animate={{ scale: [1, 1.05, 1], opacity: [0.6, 0.8, 0.6] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute top-1/2 -right-32 w-[400px] h-[400px] rounded-full"
+          style={{ background: 'radial-gradient(circle, hsl(265 25% 45% / 0.04), transparent 70%)' }}
+          animate={{ scale: [1, 1.08, 1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
 
-      <motion.div variants={fadeUp}>
-        <CurrentPulse quickState={quickState || 'flat'} />
-      </motion.div>
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="show"
+        className="relative mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6"
+      >
+        {/* Header */}
+        <motion.div variants={fadeUp} className="text-center space-y-2">
+          <motion.div
+            className="mx-auto h-10 w-10 rounded-full mb-3 soul-glow-gold"
+            style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.25), hsl(42 65% 58% / 0.06))' }}
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
+          <p className="text-xs text-muted-foreground font-light tracking-wide font-heading italic">Return to your inner current</p>
+        </motion.div>
 
-      <motion.div variants={fadeUp}>
-        <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
-      </motion.div>
+        {/* Pulse */}
+        <motion.div variants={fadeUp} className="soul-glass-elevated rounded-2xl p-5 soul-ambient-gold">
+          <CurrentPulse quickState={quickState || 'flat'} />
+        </motion.div>
 
-      <motion.div variants={fadeUp}>
-        <TodayFlowCard flow={state.todayFlow} />
-      </motion.div>
+        {/* Check-in */}
+        <motion.div variants={fadeUp}>
+          <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
+        </motion.div>
 
-      <motion.div variants={fadeUp}>
-        <div className="space-y-3">
-          <h2 className="font-heading text-lg font-medium text-foreground">Quick Launch</h2>
-          <QuickLaunchCards />
-        </div>
-      </motion.div>
+        {/* Today's Flow */}
+        <motion.div variants={fadeUp} className="soul-glass-elevated rounded-2xl p-5">
+          <TodayFlowCard flow={state.todayFlow} />
+        </motion.div>
 
-      <motion.div variants={fadeUp}>
-        <DailyInsight />
+        {/* Quick Launch */}
+        <motion.div variants={fadeUp}>
+          <div className="space-y-3">
+            <h2 className="font-heading text-lg font-medium text-foreground">Quick Launch</h2>
+            <QuickLaunchCards />
+          </div>
+        </motion.div>
+
+        {/* Daily Insight */}
+        <motion.div variants={fadeUp} className="soul-glass rounded-2xl p-5 soul-ambient-violet">
+          <DailyInsight />
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
