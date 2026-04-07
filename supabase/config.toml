@@ -1,0 +1,4 @@
+project_id = "bwrjwmreepeewumpvhau"
+
+[functions.current-guide]
+verify_jwt = false

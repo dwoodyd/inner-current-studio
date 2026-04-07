@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
 @layer base {
   :root {
     --background: 220 20% 7%;
@@ -74,6 +76,8 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -91,12 +95,22 @@
   }
 
   .soul-card {
-    @apply bg-card rounded-2xl border border-border/50 p-5;
+    @apply rounded-2xl border border-border/30 p-5;
+    background: hsl(var(--card));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .soul-card-raised {
-    background: hsl(var(--soul-surface-raised));
-    @apply rounded-2xl border border-border/30 p-5;
+    @apply rounded-2xl border border-border/20 p-5;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--soul-surface-raised)),
+      hsl(var(--soul-surface-raised) / 0.8)
+    );
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 24px hsl(220 20% 0% / 0.15), 0 1px 3px hsl(220 20% 0% / 0.08);
   }
 
   .soul-text-warm {
@@ -117,6 +131,13 @@
 
   .soul-gradient-violet {
     background: linear-gradient(135deg, hsl(265 25% 45%), hsl(280 30% 35%));
+  }
+
+  .soul-glass {
+    background: hsl(var(--card) / 0.6);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid hsl(var(--border) / 0.15);
   }
 
   .safe-bottom {

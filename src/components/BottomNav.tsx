@@ -15,7 +15,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/40 bg-background/90 backdrop-blur-xl safe-bottom"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/30 bg-background/80 backdrop-blur-2xl safe-bottom"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -32,16 +32,25 @@ export default function BottomNav() {
               {isActive && (
                 <motion.div
                   layoutId="tab-indicator"
-                  className="absolute -top-0.5 h-0.5 w-6 rounded-full bg-primary"
+                  className="absolute -top-0.5 h-0.5 w-8 rounded-full bg-primary soul-glow-gold"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
-              <Icon
-                size={20}
-                className={isActive ? 'text-primary' : 'text-muted-foreground'}
-                strokeWidth={isActive ? 2 : 1.5}
-              />
-              <span className={`text-[10px] font-medium ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+              <motion.div
+                animate={isActive ? { scale: 1, y: 0 } : { scale: 0.95, y: 0 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              >
+                <Icon
+                  size={20}
+                  className={`transition-colors duration-200 ${isActive ? 'text-primary' : 'text-muted-foreground/60'}`}
+                  strokeWidth={isActive ? 2 : 1.5}
+                />
+              </motion.div>
+              <span
+                className={`text-[10px] font-medium transition-colors duration-200 ${
+                  isActive ? 'text-primary' : 'text-muted-foreground/50'
+                }`}
+              >
                 {label}
               </span>
             </NavLink>

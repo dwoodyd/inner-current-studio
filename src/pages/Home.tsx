@@ -16,6 +16,16 @@ const quickToEmotional: Record<QuickState, EmotionalState> = {
   flowing: 'flowing',
 };
 
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+};
+
 export default function Home() {
   const { state, addCheckIn } = useAppState();
   const [quickState, setQuickState] = useState<QuickState | undefined>(
@@ -30,38 +40,39 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center space-y-1"
-      >
-        <h1 className="font-heading text-2xl font-semibold text-foreground">SoulCurrent</h1>
-        <p className="text-xs text-muted-foreground font-light">Return to your inner current</p>
+    <motion.div
+      variants={stagger}
+      initial="hidden"
+      animate="show"
+      className="mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6"
+    >
+      <motion.div variants={fadeUp} className="text-center space-y-1">
+        <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
+        <p className="text-xs text-muted-foreground font-light tracking-wide">Return to your inner current</p>
       </motion.div>
 
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+      <motion.div variants={fadeUp}>
         <CurrentPulse quickState={quickState || 'flat'} />
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+      <motion.div variants={fadeUp}>
         <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+      <motion.div variants={fadeUp}>
         <TodayFlowCard flow={state.todayFlow} />
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+      <motion.div variants={fadeUp}>
         <div className="space-y-3">
           <h2 className="font-heading text-lg font-medium text-foreground">Quick Launch</h2>
           <QuickLaunchCards />
         </div>
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+      <motion.div variants={fadeUp}>
         <DailyInsight />
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
