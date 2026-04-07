@@ -177,10 +177,10 @@ export default function PatternMirror() {
           >
             <p className="font-heading text-sm italic text-muted-foreground leading-relaxed">
               {analysis.mostCommon === 'flowing' && '"You spend a lot of time in flow. You know how to get there."'}
-              {analysis.mostCommon === 'open' && '"Openness is your most common state. Trust that."'}
-              {analysis.mostCommon === 'flat' && '"Stillness is not stagnation. It can be the calm before clarity."'}
+              {analysis.mostCommon === 'opening' && '"Openness is your most common state. Trust that."'}
+              {analysis.mostCommon === 'still' && '"Stillness is not stagnation. It can be the calm before clarity."'}
               {analysis.mostCommon === 'restless' && '"Restlessness often carries unspent creative energy."'}
-              {analysis.mostCommon === 'tense' && '"Contraction isn\'t failure — it\'s information. You\'re paying attention."'}
+              {analysis.mostCommon === 'contracted' && '"Contraction isn\'t failure — it\'s information. You\'re paying attention."'}
             </p>
           </motion.div>
         </>
