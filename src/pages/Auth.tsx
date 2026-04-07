@@ -2,7 +2,8 @@ import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, Users } from 'lucide-react';
+import TypingText from '@/components/TypingText';
 
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
@@ -136,6 +137,33 @@ export default function Auth() {
               </p>
             </div>
 
+            {/* Social proof */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="flex items-center gap-3 soul-glass rounded-full px-5 py-2.5"
+            >
+              <div className="flex -space-x-2">
+                {[0, 1, 2, 3].map(i => (
+                  <div
+                    key={i}
+                    className="h-7 w-7 rounded-full border-2 border-background flex items-center justify-center text-[9px] font-medium"
+                    style={{
+                      background: `hsl(${42 + i * 30} 45% ${40 + i * 8}% / 0.4)`,
+                      color: `hsl(${42 + i * 30} 45% 75%)`,
+                    }}
+                  >
+                    {['✦', '◈', '❋', '✧'][i]}
+                  </div>
+                ))}
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-medium text-foreground/80">12,400+ returns to center</p>
+                <p className="text-[10px] text-muted-foreground/50">Join a quiet community</p>
+              </div>
+            </motion.div>
+
             <div className="flex flex-col gap-3 w-full">
               <motion.button
                 onClick={() => setPhase('aha')}
@@ -203,9 +231,13 @@ export default function Auth() {
                 </div>
                 <p className="text-xs text-primary/60 uppercase tracking-widest">SoulCurrent responds…</p>
               </div>
-              <p className="text-sm text-foreground/85 leading-relaxed">
-                {REFRAME_STEPS[ahaStep].reframe}
-              </p>
+              <TypingText
+                key={`reframe-${ahaStep}`}
+                text={REFRAME_STEPS[ahaStep].reframe}
+                speed={25}
+                delay={500}
+                className="text-sm text-foreground/85 leading-relaxed"
+              />
             </motion.div>
 
             <motion.button
