@@ -288,6 +288,33 @@ export default function CurrentGuide() {
           </button>
         </div>
       </div>
+
+      {/* AI Data Transparency Consent (App Store Guideline 5.1.2(i)) */}
+      <AlertDialog open={showConsent} onOpenChange={setShowConsent}>
+        <AlertDialogContent className="soul-glass border-border/20 max-w-sm">
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2 mb-1">
+              <Shield size={18} className="text-primary" />
+              <AlertDialogTitle className="font-heading text-foreground text-base">Before we begin</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription className="text-muted-foreground text-sm leading-relaxed space-y-2">
+              <span className="block">Your messages are sent to an AI service to generate responses. Your recent emotional check-in data may also be shared for context.</span>
+              <span className="block">Your conversations are not stored on external servers and are not used to train AI models.</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-border/20" onClick={() => { setShowConsent(false); setPendingText(''); }}>
+              Not now
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConsentAccepted}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              I understand
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
