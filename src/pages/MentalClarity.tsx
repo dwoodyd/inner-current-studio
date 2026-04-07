@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Sparkles } from 'lucide-react';
 
 const PROMPTS = [
   'What am I replaying?',
@@ -11,7 +11,7 @@ const PROMPTS = [
   'What feels 5% more open?',
 ];
 
-const fadeUp = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -6 } };
+const fadeUp = { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -10 }, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } };
 
 export default function MentalClarity() {
   const navigate = useNavigate();
@@ -24,39 +24,38 @@ export default function MentalClarity() {
   }
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-8 pb-6 min-h-[80dvh] flex flex-col">
-      <button onClick={() => navigate('/reset/quiet')} className="flex items-center gap-1.5 text-muted-foreground text-sm mb-6 active:scale-95">
+    <div className="mx-auto max-w-lg px-5 pt-8 pb-8 min-h-[80dvh] flex flex-col soul-ambient-gold">
+      <button onClick={() => navigate('/reset/quiet')} className="flex items-center gap-1.5 text-muted-foreground text-sm mb-6 active:scale-95 transition-transform">
         <ArrowLeft size={16} /> Quiet the Mind
       </button>
 
       <div className="flex-1 flex flex-col items-center justify-center">
         <AnimatePresence mode="wait">
           {!done ? (
-            <motion.div key={step} {...fadeUp} className="w-full max-w-sm space-y-6 text-center">
-              <p className="text-xs text-muted-foreground">{step + 1} / {PROMPTS.length}</p>
-              <h2 className="font-heading text-lg text-foreground/90 leading-relaxed">{PROMPTS[step]}</h2>
+            <motion.div key={step} {...fadeUp} className="w-full max-w-sm space-y-7 text-center">
+              <div className="space-y-2">
+                <Sparkles size={20} className="text-soul-green mx-auto" strokeWidth={1.5} />
+                <p className="text-xs text-muted-foreground tracking-wide">{step + 1} / {PROMPTS.length}</p>
+              </div>
+              <h2 className="font-heading text-xl text-foreground/90 leading-relaxed">{PROMPTS[step]}</h2>
               <textarea
                 value={responses[step]}
                 onChange={e => updateResponse(e.target.value)}
                 placeholder="Write freely…"
-                className="w-full p-3 rounded-xl bg-muted/30 border border-border/30 text-sm resize-none h-24 focus:outline-none focus:ring-1 focus:ring-primary/40"
+                className="soul-textarea h-28"
               />
-              <button
-                onClick={() => setStep(s => s + 1)}
-                className="px-8 py-3 rounded-full bg-primary/15 text-primary font-medium text-sm active:scale-95"
-              >
+              <button onClick={() => setStep(s => s + 1)} className="soul-btn-primary">
                 {step < PROMPTS.length - 1 ? 'Continue' : 'Finish'}
               </button>
             </motion.div>
           ) : (
-            <motion.div key="done" {...fadeUp} className="text-center space-y-5">
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}
-                className="w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center mx-auto">
-                <Check size={28} className="text-primary" />
+            <motion.div key="done" {...fadeUp} className="text-center space-y-6">
+              <motion.div initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 180, damping: 14 }} className="soul-completion-ring">
+                <Check size={30} className="text-primary" strokeWidth={2} />
               </motion.div>
-              <h2 className="font-heading text-xl font-semibold">Clarity doesn't need force.</h2>
-              <p className="text-sm text-muted-foreground max-w-xs mx-auto">The mind gets quieter when you stop trying to control it.</p>
-              <button onClick={() => navigate('/reset/quiet')} className="text-sm text-primary/80">Back to Quiet the Mind</button>
+              <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="font-heading text-2xl font-semibold">Clarity doesn't need force.</motion.h2>
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} className="text-sm text-muted-foreground max-w-xs mx-auto">The mind gets quieter when you stop trying to control it.</motion.p>
+              <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} onClick={() => navigate('/reset/quiet')} className="text-sm text-primary/80 hover:text-primary transition-colors">Back to Quiet the Mind</motion.button>
             </motion.div>
           )}
         </AnimatePresence>
