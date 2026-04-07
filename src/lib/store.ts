@@ -1,4 +1,4 @@
-import { AppState, CheckIn, TodayFlow } from './types';
+import { AppState, CheckIn, TodayFlow, Wheel, WheelSegment, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual } from './types';
 
 const STORAGE_KEY = 'soulcurrent_state';
 
@@ -29,7 +29,6 @@ export function loadState(): AppState {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...defaultState };
     const parsed = JSON.parse(raw) as AppState;
-    // Reset today flow if last visit was a different day
     const lastDate = new Date(parsed.lastVisit).toDateString();
     const today = new Date().toDateString();
     if (lastDate !== today) {
@@ -60,16 +59,60 @@ export function addCheckIn(checkIn: CheckIn) {
 }
 
 export function completeOnboarding(data: { reason: string; style: string; challenge: string }) {
-  return updateState(s => ({
-    ...s,
-    onboarding: { ...data, completed: true },
-  }));
+  return updateState(s => ({ ...s, onboarding: { ...data, completed: true } }));
 }
 
 export function updateTodayFlow(updates: Partial<TodayFlow>) {
+  return updateState(s => ({ ...s, todayFlow: { ...s.todayFlow, ...updates } }));
+}
+
+export function addWheel(wheel: Omit<Wheel, 'id' | 'createdAt' | 'updatedAt'>) {
+  const now = new Date().toISOString();
   return updateState(s => ({
     ...s,
-    todayFlow: { ...s.todayFlow, ...updates },
+    wheels: [{ ...wheel, id: generateId(), createdAt: now, updatedAt: now }, ...s.wheels],
+  }));
+}
+
+export function addGatheredSequence(seq: Omit<GatheredSequence, 'id' | 'createdAt'>) {
+  return updateState(s => ({
+    ...s,
+    gatheredSequences: [{ ...seq, id: generateId(), createdAt: new Date().toISOString() }, ...s.gatheredSequences],
+  }));
+}
+
+export function addMomentumSession(session: Omit<MomentumSession, 'id' | 'createdAt'>) {
+  return updateState(s => ({
+    ...s,
+    momentumSessions: [{ ...session, id: generateId(), createdAt: new Date().toISOString() }, ...s.momentumSessions],
+  }));
+}
+
+export function addFuturePage(page: Omit<FuturePage, 'id' | 'createdAt'>) {
+  return updateState(s => ({
+    ...s,
+    futurePages: [{ ...page, id: generateId(), createdAt: new Date().toISOString() }, ...s.futurePages],
+  }));
+}
+
+export function addImagineIfEntry(entry: Omit<ImagineIfEntry, 'id' | 'createdAt'>) {
+  return updateState(s => ({
+    ...s,
+    imagineIfEntries: [{ ...entry, id: generateId(), createdAt: new Date().toISOString() }, ...s.imagineIfEntries],
+  }));
+}
+
+export function addOverflowEntry(entry: Omit<OverflowEntry, 'id' | 'createdAt'>) {
+  return updateState(s => ({
+    ...s,
+    overflowEntries: [{ ...entry, id: generateId(), createdAt: new Date().toISOString() }, ...s.overflowEntries],
+  }));
+}
+
+export function addCustomRitual(ritual: Omit<CustomRitual, 'id' | 'createdAt'>) {
+  return updateState(s => ({
+    ...s,
+    customRituals: [{ ...ritual, id: generateId(), createdAt: new Date().toISOString() }, ...s.customRituals],
   }));
 }
 
