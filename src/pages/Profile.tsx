@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAppState } from '@/lib/AppContext';
 import { useAuth } from '@/hooks/useAuth';
+import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info } from 'lucide-react';
+import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,6 +32,7 @@ export default function Profile() {
   const navigate = useNavigate();
   const { state } = useAppState();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const totalCheckIns = state.checkIns.length;
@@ -71,6 +73,7 @@ export default function Profile() {
     { icon: CreditCard, label: 'Subscription', description: 'Manage your plan' },
     { icon: Download, label: 'Export & Backup', description: 'Save your data' },
     { icon: Info, label: 'About SoulCurrent', description: 'Our mission & philosophy', to: '/about' },
+    ...(isAdmin ? [{ icon: Shield, label: 'Admin Dashboard', description: 'Manage users & roles', to: '/admin', accent: true }] : []),
   ];
 
   return (
