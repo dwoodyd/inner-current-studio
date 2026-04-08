@@ -40,6 +40,7 @@ import Notifications from "@/pages/Notifications";
 import Onboarding from "@/pages/Onboarding";
 import Auth from "@/pages/Auth";
 import About from "@/pages/About";
+import AdminDashboard from "@/pages/AdminDashboard";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
 import NotFound from "@/pages/NotFound";
@@ -116,6 +117,7 @@ function AppRoutes() {
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/about" element={<About />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Route>
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />
