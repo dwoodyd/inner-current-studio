@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import BottomNav from './BottomNav';
 
 const pageVariants = {
-  initial: { opacity: 0, y: 6 },
+  initial: { opacity: 0, y: 6, willChange: 'transform, opacity' as const },
   animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
   exit: { opacity: 0, y: -4, transition: { duration: 0.15 } },
 };
