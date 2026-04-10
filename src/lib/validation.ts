@@ -94,7 +94,9 @@ export const onboardingSchema = z.object({
 
 // ── Helper ─────────────────────────────────────────────────────────
 
-export function validate<T>(schema: z.ZodSchema<T>, data: unknown): { success: true; data: T } | { success: false; error: string } {
+type ValidationResult<T> = { success: true; data: T } | { success: false; error: string };
+
+export function validate<T>(schema: z.ZodSchema<T>, data: unknown): ValidationResult<T> {
   const result = schema.safeParse(data);
   if (result.success) return { success: true, data: result.data };
   const msg = result.error.issues.map(i => i.message).join(', ');
