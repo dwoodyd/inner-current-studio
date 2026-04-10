@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { AppState, CheckIn, TodayFlow, Wheel, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift } from './types';
 import { loadState, saveState, generateId } from './store';
 import { supabase } from '@/integrations/supabase/client';
