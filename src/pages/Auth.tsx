@@ -91,7 +91,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center px-6 py-12 bg-background relative overflow-hidden">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center px-5 py-12 bg-background relative overflow-hidden safe-top safe-x">
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -168,7 +168,7 @@ export default function Auth() {
             <div className="flex flex-col gap-3 w-full">
               <motion.button
                 onClick={() => setPhase('aha')}
-                className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2"
+                className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2"
                 whileTap={{ scale: 0.98 }}
               >
                 Show me how it works
@@ -176,7 +176,7 @@ export default function Auth() {
               </motion.button>
               <button
                 onClick={() => { setMode('login'); setPhase('auth'); }}
-                className="text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors py-2"
+                className="text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors duration-150 py-3 min-h-[44px]"
               >
                 I already have an account
               </button>
@@ -246,7 +246,7 @@ export default function Auth() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2"
+              className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2"
               whileTap={{ scale: 0.98 }}
             >
               {ahaStep < REFRAME_STEPS.length - 1 ? 'Show me another' : 'Start my practice'}
@@ -255,7 +255,7 @@ export default function Auth() {
 
             <button
               onClick={() => { setMode('login'); setPhase('auth'); }}
-              className="text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+              className="text-xs text-muted-foreground/40 hover:text-muted-foreground transition-colors duration-150 py-3 min-h-[44px]"
             >
               Skip — I already have an account
             </button>
@@ -313,7 +313,7 @@ export default function Auth() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20"
+                className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20"
               >
                 {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
               </button>
@@ -323,17 +323,17 @@ export default function Auth() {
             <div className="text-center">
               <button
                 onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 py-3 min-h-[44px]"
               >
                 {mode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
               </button>
             </div>
 
             {/* Privacy links */}
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <Link to="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Privacy Policy</Link>
-              <span className="text-[10px] text-muted-foreground/20">·</span>
-              <Link to="/terms" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Terms of Service</Link>
+            <div className="flex items-center justify-center gap-4 pt-2">
+              <Link to="/privacy" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Privacy Policy</Link>
+              <span className="text-[11px] text-muted-foreground/20">·</span>
+              <Link to="/terms" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Terms of Service</Link>
             </div>
           </motion.div>
         )}
