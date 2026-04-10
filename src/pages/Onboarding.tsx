@@ -5,8 +5,8 @@ import { useAppState } from '@/lib/AppContext';
 
 const steps = [
   {
-    title: 'Welcome to SoulCurrent',
-    subtitle: 'Return to your inner current.',
+    title: 'Welcome to Inner Wake',
+    subtitle: 'Wake the inner current.',
     type: 'welcome' as const,
   },
   {

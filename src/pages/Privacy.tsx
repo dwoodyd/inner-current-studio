@@ -15,7 +15,7 @@ const fadeUp = {
 const sections = [
   {
     title: '1. Information We Collect',
-    content: `When you create an account, we collect your email address and an encrypted password. As you use SoulCurrent, we store your check-ins, reflections, rituals, and emotional data — all tied to your account. We do not collect your real name, phone number, or location unless you choose to provide them.`,
+    content: `When you create an account, we collect your email address and an encrypted password. As you use Inner Wake, we store your check-ins, reflections, rituals, and emotional data — all tied to your account. We do not collect your real name, phone number, or location unless you choose to provide them.`,
   },
   {
     title: '2. How We Use Your Data',
@@ -35,11 +35,11 @@ const sections = [
   },
   {
     title: '6. Cookies & Analytics',
-    content: `SoulCurrent uses minimal, functional cookies required for authentication. We do not use advertising trackers or third-party analytics cookies. Session data is stored locally in your browser.`,
+    content: `Inner Wake uses minimal, functional cookies required for authentication. We do not use advertising trackers or third-party analytics cookies. Session data is stored locally in your browser.`,
   },
   {
     title: '7. Children\'s Privacy',
-    content: `SoulCurrent is not intended for users under the age of 13. We do not knowingly collect personal information from children. If you believe a child has provided us with data, please contact us for removal.`,
+    content: `Inner Wake is not intended for users under the age of 13. We do not knowingly collect personal information from children. If you believe a child has provided us with data, please contact us for removal.`,
   },
   {
     title: '8. Changes to This Policy',
@@ -47,7 +47,7 @@ const sections = [
   },
   {
     title: '9. Contact',
-    content: `For questions about this privacy policy or your data, reach out to us at privacy@soulcurrent.app.`,
+    content: `For questions about this privacy policy or your data, reach out to us at privacy@innerwake.app.`,
   },
 ];
 
@@ -90,7 +90,7 @@ export default function Privacy() {
 
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-5 py-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            SoulCurrent ("we," "our," or "us") is committed to protecting your privacy.
+            Inner Wake ("we," "our," or "us") is committed to protecting your privacy.
             This policy explains how we collect, use, and safeguard your information when you use our app.
           </p>
         </motion.div>
@@ -109,7 +109,7 @@ export default function Privacy() {
         </div>
 
         <motion.div variants={fadeUp} className="text-center pt-4 pb-8">
-          <p className="text-[10px] text-muted-foreground/30">© 2026 SoulCurrent. All rights reserved.</p>
+          <p className="text-[10px] text-muted-foreground/30">© 2026 Inner Wake. All rights reserved.</p>
         </motion.div>
       </motion.div>
     </div>

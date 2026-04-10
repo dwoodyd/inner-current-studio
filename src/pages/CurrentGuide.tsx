@@ -19,7 +19,7 @@ import {
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
-const AI_CONSENT_KEY = 'soulcurrent_ai_consent';
+const AI_CONSENT_KEY = 'innerwake_ai_consent';
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/current-guide`;
 

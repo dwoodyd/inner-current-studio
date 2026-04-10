@@ -13,7 +13,7 @@ const MAX_ATTEMPTS = 5;
 const REFRAME_STEPS = [
   {
     pain: '"I can\'t stop overthinking everything."',
-    reframe: 'What if your mind isn\'t broken — it\'s just unsupervised? SoulCurrent gives your thoughts a softer track to run on.',
+    reframe: 'What if your mind isn\'t broken — it\'s just unsupervised? Inner Wake gives your thoughts a softer track to run on.',
   },
   {
     pain: '"I feel stuck but I don\'t know why."',
@@ -66,7 +66,7 @@ export default function Auth() {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success('Account created. Welcome to SoulCurrent.');
+        toast.success('Account created. Welcome to Inner Wake.');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: trimmedEmail,
@@ -129,7 +129,7 @@ export default function Auth() {
             </motion.div>
 
             <div className="space-y-3">
-              <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
+              <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
               <p className="font-heading text-lg text-muted-foreground italic leading-relaxed">
                 When your mind won't quiet,<br />your emotions feel heavy,<br />or you've lost your center —
               </p>
@@ -230,7 +230,7 @@ export default function Auth() {
                 <div className="h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center">
                   <Sparkles size={10} className="text-primary" />
                 </div>
-                <p className="text-xs text-primary/60 uppercase tracking-widest">SoulCurrent responds…</p>
+                <p className="text-xs text-primary/60 uppercase tracking-widest">Inner Wake responds…</p>
               </div>
               <TypingText
                 key={`reframe-${ahaStep}`}
@@ -281,7 +281,7 @@ export default function Auth() {
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               />
               <div className="space-y-2">
-                <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
+                <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
                 <p className="font-heading text-base font-light italic text-muted-foreground">
                   {mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
                 </p>

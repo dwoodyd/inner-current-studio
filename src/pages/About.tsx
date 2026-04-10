@@ -36,7 +36,7 @@ const PILLARS = [
   {
     icon: Waves,
     title: 'Flow, Not Force',
-    description: 'Like water finding its path, SoulCurrent helps you move through — not against — your feelings.',
+    description: 'Like water finding its path, Inner Wake helps you move through — not against — your feelings.',
   },
   {
     icon: Leaf,
@@ -95,10 +95,10 @@ export default function About() {
 
           <div className="space-y-3">
             <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">
-              About SoulCurrent
+              About Inner Wake
             </h1>
             <p className="font-heading text-lg text-muted-foreground italic leading-relaxed max-w-xs mx-auto">
-              A practice for your inner world.
+              Wake the inner current.
             </p>
           </div>
         </motion.div>
@@ -110,13 +110,13 @@ export default function About() {
         >
           <h2 className="font-heading text-lg font-medium text-foreground">Our Mission</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            SoulCurrent was built for the moments when your mind won't quiet, your emotions feel heavy,
+            Inner Wake was built for the moments when your mind won't quiet, your emotions feel heavy,
             or you've lost your center. It's not a meditation app. It's not therapy. It's a practice space
             — a living toolbox for emotional clarity, built around how you actually feel.
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
             We believe relief doesn't arrive through effort. It arrives when you stop gripping.
-            Every tool inside SoulCurrent is designed to help you release, reframe, and return to yourself.
+            Every tool inside Inner Wake is designed to help you release, reframe, and return to yourself.
           </p>
         </motion.div>
 
@@ -153,7 +153,7 @@ export default function About() {
             <div className="h-6 w-6 rounded-full bg-primary/15 flex items-center justify-center">
               <Sparkles size={12} className="text-primary" />
             </div>
-            <h2 className="font-heading text-base font-medium text-foreground">The SoulCurrent Philosophy</h2>
+            <h2 className="font-heading text-base font-medium text-foreground">The Inner Wake Philosophy</h2>
           </div>
           <motion.blockquote
             initial={{ opacity: 0, x: -8 }}
@@ -165,14 +165,14 @@ export default function About() {
             Sometimes the next clear thought is only one breath away."
           </motion.blockquote>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            We don't believe in toxic positivity or aggressive motivation. SoulCurrent meets you
+            We don't believe in toxic positivity or aggressive motivation. Inner Wake meets you
             where you are — with softness, with honesty, and with tools that actually work.
           </p>
         </motion.div>
 
         {/* Version & credits */}
         <motion.div variants={fadeUp} className="text-center space-y-3 pt-4 pb-8">
-          <p className="text-xs text-muted-foreground/50">SoulCurrent v1.0</p>
+          <p className="text-xs text-muted-foreground/50">Inner Wake v1.0</p>
           <p className="text-[10px] text-muted-foreground/30">
             Crafted with intention. All content is original.
           </p>

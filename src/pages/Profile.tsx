@@ -72,7 +72,7 @@ export default function Profile() {
     { icon: Volume2, label: 'Audio', description: 'Sound and haptic settings' },
     { icon: CreditCard, label: 'Subscription', description: 'Manage your plan' },
     { icon: Download, label: 'Export & Backup', description: 'Save your data' },
-    { icon: Info, label: 'About SoulCurrent', description: 'Our mission & philosophy', to: '/about' },
+    { icon: Info, label: 'About Inner Wake', description: 'Our mission & philosophy', to: '/about' },
     ...(isAdmin ? [{ icon: Shield, label: 'Admin Dashboard', description: 'Manage users & roles', to: '/admin', accent: true }] : []),
   ];
 
@@ -176,13 +176,13 @@ export default function Profile() {
         {/* Footer */}
         <motion.div variants={fadeUp} className="text-center pt-2 space-y-1.5">
           <p className="text-[10px] text-muted-foreground/40 truncate">{user?.email}</p>
-          <p className="text-xs text-muted-foreground/50">SoulCurrent v1.0</p>
+          <p className="text-xs text-muted-foreground/50">Inner Wake v1.0</p>
           <div className="flex items-center justify-center gap-4 pt-1">
             <a href="/privacy" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Privacy Policy</a>
             <span className="text-[11px] text-muted-foreground/20">·</span>
             <a href="/terms" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Terms of Service</a>
           </div>
-          <p className="text-xs text-muted-foreground/30 font-heading italic">Return to your inner current</p>
+          <p className="text-xs text-muted-foreground/30 font-heading italic">Wake the inner current</p>
         </motion.div>
 
         {/* Delete Account Dialog */}
