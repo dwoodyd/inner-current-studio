@@ -243,6 +243,25 @@
   .safe-bottom {
     padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.5rem);
   }
+
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top, 0px), 0.75rem);
+  }
+
+  .safe-x {
+    padding-left: max(env(safe-area-inset-left, 0px), 0px);
+    padding-right: max(env(safe-area-inset-right, 0px), 0px);
+  }
+
+  /* Minimum 44x44 touch target */
+  .touch-target {
+    position: relative;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 @layer utilities {
