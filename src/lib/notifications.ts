@@ -1,3 +1,5 @@
+import { safeStorage, hasNotificationAPI } from './platform';
+
 const NOTIF_KEY = 'innerwake_notifications';
 
 export interface NotificationPrefs {
@@ -24,7 +26,7 @@ const defaults: NotificationPrefs = {
 
 export function loadNotifPrefs(): NotificationPrefs {
   try {
-    const raw = localStorage.getItem(NOTIF_KEY);
+    const raw = safeStorage.getItem(NOTIF_KEY);
     if (!raw) return { ...defaults };
     return { ...defaults, ...JSON.parse(raw) };
   } catch {
@@ -33,17 +35,17 @@ export function loadNotifPrefs(): NotificationPrefs {
 }
 
 export function saveNotifPrefs(prefs: NotificationPrefs) {
-  localStorage.setItem(NOTIF_KEY, JSON.stringify(prefs));
+  safeStorage.setItem(NOTIF_KEY, JSON.stringify(prefs));
 }
 
 export async function requestPermission(): Promise<NotificationPermission> {
-  if (!('Notification' in window)) return 'denied';
+  if (!hasNotificationAPI()) return 'denied';
   if (Notification.permission === 'granted') return 'granted';
   return await Notification.requestPermission();
 }
 
 export function canNotify(): boolean {
-  return 'Notification' in window && Notification.permission === 'granted';
+  return hasNotificationAPI() && Notification.permission === 'granted';
 }
 
 const GENTLE_MESSAGES = [

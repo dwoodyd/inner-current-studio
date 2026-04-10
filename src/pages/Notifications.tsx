@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bell, BellOff, Sun, Moon, Clock, RotateCcw } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
+import { hasNotificationAPI } from '@/lib/platform';
 import {
   loadNotifPrefs,
   saveNotifPrefs,
@@ -19,7 +20,7 @@ export default function Notifications() {
   const navigate = useNavigate();
   const [prefs, setPrefs] = useState<NotificationPrefs>(loadNotifPrefs);
   const [permissionState, setPermissionState] = useState<NotificationPermission>(
-    'Notification' in window ? Notification.permission : 'denied'
+    hasNotificationAPI() ? Notification.permission : 'denied'
   );
 
   useEffect(() => {
@@ -62,7 +63,7 @@ export default function Notifications() {
     toast.success('Check your notifications.');
   };
 
-  const notSupported = !('Notification' in window);
+  const notSupported = !hasNotificationAPI();
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-6">

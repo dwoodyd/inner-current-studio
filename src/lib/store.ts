@@ -1,4 +1,5 @@
 import { AppState, CheckIn, TodayFlow, Wheel, WheelSegment, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift } from './types';
+import { safeStorage } from './platform';
 
 const STORAGE_KEY = 'innerwake_state';
 
@@ -28,7 +29,7 @@ const defaultState: AppState = {
 
 export function loadState(): AppState {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = safeStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...defaultState };
     const parsed = JSON.parse(raw) as Partial<AppState>;
     const state: AppState = { ...defaultState, ...parsed };
@@ -47,7 +48,7 @@ export function loadState(): AppState {
 }
 
 export function saveState(state: AppState) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  safeStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
 export function updateState(updater: (s: AppState) => AppState) {

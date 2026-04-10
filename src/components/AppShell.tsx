@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import BottomNav from './BottomNav';
+import OfflineBanner from './OfflineBanner';
 
 const pageVariants = {
   initial: { opacity: 0, y: 6, willChange: 'transform, opacity' as const },
@@ -13,6 +14,7 @@ export default function AppShell() {
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background safe-x">
+      <OfflineBanner />
       <main className="flex-1 overflow-y-auto pb-24">
         <AnimatePresence mode="wait">
           <motion.div
