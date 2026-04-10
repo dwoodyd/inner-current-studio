@@ -177,17 +177,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // Migrate localStorage data to cloud on first login
   useEffect(() => {
     if (!user || !cloudLoaded) return;
-    const migrated = localStorage.getItem('soulcurrent_migrated_' + user.id);
+    const migrated = localStorage.getItem('innerwake_migrated_' + user.id);
     if (migrated) return;
 
     const local = loadState();
     if (local.checkIns.length > 0 || local.wheels.length > 0) {
       migrateToCloud(user.id, local).then(() => {
-        localStorage.setItem('soulcurrent_migrated_' + user.id, 'true');
+        localStorage.setItem('innerwake_migrated_' + user.id, 'true');
         loadCloudState(user.id).then(s => { if (s) setState(s); });
       });
     } else {
-      localStorage.setItem('soulcurrent_migrated_' + user.id, 'true');
+      localStorage.setItem('innerwake_migrated_' + user.id, 'true');
     }
   }, [user?.id, cloudLoaded]);
 

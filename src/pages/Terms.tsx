@@ -15,15 +15,15 @@ const fadeUp = {
 const sections = [
   {
     title: '1. Acceptance of Terms',
-    content: `By creating an account or using SoulCurrent, you agree to be bound by these Terms of Service. If you do not agree, please do not use the app.`,
+    content: `By creating an account or using Inner Wake, you agree to be bound by these Terms of Service. If you do not agree, please do not use the app.`,
   },
   {
     title: '2. Description of Service',
-    content: `SoulCurrent is an emotional wellness practice app that provides tools for self-reflection, emotional check-ins, guided reframes, and AI-assisted emotional support. SoulCurrent is not a substitute for professional therapy, counseling, or medical treatment.`,
+    content: `Inner Wake is an emotional wellness practice app that provides tools for self-reflection, emotional check-ins, guided reframes, and AI-assisted emotional support. Inner Wake is not a substitute for professional therapy, counseling, or medical treatment.`,
   },
   {
     title: '3. User Accounts',
-    content: `You must provide a valid email address and create a password to use SoulCurrent. You are responsible for maintaining the confidentiality of your account credentials. You must be at least 13 years of age to use this service.`,
+    content: `You must provide a valid email address and create a password to use Inner Wake. You are responsible for maintaining the confidentiality of your account credentials. You must be at least 13 years of age to use this service.`,
   },
   {
     title: '4. Acceptable Use',
@@ -31,11 +31,11 @@ const sections = [
   },
   {
     title: '5. Intellectual Property',
-    content: `All content within SoulCurrent — including text, reframes, ritual templates, UI design, and branding — is original and owned by SoulCurrent. You may not copy, reproduce, or distribute any content without written permission. Your personal data (check-ins, reflections, entries) remains yours.`,
+    content: `All content within Inner Wake — including text, reframes, ritual templates, UI design, and branding — is original and owned by Inner Wake. You may not copy, reproduce, or distribute any content without written permission. Your personal data (check-ins, reflections, entries) remains yours.`,
   },
   {
     title: '6. AI-Generated Content',
-    content: `The Current Guide feature uses AI to generate personalized emotional support. AI responses are not professional advice. They are designed to offer perspective and gentle reframing. SoulCurrent makes no guarantees about the accuracy or suitability of AI-generated content.`,
+    content: `The Current Guide feature uses AI to generate personalized emotional support. AI responses are not professional advice. They are designed to offer perspective and gentle reframing. Inner Wake makes no guarantees about the accuracy or suitability of AI-generated content.`,
   },
   {
     title: '7. Account Deletion',
@@ -43,7 +43,7 @@ const sections = [
   },
   {
     title: '8. Limitation of Liability',
-    content: `SoulCurrent is provided "as is" without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the service. Our total liability shall not exceed the amount you paid for the service in the preceding 12 months.`,
+    content: `Inner Wake is provided "as is" without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the service. Our total liability shall not exceed the amount you paid for the service in the preceding 12 months.`,
   },
   {
     title: '9. Modifications',
@@ -51,11 +51,11 @@ const sections = [
   },
   {
     title: '10. Governing Law',
-    content: `These terms are governed by applicable law. Any disputes arising from these terms or the use of SoulCurrent will be resolved through binding arbitration.`,
+    content: `These terms are governed by applicable law. Any disputes arising from these terms or the use of Inner Wake will be resolved through binding arbitration.`,
   },
   {
     title: '11. Contact',
-    content: `For questions about these terms, contact us at legal@soulcurrent.app.`,
+    content: `For questions about these terms, contact us at legal@innerwake.app.`,
   },
 ];
 
@@ -98,7 +98,7 @@ export default function Terms() {
 
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-5 py-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Welcome to SoulCurrent. These terms govern your use of our app and services.
+            Welcome to Inner Wake. These terms govern your use of our app and services.
             Please read them carefully before creating an account.
           </p>
         </motion.div>
@@ -117,7 +117,7 @@ export default function Terms() {
         </div>
 
         <motion.div variants={fadeUp} className="text-center pt-4 pb-8">
-          <p className="text-[10px] text-muted-foreground/30">© 2026 SoulCurrent. All rights reserved.</p>
+          <p className="text-[10px] text-muted-foreground/30">© 2026 Inner Wake. All rights reserved.</p>
         </motion.div>
       </motion.div>
     </div>

@@ -1,4 +1,4 @@
-const NOTIF_KEY = 'soulcurrent_notifications';
+const NOTIF_KEY = 'innerwake_notifications';
 
 export interface NotificationPrefs {
   enabled: boolean;
@@ -84,7 +84,7 @@ export function sendNotification(type: 'morning' | 'evening' | 'return') {
       body: msg.body,
       icon: '/icon.svg',
       badge: '/icon.svg',
-      tag: `soulcurrent-${type}`,
+      tag: `innerwake-${type}`,
       silent: false,
     });
   } catch {

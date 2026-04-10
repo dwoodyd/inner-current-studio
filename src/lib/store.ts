@@ -1,6 +1,6 @@
 import { AppState, CheckIn, TodayFlow, Wheel, WheelSegment, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift } from './types';
 
-const STORAGE_KEY = 'soulcurrent_state';
+const STORAGE_KEY = 'innerwake_state';
 
 const defaultTodayFlow: TodayFlow = {
   morningRitual: false,
