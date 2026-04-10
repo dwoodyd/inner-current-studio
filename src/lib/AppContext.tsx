@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import {
-  validate, checkInSchema, wheelSchema, gatheredSequenceSchema,
+  validateOrError, checkInSchema, wheelSchema, gatheredSequenceSchema,
   momentumSessionSchema, futurePageSchema, imagineIfSchema, overflowSchema,
   customRitualSchema, resistanceEntrySchema, thoughtShiftSchema, onboardingSchema,
 } from './validation';
