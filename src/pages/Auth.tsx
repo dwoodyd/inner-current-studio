@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Sparkles, ArrowRight, Users } from 'lucide-react';
+import { ArrowRight, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
+import brandSymbol from '@/assets/inner-wake-symbol.png';
 
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
@@ -120,12 +121,12 @@ export default function Auth() {
             className="relative w-full max-w-sm flex flex-col items-center text-center gap-8"
           >
             <motion.div
-              className="h-24 w-24 rounded-full soul-glow-gold flex items-center justify-center"
-              style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.3), hsl(42 65% 58% / 0.08))' }}
+              className="h-24 w-24 rounded-full flex items-center justify-center"
+              style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.15), hsl(42 65% 58% / 0.03))' }}
               animate={{ scale: [1, 1.06, 1] }}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <Sparkles size={28} className="text-primary/60" />
+              <img src={brandSymbol} alt="Inner Wake" className="h-16 w-16 object-contain" />
             </motion.div>
 
             <div className="space-y-3">
@@ -275,11 +276,13 @@ export default function Auth() {
             {/* Logo */}
             <div className="flex flex-col items-center gap-6 text-center">
               <motion.div
-                className="h-20 w-20 rounded-full soul-glow-gold"
-                style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.3), hsl(42 65% 58% / 0.08))' }}
+                className="h-20 w-20 rounded-full flex items-center justify-center"
+                style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.15), hsl(42 65% 58% / 0.03))' }}
                 animate={{ scale: [1, 1.06, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              />
+              >
+                <img src={brandSymbol} alt="Inner Wake" className="h-14 w-14 object-contain" />
+              </motion.div>
               <div className="space-y-2">
                 <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
                 <p className="font-heading text-base font-light italic text-muted-foreground">
