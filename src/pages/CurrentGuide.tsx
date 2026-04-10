@@ -105,7 +105,7 @@ export default function CurrentGuide() {
   const [pendingText, setPendingText] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const hasConsented = localStorage.getItem(AI_CONSENT_KEY) === 'true';
+  const hasConsented = (() => { try { return localStorage.getItem(AI_CONSENT_KEY) === 'true'; } catch { return false; } })();
 
   const recentStates = state.checkIns.slice(0, 5).map(c => c.state).join(', ');
   const emotionalContext = recentStates
@@ -128,7 +128,7 @@ export default function CurrentGuide() {
   };
 
   const handleConsentAccepted = () => {
-    localStorage.setItem(AI_CONSENT_KEY, 'true');
+    try { localStorage.setItem(AI_CONSENT_KEY, 'true'); } catch {}
     setShowConsent(false);
     if (pendingText) {
       doSend(pendingText);

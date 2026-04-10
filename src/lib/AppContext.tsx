@@ -29,7 +29,7 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | null>(null);
 
-// Debounced localStorage save to avoid blocking the main thread on every mutation
+// Debounced local save to avoid blocking the main thread on every mutation
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 function debouncedSave(state: AppState) {
   if (saveTimer) clearTimeout(saveTimer);
@@ -174,20 +174,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   }, [user?.id]);
 
-  // Migrate localStorage data to cloud on first login
+  // Migrate local data to cloud on first login
   useEffect(() => {
     if (!user || !cloudLoaded) return;
-    const migrated = localStorage.getItem('innerwake_migrated_' + user.id);
-    if (migrated) return;
+    const migrationKey = 'innerwake_migrated_' + user.id;
+    try {
+      const migrated = localStorage.getItem(migrationKey);
+      if (migrated) return;
+    } catch { return; }
 
     const local = loadState();
     if (local.checkIns.length > 0 || local.wheels.length > 0) {
       migrateToCloud(user.id, local).then(() => {
-        localStorage.setItem('innerwake_migrated_' + user.id, 'true');
+        try { localStorage.setItem(migrationKey, 'true'); } catch {}
         loadCloudState(user.id).then(s => { if (s) setState(s); });
       });
     } else {
-      localStorage.setItem('innerwake_migrated_' + user.id, 'true');
+      try { localStorage.setItem(migrationKey, 'true'); } catch {}
     }
   }, [user?.id, cloudLoaded]);
 
