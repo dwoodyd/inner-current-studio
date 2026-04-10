@@ -83,7 +83,7 @@ export default function Notifications() {
             Notifications aren't available in this browser.
           </p>
           <p className="text-xs text-muted-foreground/60">
-            Try opening SoulCurrent in Chrome, Safari, or Firefox.
+            Try opening Inner Wake in Chrome, Safari, or Firefox.
           </p>
         </div>
       ) : (
