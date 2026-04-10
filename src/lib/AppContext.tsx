@@ -1,8 +1,14 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { AppState, CheckIn, TodayFlow, Wheel, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift } from './types';
 import { loadState, saveState, generateId } from './store';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
+import {
+  validate, checkInSchema, wheelSchema, gatheredSequenceSchema,
+  momentumSessionSchema, futurePageSchema, imagineIfSchema, overflowSchema,
+  customRitualSchema, resistanceEntrySchema, thoughtShiftSchema, onboardingSchema,
+} from './validation';
 
 interface AppContextType {
   state: AppState;
