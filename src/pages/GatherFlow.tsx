@@ -164,6 +164,35 @@ export default function GatherFlow() {
             </button>
           </div>
 
+          {/* Picker from starter lines */}
+          <details className="group">
+            <summary className="text-[10px] uppercase tracking-wider text-muted-foreground/60 cursor-pointer select-none flex items-center gap-1.5 py-1">
+              <Library size={10} /> Pick from library
+            </summary>
+            <div className="mt-2 space-y-3 max-h-[40vh] overflow-y-auto pr-1">
+              {TIERS.map(tier => (
+                <div key={tier} className="space-y-1.5">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40">{tier}</p>
+                  {STARTER_LINES[tier].map((line, i) => {
+                    const alreadyAdded = buildLines.includes(line);
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => !alreadyAdded && addLine(line)}
+                        disabled={alreadyAdded}
+                        className={`w-full text-left text-xs soul-glass rounded-xl px-3 py-2.5 transition-all ${alreadyAdded ? 'opacity-30 cursor-not-allowed' : 'hover:scale-[1.01] active:scale-[0.98] text-foreground/80'}`}
+                      >
+                        {line}
+                        {!alreadyAdded && <Plus size={10} className="inline ml-1.5 text-primary/40" />}
+                        {alreadyAdded && <Check size={10} className="inline ml-1.5 text-primary/60" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          </details>
+
           <button onClick={saveSequence} disabled={buildLines.length < 2}
             className="soul-btn-primary w-full">
             Save Sequence ({buildLines.length} thoughts)
