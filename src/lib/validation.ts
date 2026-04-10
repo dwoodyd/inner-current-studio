@@ -94,11 +94,11 @@ export const onboardingSchema = z.object({
 
 // ── Helper ─────────────────────────────────────────────────────────
 
-type ValidationResult<T> = { success: true; data: T } | { success: false; error: string };
-
-export function validate<T>(schema: z.ZodSchema<T>, data: unknown): ValidationResult<T> {
+/**
+ * Validates data against a zod schema. Returns the error message string if invalid, or null if valid.
+ */
+export function validateOrError<T>(schema: z.ZodSchema<T>, data: unknown): string | null {
   const result = schema.safeParse(data);
-  if (result.success) return { success: true, data: result.data };
-  const msg = result.error.issues.map(i => i.message).join(', ');
-  return { success: false, error: msg };
+  if (result.success) return null;
+  return result.error.issues.map(i => i.message).join(', ');
 }
