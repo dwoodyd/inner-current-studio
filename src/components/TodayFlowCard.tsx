@@ -26,10 +26,10 @@ export default function TodayFlowCard({ flow }: TodayFlowCardProps) {
       </div>
 
       {/* Progress bar */}
-      <div className="h-1.5 w-full rounded-full bg-muted">
+      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
         <div
-          className="h-full rounded-full bg-primary transition-all duration-700 ease-out"
-          style={{ width: `${progress * 100}%` }}
+          className="h-full rounded-full bg-primary transition-transform duration-700 ease-out origin-left will-change-transform"
+          style={{ transform: `scaleX(${progress})` }}
         />
       </div>
 

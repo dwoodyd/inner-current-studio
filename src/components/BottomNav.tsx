@@ -42,7 +42,7 @@ export default function BottomNav() {
               >
                 <Icon
                   size={20}
-                  className={`transition-colors duration-200 ${isActive ? 'text-primary' : 'text-muted-foreground/60'}`}
+                  className={`transition-colors duration-150 ${isActive ? 'text-primary' : 'text-muted-foreground/60'}`}
                   strokeWidth={isActive ? 2 : 1.5}
                 />
               </motion.div>
