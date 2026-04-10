@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Play, Library, Pencil, Trash2, GripVertical, Pause, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
@@ -40,22 +40,59 @@ export default function GatherFlow() {
   const [playIndex, setPlayIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [title, setTitle] = useState('');
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
 
-  const addLine = (line: string) => { setBuildLines(prev => [...prev, line]); setNewLine(''); setTab('build'); };
-  const removeLine = (idx: number) => setBuildLines(prev => prev.filter((_, i) => i !== idx));
+  const addLine = useCallback((line: string) => {
+    setBuildLines(prev => [...prev, line]);
+    setNewLine('');
+    setTab('build');
+  }, []);
 
-  const saveSequence = () => {
+  const removeLine = useCallback((idx: number) => {
+    setBuildLines(prev => prev.filter((_, i) => i !== idx));
+  }, []);
+
+  const saveSequence = useCallback(() => {
     if (buildLines.length < 2) return;
     saveGatheredSequence({ title: title || 'Untitled Sequence', lines: buildLines, playbackSettings: { speed: 4, mode: 'text' } });
-    setBuildLines([]); setTitle(''); setTab('library');
-  };
+    setBuildLines([]);
+    setTitle('');
+    setTab('library');
+  }, [buildLines, title, saveGatheredSequence]);
 
-  const startPlay = (lines: string[]) => { setBuildLines(lines); setPlayIndex(0); setPlaying(true); setTab('play'); };
+  const startPlay = useCallback((lines: string[]) => {
+    setBuildLines(lines);
+    setPlayIndex(0);
+    setPlaying(true);
+    setTab('play');
+  }, []);
+
+  const togglePlay = useCallback(() => {
+    if (playing) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      setPlaying(false);
+    } else {
+      setPlaying(true);
+      intervalRef.current = setInterval(() => {
+        setPlayIndex(prev => {
+          if (prev >= buildLines.length - 1) {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            setPlaying(false);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 4000);
+    }
+  }, [playing, buildLines.length]);
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-5 soul-ambient-gold overflow-hidden">
+      {/* Header */}
       <div className="flex items-center gap-3">
-        <button onClick={() => navigate('/align')} className="text-muted-foreground p-2 -ml-2 hover:text-foreground transition-colors"><ArrowLeft size={20} /></button>
+        <button onClick={() => navigate('/align')} className="text-muted-foreground p-2 -ml-2 hover:text-foreground transition-colors">
+          <ArrowLeft size={20} />
+        </button>
         <h1 className="font-heading text-lg font-semibold text-foreground">Gather Flow</h1>
       </div>
 
@@ -65,7 +102,7 @@ export default function GatherFlow() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 text-xs py-2.5 rounded-xl capitalize transition-all ${
+            className={`flex-1 text-xs py-2.5 rounded-xl capitalize transition-all duration-200 ${
               tab === t ? 'bg-card/80 text-foreground shadow-sm backdrop-blur-sm' : 'text-muted-foreground hover:text-foreground/70'
             }`}
           >
@@ -86,7 +123,7 @@ export default function GatherFlow() {
                 <button
                   key={seq.id}
                   onClick={() => startPlay(seq.lines)}
-                  className="soul-glass-elevated w-full text-left flex items-center justify-between p-4 rounded-2xl hover:scale-[1.01] active:scale-[0.98] transition-all"
+                  className="soul-glass-elevated w-full text-left flex items-center justify-between p-4 rounded-2xl hover:scale-[1.01] active:scale-[0.98] transition-transform duration-200"
                 >
                   <div>
                     <p className="text-sm font-medium text-foreground">{seq.title}</p>
@@ -108,7 +145,7 @@ export default function GatherFlow() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                   onClick={() => addLine(line)}
-                  className="w-full text-left text-xs text-foreground/80 soul-glass rounded-xl px-4 py-3 hover:scale-[1.01] active:scale-[0.98] transition-all"
+                  className="w-full text-left text-xs text-foreground/80 soul-glass rounded-xl px-4 py-3 hover:scale-[1.01] active:scale-[0.98] transition-transform duration-200"
                 >
                   {line}
                   <Plus size={12} className="inline ml-2 text-primary/40" />
@@ -132,23 +169,29 @@ export default function GatherFlow() {
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="Sequence title…"
-            className="w-full bg-transparent border-b border-border/30 text-foreground text-sm py-2 focus:outline-none focus:border-primary/40 placeholder:text-muted-foreground/40 transition-colors"
+            className="w-full bg-transparent border-b border-border/30 text-foreground text-sm py-2 focus:outline-none focus:border-primary/40 placeholder:text-muted-foreground/40 transition-colors duration-200"
           />
 
-          <div className="space-y-2">
+          {/* Reorderable lines */}
+          <Reorder.Group axis="y" values={buildLines} onReorder={setBuildLines} className="space-y-2">
             {buildLines.map((line, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-2 soul-glass rounded-xl px-3 py-2.5"
+              <Reorder.Item
+                key={line + i}
+                value={line}
+                className="flex items-center gap-2 soul-glass rounded-xl px-3 py-2.5 cursor-grab active:cursor-grabbing active:scale-[1.02] transition-shadow duration-200 hover:shadow-md"
+                whileDrag={{ scale: 1.03, boxShadow: '0 8px 24px hsl(220 20% 0% / 0.25)' }}
               >
-                <GripVertical size={12} className="text-muted-foreground/30" />
-                <span className="flex-1 text-xs text-foreground">{line}</span>
-                <button onClick={() => removeLine(i)}><Trash2 size={12} className="text-muted-foreground/30 hover:text-destructive transition-colors" /></button>
-              </motion.div>
+                <GripVertical size={12} className="text-muted-foreground/40 flex-shrink-0" />
+                <span className="flex-1 text-xs text-foreground select-none">{line}</span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); removeLine(i); }}
+                  className="flex-shrink-0"
+                >
+                  <Trash2 size={12} className="text-muted-foreground/30 hover:text-destructive transition-colors duration-200" />
+                </button>
+              </Reorder.Item>
             ))}
-          </div>
+          </Reorder.Group>
 
           <div className="flex gap-2">
             <input
@@ -159,7 +202,7 @@ export default function GatherFlow() {
               onKeyDown={e => e.key === 'Enter' && newLine.trim() && addLine(newLine)}
             />
             <button onClick={() => newLine.trim() && addLine(newLine)} disabled={!newLine.trim()}
-              className="px-3 py-2 text-primary disabled:opacity-30 transition-opacity">
+              className="px-3 py-2 text-primary disabled:opacity-30 transition-opacity duration-200">
               <Plus size={16} />
             </button>
           </div>
@@ -180,7 +223,7 @@ export default function GatherFlow() {
                         key={i}
                         onClick={() => !alreadyAdded && addLine(line)}
                         disabled={alreadyAdded}
-                        className={`w-full text-left text-xs soul-glass rounded-xl px-3 py-2.5 transition-all ${alreadyAdded ? 'opacity-30 cursor-not-allowed' : 'hover:scale-[1.01] active:scale-[0.98] text-foreground/80'}`}
+                        className={`w-full text-left text-xs soul-glass rounded-xl px-3 py-2.5 transition-all duration-200 ${alreadyAdded ? 'opacity-30 cursor-not-allowed' : 'hover:scale-[1.01] active:scale-[0.98] text-foreground/80'}`}
                       >
                         {line}
                         {!alreadyAdded && <Plus size={10} className="inline ml-1.5 text-primary/40" />}
@@ -220,27 +263,17 @@ export default function GatherFlow() {
 
           <div className="flex items-center gap-6">
             <button onClick={() => setPlayIndex(Math.max(0, playIndex - 1))} disabled={playIndex === 0}
-              className="text-muted-foreground disabled:opacity-20 transition-opacity">
+              className="text-muted-foreground disabled:opacity-20 transition-opacity duration-200">
               <ChevronLeft size={24} />
             </button>
             <button
-              onClick={() => {
-                if (playing) { setPlaying(false); } else {
-                  setPlaying(true);
-                  const interval = setInterval(() => {
-                    setPlayIndex(prev => {
-                      if (prev >= buildLines.length - 1) { clearInterval(interval); setPlaying(false); return prev; }
-                      return prev + 1;
-                    });
-                  }, 4000);
-                }
-              }}
-              className="w-14 h-14 rounded-full soul-glass-elevated flex items-center justify-center text-primary hover:scale-105 active:scale-95 transition-transform"
+              onClick={togglePlay}
+              className="w-14 h-14 rounded-full soul-glass-elevated flex items-center justify-center text-primary hover:scale-105 active:scale-95 transition-transform duration-200"
             >
               {playing ? <Pause size={20} /> : <Play size={20} />}
             </button>
             <button onClick={() => setPlayIndex(Math.min(buildLines.length - 1, playIndex + 1))} disabled={playIndex === buildLines.length - 1}
-              className="text-muted-foreground disabled:opacity-20 transition-opacity">
+              className="text-muted-foreground disabled:opacity-20 transition-opacity duration-200">
               <ChevronRight size={24} />
             </button>
           </div>
