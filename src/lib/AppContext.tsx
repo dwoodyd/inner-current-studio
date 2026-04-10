@@ -3,6 +3,12 @@ import { AppState, CheckIn, TodayFlow, Wheel, GatheredSequence, MomentumSession,
 import { loadState, saveState, generateId } from './store';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
+import {
+  validateOrError, checkInSchema, wheelSchema, gatheredSequenceSchema,
+  momentumSessionSchema, futurePageSchema, imagineIfSchema, overflowSchema,
+  customRitualSchema, resistanceEntrySchema, thoughtShiftSchema, onboardingSchema,
+} from './validation';
 
 interface AppContextType {
   state: AppState;
@@ -193,33 +199,58 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
-  const addCheckIn = useCallback((emotionalState: CheckIn['state'], note?: string) => {
-    const checkIn: CheckIn = { id: generateId(), state: emotionalState, note, createdAt: new Date().toISOString() };
+  // Optimistic helper: apply state change immediately, rollback on cloud failure
+  const optimistic = useCallback((
+    updater: (prev: AppState) => AppState,
+    cloudOp: () => PromiseLike<{ error: any }>,
+    label: string
+  ) => {
+    let snapshot: AppState | null = null;
     setState(prev => {
-      const next = { ...prev, checkIns: [checkIn, ...prev.checkIns] };
+      snapshot = prev;
+      const next = updater(prev);
       debouncedSave(next);
       return next;
     });
     if (user) {
-      supabase.from('check_ins').insert({ user_id: user.id, state: emotionalState, note }).then();
+      cloudOp().then(({ error }) => {
+        if (error) {
+          console.error(`Failed to save ${label}:`, error);
+          toast.error(`Couldn't save ${label}. Rolled back.`);
+          if (snapshot) {
+            setState(snapshot);
+            debouncedSave(snapshot);
+          }
+        }
+      });
     }
   }, [user]);
 
+  const addCheckIn = useCallback((emotionalState: CheckIn['state'], note?: string) => {
+    const err = validateOrError(checkInSchema, { state: emotionalState, note });
+    if (err) { toast.error(err); return; }
+    const checkIn: CheckIn = { id: generateId(), state: emotionalState, note, createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, checkIns: [checkIn, ...prev.checkIns] }),
+      () => supabase.from('check_ins').insert({ user_id: user!.id, state: emotionalState, note }),
+      'check-in'
+    );
+  }, [user, optimistic]);
+
   const completeOnboarding = useCallback((data: { reason: string; style: string; challenge: string }) => {
-    setState(prev => {
-      const next = { ...prev, onboarding: { ...data, completed: true } };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('profiles').update({
+    const err = validateOrError(onboardingSchema, data);
+    if (err) { toast.error(err); return; }
+    optimistic(
+      prev => ({ ...prev, onboarding: { ...data, completed: true } }),
+      () => supabase.from('profiles').update({
         onboarding_completed: true,
         onboarding_reason: data.reason,
         onboarding_style: data.style,
         onboarding_challenge: data.challenge,
-      }).eq('user_id', user.id).then();
-    }
-  }, [user]);
+      }).eq('user_id', user!.id),
+      'onboarding'
+    );
+  }, [user, optimistic]);
 
   // FIX: use functional setState to avoid stale closure over state.todayFlow
   const updateTodayFlow = useCallback((updates: Partial<TodayFlow>) => {
@@ -234,146 +265,129 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   const saveWheel = useCallback((wheel: Omit<Wheel, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const err = validateOrError(wheelSchema, wheel);
+    if (err) { toast.error(err); return; }
     const now = new Date().toISOString();
     const id = generateId();
     const full: Wheel = { ...wheel, id, createdAt: now, updatedAt: now };
-    setState(prev => {
-      const next = { ...prev, wheels: [full, ...prev.wheels] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('wheels').insert({
-        user_id: user.id, title: wheel.title, center_text: wheel.centerText,
+    optimistic(
+      prev => ({ ...prev, wheels: [full, ...prev.wheels] }),
+      () => supabase.from('wheels').insert({
+        user_id: user!.id, title: wheel.title, center_text: wheel.centerText,
         segments: wheel.segments as any, type: wheel.type, completion_status: wheel.completionStatus,
-      }).then();
-    }
-  }, [user]);
+      }),
+      'wheel'
+    );
+  }, [user, optimistic]);
 
   const saveGatheredSequence = useCallback((seq: Omit<GatheredSequence, 'id' | 'createdAt'>) => {
-    const id = generateId();
-    const full = { ...seq, id, createdAt: new Date().toISOString() };
-    setState(prev => {
-      const next = { ...prev, gatheredSequences: [full, ...prev.gatheredSequences] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('gathered_sequences').insert({
-        user_id: user.id, title: seq.title, lines: seq.lines as any,
+    const err = validateOrError(gatheredSequenceSchema, seq);
+    if (err) { toast.error(err); return; }
+    const full = { ...seq, id: generateId(), createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, gatheredSequences: [full, ...prev.gatheredSequences] }),
+      () => supabase.from('gathered_sequences').insert({
+        user_id: user!.id, title: seq.title, lines: seq.lines as any,
         playback_settings: seq.playbackSettings as any,
-      }).then();
-    }
-  }, [user]);
+      }),
+      'sequence'
+    );
+  }, [user, optimistic]);
 
   const saveMomentumSession = useCallback((session: Omit<MomentumSession, 'id' | 'createdAt'>) => {
-    const id = generateId();
-    const full = { ...session, id, createdAt: new Date().toISOString() };
-    setState(prev => {
-      const next = { ...prev, momentumSessions: [full, ...prev.momentumSessions] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('momentum_sessions').insert({
-        user_id: user.id, phrase: session.phrase, duration: session.duration, completed: session.completed,
-      }).then();
-    }
-  }, [user]);
+    const err = validateOrError(momentumSessionSchema, session);
+    if (err) { toast.error(err); return; }
+    const full = { ...session, id: generateId(), createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, momentumSessions: [full, ...prev.momentumSessions] }),
+      () => supabase.from('momentum_sessions').insert({
+        user_id: user!.id, phrase: session.phrase, duration: session.duration, completed: session.completed,
+      }),
+      'momentum session'
+    );
+  }, [user, optimistic]);
 
   const saveFuturePage = useCallback((page: Omit<FuturePage, 'id' | 'createdAt'>) => {
-    const id = generateId();
-    const full = { ...page, id, createdAt: new Date().toISOString() };
-    setState(prev => {
-      const next = { ...prev, futurePages: [full, ...prev.futurePages] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('future_pages').insert({
-        user_id: user.id, title: page.title, template: page.template,
+    const err = validateOrError(futurePageSchema, page);
+    if (err) { toast.error(err); return; }
+    const full = { ...page, id: generateId(), createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, futurePages: [full, ...prev.futurePages] }),
+      () => supabase.from('future_pages').insert({
+        user_id: user!.id, title: page.title, template: page.template,
         content: page.content, vibe_check: page.vibeCheck,
-      }).then();
-    }
-  }, [user]);
+      }),
+      'future page'
+    );
+  }, [user, optimistic]);
 
   const saveImagineIfEntry = useCallback((entry: Omit<ImagineIfEntry, 'id' | 'createdAt'>) => {
-    const id = generateId();
-    const full = { ...entry, id, createdAt: new Date().toISOString() };
-    setState(prev => {
-      const next = { ...prev, imagineIfEntries: [full, ...prev.imagineIfEntries] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('imagine_if_entries').insert({ user_id: user.id, category: entry.category, text: entry.text }).then();
-    }
-  }, [user]);
+    const err = validateOrError(imagineIfSchema, entry);
+    if (err) { toast.error(err); return; }
+    const full = { ...entry, id: generateId(), createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, imagineIfEntries: [full, ...prev.imagineIfEntries] }),
+      () => supabase.from('imagine_if_entries').insert({ user_id: user!.id, category: entry.category, text: entry.text }),
+      'imagine-if entry'
+    );
+  }, [user, optimistic]);
 
   const saveOverflowEntry = useCallback((entry: Omit<OverflowEntry, 'id' | 'createdAt'>) => {
-    const id = generateId();
-    const full = { ...entry, id, createdAt: new Date().toISOString() };
-    setState(prev => {
-      const next = { ...prev, overflowEntries: [full, ...prev.overflowEntries] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('overflow_entries').insert({
-        user_id: user.id, mode: entry.mode, resource_amount: entry.resourceAmount,
+    const err = validateOrError(overflowSchema, entry);
+    if (err) { toast.error(err); return; }
+    const full = { ...entry, id: generateId(), createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, overflowEntries: [full, ...prev.overflowEntries] }),
+      () => supabase.from('overflow_entries').insert({
+        user_id: user!.id, mode: entry.mode, resource_amount: entry.resourceAmount,
         entry_text: entry.entryText, feeling_text: entry.feelingText, resistance_note: entry.resistanceNote,
-      }).then();
-    }
-  }, [user]);
+      }),
+      'overflow entry'
+    );
+  }, [user, optimistic]);
 
   const saveCustomRitual = useCallback((ritual: Omit<CustomRitual, 'id' | 'createdAt'>) => {
-    const id = generateId();
-    const full = { ...ritual, id, createdAt: new Date().toISOString() };
-    setState(prev => {
-      const next = { ...prev, customRituals: [full, ...prev.customRituals] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('custom_rituals').insert({
-        user_id: user.id, name: ritual.name, steps: ritual.steps as any, duration_estimate: ritual.durationEstimate,
-      }).then();
-    }
-  }, [user]);
+    const err = validateOrError(customRitualSchema, ritual);
+    if (err) { toast.error(err); return; }
+    const full = { ...ritual, id: generateId(), createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, customRituals: [full, ...prev.customRituals] }),
+      () => supabase.from('custom_rituals').insert({
+        user_id: user!.id, name: ritual.name, steps: ritual.steps as any, duration_estimate: ritual.durationEstimate,
+      }),
+      'custom ritual'
+    );
+  }, [user, optimistic]);
 
   const saveResistanceEntry = useCallback((entry: Omit<ResistanceEntry, 'id' | 'createdAt'>) => {
-    const id = generateId();
-    const full = { ...entry, id, createdAt: new Date().toISOString() };
-    setState(prev => {
-      const next = { ...prev, resistanceEntries: [full, ...(prev.resistanceEntries || [])] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('resistance_entries').insert({
-        user_id: user.id, trigger_type: entry.triggerType, body_location: entry.bodyLocation,
+    const err = validateOrError(resistanceEntrySchema, entry);
+    if (err) { toast.error(err); return; }
+    const full = { ...entry, id: generateId(), createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, resistanceEntries: [full, ...(prev.resistanceEntries || [])] }),
+      () => supabase.from('resistance_entries').insert({
+        user_id: user!.id, trigger_type: entry.triggerType, body_location: entry.bodyLocation,
         charge_before: entry.chargeBefore, charge_after: entry.chargeAfter,
         clearing_mode: entry.clearingMode, softened_statement: entry.softenedStatement,
-      }).then();
-    }
-  }, [user]);
+      }),
+      'resistance entry'
+    );
+  }, [user, optimistic]);
 
   const saveThoughtShift = useCallback((shift: Omit<ThoughtShift, 'id' | 'createdAt'>) => {
-    const id = generateId();
-    const full = { ...shift, id, createdAt: new Date().toISOString() };
-    setState(prev => {
-      const next = { ...prev, thoughtShifts: [full, ...(prev.thoughtShifts || [])] };
-      debouncedSave(next);
-      return next;
-    });
-    if (user) {
-      supabase.from('thought_shifts').insert({
-        user_id: user.id, original_thought: shift.originalThought, charge_type: shift.chargeType,
+    const err = validateOrError(thoughtShiftSchema, shift);
+    if (err) { toast.error(err); return; }
+    const full = { ...shift, id: generateId(), createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, thoughtShifts: [full, ...(prev.thoughtShifts || [])] }),
+      () => supabase.from('thought_shifts').insert({
+        user_id: user!.id, original_thought: shift.originalThought, charge_type: shift.chargeType,
         softer_statement: shift.softerStatement, believable_statement: shift.believableStatement,
         support_statement: shift.supportStatement,
-      }).then();
-    }
-  }, [user]);
+      }),
+      'thought shift'
+    );
+  }, [user, optimistic]);
 
   // Memoize context value to prevent re-renders when callbacks haven't changed
   const contextValue = useMemo(() => ({
