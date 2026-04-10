@@ -12,7 +12,6 @@ const modules = [
     description: 'A guided thought-shift ritual from resistance toward resonance.',
     gradient: 'from-soul-gold/15 to-soul-gold/5',
     iconColor: 'text-soul-gold',
-    glowColor: 'shadow-soul-gold/10',
     to: '/align/wheel',
   },
   {
@@ -21,7 +20,6 @@ const modules = [
     description: 'A gentler version for low-capacity moments.',
     gradient: 'from-soul-violet/15 to-soul-violet/5',
     iconColor: 'text-soul-violet',
-    glowColor: 'shadow-soul-violet/10',
     to: '/align/relief',
   },
   {
@@ -30,7 +28,6 @@ const modules = [
     description: 'Build and play sequences of supportive, believable thoughts.',
     gradient: 'from-soul-green/15 to-soul-green/5',
     iconColor: 'text-soul-green',
-    glowColor: 'shadow-soul-green/10',
     to: '/align/gather',
   },
   {
@@ -39,7 +36,6 @@ const modules = [
     description: 'A timed state-holding ritual to lock in your shift.',
     gradient: 'from-soul-blue/15 to-soul-blue/5',
     iconColor: 'text-soul-blue',
-    glowColor: 'shadow-soul-blue/10',
     to: '/align/momentum',
   },
 ];
@@ -48,35 +44,35 @@ export default function Align() {
   const navigate = useNavigate();
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-12 pb-6 space-y-8 soul-ambient-gold overflow-hidden">
+    <div className="mx-auto max-w-lg px-4 pt-12 pb-6 space-y-8 soul-ambient-gold overflow-hidden safe-top">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="text-center space-y-3"
       >
-        <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Align</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">Align</h1>
         <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
           Core rituals for shifting your state toward clarity and momentum
         </p>
       </motion.div>
 
       <motion.div className="space-y-3" variants={stagger} initial="initial" animate="animate">
-        {modules.map(({ icon: Icon, title, description, gradient, iconColor, glowColor, to }, i) => (
+        {modules.map(({ icon: Icon, title, description, gradient, iconColor, to }) => (
           <motion.button
             key={title}
             variants={fadeUp}
             onClick={() => navigate(to)}
-            className={`soul-glass-elevated w-full text-left flex items-start gap-4 p-5 rounded-2xl transition-all hover:scale-[1.01] active:scale-[0.98] group`}
+            className="soul-glass-elevated w-full text-left flex items-center gap-4 p-4 sm:p-5 rounded-2xl transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] group min-h-[64px]"
           >
-            <div className={`mt-0.5 w-10 h-10 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shrink-0`}>
+            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shrink-0`}>
               <Icon size={20} strokeWidth={1.5} className={iconColor} />
             </div>
-            <div className="flex-1 space-y-1.5 min-w-0">
+            <div className="flex-1 space-y-1 min-w-0">
               <h3 className="font-heading text-base font-medium text-foreground">{title}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{description}</p>
             </div>
-            <ChevronRight size={16} className="text-muted-foreground/30 mt-1.5 shrink-0 group-hover:text-muted-foreground/60 transition-colors" />
+            <ChevronRight size={16} className="text-muted-foreground/30 shrink-0 group-hover:text-muted-foreground/60 transition-colors duration-150" />
           </motion.button>
         ))}
       </motion.div>

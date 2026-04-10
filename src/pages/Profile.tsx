@@ -92,7 +92,7 @@ export default function Profile() {
         variants={stagger}
         initial="hidden"
         animate="show"
-        className="relative mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6"
+        className="relative mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6 safe-top"
       >
         {/* Header */}
         <motion.div variants={fadeUp} className="text-center space-y-2">
@@ -127,18 +127,18 @@ export default function Profile() {
               key={label}
               variants={fadeUp}
               onClick={() => to && navigate(to)}
-              className={`w-full flex items-center gap-4 px-5 py-4 transition-all hover:bg-muted/10 active:scale-[0.99] ${
+              className={`w-full flex items-center gap-4 px-4 sm:px-5 py-4 min-h-[56px] transition-all duration-200 hover:bg-muted/10 active:scale-[0.99] ${
                 accent ? 'bg-primary/[0.03]' : ''
               }`}
               whileTap={{ scale: 0.99 }}
             >
-              <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${
+              <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${
                 accent
                   ? 'bg-primary/10 border border-primary/15'
                   : 'bg-muted/30 border border-border/20'
               }`}>
                 <Icon
-                  size={16}
+                  size={18}
                   className={accent ? 'text-primary' : 'text-muted-foreground'}
                   strokeWidth={1.5}
                 />
@@ -157,7 +157,7 @@ export default function Profile() {
         <motion.button
           variants={fadeUp}
           onClick={signOut}
-          className="w-full soul-glass rounded-2xl flex items-center justify-center gap-2 px-4 py-3.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/10 transition-all active:scale-[0.98]"
+          className="w-full soul-glass rounded-2xl flex items-center justify-center gap-2 px-4 py-4 min-h-[48px] text-sm text-muted-foreground hover:text-foreground hover:bg-muted/10 transition-all duration-200 active:scale-[0.98]"
         >
           <LogOut size={15} />
           Sign Out
@@ -167,7 +167,7 @@ export default function Profile() {
         <motion.button
           variants={fadeUp}
           onClick={() => setShowDeleteDialog(true)}
-          className="w-full soul-glass rounded-2xl flex items-center justify-center gap-2 px-4 py-3.5 text-sm text-destructive/60 hover:text-destructive hover:bg-destructive/5 transition-all active:scale-[0.98]"
+          className="w-full soul-glass rounded-2xl flex items-center justify-center gap-2 px-4 py-4 min-h-[48px] text-sm text-destructive/60 hover:text-destructive hover:bg-destructive/5 transition-all duration-200 active:scale-[0.98]"
         >
           <Trash2 size={15} />
           Delete Account
@@ -177,10 +177,10 @@ export default function Profile() {
         <motion.div variants={fadeUp} className="text-center pt-2 space-y-1.5">
           <p className="text-[10px] text-muted-foreground/40 truncate">{user?.email}</p>
           <p className="text-xs text-muted-foreground/50">SoulCurrent v1.0</p>
-          <div className="flex items-center justify-center gap-3 pt-1">
-            <a href="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Privacy Policy</a>
-            <span className="text-[10px] text-muted-foreground/20">·</span>
-            <a href="/terms" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline">Terms of Service</a>
+          <div className="flex items-center justify-center gap-4 pt-1">
+            <a href="/privacy" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Privacy Policy</a>
+            <span className="text-[11px] text-muted-foreground/20">·</span>
+            <a href="/terms" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Terms of Service</a>
           </div>
           <p className="text-xs text-muted-foreground/30 font-heading italic">Return to your inner current</p>
         </motion.div>
