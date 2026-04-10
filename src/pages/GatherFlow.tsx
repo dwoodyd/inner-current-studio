@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Play, Library, Pencil, Trash2, GripVertical, Pause, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Plus, Play, Library, Pencil, Trash2, GripVertical, Pause, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 
 const TIERS = ['Relief', 'Opening', 'Steadying', 'Expanding'] as const;
