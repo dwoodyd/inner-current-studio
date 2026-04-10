@@ -227,8 +227,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   const addCheckIn = useCallback((emotionalState: CheckIn['state'], note?: string) => {
-    const v = validate(checkInSchema, { state: emotionalState, note });
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(checkInSchema, { state: emotionalState, note });
+    if (err) { toast.error(err); return; }
     const checkIn: CheckIn = { id: generateId(), state: emotionalState, note, createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, checkIns: [checkIn, ...prev.checkIns] }),
@@ -238,8 +238,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const completeOnboarding = useCallback((data: { reason: string; style: string; challenge: string }) => {
-    const v = validate(onboardingSchema, data);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(onboardingSchema, data);
+    if (err) { toast.error(err); return; }
     optimistic(
       prev => ({ ...prev, onboarding: { ...data, completed: true } }),
       () => supabase.from('profiles').update({
@@ -265,8 +265,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   const saveWheel = useCallback((wheel: Omit<Wheel, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const v = validate(wheelSchema, wheel);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(wheelSchema, wheel);
+    if (err) { toast.error(err); return; }
     const now = new Date().toISOString();
     const id = generateId();
     const full: Wheel = { ...wheel, id, createdAt: now, updatedAt: now };
@@ -281,8 +281,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const saveGatheredSequence = useCallback((seq: Omit<GatheredSequence, 'id' | 'createdAt'>) => {
-    const v = validate(gatheredSequenceSchema, seq);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(gatheredSequenceSchema, seq);
+    if (err) { toast.error(err); return; }
     const full = { ...seq, id: generateId(), createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, gatheredSequences: [full, ...prev.gatheredSequences] }),
@@ -295,8 +295,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const saveMomentumSession = useCallback((session: Omit<MomentumSession, 'id' | 'createdAt'>) => {
-    const v = validate(momentumSessionSchema, session);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(momentumSessionSchema, session);
+    if (err) { toast.error(err); return; }
     const full = { ...session, id: generateId(), createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, momentumSessions: [full, ...prev.momentumSessions] }),
@@ -308,8 +308,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const saveFuturePage = useCallback((page: Omit<FuturePage, 'id' | 'createdAt'>) => {
-    const v = validate(futurePageSchema, page);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(futurePageSchema, page);
+    if (err) { toast.error(err); return; }
     const full = { ...page, id: generateId(), createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, futurePages: [full, ...prev.futurePages] }),
@@ -322,8 +322,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const saveImagineIfEntry = useCallback((entry: Omit<ImagineIfEntry, 'id' | 'createdAt'>) => {
-    const v = validate(imagineIfSchema, entry);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(imagineIfSchema, entry);
+    if (err) { toast.error(err); return; }
     const full = { ...entry, id: generateId(), createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, imagineIfEntries: [full, ...prev.imagineIfEntries] }),
@@ -333,8 +333,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const saveOverflowEntry = useCallback((entry: Omit<OverflowEntry, 'id' | 'createdAt'>) => {
-    const v = validate(overflowSchema, entry);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(overflowSchema, entry);
+    if (err) { toast.error(err); return; }
     const full = { ...entry, id: generateId(), createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, overflowEntries: [full, ...prev.overflowEntries] }),
@@ -347,8 +347,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const saveCustomRitual = useCallback((ritual: Omit<CustomRitual, 'id' | 'createdAt'>) => {
-    const v = validate(customRitualSchema, ritual);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(customRitualSchema, ritual);
+    if (err) { toast.error(err); return; }
     const full = { ...ritual, id: generateId(), createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, customRituals: [full, ...prev.customRituals] }),
@@ -360,8 +360,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const saveResistanceEntry = useCallback((entry: Omit<ResistanceEntry, 'id' | 'createdAt'>) => {
-    const v = validate(resistanceEntrySchema, entry);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(resistanceEntrySchema, entry);
+    if (err) { toast.error(err); return; }
     const full = { ...entry, id: generateId(), createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, resistanceEntries: [full, ...(prev.resistanceEntries || [])] }),
@@ -375,8 +375,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [user, optimistic]);
 
   const saveThoughtShift = useCallback((shift: Omit<ThoughtShift, 'id' | 'createdAt'>) => {
-    const v = validate(thoughtShiftSchema, shift);
-    if (!v.success) { toast.error(v.error); return; }
+    const err = validateOrError(thoughtShiftSchema, shift);
+    if (err) { toast.error(err); return; }
     const full = { ...shift, id: generateId(), createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, thoughtShifts: [full, ...(prev.thoughtShifts || [])] }),
