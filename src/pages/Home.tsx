@@ -61,7 +61,7 @@ export default function Home() {
         variants={stagger}
         initial="hidden"
         animate="show"
-        className="relative mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6"
+        className="relative mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6 safe-top"
       >
         {/* Header */}
         <motion.div variants={fadeUp} className="text-center space-y-2">
@@ -71,8 +71,8 @@ export default function Home() {
             animate={{ scale: [1, 1.08, 1] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
-          <p className="text-xs text-muted-foreground font-light tracking-wide font-heading italic">Return to your inner current</p>
+          <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">SoulCurrent</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-light tracking-wide font-heading italic">Return to your inner current</p>
         </motion.div>
 
         {/* Pulse */}

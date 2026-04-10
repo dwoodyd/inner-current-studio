@@ -15,18 +15,18 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/30 bg-background/80 backdrop-blur-2xl safe-bottom"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/30 bg-background/80 backdrop-blur-2xl safe-bottom safe-x"
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="mx-auto flex max-w-lg items-center justify-around px-2 pt-2 pb-1">
+      <div className="mx-auto flex max-w-lg items-center justify-around px-1 pt-1 pb-0.5">
         {tabs.map(({ to, icon: Icon, label }) => {
           const isActive = to === '/' ? location.pathname === '/' : location.pathname.startsWith(to);
           return (
             <NavLink
               key={to}
               to={to}
-              className="relative flex flex-col items-center gap-0.5 px-3 py-1 min-w-[3.5rem]"
+              className="relative flex flex-col items-center justify-center gap-0.5 min-w-[3rem] min-h-[44px] px-2 py-1"
               aria-label={label}
             >
               {isActive && (
@@ -41,13 +41,13 @@ export default function BottomNav() {
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               >
                 <Icon
-                  size={20}
+                  size={22}
                   className={`transition-colors duration-150 ${isActive ? 'text-primary' : 'text-muted-foreground/60'}`}
                   strokeWidth={isActive ? 2 : 1.5}
                 />
               </motion.div>
               <span
-                className={`text-[10px] font-medium transition-colors duration-200 ${
+                className={`text-[11px] font-medium transition-colors duration-150 ${
                   isActive ? 'text-primary' : 'text-muted-foreground/50'
                 }`}
               >

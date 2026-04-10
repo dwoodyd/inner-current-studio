@@ -12,8 +12,8 @@ export default function AppShell() {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-background">
-      <main className="flex-1 overflow-y-auto pb-20">
+    <div className="flex min-h-[100dvh] flex-col bg-background safe-x">
+      <main className="flex-1 overflow-y-auto pb-24">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}

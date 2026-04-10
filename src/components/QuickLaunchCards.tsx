@@ -20,10 +20,10 @@ const QuickLaunchCards = React.memo(function QuickLaunchCards() {
         <button
           key={label}
           onClick={() => navigate(to)}
-          className="soul-card flex flex-col items-center gap-2 py-4 px-2 transition-all duration-200 hover:bg-muted/30 active:scale-[0.97]"
+          className="soul-card flex flex-col items-center justify-center gap-2 min-h-[72px] py-4 px-2 transition-all duration-200 hover:bg-muted/30 active:scale-[0.97]"
           aria-label={label}
         >
-          <Icon size={20} className={color} strokeWidth={1.5} />
+          <Icon size={22} className={color} strokeWidth={1.5} />
           <span className="text-[11px] font-medium text-muted-foreground leading-tight text-center">{label}</span>
         </button>
       ))}
