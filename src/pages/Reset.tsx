@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { BarChart3, RefreshCw, Timer, Shield, BrainCircuit, ChevronRight } from 'lucide-react';
+import { BarChart3, RefreshCw, Timer, Shield, BrainCircuit, Wind, ChevronRight } from 'lucide-react';
 
 const tools = [
   { icon: BarChart3, title: 'State Ladder', description: 'Identify your current emotional state and the next reachable one.', to: '/reset/ladder', color: 'text-soul-violet' },
@@ -8,6 +8,7 @@ const tools = [
   { icon: Shield, title: 'Resistance Release', description: 'Identify, soften, and clear resistance without forcing positivity.', to: '/reset/resistance', color: 'text-soul-gold' },
   { icon: BrainCircuit, title: 'Quiet the Mind', description: 'Tools for mental noise, thought loops, and inner overactivity.', to: '/reset/quiet', color: 'text-soul-green' },
   { icon: Timer, title: 'Stillness Timer', description: 'Simple premium breathing and stillness ritual.', to: '/reset/stillness', color: 'text-soul-warm' },
+  { icon: Wind, title: 'Breathwork', description: 'Guided breathing exercises with voice guidance and soundscapes.', to: '/reset/breathwork', color: 'text-primary' },
 ];
 
 export default function Reset() {
