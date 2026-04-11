@@ -1,8 +1,10 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Play, Library, Pencil, Trash2, GripVertical, Pause, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
+import { PlaybackSettings, type PlaybackConfig } from '@/components/gather/PlaybackSettings';
+import { startSound, stopSound, speakText, stopSpeech, setVolume } from '@/lib/sounds';
 
 const TIERS = ['Relief', 'Opening', 'Steadying', 'Expanding'] as const;
 
@@ -41,6 +43,29 @@ export default function GatherFlow() {
   const [playing, setPlaying] = useState(false);
   const [title, setTitle] = useState('');
   const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const [playbackConfig, setPlaybackConfig] = useState<PlaybackConfig>({
+    voiceEnabled: false,
+    soundEnabled: false,
+    selectedSound: 'rain',
+    volume: 0.4,
+  });
+  const speakingRef = useRef(false);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      stopSound();
+      stopSpeech();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
+  // Adjust volume live
+  useEffect(() => {
+    if (playbackConfig.soundEnabled && tab === 'play') {
+      setVolume(playbackConfig.volume);
+    }
+  }, [playbackConfig.volume, playbackConfig.soundEnabled, tab]);
 
   const addLine = useCallback((line: string) => {
     setBuildLines(prev => [...prev, line]);
@@ -60,31 +85,81 @@ export default function GatherFlow() {
     setTab('library');
   }, [buildLines, title, saveGatheredSequence]);
 
+  const advanceToLine = useCallback(async (idx: number, lines: string[]) => {
+    setPlayIndex(idx);
+    if (playbackConfig.voiceEnabled) {
+      speakingRef.current = true;
+      await speakText(lines[idx], 0.85);
+      speakingRef.current = false;
+    }
+  }, [playbackConfig.voiceEnabled]);
+
   const startPlay = useCallback((lines: string[]) => {
     setBuildLines(lines);
     setPlayIndex(0);
-    setPlaying(true);
+    setPlaying(false);
     setTab('play');
-  }, []);
+    // Start ambient sound if enabled
+    if (playbackConfig.soundEnabled) {
+      startSound(playbackConfig.selectedSound, playbackConfig.volume);
+    }
+    // Speak first line if voice enabled
+    if (playbackConfig.voiceEnabled) {
+      setTimeout(() => speakText(lines[0], 0.85), 400);
+    }
+  }, [playbackConfig]);
 
   const togglePlay = useCallback(() => {
     if (playing) {
       if (intervalRef.current) clearInterval(intervalRef.current);
       setPlaying(false);
+      stopSpeech();
     } else {
       setPlaying(true);
+      // Speak current line
+      if (playbackConfig.voiceEnabled) {
+        speakText(buildLines[playIndex], 0.85);
+      }
       intervalRef.current = setInterval(() => {
         setPlayIndex(prev => {
-          if (prev >= buildLines.length - 1) {
+          const next = prev + 1;
+          if (next >= buildLines.length) {
             if (intervalRef.current) clearInterval(intervalRef.current);
             setPlaying(false);
+            stopSound();
             return prev;
           }
-          return prev + 1;
+          // Speak next line
+          if (playbackConfig.voiceEnabled) {
+            speakText(buildLines[next], 0.85);
+          }
+          return next;
         });
-      }, 4000);
+      }, playbackConfig.voiceEnabled ? 5000 : 4000);
     }
-  }, [playing, buildLines.length]);
+  }, [playing, buildLines, playIndex, playbackConfig]);
+
+  // Start/stop sound when entering/leaving play tab
+  useEffect(() => {
+    if (tab === 'play' && playbackConfig.soundEnabled) {
+      startSound(playbackConfig.selectedSound, playbackConfig.volume);
+    }
+    if (tab !== 'play') {
+      stopSound();
+      stopSpeech();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      setPlaying(false);
+    }
+  }, [tab]);
+
+  const handleManualNav = useCallback((direction: 'prev' | 'next') => {
+    stopSpeech();
+    const newIdx = direction === 'prev' ? Math.max(0, playIndex - 1) : Math.min(buildLines.length - 1, playIndex + 1);
+    setPlayIndex(newIdx);
+    if (playbackConfig.voiceEnabled) {
+      speakText(buildLines[newIdx], 0.85);
+    }
+  }, [playIndex, buildLines, playbackConfig.voiceEnabled]);
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-5 soul-ambient-gold overflow-hidden">
@@ -172,7 +247,6 @@ export default function GatherFlow() {
             className="w-full bg-transparent border-b border-border/30 text-foreground text-sm py-2 focus:outline-none focus:border-primary/40 placeholder:text-muted-foreground/40 transition-colors duration-200"
           />
 
-          {/* Reorderable lines */}
           <Reorder.Group axis="y" values={buildLines} onReorder={setBuildLines} className="space-y-2">
             {buildLines.map((line, i) => (
               <Reorder.Item
@@ -183,10 +257,7 @@ export default function GatherFlow() {
               >
                 <GripVertical size={12} className="text-muted-foreground/40 flex-shrink-0" />
                 <span className="flex-1 text-xs text-foreground select-none">{line}</span>
-                <button
-                  onClick={(e) => { e.stopPropagation(); removeLine(i); }}
-                  className="flex-shrink-0"
-                >
+                <button onClick={(e) => { e.stopPropagation(); removeLine(i); }} className="flex-shrink-0">
                   <Trash2 size={12} className="text-muted-foreground/30 hover:text-destructive transition-colors duration-200" />
                 </button>
               </Reorder.Item>
@@ -207,7 +278,6 @@ export default function GatherFlow() {
             </button>
           </div>
 
-          {/* Picker from starter lines */}
           <details className="group">
             <summary className="text-[10px] uppercase tracking-wider text-muted-foreground/60 cursor-pointer select-none flex items-center gap-1.5 py-1">
               <Library size={10} /> Pick from library
@@ -236,6 +306,9 @@ export default function GatherFlow() {
             </div>
           </details>
 
+          {/* Playback settings */}
+          <PlaybackSettings config={playbackConfig} onChange={setPlaybackConfig} />
+
           <button onClick={saveSequence} disabled={buildLines.length < 2}
             className="soul-btn-primary w-full">
             Save Sequence ({buildLines.length} thoughts)
@@ -246,6 +319,15 @@ export default function GatherFlow() {
       {/* Play */}
       {tab === 'play' && buildLines.length > 0 && (
         <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-8">
+          {/* Mode indicator */}
+          <div className="flex items-center gap-3 text-[10px] text-muted-foreground/40">
+            {playbackConfig.voiceEnabled && <span className="flex items-center gap-1">🔊 Voice</span>}
+            {playbackConfig.soundEnabled && (
+              <span className="flex items-center gap-1">🎵 {SOUND_OPTIONS_MAP[playbackConfig.selectedSound] || 'Sound'}</span>
+            )}
+            {!playbackConfig.voiceEnabled && !playbackConfig.soundEnabled && <span>🤫 Silent mode</span>}
+          </div>
+
           <AnimatePresence mode="wait">
             <motion.p
               key={playIndex}
@@ -262,7 +344,7 @@ export default function GatherFlow() {
           <p className="text-[10px] text-muted-foreground/50">{playIndex + 1} / {buildLines.length}</p>
 
           <div className="flex items-center gap-6">
-            <button onClick={() => setPlayIndex(Math.max(0, playIndex - 1))} disabled={playIndex === 0}
+            <button onClick={() => handleManualNav('prev')} disabled={playIndex === 0}
               className="text-muted-foreground disabled:opacity-20 transition-opacity duration-200">
               <ChevronLeft size={24} />
             </button>
@@ -272,7 +354,7 @@ export default function GatherFlow() {
             >
               {playing ? <Pause size={20} /> : <Play size={20} />}
             </button>
-            <button onClick={() => setPlayIndex(Math.min(buildLines.length - 1, playIndex + 1))} disabled={playIndex === buildLines.length - 1}
+            <button onClick={() => handleManualNav('next')} disabled={playIndex === buildLines.length - 1}
               className="text-muted-foreground disabled:opacity-20 transition-opacity duration-200">
               <ChevronRight size={24} />
             </button>
@@ -282,3 +364,9 @@ export default function GatherFlow() {
     </div>
   );
 }
+
+// Quick lookup map for display names
+const SOUND_OPTIONS_MAP: Record<string, string> = {
+  rain: 'Gentle Rain', ocean: 'Ocean Waves', wind: 'Soft Wind', stream: 'Forest Stream',
+  bowl: 'Singing Bowl', drone: 'Soft Drone', chimes: 'Wind Chimes', binaural: 'Binaural Calm',
+};
