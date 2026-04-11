@@ -43,6 +43,7 @@ import About from "@/pages/About";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
+import ResetPassword from "@/pages/ResetPassword";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -65,6 +66,7 @@ function AppRoutes() {
     return (
       <Routes>
         <Route path="/auth" element={<Auth />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
