@@ -15,6 +15,7 @@ import Reset from "@/pages/Reset";
 import StateLadder from "@/pages/StateLadder";
 import ContrastReset from "@/pages/ContrastReset";
 import StillnessTimer from "@/pages/StillnessTimer";
+import Breathwork from "@/pages/Breathwork";
 import ResistanceRelease from "@/pages/ResistanceRelease";
 import QuietMind from "@/pages/QuietMind";
 import PresentMoment from "@/pages/PresentMoment";
@@ -96,6 +97,7 @@ function AppRoutes() {
         <Route path="/reset/ladder" element={<StateLadder />} />
         <Route path="/reset/contrast" element={<ContrastReset />} />
         <Route path="/reset/stillness" element={<StillnessTimer />} />
+        <Route path="/reset/breathwork" element={<Breathwork />} />
         <Route path="/reset/resistance" element={<ResistanceRelease />} />
         <Route path="/reset/quiet" element={<QuietMind />} />
         <Route path="/reset/quiet/present" element={<PresentMoment />} />
