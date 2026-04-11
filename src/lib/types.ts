@@ -55,7 +55,14 @@ export interface GatheredSequence {
   id: string;
   title: string;
   lines: string[];
-  playbackSettings: { speed: number; mode: 'text' | 'audio' | 'both' };
+  playbackSettings: {
+    speed: number;
+    mode: 'text' | 'audio' | 'both';
+    voiceEnabled?: boolean;
+    soundEnabled?: boolean;
+    selectedSound?: string;
+    volume?: number;
+  };
   createdAt: string;
 }
 
