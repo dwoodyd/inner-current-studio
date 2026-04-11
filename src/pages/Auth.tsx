@@ -308,41 +308,73 @@ export default function Auth() {
               <div className="space-y-2">
                 <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
                 <p className="font-heading text-base font-light italic text-muted-foreground">
-                  {mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
+                  {forgotMode ? (resetSent ? 'Check your email.' : 'Reset your password.') : mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
                 </p>
               </div>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-3">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="Email"
-                  required
-                  className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
-                />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="Password"
-                  required
-                  minLength={6}
-                  className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20"
-              >
-                {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
-              </button>
-            </form>
+            {forgotMode ? (
+              resetSent ? (
+                <div className="text-center space-y-4">
+                  <p className="text-sm text-muted-foreground">We sent a reset link to <span className="text-foreground">{email}</span>. Check your inbox.</p>
+                  <button onClick={() => { setForgotMode(false); setResetSent(false); }} className="text-sm text-primary hover:text-primary/80 transition-colors py-3 min-h-[44px]">
+                    Back to sign in
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleForgotPassword} className="space-y-4">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                    className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
+                  />
+                  <button type="submit" disabled={loading} className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98]">
+                    {loading ? '…' : 'Send Reset Link'}
+                  </button>
+                  <div className="text-center">
+                    <button type="button" onClick={() => setForgotMode(false)} className="text-sm text-muted-foreground hover:text-foreground transition-colors py-3 min-h-[44px]">
+                      Back to sign in
+                    </button>
+                  </div>
+                </form>
+              )
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-3">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                    className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
+                  />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                    minLength={6}
+                    className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
+                  />
+                </div>
+                {mode === 'login' && (
+                  <div className="text-right">
+                    <button type="button" onClick={() => setForgotMode(true)} className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors py-1 min-h-[44px]">
+                      Forgot password?
+                    </button>
+                  </div>
+                )}
+                <button type="submit" disabled={loading} className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20">
+                  {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
+                </button>
+              </form>
+            )}
 
             {/* Toggle */}
             <div className="text-center">
