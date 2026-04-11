@@ -79,32 +79,46 @@ export default function GatherFlow() {
 
   const saveSequence = useCallback(() => {
     if (buildLines.length < 2) return;
-    saveGatheredSequence({ title: title || 'Untitled Sequence', lines: buildLines, playbackSettings: { speed: 4, mode: 'text' } });
+    // Save playback config with the sequence
+    saveGatheredSequence({
+      title: title || 'Untitled Sequence',
+      lines: buildLines,
+      playbackSettings: {
+        speed: playbackConfig.voiceEnabled ? 5 : 4,
+        mode: playbackConfig.voiceEnabled ? 'audio' : playbackConfig.soundEnabled ? 'both' : 'text',
+        voiceEnabled: playbackConfig.voiceEnabled,
+        soundEnabled: playbackConfig.soundEnabled,
+        selectedSound: playbackConfig.selectedSound,
+        volume: playbackConfig.volume,
+      },
+    });
     setBuildLines([]);
     setTitle('');
     setTab('library');
-  }, [buildLines, title, saveGatheredSequence]);
+  }, [buildLines, title, saveGatheredSequence, playbackConfig]);
 
-  const advanceToLine = useCallback(async (idx: number, lines: string[]) => {
-    setPlayIndex(idx);
-    if (playbackConfig.voiceEnabled) {
-      speakingRef.current = true;
-      await speakText(lines[idx], 0.85);
-      speakingRef.current = false;
-    }
-  }, [playbackConfig.voiceEnabled]);
-
-  const startPlay = useCallback((lines: string[]) => {
+  const startPlay = useCallback((lines: string[], savedSettings?: any) => {
     setBuildLines(lines);
     setPlayIndex(0);
     setPlaying(false);
-    setTab('play');
-    // Start ambient sound if enabled
-    if (playbackConfig.soundEnabled) {
-      startSound(playbackConfig.selectedSound, playbackConfig.volume);
+
+    // Restore saved playback settings if available
+    if (savedSettings) {
+      setPlaybackConfig({
+        voiceEnabled: savedSettings.voiceEnabled ?? false,
+        soundEnabled: savedSettings.soundEnabled ?? false,
+        selectedSound: savedSettings.selectedSound ?? 'rain',
+        volume: savedSettings.volume ?? 0.4,
+      });
     }
-    // Speak first line if voice enabled
-    if (playbackConfig.voiceEnabled) {
+
+    setTab('play');
+
+    const cfg = savedSettings || playbackConfig;
+    if (cfg.soundEnabled) {
+      startSound(cfg.selectedSound || 'rain', cfg.volume ?? 0.4);
+    }
+    if (cfg.voiceEnabled) {
       setTimeout(() => speakText(lines[0], 0.85), 400);
     }
   }, [playbackConfig]);
@@ -116,7 +130,6 @@ export default function GatherFlow() {
       stopSpeech();
     } else {
       setPlaying(true);
-      // Speak current line
       if (playbackConfig.voiceEnabled) {
         speakText(buildLines[playIndex], 0.85);
       }
@@ -129,7 +142,6 @@ export default function GatherFlow() {
             stopSound();
             return prev;
           }
-          // Speak next line
           if (playbackConfig.voiceEnabled) {
             speakText(buildLines[next], 0.85);
           }
@@ -160,6 +172,27 @@ export default function GatherFlow() {
       speakText(buildLines[newIdx], 0.85);
     }
   }, [playIndex, buildLines, playbackConfig.voiceEnabled]);
+
+  // Breathing animation cycle for playback
+  const breathCycle = 8; // seconds total
+  const [breathPhase, setBreathPhase] = useState(0); // 0-1
+  useEffect(() => {
+    if (tab !== 'play') return;
+    let frame: number;
+    let start = performance.now();
+    const tick = (now: number) => {
+      const elapsed = ((now - start) / 1000) % breathCycle;
+      setBreathPhase(elapsed / breathCycle);
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [tab]);
+
+  // Orb scale: inhale first half, exhale second half
+  const orbScale = breathPhase < 0.5
+    ? 1 + breathPhase * 0.6  // 1.0 → 1.3
+    : 1.3 - (breathPhase - 0.5) * 0.6; // 1.3 → 1.0
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-5 soul-ambient-gold overflow-hidden">
@@ -197,12 +230,16 @@ export default function GatherFlow() {
               {state.gatheredSequences.map(seq => (
                 <button
                   key={seq.id}
-                  onClick={() => startPlay(seq.lines)}
+                  onClick={() => startPlay(seq.lines, seq.playbackSettings)}
                   className="soul-glass-elevated w-full text-left flex items-center justify-between p-4 rounded-2xl hover:scale-[1.01] active:scale-[0.98] transition-transform duration-200"
                 >
                   <div>
                     <p className="text-sm font-medium text-foreground">{seq.title}</p>
-                    <p className="text-[11px] text-muted-foreground">{seq.lines.length} thoughts</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {seq.lines.length} thoughts
+                      {(seq.playbackSettings as any)?.voiceEnabled && ' · 🔊'}
+                      {(seq.playbackSettings as any)?.soundEnabled && ' · 🎵'}
+                    </p>
                   </div>
                   <Play size={16} className="text-primary" />
                 </button>
@@ -328,6 +365,19 @@ export default function GatherFlow() {
             {!playbackConfig.voiceEnabled && !playbackConfig.soundEnabled && <span>🤫 Silent mode</span>}
           </div>
 
+          {/* Breathing orb */}
+          <div className="relative flex items-center justify-center" style={{ width: 160, height: 160 }}>
+            <motion.div
+              animate={{ scale: orbScale }}
+              transition={{ duration: 0.3, ease: 'linear' }}
+              className="w-24 h-24 rounded-full"
+              style={{
+                background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.35), hsl(var(--primary) / 0.06))',
+                boxShadow: '0 0 50px hsl(var(--primary) / 0.12)',
+              }}
+            />
+          </div>
+
           <AnimatePresence mode="wait">
             <motion.p
               key={playIndex}
@@ -365,7 +415,6 @@ export default function GatherFlow() {
   );
 }
 
-// Quick lookup map for display names
 const SOUND_OPTIONS_MAP: Record<string, string> = {
   rain: 'Gentle Rain', ocean: 'Ocean Waves', wind: 'Soft Wind', stream: 'Forest Stream',
   bowl: 'Singing Bowl', drone: 'Soft Drone', chimes: 'Wind Chimes', binaural: 'Binaural Calm',
