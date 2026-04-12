@@ -63,8 +63,8 @@ export default function Auth() {
       if (error) throw error;
       setResetSent(true);
       toast.success('Check your email for a reset link.');
-    } catch (err: any) {
-      toast.error(err.message || 'Something went wrong');
+    } catch {
+      toast.error('Unable to send reset link. Please check your email and try again.');
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,12 @@ export default function Auth() {
         if (error) throw error;
       }
     } catch (err: any) {
-      toast.error(err.message || 'Something went wrong');
+      const msg = err?.message?.toLowerCase() ?? '';
+      if (msg.includes('invalid login')) toast.error('Incorrect email or password.');
+      else if (msg.includes('already registered') || msg.includes('already been registered')) toast.error('An account with that email already exists.');
+      else if (msg.includes('rate limit') || msg.includes('too many')) toast.error('Too many attempts. Please wait a moment.');
+      else if (msg.includes('password') && msg.includes('leaked')) toast.error('That password has appeared in a data breach. Please choose a different one.');
+      else toast.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }

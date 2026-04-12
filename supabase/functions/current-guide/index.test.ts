@@ -142,11 +142,14 @@ Deno.test("returns error for undefined fields", async () => {
   assertEquals(status, 401);
 });
 
-Deno.test("CORS preflight returns 200", async () => {
-  const resp = await fetch(FUNCTION_URL, { method: "OPTIONS" });
+Deno.test("CORS preflight returns 200 with origin-specific header", async () => {
+  const resp = await fetch(FUNCTION_URL, {
+    method: "OPTIONS",
+    headers: { Origin: "https://current-inner-flow.lovable.app" },
+  });
   await resp.text();
   assertEquals(resp.status, 200);
-  assert(resp.headers.get("access-control-allow-origin") === "*");
+  assertEquals(resp.headers.get("access-control-allow-origin"), "https://current-inner-flow.lovable.app");
 });
 
 Deno.test("rejects message with invalid role (requires auth bypass — expects 401)", async () => {
