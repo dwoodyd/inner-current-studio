@@ -46,6 +46,11 @@ import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
 import ResetPassword from "@/pages/ResetPassword";
 import NotFound from "@/pages/NotFound";
+import MoneyCurrent from "@/pages/MoneyCurrent";
+import MoneyState from "@/pages/MoneyState";
+import CurrentDeposit from "@/pages/CurrentDeposit";
+import MoneyOpenings from "@/pages/MoneyOpenings";
+import OverflowSpending from "@/pages/OverflowSpending";
 
 const queryClient = new QueryClient();
 
@@ -122,6 +127,11 @@ function AppRoutes() {
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/about" element={<About />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/money" element={<MoneyCurrent />} />
+        <Route path="/money/state" element={<MoneyState />} />
+        <Route path="/money/deposit" element={<CurrentDeposit />} />
+        <Route path="/money/openings" element={<MoneyOpenings />} />
+        <Route path="/money/overflow" element={<OverflowSpending />} />
       </Route>
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />
