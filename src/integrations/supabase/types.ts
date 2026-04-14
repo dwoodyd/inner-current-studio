@@ -98,6 +98,30 @@ export type Database = {
         }
         Relationships: []
       }
+      evidence_of_support: {
+        Row: {
+          category: string
+          created_at: string
+          entry_text: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          entry_text?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          entry_text?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       future_pages: {
         Row: {
           content: string
@@ -245,6 +269,39 @@ export type Database = {
         }
         Relationships: []
       }
+      money_resistance: {
+        Row: {
+          body_sensation: string
+          charge_after: string
+          charge_before: string
+          created_at: string
+          id: string
+          resistance_type: string
+          softened_thought: string | null
+          user_id: string
+        }
+        Insert: {
+          body_sensation?: string
+          charge_after?: string
+          charge_before?: string
+          created_at?: string
+          id?: string
+          resistance_type?: string
+          softened_thought?: string | null
+          user_id: string
+        }
+        Update: {
+          body_sensation?: string
+          charge_after?: string
+          charge_before?: string
+          created_at?: string
+          id?: string
+          resistance_type?: string
+          softened_thought?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       money_states: {
         Row: {
           created_at: string
@@ -332,6 +389,39 @@ export type Database = {
           user_id?: string
           what_chosen?: string
           why_it_matters?: string
+        }
+        Relationships: []
+      }
+      payment_shifts: {
+        Row: {
+          circulation_feeling: string
+          created_at: string
+          from_steadiness: string
+          id: string
+          payment_name: string
+          user_id: string
+          what_it_provided: string
+          what_it_supports: string
+        }
+        Insert: {
+          circulation_feeling?: string
+          created_at?: string
+          from_steadiness?: string
+          id?: string
+          payment_name?: string
+          user_id: string
+          what_it_provided?: string
+          what_it_supports?: string
+        }
+        Update: {
+          circulation_feeling?: string
+          created_at?: string
+          from_steadiness?: string
+          id?: string
+          payment_name?: string
+          user_id?: string
+          what_it_provided?: string
+          what_it_supports?: string
         }
         Relationships: []
       }
