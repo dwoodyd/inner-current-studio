@@ -12,10 +12,10 @@ const DAILY_AMOUNTS = [
 ];
 
 const STEPS = [
-  { key: 'what_chosen', prompt: 'What would you choose to do with this?', placeholder: 'Describe how you'd spend or direct this…' },
-  { key: 'why_it_matters', prompt: 'Why does this choice matter to you?', placeholder: 'What makes this meaningful…' },
-  { key: 'how_it_feels', prompt: 'How does it feel to imagine this?', placeholder: 'Describe the feeling…' },
-  { key: 'resistance_note', prompt: 'What resistance came up, if any?', placeholder: 'Notice any tightness, doubt, or "but…" thoughts' },
+  { key: 'what_chosen', prompt: 'What would you choose to do with this?', placeholder: 'Describe how you would spend or direct this...' },
+  { key: 'why_it_matters', prompt: 'Why does this choice matter to you?', placeholder: 'What makes this meaningful...' },
+  { key: 'how_it_feels', prompt: 'How does it feel to imagine this?', placeholder: 'Describe the feeling...' },
+  { key: 'resistance_note', prompt: 'What resistance came up, if any?', placeholder: 'Notice any tightness, doubt, or "but..." thoughts' },
 ] as const;
 
 export default function OverflowSpending() {
