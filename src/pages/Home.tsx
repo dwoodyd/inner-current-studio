@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { ChevronRight } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 import CurrentPulse from '@/components/CurrentPulse';
 import QuickCheckIn from '@/components/QuickCheckIn';
@@ -29,7 +31,7 @@ const fadeUp = {
 
 export default function Home() {
   const { state, addCheckIn } = useAppState();
-  const [quickState, setQuickState] = useState<QuickState | undefined>(
+  const navigate = useNavigate();
     state.checkIns.length > 0
       ? (Object.entries(quickToEmotional).find(([, v]) => v === state.checkIns[0]?.state)?.[0] as QuickState)
       : undefined
