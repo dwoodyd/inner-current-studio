@@ -38,6 +38,39 @@ export type Database = {
         }
         Relationships: []
       }
+      current_deposits: {
+        Row: {
+          amount: string
+          created_at: string
+          ease_when_arrives: string
+          feeling: string
+          id: string
+          represents: string
+          resistance_level: string
+          user_id: string
+        }
+        Insert: {
+          amount?: string
+          created_at?: string
+          ease_when_arrives?: string
+          feeling?: string
+          id?: string
+          represents?: string
+          resistance_level?: string
+          user_id: string
+        }
+        Update: {
+          amount?: string
+          created_at?: string
+          ease_when_arrives?: string
+          feeling?: string
+          id?: string
+          represents?: string
+          resistance_level?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       custom_rituals: {
         Row: {
           created_at: string
@@ -173,6 +206,69 @@ export type Database = {
         }
         Relationships: []
       }
+      money_openings: {
+        Row: {
+          created_at: string
+          current_resistance: string
+          desire: string
+          desired_feeling: string
+          id: string
+          next_aligned_step: string
+          position: number
+          updated_at: string
+          user_id: string
+          why_it_matters: string
+        }
+        Insert: {
+          created_at?: string
+          current_resistance?: string
+          desire?: string
+          desired_feeling?: string
+          id?: string
+          next_aligned_step?: string
+          position?: number
+          updated_at?: string
+          user_id: string
+          why_it_matters?: string
+        }
+        Update: {
+          created_at?: string
+          current_resistance?: string
+          desire?: string
+          desired_feeling?: string
+          id?: string
+          next_aligned_step?: string
+          position?: number
+          updated_at?: string
+          user_id?: string
+          why_it_matters?: string
+        }
+        Relationships: []
+      }
+      money_states: {
+        Row: {
+          created_at: string
+          id: string
+          note: string | null
+          state: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          state: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          state?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       overflow_entries: {
         Row: {
           created_at: string
@@ -203,6 +299,39 @@ export type Database = {
           resistance_note?: string
           resource_amount?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      overflow_spending: {
+        Row: {
+          created_at: string
+          daily_amount: string
+          how_it_feels: string
+          id: string
+          resistance_note: string
+          user_id: string
+          what_chosen: string
+          why_it_matters: string
+        }
+        Insert: {
+          created_at?: string
+          daily_amount?: string
+          how_it_feels?: string
+          id?: string
+          resistance_note?: string
+          user_id: string
+          what_chosen?: string
+          why_it_matters?: string
+        }
+        Update: {
+          created_at?: string
+          daily_amount?: string
+          how_it_feels?: string
+          id?: string
+          resistance_note?: string
+          user_id?: string
+          what_chosen?: string
+          why_it_matters?: string
         }
         Relationships: []
       }
