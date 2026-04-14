@@ -31,7 +31,7 @@ const fadeUp = {
 
 export default function Home() {
   const { state, addCheckIn } = useAppState();
-  const navigate = useNavigate();
+  const [quickState, setQuickState] = useState<QuickState | undefined>(
     state.checkIns.length > 0
       ? (Object.entries(quickToEmotional).find(([, v]) => v === state.checkIns[0]?.state)?.[0] as QuickState)
       : undefined
