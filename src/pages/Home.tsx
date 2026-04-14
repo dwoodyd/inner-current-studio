@@ -30,6 +30,7 @@ const fadeUp = {
 };
 
 export default function Home() {
+  const navigate = useNavigate();
   const { state, addCheckIn } = useAppState();
   const [quickState, setQuickState] = useState<QuickState | undefined>(
     state.checkIns.length > 0
@@ -101,6 +102,26 @@ export default function Home() {
             <h2 className="font-heading text-lg font-medium text-foreground">Quick Launch</h2>
             <QuickLaunchCards />
           </div>
+        </motion.div>
+
+        {/* Money Current */}
+        <motion.div variants={fadeUp}>
+          <button
+            onClick={() => navigate('/money')}
+            className="w-full soul-glass-elevated rounded-2xl p-5 text-left group hover:bg-muted/10 active:scale-[0.98] transition-all duration-200"
+            style={{ background: 'linear-gradient(135deg, hsl(42 65% 58% / 0.06), hsl(160 30% 40% / 0.04))' }}
+          >
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">💰</span>
+                  <h2 className="font-heading text-lg font-medium text-foreground">Money Current</h2>
+                </div>
+                <p className="text-xs text-muted-foreground">Release resistance. Rehearse receiving.</p>
+              </div>
+              <ChevronRight size={18} className="text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors" />
+            </div>
+          </button>
         </motion.div>
 
         {/* Daily Insight */}
