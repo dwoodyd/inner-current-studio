@@ -51,6 +51,9 @@ import MoneyState from "@/pages/MoneyState";
 import CurrentDeposit from "@/pages/CurrentDeposit";
 import MoneyOpenings from "@/pages/MoneyOpenings";
 import OverflowSpending from "@/pages/OverflowSpending";
+import EvidenceOfSupport from "@/pages/EvidenceOfSupport";
+import MoneyResistanceRelease from "@/pages/MoneyResistanceRelease";
+import PaymentShift from "@/pages/PaymentShift";
 
 const queryClient = new QueryClient();
 
@@ -132,6 +135,9 @@ function AppRoutes() {
         <Route path="/money/deposit" element={<CurrentDeposit />} />
         <Route path="/money/openings" element={<MoneyOpenings />} />
         <Route path="/money/overflow" element={<OverflowSpending />} />
+        <Route path="/money/evidence" element={<EvidenceOfSupport />} />
+        <Route path="/money/resistance" element={<MoneyResistanceRelease />} />
+        <Route path="/money/payment-shift" element={<PaymentShift />} />
       </Route>
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />

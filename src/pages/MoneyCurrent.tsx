@@ -33,6 +33,27 @@ const tools = [
     to: '/money/overflow',
     color: 'text-soul-blue',
   },
+  {
+    icon: Sparkles,
+    title: 'Evidence of Support',
+    description: 'Track the abundance and support already around you.',
+    to: '/money/evidence',
+    color: 'text-amber-400',
+  },
+  {
+    icon: Heart,
+    title: 'Money Resistance Release',
+    description: 'Name, feel, and soften money-specific resistance.',
+    to: '/money/resistance',
+    color: 'text-rose-400',
+  },
+  {
+    icon: Receipt,
+    title: 'Payment Shift',
+    description: 'Reframe bills from fear into flowing circulation.',
+    to: '/money/payment-shift',
+    color: 'text-sky-400',
+  },
 ];
 
 export default function MoneyCurrent() {
@@ -101,7 +122,7 @@ export default function MoneyCurrent() {
         {/* Coming soon hint */}
         <div className="soul-glass rounded-2xl p-4 text-center">
           <p className="text-xs text-muted-foreground italic">
-            More tools arriving soon — Evidence of Support, Money Resistance Release, Payment Shift, Aligned Action, and Wealth Rhythm.
+            More tools arriving soon — Money Gather Flow, Aligned Action, and Wealth Rhythm.
           </p>
         </div>
       </div>
