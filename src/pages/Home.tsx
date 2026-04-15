@@ -8,7 +8,7 @@ import QuickCheckIn from '@/components/QuickCheckIn';
 import TodayFlowCard from '@/components/TodayFlowCard';
 import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
-import brandSymbol from '@/assets/inner-wake-symbol.png';
+import brandLogo from '@/assets/inner-wake-logo.png';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {
@@ -70,12 +70,11 @@ export default function Home() {
         {/* Header */}
         <motion.div variants={fadeUp} className="text-center space-y-2">
           <motion.div
-            className="mx-auto h-12 w-12 rounded-full mb-3 flex items-center justify-center"
-            style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.12), hsl(42 65% 58% / 0.03))' }}
-            animate={{ scale: [1, 1.08, 1] }}
+            className="mx-auto h-20 w-20 rounded-2xl mb-3 flex items-center justify-center overflow-hidden"
+            animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <img src={brandSymbol} alt="" className="h-8 w-8 object-contain" />
+            <img src={brandLogo} alt="Inner Wake" className="h-full w-full object-cover rounded-2xl" />
           </motion.div>
           <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-light tracking-wide font-heading italic">Wake the inner current</p>
