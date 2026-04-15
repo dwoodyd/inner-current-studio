@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ArrowRight, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
-import brandSymbol from '@/assets/inner-wake-symbol.png';
+import brandLogo from '@/assets/inner-wake-logo.png';
 
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;

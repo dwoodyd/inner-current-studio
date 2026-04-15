@@ -8,7 +8,7 @@ import QuickCheckIn from '@/components/QuickCheckIn';
 import TodayFlowCard from '@/components/TodayFlowCard';
 import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
-import brandSymbol from '@/assets/inner-wake-symbol.png';
+import brandLogo from '@/assets/inner-wake-logo.png';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {
