@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Pause, RotateCcw, Timer, Hash } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 const AFFIRMATIONS = [
   // Original present-tense affirmations
@@ -93,6 +95,7 @@ const SPEEDS = [
 
 export default function MoneyAffirmations() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [phase, setPhase] = useState<'setup' | 'active' | 'done'>('setup');
   const [duration, setDuration] = useState(DURATIONS[1]);
   const [speed, setSpeed] = useState(SPEEDS[1]);
@@ -131,13 +134,21 @@ export default function MoneyAffirmations() {
           clearInterval(timerRef.current);
           clearInterval(affirmRef.current);
           setPhase('done');
+          // Log session to tracker
+          if (user) {
+            supabase.from('affirmation_sessions').insert({
+              user_id: user.id,
+              source: 'auto',
+              count: count + 1,
+            }).then(() => {});
+          }
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [phase, paused]);
+  }, [phase, paused, user, count]);
 
   // affirmation cycling
   useEffect(() => {
