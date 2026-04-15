@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Play, Pause, RotateCcw, Timer, Hash } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Timer, Hash, Volume2, VolumeX } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { speakText, stopSpeech } from '@/lib/sounds';
 
 const AFFIRMATIONS = [
-  // Original present-tense affirmations
   "I am wealthy and abundant right now.",
   "Money flows to me easily and effortlessly.",
   "I am grateful for the abundance I already have.",
@@ -103,9 +103,11 @@ export default function MoneyAffirmations() {
   const [count, setCount] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>();
   const affirmRef = useRef<ReturnType<typeof setInterval>>();
   const shuffledRef = useRef<string[]>([]);
+  const speakingRef = useRef(false);
 
   const shuffle = useCallback(() => {
     const arr = [...AFFIRMATIONS];
@@ -125,6 +127,17 @@ export default function MoneyAffirmations() {
     setPhase('active');
   }, [duration, shuffle]);
 
+  // Speak current affirmation when voice is enabled
+  useEffect(() => {
+    if (phase !== 'active' || paused || !voiceEnabled) return;
+    const text = shuffledRef.current[currentIndex] || AFFIRMATIONS[0];
+    if (!speakingRef.current) {
+      speakingRef.current = true;
+      const rate = speed.ms <= 2000 ? 1.2 : speed.ms <= 3000 ? 1.0 : 0.85;
+      speakText(text, rate).finally(() => { speakingRef.current = false; });
+    }
+  }, [currentIndex, phase, paused, voiceEnabled, speed.ms]);
+
   // countdown
   useEffect(() => {
     if (phase !== 'active' || paused) return;
@@ -133,8 +146,8 @@ export default function MoneyAffirmations() {
         if (prev <= 1) {
           clearInterval(timerRef.current);
           clearInterval(affirmRef.current);
+          stopSpeech();
           setPhase('done');
-          // Log session to tracker
           if (user) {
             supabase.from('affirmation_sessions').insert({
               user_id: user.id,
@@ -163,8 +176,11 @@ export default function MoneyAffirmations() {
     return () => clearInterval(affirmRef.current);
   }, [phase, paused, speed.ms]);
 
-  const togglePause = () => setPaused(p => !p);
-  const reset = () => { clearInterval(timerRef.current); clearInterval(affirmRef.current); setPhase('setup'); };
+  const togglePause = () => {
+    if (!paused) stopSpeech();
+    setPaused(p => !p);
+  };
+  const reset = () => { clearInterval(timerRef.current); clearInterval(affirmRef.current); stopSpeech(); setPhase('setup'); };
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60);
@@ -172,7 +188,7 @@ export default function MoneyAffirmations() {
     return `${m}:${sec.toString().padStart(2, '0')}`;
   };
 
-  useEffect(() => () => { clearInterval(timerRef.current); clearInterval(affirmRef.current); }, []);
+  useEffect(() => () => { clearInterval(timerRef.current); clearInterval(affirmRef.current); stopSpeech(); }, []);
 
   // SETUP
   if (phase === 'setup') {
@@ -216,6 +232,27 @@ export default function MoneyAffirmations() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Voice toggle */}
+        <div className="soul-glass rounded-2xl p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Volume2 size={18} className="text-soul-gold" />
+            <div>
+              <p className="text-sm font-medium text-foreground">Voice Readout</p>
+              <p className="text-xs text-muted-foreground">Hear each affirmation spoken aloud</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setVoiceEnabled(v => !v)}
+            className={`w-12 h-7 rounded-full transition-colors relative ${voiceEnabled ? 'bg-soul-gold/40' : 'bg-muted/30'}`}
+          >
+            <motion.div
+              className="w-5 h-5 rounded-full bg-foreground absolute top-1"
+              animate={{ left: voiceEnabled ? 26 : 2 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            />
+          </button>
         </div>
 
         <button onClick={start} className="w-full py-4 rounded-2xl font-medium text-lg bg-soul-gold/20 text-soul-gold hover:bg-soul-gold/30 transition-colors">
@@ -280,6 +317,10 @@ export default function MoneyAffirmations() {
             <button onClick={togglePause}
               className="w-16 h-16 rounded-full bg-soul-gold/20 flex items-center justify-center text-soul-gold hover:bg-soul-gold/30 transition-colors">
               {paused ? <Play size={24} /> : <Pause size={24} />}
+            </button>
+            <button onClick={() => { if (!paused) stopSpeech(); setVoiceEnabled(v => !v); }}
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${voiceEnabled ? 'bg-soul-gold/20 text-soul-gold' : 'bg-muted/20 text-muted-foreground'}`}>
+              {voiceEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
             </button>
           </div>
 

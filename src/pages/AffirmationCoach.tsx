@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Send, Sparkles, MessageCircle, CalendarClock, Repeat } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, MessageCircle, CalendarClock, Repeat, BookmarkPlus, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { useToast } from '@/hooks/use-toast';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
@@ -15,17 +16,58 @@ const SUGGESTIONS = [
   { icon: CalendarClock, label: 'Create an hourly affirmation schedule' },
 ];
 
+const SAVED_KEY = 'innerwake_saved_affirmations';
+
+function getSavedAffirmations(): string[] {
+  try {
+    return JSON.parse(localStorage.getItem(SAVED_KEY) || '[]');
+  } catch { return []; }
+}
+
+function saveAffirmation(text: string) {
+  const existing = getSavedAffirmations();
+  if (!existing.includes(text)) {
+    existing.push(text);
+    localStorage.setItem(SAVED_KEY, JSON.stringify(existing));
+  }
+}
+
+function extractAffirmations(content: string): string[] {
+  const lines = content.split('\n');
+  const affirmations: string[] = [];
+  for (const line of lines) {
+    const cleaned = line.replace(/^[\d\-\*•\.]+\s*/, '').replace(/^\*\*/, '').replace(/\*\*$/, '').replace(/^[""]|[""]$/g, '').trim();
+    if (
+      cleaned.length > 10 &&
+      cleaned.length < 200 &&
+      (cleaned.startsWith('I ') || cleaned.startsWith('My ') || cleaned.startsWith('Money ') ||
+       cleaned.startsWith('Thank ') || cleaned.startsWith('Everything ') || cleaned.startsWith('Wealth ') ||
+       cleaned.startsWith('Abundance ') || cleaned.startsWith('I\'m ') || cleaned.startsWith('People '))
+    ) {
+      affirmations.push(cleaned.replace(/\.?$/, '.'));
+    }
+  }
+  return affirmations;
+}
+
 export default function AffirmationCoach() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [savedSet, setSavedSet] = useState<Set<string>>(new Set(getSavedAffirmations()));
   const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages]);
+
+  const handleSaveAffirmation = useCallback((text: string) => {
+    saveAffirmation(text);
+    setSavedSet(new Set(getSavedAffirmations()));
+    toast({ title: 'Saved to library ✦', description: text.slice(0, 60) + '…' });
+  }, [toast]);
 
   const send = async (text: string) => {
     if (!text.trim() || isLoading) return;
@@ -146,24 +188,47 @@ export default function AffirmationCoach() {
             </div>
           )}
 
-          {messages.map((m, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-                m.role === 'user'
-                  ? 'bg-soul-gold/15 text-foreground'
-                  : 'soul-glass text-foreground'
-              }`}>
-                {m.role === 'assistant' ? (
-                  <div className="prose prose-sm prose-invert max-w-none text-sm leading-relaxed [&_p]:mb-2 [&_ul]:mb-2 [&_li]:text-foreground">
-                    <ReactMarkdown>{m.content}</ReactMarkdown>
-                  </div>
-                ) : (
-                  <p className="text-sm leading-relaxed">{m.content}</p>
-                )}
-              </div>
-            </motion.div>
-          ))}
+          {messages.map((m, i) => {
+            const extracted = m.role === 'assistant' ? extractAffirmations(m.content) : [];
+            return (
+              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                  m.role === 'user'
+                    ? 'bg-soul-gold/15 text-foreground'
+                    : 'soul-glass text-foreground'
+                }`}>
+                  {m.role === 'assistant' ? (
+                    <>
+                      <div className="prose prose-sm prose-invert max-w-none text-sm leading-relaxed [&_p]:mb-2 [&_ul]:mb-2 [&_li]:text-foreground">
+                        <ReactMarkdown>{m.content}</ReactMarkdown>
+                      </div>
+                      {extracted.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-border/20 space-y-1.5">
+                          <p className="text-xs text-muted-foreground font-medium">Save to your library:</p>
+                          {extracted.map((aff, j) => {
+                            const isSaved = savedSet.has(aff);
+                            return (
+                              <button key={j} onClick={() => !isSaved && handleSaveAffirmation(aff)}
+                                disabled={isSaved}
+                                className={`flex items-center gap-2 w-full text-left text-xs rounded-lg px-2.5 py-1.5 transition-colors ${
+                                  isSaved ? 'text-soul-gold/60 bg-soul-gold/5' : 'text-muted-foreground hover:text-foreground hover:bg-muted/10'
+                                }`}>
+                                {isSaved ? <Check size={12} className="text-soul-gold shrink-0" /> : <BookmarkPlus size={12} className="shrink-0" />}
+                                <span className="line-clamp-1">{aff}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-sm leading-relaxed">{m.content}</p>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
 
           {isLoading && messages[messages.length - 1]?.role === 'user' && (
             <div className="flex justify-start">
@@ -184,7 +249,6 @@ export default function AffirmationCoach() {
       <div className="border-t border-border/20 px-4 py-3 safe-bottom">
         <div className="max-w-lg mx-auto flex items-end gap-2">
           <textarea
-            ref={inputRef}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
