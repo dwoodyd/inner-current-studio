@@ -60,6 +60,7 @@ import WealthRhythm from "@/pages/WealthRhythm";
 import MoneyAffirmations from "@/pages/MoneyAffirmations";
 import AffirmationTracker from "@/pages/AffirmationTracker";
 import AffirmationCoach from "@/pages/AffirmationCoach";
+import AffirmationLibrary from "@/pages/AffirmationLibrary";
 
 const queryClient = new QueryClient();
 
@@ -150,6 +151,7 @@ function AppRoutes() {
         <Route path="/money/affirmations" element={<MoneyAffirmations />} />
         <Route path="/money/tracker" element={<AffirmationTracker />} />
         <Route path="/money/coach" element={<AffirmationCoach />} />
+        <Route path="/money/library" element={<AffirmationLibrary />} />
       </Route>
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />

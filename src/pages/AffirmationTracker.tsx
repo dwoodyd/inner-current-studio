@@ -205,16 +205,16 @@ export default function AffirmationTracker() {
         <h3 className="text-sm font-medium text-foreground text-center">Robotic Affirming Counter</h3>
         <p className="text-xs text-muted-foreground text-center">Tap to count each spoken affirmation</p>
         <div className="flex items-center justify-center gap-6">
-          <button onClick={() => setManualCount(c => Math.max(0, c - 1))}
-            className="w-12 h-12 rounded-full bg-muted/20 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => { navigator.vibrate?.(10); setManualCount(c => Math.max(0, c - 1)); }}
+            className="w-12 h-12 rounded-full bg-muted/20 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors active:scale-90 transition-transform">
             <Minus size={20} />
           </button>
           <motion.p key={manualCount} initial={{ scale: 0.8 }} animate={{ scale: 1 }}
             className="text-4xl font-heading font-bold text-foreground tabular-nums min-w-[80px] text-center">
             {manualCount}
           </motion.p>
-          <button onClick={() => setManualCount(c => c + 1)}
-            className="w-12 h-12 rounded-full bg-soul-gold/20 flex items-center justify-center text-soul-gold hover:bg-soul-gold/30 transition-colors">
+          <button onClick={() => { navigator.vibrate?.(20); setManualCount(c => c + 1); }}
+            className="w-12 h-12 rounded-full bg-soul-gold/20 flex items-center justify-center text-soul-gold hover:bg-soul-gold/30 active:scale-90 transition-all">
             <Plus size={20} />
           </button>
         </div>

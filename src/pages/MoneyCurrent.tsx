@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Heart, Receipt, Target, Sparkles, ChevronRight,
-  BookOpen, Zap, Trophy, Timer, ListChecks, Bot,
+  BookOpen, Zap, Trophy, Timer, ListChecks, Bot, Library,
 } from 'lucide-react';
 
 const tools = [
@@ -95,6 +95,13 @@ const tools = [
     title: 'Affirmation Coach',
     description: 'AI-powered coach for personalized affirmations and guidance.',
     to: '/money/coach',
+    color: 'text-soul-gold',
+  },
+  {
+    icon: Library,
+    title: 'My Affirmation Library',
+    description: 'View, manage, and set reminders for your saved affirmations.',
+    to: '/money/library',
     color: 'text-soul-gold',
   },
 ];
