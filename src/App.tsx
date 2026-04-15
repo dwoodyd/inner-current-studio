@@ -58,6 +58,8 @@ import MoneyGatherFlow from "@/pages/MoneyGatherFlow";
 import AlignedAction from "@/pages/AlignedAction";
 import WealthRhythm from "@/pages/WealthRhythm";
 import MoneyAffirmations from "@/pages/MoneyAffirmations";
+import AffirmationTracker from "@/pages/AffirmationTracker";
+import AffirmationCoach from "@/pages/AffirmationCoach";
 
 const queryClient = new QueryClient();
 
@@ -146,6 +148,8 @@ function AppRoutes() {
         <Route path="/money/aligned-action" element={<AlignedAction />} />
         <Route path="/money/wealth-rhythm" element={<WealthRhythm />} />
         <Route path="/money/affirmations" element={<MoneyAffirmations />} />
+        <Route path="/money/tracker" element={<AffirmationTracker />} />
+        <Route path="/money/coach" element={<AffirmationCoach />} />
       </Route>
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />

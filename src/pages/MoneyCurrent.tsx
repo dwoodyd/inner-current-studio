@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Heart, Receipt, Target, Sparkles, ChevronRight,
-  BookOpen, Zap, Trophy, Timer,
+  BookOpen, Zap, Trophy, Timer, ListChecks, Bot,
 } from 'lucide-react';
 
 const tools = [
@@ -81,6 +81,20 @@ const tools = [
     title: 'Auto Affirmations',
     description: 'Set a timer and absorb powerful money affirmations on repeat.',
     to: '/money/affirmations',
+    color: 'text-soul-gold',
+  },
+  {
+    icon: ListChecks,
+    title: '10K Challenge',
+    description: 'Track your way to 10,000 affirmations. Saturate your mind.',
+    to: '/money/tracker',
+    color: 'text-soul-gold',
+  },
+  {
+    icon: Bot,
+    title: 'Affirmation Coach',
+    description: 'AI-powered coach for personalized affirmations and guidance.',
+    to: '/money/coach',
     color: 'text-soul-gold',
   },
 ];

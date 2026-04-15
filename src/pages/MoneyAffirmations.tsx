@@ -2,8 +2,11 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Pause, RotateCcw, Timer, Hash } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 const AFFIRMATIONS = [
+  // Original present-tense affirmations
   "I am wealthy and abundant right now.",
   "Money flows to me easily and effortlessly.",
   "I am grateful for the abundance I already have.",
@@ -44,6 +47,35 @@ const AFFIRMATIONS = [
   "I am living my most abundant life right now.",
   "Money is a tool I use to create a beautiful life.",
   "Thank you that opportunities are pouring in from every direction.",
+  // Spoiled affirmations
+  "I always get what I want instantly.",
+  "Everything always goes my way.",
+  "I manifest instantly and effortlessly.",
+  "Everything always works out in my favor.",
+  "Everyone loves to spoil me with gifts.",
+  "I get money when I sleep.",
+  "I get things for free just because.",
+  "Money is obsessed with me.",
+  "I'm a millionaire.",
+  "I don't lose money.",
+  "Everything I spend comes back to me multiplied.",
+  "I receive money simply for existing.",
+  "I find money out of nowhere.",
+  "People give me money for no reason.",
+  "I have unlimited access to money.",
+  "I attract $10K easily and effortlessly every day.",
+  "I magnetize wealth, it comes to me in perfect timing, from expected and unexpected places.",
+  "I deserve abundance, I release scarcity thinking, there's always more than enough for me.",
+  "I spend, save, and multiply my money with ease and joy.",
+  "I see opportunities everywhere and I take inspired action without fear.",
+  "I am a money magnet, wealth follows me wherever I go.",
+  "I earn with effortlessness! Money flows to me like water, constant and unstoppable.",
+  "I reject struggle! Making money is fun, easy, and exciting. I value myself.",
+  "I already have everything I need to manifest wealth.",
+  "I thank the Youniverse for my expanding bank accounts, for new streams of income, and for every dollar that comes to me.",
+  "I see abundance in every interaction, every decision, every opportunity.",
+  "I stopped asking if I can have it, I know it is mine.",
+  "I am someone who already has $10K, $50K, $100K, $1M and more.",
 ];
 
 const DURATIONS = [
@@ -63,6 +95,7 @@ const SPEEDS = [
 
 export default function MoneyAffirmations() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [phase, setPhase] = useState<'setup' | 'active' | 'done'>('setup');
   const [duration, setDuration] = useState(DURATIONS[1]);
   const [speed, setSpeed] = useState(SPEEDS[1]);
@@ -101,13 +134,21 @@ export default function MoneyAffirmations() {
           clearInterval(timerRef.current);
           clearInterval(affirmRef.current);
           setPhase('done');
+          // Log session to tracker
+          if (user) {
+            supabase.from('affirmation_sessions').insert({
+              user_id: user.id,
+              source: 'auto',
+              count: count + 1,
+            }).then(() => {});
+          }
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [phase, paused]);
+  }, [phase, paused, user, count]);
 
   // affirmation cycling
   useEffect(() => {

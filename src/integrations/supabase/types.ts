@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      affirmation_sessions: {
+        Row: {
+          affirmation_text: string | null
+          count: number
+          created_at: string
+          id: string
+          source: string
+          user_id: string
+        }
+        Insert: {
+          affirmation_text?: string | null
+          count?: number
+          created_at?: string
+          id?: string
+          source?: string
+          user_id: string
+        }
+        Update: {
+          affirmation_text?: string | null
+          count?: number
+          created_at?: string
+          id?: string
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       check_ins: {
         Row: {
           created_at: string
