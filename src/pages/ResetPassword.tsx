@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import brandSymbol from '@/assets/inner-wake-symbol.png';
+import brandLogo from '@/assets/inner-wake-logo.png';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -40,7 +40,7 @@ export default function ResetPassword() {
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="h-16 w-16 rounded-full flex items-center justify-center"
             style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.15), hsl(42 65% 58% / 0.03))' }}>
-            <img src={brandSymbol} alt="Inner Wake" className="h-10 w-10 object-contain" />
+            <img src={brandLogo} alt="Inner Wake" className="h-10 w-10 object-contain" />
           </div>
           <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">Set New Password</h1>
           <p className="text-sm text-muted-foreground">Choose a new password for your account.</p>

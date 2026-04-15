@@ -75,7 +75,7 @@ export default function Home() {
             animate={{ scale: [1, 1.08, 1] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <img src={brandSymbol} alt="" className="h-8 w-8 object-contain" />
+            <img src={brandLogo} alt="" className="h-8 w-8 object-contain" />
           </motion.div>
           <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-light tracking-wide font-heading italic">Wake the inner current</p>
