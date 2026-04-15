@@ -54,6 +54,10 @@ import OverflowSpending from "@/pages/OverflowSpending";
 import EvidenceOfSupport from "@/pages/EvidenceOfSupport";
 import MoneyResistanceRelease from "@/pages/MoneyResistanceRelease";
 import PaymentShift from "@/pages/PaymentShift";
+import MoneyGatherFlow from "@/pages/MoneyGatherFlow";
+import AlignedAction from "@/pages/AlignedAction";
+import WealthRhythm from "@/pages/WealthRhythm";
+import MoneyAffirmations from "@/pages/MoneyAffirmations";
 
 const queryClient = new QueryClient();
 
