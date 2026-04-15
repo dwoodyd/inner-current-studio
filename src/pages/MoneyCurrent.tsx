@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Heart, Receipt, Target, Sparkles, ChevronRight,
+  BookOpen, Zap, Trophy, Timer,
 } from 'lucide-react';
 
 const tools = [
@@ -54,6 +55,34 @@ const tools = [
     to: '/money/payment-shift',
     color: 'text-sky-400',
   },
+  {
+    icon: BookOpen,
+    title: 'Money Gather Flow',
+    description: 'Build and absorb money-supportive thought sequences.',
+    to: '/money/gather',
+    color: 'text-teal-400',
+  },
+  {
+    icon: Zap,
+    title: 'Aligned Action',
+    description: 'Turn a money shift into one grounded, practical step.',
+    to: '/money/aligned-action',
+    color: 'text-orange-400',
+  },
+  {
+    icon: Trophy,
+    title: 'Wealth Rhythm',
+    description: 'Track your momentum with levels, streaks, and milestones.',
+    to: '/money/wealth-rhythm',
+    color: 'text-purple-400',
+  },
+  {
+    icon: Timer,
+    title: 'Auto Affirmations',
+    description: 'Set a timer and absorb powerful money affirmations on repeat.',
+    to: '/money/affirmations',
+    color: 'text-soul-gold',
+  },
 ];
 
 export default function MoneyCurrent() {
@@ -61,7 +90,6 @@ export default function MoneyCurrent() {
 
   return (
     <div className="relative">
-      {/* Ambient gold-green glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
           className="absolute -top-24 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full"
@@ -72,13 +100,11 @@ export default function MoneyCurrent() {
       </div>
 
       <div className="relative mx-auto max-w-lg px-4 pt-12 pb-8 space-y-7 safe-top">
-        {/* Back */}
         <button onClick={() => navigate('/')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft size={18} strokeWidth={1.5} />
           <span className="text-sm">Home</span>
         </button>
 
-        {/* Header */}
         <div className="text-center space-y-3">
           <motion.div
             className="w-16 h-16 rounded-full mx-auto flex items-center justify-center"
@@ -96,14 +122,13 @@ export default function MoneyCurrent() {
           </p>
         </div>
 
-        {/* Tools */}
         <div className="space-y-3">
           {tools.map(({ icon: Icon, title, description, to, color }, i) => (
             <motion.button
               key={title}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: i * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => navigate(to)}
               className="soul-glass-elevated w-full text-left flex items-center gap-4 p-4 sm:p-5 rounded-2xl hover:bg-muted/10 active:scale-[0.98] transition-all duration-200 min-h-[64px] group"
             >
@@ -117,13 +142,6 @@ export default function MoneyCurrent() {
               <ChevronRight size={16} className="text-muted-foreground/30 shrink-0 group-hover:text-muted-foreground/60 transition-colors" />
             </motion.button>
           ))}
-        </div>
-
-        {/* Coming soon hint */}
-        <div className="soul-glass rounded-2xl p-4 text-center">
-          <p className="text-xs text-muted-foreground italic">
-            More tools arriving soon — Money Gather Flow, Aligned Action, and Wealth Rhythm.
-          </p>
         </div>
       </div>
     </div>

@@ -54,6 +54,10 @@ import OverflowSpending from "@/pages/OverflowSpending";
 import EvidenceOfSupport from "@/pages/EvidenceOfSupport";
 import MoneyResistanceRelease from "@/pages/MoneyResistanceRelease";
 import PaymentShift from "@/pages/PaymentShift";
+import MoneyGatherFlow from "@/pages/MoneyGatherFlow";
+import AlignedAction from "@/pages/AlignedAction";
+import WealthRhythm from "@/pages/WealthRhythm";
+import MoneyAffirmations from "@/pages/MoneyAffirmations";
 
 const queryClient = new QueryClient();
 
@@ -138,6 +142,10 @@ function AppRoutes() {
         <Route path="/money/evidence" element={<EvidenceOfSupport />} />
         <Route path="/money/resistance" element={<MoneyResistanceRelease />} />
         <Route path="/money/payment-shift" element={<PaymentShift />} />
+        <Route path="/money/gather" element={<MoneyGatherFlow />} />
+        <Route path="/money/aligned-action" element={<AlignedAction />} />
+        <Route path="/money/wealth-rhythm" element={<WealthRhythm />} />
+        <Route path="/money/affirmations" element={<MoneyAffirmations />} />
       </Route>
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />
