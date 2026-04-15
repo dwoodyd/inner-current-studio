@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Minus, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, RotateCcw, Flame } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -23,10 +23,28 @@ const MILESTONES = [
   { at: 10000, note: "it's done. it's yours." },
 ];
 
+function computeStreak(dates: string[]): number {
+  if (dates.length === 0) return 0;
+  const unique = [...new Set(dates)].sort().reverse();
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  if (unique[0] !== today && unique[0] !== yesterday) return 0;
+  let streak = 1;
+  for (let i = 1; i < unique.length; i++) {
+    const prev = new Date(unique[i - 1]);
+    const curr = new Date(unique[i]);
+    const diff = (prev.getTime() - curr.getTime()) / 86400000;
+    if (Math.round(diff) === 1) streak++;
+    else break;
+  }
+  return streak;
+}
+
 export default function AffirmationTracker() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [total, setTotal] = useState(0);
+  const [streak, setStreak] = useState(0);
   const [manualCount, setManualCount] = useState(0);
   const [affirming, setAffirming] = useState('');
   const [loading, setLoading] = useState(true);
@@ -35,11 +53,13 @@ export default function AffirmationTracker() {
     if (!user) return;
     const { data } = await supabase
       .from('affirmation_sessions')
-      .select('count')
+      .select('count, created_at')
       .eq('user_id', user.id);
     if (data) {
       const sum = data.reduce((acc, r) => acc + (r.count || 0), 0);
       setTotal(sum);
+      const dates = data.map(r => r.created_at.slice(0, 10));
+      setStreak(computeStreak(dates));
     }
     setLoading(false);
   }, [user]);
@@ -56,6 +76,8 @@ export default function AffirmationTracker() {
     });
     setTotal(prev => prev + manualCount);
     setManualCount(0);
+    // Refresh streak
+    fetchTotal();
   };
 
   const filledCells = Math.min(Math.floor(total / PER_CELL), CELLS_PER_ROW * ROWS);
@@ -80,6 +102,41 @@ export default function AffirmationTracker() {
         <h1 className="font-heading text-2xl font-semibold text-foreground">the <span className="text-soul-gold italic">10,000</span> affirmation challenge</h1>
         <p className="text-xs text-muted-foreground uppercase tracking-widest">saturate your mind · the belief follows.</p>
       </div>
+
+      {/* Daily Streak */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="soul-glass rounded-2xl p-4 flex items-center justify-center gap-4"
+      >
+        <div className="relative">
+          <motion.div
+            animate={streak > 0 ? { scale: [1, 1.15, 1] } : {}}
+            transition={{ duration: 2, repeat: Infinity }}
+            className={`w-14 h-14 rounded-full flex items-center justify-center ${
+              streak > 0
+                ? 'bg-gradient-to-br from-orange-500/20 to-soul-gold/20'
+                : 'bg-muted/10'
+            }`}
+          >
+            <Flame size={24} className={streak > 0 ? 'text-orange-400' : 'text-muted-foreground/40'} />
+          </motion.div>
+        </div>
+        <div className="text-left">
+          <p className="text-2xl font-heading font-bold text-foreground">
+            {streak} <span className="text-sm font-normal text-muted-foreground">{streak === 1 ? 'day' : 'days'}</span>
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {streak === 0
+              ? 'affirm today to start your streak'
+              : streak < 7
+                ? 'keep the fire alive'
+                : streak < 30
+                  ? 'you\'re building momentum ✦'
+                  : 'unstoppable. you are the energy. 🔥'}
+          </p>
+        </div>
+      </motion.div>
 
       {/* I am affirming */}
       <div className="space-y-1">
