@@ -56,6 +56,14 @@ const GENTLE_MESSAGES = [
   { title: 'A soft reminder', body: 'Sometimes the most important thing is just showing up.' },
 ];
 
+const AFFIRM_MESSAGES = [
+  { title: 'Time to affirm ✦', body: 'Money flows to me easily and effortlessly.' },
+  { title: 'Affirm now ✦', body: 'I am a powerful money magnet.' },
+  { title: 'Your reminder ✦', body: 'Everything always works out in my favor.' },
+  { title: 'Affirmation time ✦', body: 'I receive large sums of money regularly.' },
+  { title: 'Saturate your mind ✦', body: 'I manifest instantly and effortlessly.' },
+];
+
 const MORNING_MESSAGES = [
   { title: 'Good morning', body: 'Before the day begins — where are you right now?' },
   { title: 'A new day', body: 'Start with one honest check-in. That changes everything.' },
@@ -72,13 +80,15 @@ function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export function sendNotification(type: 'morning' | 'evening' | 'return') {
+export function sendNotification(type: 'morning' | 'evening' | 'return' | 'affirm') {
   if (!canNotify()) return;
 
   const msg = type === 'morning'
     ? pickRandom(MORNING_MESSAGES)
     : type === 'evening'
     ? pickRandom(EVENING_MESSAGES)
+    : type === 'affirm'
+    ? pickRandom(AFFIRM_MESSAGES)
     : pickRandom(GENTLE_MESSAGES);
 
   try {
@@ -126,6 +136,17 @@ export function startNotificationScheduler() {
         lastReturnNotif = Date.now();
       }
     }
+
+    // Affirmation reminders
+    try {
+      const remindRaw = localStorage.getItem('innerwake_affirm_reminders');
+      if (remindRaw) {
+        const remind = JSON.parse(remindRaw);
+        if (remind.enabled && remind.times?.includes(timeStr)) {
+          sendNotification('affirm');
+        }
+      }
+    } catch {}
   }, 60000);
 }
 
