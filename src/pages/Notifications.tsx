@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bell, BellOff, Sun, Moon, Clock, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Bell, BellOff, Sun, Moon, Clock, RotateCcw, Sparkles } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { hasNotificationAPI } from '@/lib/platform';
@@ -15,6 +15,13 @@ import {
   sendNotification,
   type NotificationPrefs,
 } from '@/lib/notifications';
+import {
+  hasPushSupport,
+  subscribeAndSync,
+  updatePushPrefs,
+  unsubscribePush,
+  sendTestPush,
+} from '@/lib/push';
 
 export default function Notifications() {
   const navigate = useNavigate();
