@@ -272,6 +272,44 @@ export default function Notifications() {
                 )}
               </div>
 
+              {/* Affirmation Reminders */}
+              <div className="soul-card space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Sparkles size={16} className="text-primary/70" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">Affirmation Reminders</p>
+                      <p className="text-[10px] text-muted-foreground">Gentle pings to saturate your mind</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={prefs.affirmationReminders}
+                    onCheckedChange={v => update('affirmationReminders', v)}
+                  />
+                </div>
+                {prefs.affirmationReminders && (
+                  <div className="flex items-center gap-2 pl-7">
+                    <Clock size={12} className="text-muted-foreground/50" />
+                    <select
+                      value={prefs.affirmationIntervalMinutes}
+                      onChange={e => update('affirmationIntervalMinutes', Number(e.target.value))}
+                      className="bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 focus:outline-none focus:ring-1 focus:ring-primary/30"
+                    >
+                      <option value={30}>Every 30 minutes</option>
+                      <option value={60}>Every hour</option>
+                      <option value={120}>Every 2 hours</option>
+                      <option value={180}>Every 3 hours</option>
+                    </select>
+                    <button
+                      onClick={() => testNotification('affirm')}
+                      className="text-[10px] text-primary/60 hover:text-primary ml-auto"
+                    >
+                      Test
+                    </button>
+                  </div>
+                )}
+              </div>
+
               {/* Philosophy note */}
               <div className="text-center py-3">
                 <p className="font-heading text-xs italic text-muted-foreground/60 leading-relaxed max-w-[16rem] mx-auto">
