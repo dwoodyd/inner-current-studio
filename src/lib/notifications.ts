@@ -11,6 +11,8 @@ export interface NotificationPrefs {
   eveningTime: string;
   gentleReturns: boolean; // "Haven't seen you in a while" style
   returnIntervalHours: number;
+  affirmationReminders: boolean;
+  affirmationIntervalMinutes: number; // 0 = off, 60 = hourly
 }
 
 const defaults: NotificationPrefs = {
@@ -22,6 +24,8 @@ const defaults: NotificationPrefs = {
   eveningTime: '20:00',
   gentleReturns: true,
   returnIntervalHours: 4,
+  affirmationReminders: false,
+  affirmationIntervalMinutes: 60,
 };
 
 export function loadNotifPrefs(): NotificationPrefs {

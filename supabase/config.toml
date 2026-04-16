@@ -2,3 +2,6 @@ project_id = "bwrjwmreepeewumpvhau"
 
 [functions.current-guide]
 verify_jwt = false
+
+[functions.push-scheduler]
+verify_jwt = false
