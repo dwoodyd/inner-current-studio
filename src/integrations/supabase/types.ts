@@ -488,6 +488,60 @@ export type Database = {
         }
         Relationships: []
       }
+      push_subscriptions: {
+        Row: {
+          active: boolean
+          affirmation_interval_minutes: number
+          auth_key: string
+          created_at: string
+          endpoint: string
+          evening_reflection: boolean
+          evening_time: string
+          gentle_returns: boolean
+          id: string
+          morning_reminder: boolean
+          morning_time: string
+          p256dh: string
+          return_interval_hours: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          affirmation_interval_minutes?: number
+          auth_key: string
+          created_at?: string
+          endpoint: string
+          evening_reflection?: boolean
+          evening_time?: string
+          gentle_returns?: boolean
+          id?: string
+          morning_reminder?: boolean
+          morning_time?: string
+          p256dh: string
+          return_interval_hours?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          affirmation_interval_minutes?: number
+          auth_key?: string
+          created_at?: string
+          endpoint?: string
+          evening_reflection?: boolean
+          evening_time?: string
+          gentle_returns?: boolean
+          id?: string
+          morning_reminder?: boolean
+          morning_time?: string
+          p256dh?: string
+          return_interval_hours?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       resistance_entries: {
         Row: {
           body_location: string
