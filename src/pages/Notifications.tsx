@@ -30,22 +30,50 @@ export default function Notifications() {
     hasNotificationAPI() ? Notification.permission : 'denied'
   );
 
+  const pushAvailable = hasPushSupport();
+
+  // Map UI prefs → backend payload
+  const toPushPayload = (p: NotificationPrefs) => ({
+    morning_reminder: p.morningReminder,
+    morning_time: p.morningTime,
+    evening_reflection: p.eveningReflection,
+    evening_time: p.eveningTime,
+    gentle_returns: p.gentleReturns,
+    return_interval_hours: p.returnIntervalHours,
+    affirmation_interval_minutes: p.affirmationReminders ? p.affirmationIntervalMinutes : 0,
+  });
+
   useEffect(() => {
     saveNotifPrefs(prefs);
     if (prefs.enabled && canNotify()) {
       startNotificationScheduler();
+      // Sync prefs to backend so server-side cron can deliver pushes when app is closed.
+      if (pushAvailable) {
+        updatePushPrefs(toPushPayload(prefs)).catch(() => {});
+      }
     } else {
       stopNotificationScheduler();
     }
-  }, [prefs]);
+  }, [prefs, pushAvailable]);
 
   const handleEnableToggle = async (checked: boolean) => {
     if (checked) {
       const perm = await requestPermission();
       setPermissionState(perm);
       if (perm === 'granted') {
-        setPrefs(p => ({ ...p, enabled: true, permission: perm }));
-        toast.success('Notifications enabled. We\'ll be gentle.');
+        const next = { ...prefs, enabled: true, permission: perm };
+        setPrefs(next);
+        // Subscribe browser to push and sync prefs to backend.
+        if (pushAvailable) {
+          const ok = await subscribeAndSync(toPushPayload(next));
+          if (ok) {
+            toast.success('Notifications enabled. We\'ll be gentle.');
+          } else {
+            toast.success('Local reminders enabled.');
+          }
+        } else {
+          toast.success('Notifications enabled. We\'ll be gentle.');
+        }
       } else if (perm === 'denied') {
         toast.error('Notifications blocked. Check your browser settings.');
       } else {
@@ -54,6 +82,9 @@ export default function Notifications() {
     } else {
       setPrefs(p => ({ ...p, enabled: false }));
       stopNotificationScheduler();
+      if (pushAvailable) {
+        unsubscribePush().catch(() => {});
+      }
     }
   };
 
@@ -61,12 +92,20 @@ export default function Notifications() {
     setPrefs(p => ({ ...p, [key]: value }));
   };
 
-  const testNotification = (type: 'morning' | 'evening' | 'return') => {
+  const testNotification = async (type: 'morning' | 'evening' | 'return' | 'affirm') => {
     if (!canNotify()) {
       toast.error('Enable notifications first.');
       return;
     }
-    sendNotification(type);
+    // Prefer server-side push so the user can confirm background delivery works.
+    if (pushAvailable) {
+      const ok = await sendTestPush(type);
+      if (ok) {
+        toast.success('Push sent. Check your notifications.');
+        return;
+      }
+    }
+    sendNotification(type as any);
     toast.success('Check your notifications.');
   };
 
