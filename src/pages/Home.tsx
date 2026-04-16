@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
@@ -29,6 +29,31 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
+const FAVICON_VERSION = '20260416c';
+const STATIC_FAVICON = `/favicon-64.png?v=${FAVICON_VERSION}`;
+const STATIC_SHORTCUT_ICON = `/favicon.ico?v=${FAVICON_VERSION}`;
+const STATIC_APPLE_ICON = `/apple-touch-icon.png?v=${FAVICON_VERSION}`;
+const FAVICON_GLOW_FRAMES = [
+  `/favicon-glow-1.png?v=${FAVICON_VERSION}`,
+  `/favicon-glow-2.png?v=${FAVICON_VERSION}`,
+  `/favicon-glow-3.png?v=${FAVICON_VERSION}`,
+  `/favicon-glow-2.png?v=${FAVICON_VERSION}`,
+  STATIC_FAVICON,
+];
+
+function ensureHeadLink(selector: string, attributes: Record<string, string>) {
+  const existing = document.head.querySelector<HTMLLinkElement>(selector);
+  const link = existing ?? document.createElement('link');
+
+  Object.entries(attributes).forEach(([key, value]) => link.setAttribute(key, value));
+
+  if (!existing) {
+    document.head.appendChild(link);
+  }
+
+  return link;
+}
+
 export default function Home() {
   const navigate = useNavigate();
   const { state, addCheckIn } = useAppState();
@@ -42,6 +67,50 @@ export default function Home() {
     setQuickState(qs);
     addCheckIn(quickToEmotional[qs]);
   };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const faviconLink = ensureHeadLink('link[data-runtime-favicon="true"]', {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '64x64',
+      href: STATIC_FAVICON,
+      'data-runtime-favicon': 'true',
+    });
+
+    ensureHeadLink('link[data-runtime-shortcut-icon="true"]', {
+      rel: 'shortcut icon',
+      type: 'image/x-icon',
+      href: STATIC_SHORTCUT_ICON,
+      'data-runtime-shortcut-icon': 'true',
+    });
+
+    ensureHeadLink('link[data-runtime-apple-touch-icon="true"]', {
+      rel: 'apple-touch-icon',
+      sizes: '180x180',
+      href: STATIC_APPLE_ICON,
+      'data-runtime-apple-touch-icon': 'true',
+    });
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      faviconLink.href = STATIC_FAVICON;
+      return () => {
+        faviconLink.href = STATIC_FAVICON;
+      };
+    }
+
+    const timeouts = FAVICON_GLOW_FRAMES.map((href, index) =>
+      window.setTimeout(() => {
+        faviconLink.href = href;
+      }, index * 150)
+    );
+
+    return () => {
+      timeouts.forEach((timeout) => window.clearTimeout(timeout));
+      faviconLink.href = STATIC_FAVICON;
+    };
+  }, []);
 
   return (
     <div className="relative">
