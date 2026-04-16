@@ -14,7 +14,7 @@ const states: { value: QuickState; label: string; emoji: string; hint: string }[
   { value: 'flowing', label: 'Flowing', emoji: '✦', hint: 'Aligned, in the current' },
 ];
 
-const pulseVariants: Record<QuickState, object> = {
+const pulseVariants: Record<QuickState, import('framer-motion').TargetAndTransition> = {
   tight: { scale: [1, 0.92, 1], transition: { duration: 1.8, repeat: Infinity, ease: 'easeInOut' } },
   restless: { x: [0, -2, 2, -1, 1, 0], transition: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } },
   flat: { opacity: [0.6, 1, 0.6], transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' } },
