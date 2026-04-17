@@ -61,6 +61,12 @@ import MoneyAffirmations from "@/pages/MoneyAffirmations";
 import AffirmationTracker from "@/pages/AffirmationTracker";
 import AffirmationCoach from "@/pages/AffirmationCoach";
 import AffirmationLibrary from "@/pages/AffirmationLibrary";
+import CurrentsHub from "@/pages/CurrentsHub";
+import SelfHub from "@/pages/domain/SelfHub";
+import EnergyHub from "@/pages/domain/EnergyHub";
+import RelationshipsHub from "@/pages/domain/RelationshipsHub";
+import HealthHub from "@/pages/domain/HealthHub";
+import { SelfPages, EnergyPages, RelationshipsPages, HealthPages } from "@/pages/domain/DomainPages";
 
 const queryClient = new QueryClient();
 
@@ -152,6 +158,35 @@ function AppRoutes() {
         <Route path="/money/tracker" element={<AffirmationTracker />} />
         <Route path="/money/coach" element={<AffirmationCoach />} />
         <Route path="/money/library" element={<AffirmationLibrary />} />
+        <Route path="/currents" element={<CurrentsHub />} />
+        <Route path="/self" element={<SelfHub />} />
+        <Route path="/self/state" element={<SelfPages.State />} />
+        <Route path="/self/affirmations" element={<SelfPages.Affirmations />} />
+        <Route path="/self/gather" element={<SelfPages.Gather />} />
+        <Route path="/self/resistance" element={<SelfPages.Resistance />} />
+        <Route path="/self/openings" element={<SelfPages.Openings />} />
+        <Route path="/self/evidence" element={<SelfPages.Evidence />} />
+        <Route path="/energy" element={<EnergyHub />} />
+        <Route path="/energy/state" element={<EnergyPages.State />} />
+        <Route path="/energy/affirmations" element={<EnergyPages.Affirmations />} />
+        <Route path="/energy/gather" element={<EnergyPages.Gather />} />
+        <Route path="/energy/resistance" element={<EnergyPages.Resistance />} />
+        <Route path="/energy/openings" element={<EnergyPages.Openings />} />
+        <Route path="/energy/evidence" element={<EnergyPages.Evidence />} />
+        <Route path="/relationships" element={<RelationshipsHub />} />
+        <Route path="/relationships/state" element={<RelationshipsPages.State />} />
+        <Route path="/relationships/affirmations" element={<RelationshipsPages.Affirmations />} />
+        <Route path="/relationships/gather" element={<RelationshipsPages.Gather />} />
+        <Route path="/relationships/resistance" element={<RelationshipsPages.Resistance />} />
+        <Route path="/relationships/openings" element={<RelationshipsPages.Openings />} />
+        <Route path="/relationships/evidence" element={<RelationshipsPages.Evidence />} />
+        <Route path="/health" element={<HealthHub />} />
+        <Route path="/health/state" element={<HealthPages.State />} />
+        <Route path="/health/affirmations" element={<HealthPages.Affirmations />} />
+        <Route path="/health/gather" element={<HealthPages.Gather />} />
+        <Route path="/health/resistance" element={<HealthPages.Resistance />} />
+        <Route path="/health/openings" element={<HealthPages.Openings />} />
+        <Route path="/health/evidence" element={<HealthPages.Evidence />} />
       </Route>
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />
