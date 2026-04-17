@@ -125,6 +125,138 @@ export type Database = {
         }
         Relationships: []
       }
+      domain_evidence: {
+        Row: {
+          category: string
+          created_at: string
+          domain: string
+          entry_text: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          domain: string
+          entry_text?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          domain?: string
+          entry_text?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      domain_openings: {
+        Row: {
+          created_at: string
+          current_resistance: string
+          desire: string
+          desired_feeling: string
+          domain: string
+          id: string
+          next_aligned_step: string
+          position: number
+          updated_at: string
+          user_id: string
+          why_it_matters: string
+        }
+        Insert: {
+          created_at?: string
+          current_resistance?: string
+          desire?: string
+          desired_feeling?: string
+          domain: string
+          id?: string
+          next_aligned_step?: string
+          position?: number
+          updated_at?: string
+          user_id: string
+          why_it_matters?: string
+        }
+        Update: {
+          created_at?: string
+          current_resistance?: string
+          desire?: string
+          desired_feeling?: string
+          domain?: string
+          id?: string
+          next_aligned_step?: string
+          position?: number
+          updated_at?: string
+          user_id?: string
+          why_it_matters?: string
+        }
+        Relationships: []
+      }
+      domain_resistance: {
+        Row: {
+          body_sensation: string
+          charge_after: string
+          charge_before: string
+          created_at: string
+          domain: string
+          id: string
+          resistance_type: string
+          softened_thought: string | null
+          user_id: string
+        }
+        Insert: {
+          body_sensation?: string
+          charge_after?: string
+          charge_before?: string
+          created_at?: string
+          domain: string
+          id?: string
+          resistance_type?: string
+          softened_thought?: string | null
+          user_id: string
+        }
+        Update: {
+          body_sensation?: string
+          charge_after?: string
+          charge_before?: string
+          created_at?: string
+          domain?: string
+          id?: string
+          resistance_type?: string
+          softened_thought?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      domain_states: {
+        Row: {
+          created_at: string
+          domain: string
+          id: string
+          note: string | null
+          state: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          domain: string
+          id?: string
+          note?: string | null
+          state: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          domain?: string
+          id?: string
+          note?: string | null
+          state?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       evidence_of_support: {
         Row: {
           category: string
@@ -182,6 +314,7 @@ export type Database = {
       gathered_sequences: {
         Row: {
           created_at: string
+          domain: string
           id: string
           lines: Json
           playback_settings: Json
@@ -190,6 +323,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          domain?: string
           id?: string
           lines?: Json
           playback_settings?: Json
@@ -198,6 +332,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          domain?: string
           id?: string
           lines?: Json
           playback_settings?: Json
