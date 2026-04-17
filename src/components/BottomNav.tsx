@@ -1,12 +1,12 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Compass, RefreshCw, BookOpen, User } from 'lucide-react';
+import { Home, Compass, Waves, RefreshCw, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const tabs = [
   { to: '/', icon: Home, label: 'Home' },
   { to: '/align', icon: Compass, label: 'Align' },
+  { to: '/currents', icon: Waves, label: 'Currents' },
   { to: '/reset', icon: RefreshCw, label: 'Reset' },
-  { to: '/reflect', icon: BookOpen, label: 'Reflect' },
   { to: '/profile', icon: User, label: 'Profile' },
 ];
 
