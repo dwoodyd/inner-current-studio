@@ -589,35 +589,53 @@ export type Database = {
       }
       profiles: {
         Row: {
+          companion_feeling: string | null
+          companion_name: string | null
+          companion_sigil: string | null
           created_at: string
           display_name: string | null
+          free_current: string | null
           id: string
           onboarding_challenge: string | null
           onboarding_completed: boolean
           onboarding_reason: string | null
           onboarding_style: string | null
+          onboarding_version: number
+          subscription_tier: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          companion_feeling?: string | null
+          companion_name?: string | null
+          companion_sigil?: string | null
           created_at?: string
           display_name?: string | null
+          free_current?: string | null
           id?: string
           onboarding_challenge?: string | null
           onboarding_completed?: boolean
           onboarding_reason?: string | null
           onboarding_style?: string | null
+          onboarding_version?: number
+          subscription_tier?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          companion_feeling?: string | null
+          companion_name?: string | null
+          companion_sigil?: string | null
           created_at?: string
           display_name?: string | null
+          free_current?: string | null
           id?: string
           onboarding_challenge?: string | null
           onboarding_completed?: boolean
           onboarding_reason?: string | null
           onboarding_style?: string | null
+          onboarding_version?: number
+          subscription_tier?: string
           updated_at?: string
           user_id?: string
         }
