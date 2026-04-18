@@ -45,6 +45,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
 import ResetPassword from "@/pages/ResetPassword";
+import Welcome from "@/pages/Welcome";
 import NotFound from "@/pages/NotFound";
 import MoneyCurrent from "@/pages/MoneyCurrent";
 import MoneyState from "@/pages/MoneyState";
@@ -87,11 +88,12 @@ function AppRoutes() {
   if (!user) {
     return (
       <Routes>
+        <Route path="/welcome" element={<Welcome />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
-        <Route path="*" element={<Navigate to="/auth" replace />} />
+        <Route path="*" element={<Navigate to="/welcome" replace />} />
       </Routes>
     );
   }
@@ -188,6 +190,7 @@ function AppRoutes() {
         <Route path="/health/openings" element={<HealthPages.Openings />} />
         <Route path="/health/evidence" element={<HealthPages.Evidence />} />
       </Route>
+      <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="/onboarding" element={<Navigate to="/" replace />} />
       <Route path="*" element={<NotFound />} />
