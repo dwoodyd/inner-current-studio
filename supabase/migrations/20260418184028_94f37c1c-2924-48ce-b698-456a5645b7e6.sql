@@ -1,0 +1,7 @@
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS companion_name TEXT,
+  ADD COLUMN IF NOT EXISTS companion_sigil TEXT,
+  ADD COLUMN IF NOT EXISTS companion_feeling TEXT,
+  ADD COLUMN IF NOT EXISTS free_current TEXT,
+  ADD COLUMN IF NOT EXISTS subscription_tier TEXT NOT NULL DEFAULT 'free',
+  ADD COLUMN IF NOT EXISTS onboarding_version INTEGER NOT NULL DEFAULT 1;
