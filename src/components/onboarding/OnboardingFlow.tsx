@@ -8,7 +8,7 @@ import { BreathingOrb } from "./BreathingOrb";
 import { Sigil } from "./Sigil";
 import { AmbientAudio, playChime } from "./AmbientAudio";
 import { Paywall } from "./Paywall";
-import { TypingText } from "@/components/TypingText";
+import TypingText from "@/components/TypingText";
 
 const CURRENTS = [
   { id: "money", name: "Money", essence: "Receiving with ease", hue: 42 },
