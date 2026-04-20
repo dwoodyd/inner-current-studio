@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, Shield, Moon, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
+import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
+
+const SEEN_KEY = 'iw_cinematic_seen_v1';
 
 const TITLE = 'Inner Wake — A quiet practice space for emotional clarity';
 const DESC =
@@ -30,6 +33,18 @@ function setLink(rel: string, href: string) {
 }
 
 export default function Welcome() {
+  const navigate = useNavigate();
+  const [showCinematic, setShowCinematic] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try { return !localStorage.getItem(SEEN_KEY); } catch { return false; }
+  });
+
+  const dismissCinematic = (goToAuth: boolean) => {
+    try { localStorage.setItem(SEEN_KEY, '1'); } catch {}
+    setShowCinematic(false);
+    if (goToAuth) navigate('/auth');
+  };
+
   useEffect(() => {
     const prevTitle = document.title;
     document.title = TITLE;
@@ -63,6 +78,15 @@ export default function Welcome() {
       document.getElementById(ldId)?.remove();
     };
   }, []);
+
+  if (showCinematic) {
+    return (
+      <InnerWakeOnboarding
+        onComplete={() => dismissCinematic(true)}
+        onSkip={() => dismissCinematic(false)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
