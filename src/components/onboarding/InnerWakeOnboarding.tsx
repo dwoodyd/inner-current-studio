@@ -282,7 +282,7 @@ export default function InnerWakeOnboarding({
                 color: "var(--ink)",
                 position: "relative",
                 zIndex: 2,
-                transition: "opacity 800ms ease",
+                transition: "opacity 1800ms ease",
                 opacity: breathText ? 1 : 0,
                 minHeight: "1.5em",
                 textShadow: "0 0 24px rgba(200, 164, 90, 0.3)",
