@@ -285,6 +285,16 @@ export default function Welcome() {
         <footer className="mt-20 flex flex-col items-center justify-between gap-3 text-xs text-muted-foreground sm:flex-row">
           <p>© {new Date().getFullYear()} Inner Wake. A quiet practice.</p>
           <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => {
+                try { localStorage.removeItem(SEEN_KEY); } catch {}
+                setShowCinematic(true);
+              }}
+              className="hover:text-foreground transition-colors"
+            >
+              Replay intro
+            </button>
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
             <Link to="/terms" className="hover:text-foreground">Terms</Link>
             <Link to="/auth" className="hover:text-foreground">Sign in</Link>
