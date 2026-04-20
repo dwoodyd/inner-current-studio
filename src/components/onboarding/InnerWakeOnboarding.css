@@ -394,7 +394,7 @@
 /* ─── Responsive ─── */
 @media (max-width: 600px) {
   .iw-headline { font-size: clamp(2rem, 8vw, 3rem); }
-  .iw-breath-circle { width: 120px; height: 120px; }
+  .iw-breath-circle { width: 180px; height: 180px; }
 }
 
 /* ─── Reduced motion ─── */
