@@ -175,7 +175,7 @@ export default function InnerWakeOnboarding({
   useEffect(() => {
     if (slide !== 1) return;
     const cycle = ["Breathe in…", "Hold…", "Let go…", ""];
-    const durations = [3000, 2000, 3000, 1500];
+    const durations = [4500, 3000, 4500, 2000];
     let i = 0;
     let timeout: ReturnType<typeof setTimeout>;
     const run = () => {
