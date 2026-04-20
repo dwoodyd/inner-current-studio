@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
-import { AppProvider, useAppState } from "@/lib/AppContext";
+import { AppProvider } from "@/lib/AppContext";
 import AppShell from "@/components/AppShell";
 import Home from "@/pages/Home";
 import Align from "@/pages/Align";
@@ -73,7 +73,6 @@ const queryClient = new QueryClient();
 
 function AppRoutes() {
   const { user, loading } = useAuth();
-  const { state } = useAppState();
 
   if (loading) {
     return (
@@ -98,17 +97,9 @@ function AppRoutes() {
     );
   }
 
-  if (!state.onboarding.completed) {
-    return (
-      <Routes>
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="*" element={<Navigate to="/onboarding" replace />} />
-      </Routes>
-    );
-  }
-
   return (
     <Routes>
+      <Route path="/onboarding" element={<Onboarding />} />
       <Route element={<AppShell />}>
         <Route path="/" element={<Home />} />
         <Route path="/align" element={<Align />} />
@@ -192,7 +183,6 @@ function AppRoutes() {
       </Route>
       <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
-      <Route path="/onboarding" element={<Navigate to="/" replace />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

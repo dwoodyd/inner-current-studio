@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield } from 'lucide-react';
+import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,7 +62,16 @@ export default function Profile() {
     }
   };
 
+  const hasCompanion = Boolean(state.onboarding.completed);
+
   const sections = [
+    {
+      icon: Heart,
+      label: hasCompanion ? 'Your companion' : 'Set up your companion',
+      description: hasCompanion ? 'Revisit your sigil & first affirmation' : 'A 2-minute personal ritual',
+      to: '/onboarding',
+      accent: !hasCompanion,
+    },
     { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
     { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns' },
     { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', to: '/profile/insights' },
