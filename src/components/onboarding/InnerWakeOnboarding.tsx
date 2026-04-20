@@ -314,6 +314,24 @@ export default function InnerWakeOnboarding({
               {breathText}
             </span>
           </div>
+          {/* Breath counter */}
+          <div
+            style={{
+              marginTop: "1.4rem",
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              fontSize: "2rem",
+              fontWeight: 300,
+              color: "var(--gold-bright)",
+              letterSpacing: "0.08em",
+              minHeight: "2.4rem",
+              opacity: breathCount > 0 ? 1 : 0,
+              transition: "opacity 600ms ease",
+              textShadow: "0 0 20px rgba(200, 164, 90, 0.35)",
+            }}
+            aria-live="polite"
+          >
+            {breathCount > 0 ? breathCount : ""}
+          </div>
           <div
             style={{
               marginTop: "2.4rem",
