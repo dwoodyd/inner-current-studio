@@ -285,8 +285,8 @@
 
 /* ─── Breath circle (slide 1) ─── */
 .iw-breath-circle {
-  width: 160px;
-  height: 160px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   border: 1px solid rgba(200, 164, 90, 0.15);
   display: flex;
@@ -394,7 +394,7 @@
 /* ─── Responsive ─── */
 @media (max-width: 600px) {
   .iw-headline { font-size: clamp(2rem, 8vw, 3rem); }
-  .iw-breath-circle { width: 120px; height: 120px; }
+  .iw-breath-circle { width: 180px; height: 180px; }
 }
 
 /* ─── Reduced motion ─── */

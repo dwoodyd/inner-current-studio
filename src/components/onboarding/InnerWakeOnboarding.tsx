@@ -277,14 +277,15 @@ export default function InnerWakeOnboarding({
             <span
               style={{
                 fontFamily: serif,
-                fontSize: "1.1rem",
+                fontSize: "1.6rem",
                 fontStyle: "italic",
-                color: "var(--muted)",
+                color: "var(--ink)",
                 position: "relative",
                 zIndex: 2,
                 transition: "opacity 800ms ease",
                 opacity: breathText ? 1 : 0,
                 minHeight: "1.5em",
+                textShadow: "0 0 24px rgba(200, 164, 90, 0.3)",
               }}
             >
               {breathText}
