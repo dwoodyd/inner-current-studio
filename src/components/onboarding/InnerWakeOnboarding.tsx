@@ -169,17 +169,7 @@ export default function InnerWakeOnboarding({
   const [showBreathPrompt, setShowBreathPrompt] = useState(false);
   const touchStartY = useRef<number | null>(null);
 
-  // Inject styles
-  useEffect(() => {
-    if (document.getElementById("iw-onboard-styles")) return;
-    const el = document.createElement("style");
-    el.id = "iw-onboard-styles";
-    el.textContent = GLOBAL_CSS;
-    document.head.appendChild(el);
-    return () => {
-      document.getElementById("iw-onboard-styles")?.remove();
-    };
-  }, []);
+
 
   // Breath animation for slide 1
   useEffect(() => {
