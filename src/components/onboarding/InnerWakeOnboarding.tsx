@@ -166,6 +166,7 @@ export default function InnerWakeOnboarding({
 }: InnerWakeOnboardingProps) {
   const [slide, setSlide] = useState(1);
   const [breathText, setBreathText] = useState("");
+  const [breathCount, setBreathCount] = useState(0);
   const [showBreathPrompt, setShowBreathPrompt] = useState(false);
   const touchStartY = useRef<number | null>(null);
 
@@ -175,22 +176,44 @@ export default function InnerWakeOnboarding({
   useEffect(() => {
     if (slide !== 1) return;
     const cycle = ["Breathe in…", "Hold…", "Let go…", ""];
-    const durations = [4500, 3000, 4500, 2000];
+    const seconds = [4, 3, 4, 0]; // count length per phase
     let i = 0;
     let timeout: ReturnType<typeof setTimeout>;
+    let countInterval: ReturnType<typeof setInterval>;
+
     const run = () => {
       setBreathText(cycle[i]);
+      const total = seconds[i];
+
+      // start countdown for phases that have one
+      clearInterval(countInterval);
+      if (total > 0) {
+        let remaining = total;
+        setBreathCount(remaining);
+        countInterval = setInterval(() => {
+          remaining -= 1;
+          if (remaining <= 0) {
+            clearInterval(countInterval);
+            setBreathCount(0);
+          } else {
+            setBreathCount(remaining);
+          }
+        }, 1000);
+      } else {
+        setBreathCount(0);
+      }
+
       if (i === 3) setShowBreathPrompt(true);
       timeout = setTimeout(() => {
         i = (i + 1) % cycle.length;
-        if (i === 0) i = 0; // only run once
         if (i <= 3) run();
-      }, durations[i]);
+      }, total > 0 ? total * 1000 : 2000);
     };
     const initial = setTimeout(run, 1200);
     return () => {
       clearTimeout(initial);
       clearTimeout(timeout);
+      clearInterval(countInterval);
     };
   }, [slide]);
 
@@ -290,6 +313,24 @@ export default function InnerWakeOnboarding({
             >
               {breathText}
             </span>
+          </div>
+          {/* Breath counter */}
+          <div
+            style={{
+              marginTop: "1.4rem",
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              fontSize: "2rem",
+              fontWeight: 300,
+              color: "var(--gold-bright)",
+              letterSpacing: "0.08em",
+              minHeight: "2.4rem",
+              opacity: breathCount > 0 ? 1 : 0,
+              transition: "opacity 600ms ease",
+              textShadow: "0 0 20px rgba(200, 164, 90, 0.35)",
+            }}
+            aria-live="polite"
+          >
+            {breathCount > 0 ? breathCount : ""}
           </div>
           <div
             style={{
