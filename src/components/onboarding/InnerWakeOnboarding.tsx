@@ -175,7 +175,7 @@ export default function InnerWakeOnboarding({
   useEffect(() => {
     if (slide !== 1) return;
     const cycle = ["Breathe in…", "Hold…", "Let go…", ""];
-    const durations = [3000, 2000, 3000, 1500];
+    const durations = [4500, 3000, 4500, 2000];
     let i = 0;
     let timeout: ReturnType<typeof setTimeout>;
     const run = () => {
@@ -282,7 +282,7 @@ export default function InnerWakeOnboarding({
                 color: "var(--ink)",
                 position: "relative",
                 zIndex: 2,
-                transition: "opacity 800ms ease",
+                transition: "opacity 1800ms ease",
                 opacity: breathText ? 1 : 0,
                 minHeight: "1.5em",
                 textShadow: "0 0 24px rgba(200, 164, 90, 0.3)",
