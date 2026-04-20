@@ -917,6 +917,17 @@ export default function InnerWakeOnboarding({
         <button className="iw-skip" onClick={skip}>
           skip
         </button>
+        {slide === 1 && (
+          <button
+            className="iw-skip"
+            style={{ right: "5.2rem" }}
+            onClick={() => setChimesEnabled((v) => !v)}
+            aria-pressed={chimesEnabled}
+            aria-label="Toggle chimes"
+          >
+            {chimesEnabled ? "chimes on" : "chimes off"}
+          </button>
+        )}
         <div className="iw-progress-wrap">
           {Array.from({ length: TOTAL_SLIDES }, (_, i) => (
             <button
