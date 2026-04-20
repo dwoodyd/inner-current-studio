@@ -327,7 +327,11 @@ export default function InnerWakeOnboarding({
             alignItems: "center",
           }}
         >
-          <div className="iw-breath-circle">
+          <div
+            className="iw-breath-circle"
+            data-phase={breathPhase}
+            style={{ animation: "none" }}
+          >
             <span
               style={{
                 fontFamily: serif,
