@@ -167,25 +167,55 @@ export default function InnerWakeOnboarding({
   const [slide, setSlide] = useState(1);
   const [breathText, setBreathText] = useState("");
   const [breathCount, setBreathCount] = useState(0);
+  const [breathPhase, setBreathPhase] = useState<"in" | "hold" | "out" | "rest">("rest");
   const [showBreathPrompt, setShowBreathPrompt] = useState(false);
+  const [chimesEnabled, setChimesEnabled] = useState(false);
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const touchStartY = useRef<number | null>(null);
 
+  // Gentle chime synthesis
+  const playChime = useCallback((freq: number) => {
+    if (!chimesEnabled) return;
+    try {
+      if (!audioCtxRef.current) {
+        const Ctx = (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext);
+        audioCtxRef.current = new Ctx();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === "suspended") ctx.resume();
+      const t = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.08, t + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 1.5);
+    } catch {
+      // no-op
+    }
+  }, [chimesEnabled]);
 
-
-  // Breath animation for slide 1
+  // Breath animation for slide 1 — synced with circle (4-3-4)
   useEffect(() => {
     if (slide !== 1) return;
-    const cycle = ["Breathe in…", "Hold…", "Let go…", ""];
-    const seconds = [4, 3, 4, 0]; // count length per phase
+    const cycle = ["Breathe in…", "Hold…", "Let go…", ""] as const;
+    const phases: Array<"in" | "hold" | "out" | "rest"> = ["in", "hold", "out", "rest"];
+    const tones = [523.25, 659.25, 392.0, 0]; // C5, E5, G4
+    const seconds = [4, 3, 4, 0];
     let i = 0;
     let timeout: ReturnType<typeof setTimeout>;
     let countInterval: ReturnType<typeof setInterval>;
 
     const run = () => {
       setBreathText(cycle[i]);
+      setBreathPhase(phases[i]);
       const total = seconds[i];
+      if (tones[i]) playChime(tones[i]);
 
-      // start countdown for phases that have one
       clearInterval(countInterval);
       if (total > 0) {
         let remaining = total;
@@ -214,8 +244,9 @@ export default function InnerWakeOnboarding({
       clearTimeout(initial);
       clearTimeout(timeout);
       clearInterval(countInterval);
+      setBreathPhase("rest");
     };
-  }, [slide]);
+  }, [slide, playChime]);
 
   const goTo = useCallback((n: number) => {
     setSlide(Math.max(1, Math.min(n, TOTAL_SLIDES)));
@@ -296,7 +327,11 @@ export default function InnerWakeOnboarding({
             alignItems: "center",
           }}
         >
-          <div className="iw-breath-circle">
+          <div
+            className="iw-breath-circle"
+            data-phase={breathPhase}
+            style={{ animation: "none" }}
+          >
             <span
               style={{
                 fontFamily: serif,
@@ -882,6 +917,17 @@ export default function InnerWakeOnboarding({
         <button className="iw-skip" onClick={skip}>
           skip
         </button>
+        {slide === 1 && (
+          <button
+            className="iw-skip"
+            style={{ right: "5.2rem" }}
+            onClick={() => setChimesEnabled((v) => !v)}
+            aria-pressed={chimesEnabled}
+            aria-label="Toggle chimes"
+          >
+            {chimesEnabled ? "chimes on" : "chimes off"}
+          </button>
+        )}
         <div className="iw-progress-wrap">
           {Array.from({ length: TOTAL_SLIDES }, (_, i) => (
             <button
