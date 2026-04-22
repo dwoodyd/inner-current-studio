@@ -4,72 +4,128 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { AppProvider } from "@/lib/AppContext";
+import { lazy, Suspense } from "react";
 import AppShell from "@/components/AppShell";
-import Home from "@/pages/Home";
-import Align from "@/pages/Align";
-import AlignmentWheel from "@/pages/AlignmentWheel";
-import ReliefWheel from "@/pages/ReliefWheel";
-import GatherFlow from "@/pages/GatherFlow";
-import MomentumRing from "@/pages/MomentumRing";
-import Reset from "@/pages/Reset";
-import StateLadder from "@/pages/StateLadder";
-import ContrastReset from "@/pages/ContrastReset";
-import StillnessTimer from "@/pages/StillnessTimer";
-import Breathwork from "@/pages/Breathwork";
-import ResistanceRelease from "@/pages/ResistanceRelease";
-import QuietMind from "@/pages/QuietMind";
-import PresentMoment from "@/pages/PresentMoment";
-import ResistanceScan from "@/pages/ResistanceScan";
-import AnalyticalOfframp from "@/pages/AnalyticalOfframp";
-import ThoughtShiftLadder from "@/pages/ThoughtShiftLadder";
-import MentalClarity from "@/pages/MentalClarity";
-import PatternSoftener from "@/pages/PatternSoftener";
-import HigherView from "@/pages/HigherView";
-import SituationPacks from "@/pages/SituationPacks";
-import NoProgressSupport from "@/pages/NoProgressSupport";
-import Reflect from "@/pages/Reflect";
-import FuturePages from "@/pages/FuturePages";
-import ImagineIf from "@/pages/ImagineIf";
-import OverflowPractice from "@/pages/OverflowPractice";
-import MyCurrent from "@/pages/MyCurrent";
-import Profile from "@/pages/Profile";
-import CurrentInsights from "@/pages/CurrentInsights";
-import MyRituals from "@/pages/MyRituals";
-import CurrentGuide from "@/pages/CurrentGuide";
-import PatternMirror from "@/pages/PatternMirror";
-import Notifications from "@/pages/Notifications";
-import Onboarding from "@/pages/Onboarding";
-import Auth from "@/pages/Auth";
-import About from "@/pages/About";
-import AdminDashboard from "@/pages/AdminDashboard";
-import Privacy from "@/pages/Privacy";
-import Terms from "@/pages/Terms";
-import ResetPassword from "@/pages/ResetPassword";
-import Welcome from "@/pages/Welcome";
-import NotFound from "@/pages/NotFound";
-import MoneyCurrent from "@/pages/MoneyCurrent";
-import MoneyState from "@/pages/MoneyState";
-import CurrentDeposit from "@/pages/CurrentDeposit";
-import MoneyOpenings from "@/pages/MoneyOpenings";
-import OverflowSpending from "@/pages/OverflowSpending";
-import EvidenceOfSupport from "@/pages/EvidenceOfSupport";
-import MoneyResistanceRelease from "@/pages/MoneyResistanceRelease";
-import PaymentShift from "@/pages/PaymentShift";
-import MoneyGatherFlow from "@/pages/MoneyGatherFlow";
-import AlignedAction from "@/pages/AlignedAction";
-import WealthRhythm from "@/pages/WealthRhythm";
-import MoneyAffirmations from "@/pages/MoneyAffirmations";
-import AffirmationTracker from "@/pages/AffirmationTracker";
-import AffirmationCoach from "@/pages/AffirmationCoach";
-import AffirmationLibrary from "@/pages/AffirmationLibrary";
-import CurrentsHub from "@/pages/CurrentsHub";
-import SelfHub from "@/pages/domain/SelfHub";
-import EnergyHub from "@/pages/domain/EnergyHub";
-import RelationshipsHub from "@/pages/domain/RelationshipsHub";
-import HealthHub from "@/pages/domain/HealthHub";
-import { SelfPages, EnergyPages, RelationshipsPages, HealthPages, MoneyPages } from "@/pages/domain/DomainPages";
+
+const Home = lazy(() => import("@/pages/Home"));
+const Align = lazy(() => import("@/pages/Align"));
+const AlignmentWheel = lazy(() => import("@/pages/AlignmentWheel"));
+const ReliefWheel = lazy(() => import("@/pages/ReliefWheel"));
+const GatherFlow = lazy(() => import("@/pages/GatherFlow"));
+const MomentumRing = lazy(() => import("@/pages/MomentumRing"));
+const Reset = lazy(() => import("@/pages/Reset"));
+const StateLadder = lazy(() => import("@/pages/StateLadder"));
+const ContrastReset = lazy(() => import("@/pages/ContrastReset"));
+const StillnessTimer = lazy(() => import("@/pages/StillnessTimer"));
+const Breathwork = lazy(() => import("@/pages/Breathwork"));
+const ResistanceRelease = lazy(() => import("@/pages/ResistanceRelease"));
+const QuietMind = lazy(() => import("@/pages/QuietMind"));
+const PresentMoment = lazy(() => import("@/pages/PresentMoment"));
+const ResistanceScan = lazy(() => import("@/pages/ResistanceScan"));
+const AnalyticalOfframp = lazy(() => import("@/pages/AnalyticalOfframp"));
+const ThoughtShiftLadder = lazy(() => import("@/pages/ThoughtShiftLadder"));
+const MentalClarity = lazy(() => import("@/pages/MentalClarity"));
+const PatternSoftener = lazy(() => import("@/pages/PatternSoftener"));
+const HigherView = lazy(() => import("@/pages/HigherView"));
+const SituationPacks = lazy(() => import("@/pages/SituationPacks"));
+const NoProgressSupport = lazy(() => import("@/pages/NoProgressSupport"));
+const Reflect = lazy(() => import("@/pages/Reflect"));
+const FuturePages = lazy(() => import("@/pages/FuturePages"));
+const ImagineIf = lazy(() => import("@/pages/ImagineIf"));
+const OverflowPractice = lazy(() => import("@/pages/OverflowPractice"));
+const MyCurrent = lazy(() => import("@/pages/MyCurrent"));
+const Profile = lazy(() => import("@/pages/Profile"));
+const CurrentInsights = lazy(() => import("@/pages/CurrentInsights"));
+const MyRituals = lazy(() => import("@/pages/MyRituals"));
+const CurrentGuide = lazy(() => import("@/pages/CurrentGuide"));
+const PatternMirror = lazy(() => import("@/pages/PatternMirror"));
+const Notifications = lazy(() => import("@/pages/Notifications"));
+const Onboarding = lazy(() => import("@/pages/Onboarding"));
+const Auth = lazy(() => import("@/pages/Auth"));
+const About = lazy(() => import("@/pages/About"));
+const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
+const Privacy = lazy(() => import("@/pages/Privacy"));
+const Terms = lazy(() => import("@/pages/Terms"));
+const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const Welcome = lazy(() => import("@/pages/Welcome"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
+const MoneyCurrent = lazy(() => import("@/pages/MoneyCurrent"));
+const MoneyState = lazy(() => import("@/pages/MoneyState"));
+const CurrentDeposit = lazy(() => import("@/pages/CurrentDeposit"));
+const MoneyOpenings = lazy(() => import("@/pages/MoneyOpenings"));
+const OverflowSpending = lazy(() => import("@/pages/OverflowSpending"));
+const EvidenceOfSupport = lazy(() => import("@/pages/EvidenceOfSupport"));
+const MoneyResistanceRelease = lazy(() => import("@/pages/MoneyResistanceRelease"));
+const PaymentShift = lazy(() => import("@/pages/PaymentShift"));
+const MoneyGatherFlow = lazy(() => import("@/pages/MoneyGatherFlow"));
+const AlignedAction = lazy(() => import("@/pages/AlignedAction"));
+const WealthRhythm = lazy(() => import("@/pages/WealthRhythm"));
+const MoneyAffirmations = lazy(() => import("@/pages/MoneyAffirmations"));
+const AffirmationTracker = lazy(() => import("@/pages/AffirmationTracker"));
+const AffirmationCoach = lazy(() => import("@/pages/AffirmationCoach"));
+const AffirmationLibrary = lazy(() => import("@/pages/AffirmationLibrary"));
+const CurrentsHub = lazy(() => import("@/pages/CurrentsHub"));
+const SelfHub = lazy(() => import("@/pages/domain/SelfHub"));
+const EnergyHub = lazy(() => import("@/pages/domain/EnergyHub"));
+const RelationshipsHub = lazy(() => import("@/pages/domain/RelationshipsHub"));
+const HealthHub = lazy(() => import("@/pages/domain/HealthHub"));
+const SelfState = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.State })));
+const SelfAffirmations = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.Affirmations })));
+const SelfGather = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.Gather })));
+const SelfResistance = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.Resistance })));
+const SelfOpenings = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.Openings })));
+const SelfEvidence = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.Evidence })));
+const SelfScriptHub = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.ScriptHub })));
+const SelfScriptNew = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.ScriptNew })));
+const SelfScriptLibrary = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.ScriptLibrary })));
+const SelfScriptDetail = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.SelfPages.ScriptDetail })));
+const EnergyState = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.State })));
+const EnergyAffirmations = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.Affirmations })));
+const EnergyGather = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.Gather })));
+const EnergyResistance = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.Resistance })));
+const EnergyOpenings = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.Openings })));
+const EnergyEvidence = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.Evidence })));
+const EnergyScriptHub = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.ScriptHub })));
+const EnergyScriptNew = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.ScriptNew })));
+const EnergyScriptLibrary = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.ScriptLibrary })));
+const EnergyScriptDetail = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.EnergyPages.ScriptDetail })));
+const RelationshipsState = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.State })));
+const RelationshipsAffirmations = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.Affirmations })));
+const RelationshipsGather = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.Gather })));
+const RelationshipsResistance = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.Resistance })));
+const RelationshipsOpenings = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.Openings })));
+const RelationshipsEvidence = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.Evidence })));
+const RelationshipsScriptHub = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.ScriptHub })));
+const RelationshipsScriptNew = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.ScriptNew })));
+const RelationshipsScriptLibrary = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.ScriptLibrary })));
+const RelationshipsScriptDetail = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.RelationshipsPages.ScriptDetail })));
+const HealthState = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.State })));
+const HealthAffirmations = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.Affirmations })));
+const HealthGather = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.Gather })));
+const HealthResistance = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.Resistance })));
+const HealthOpenings = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.Openings })));
+const HealthEvidence = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.Evidence })));
+const HealthScriptHub = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.ScriptHub })));
+const HealthScriptNew = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.ScriptNew })));
+const HealthScriptLibrary = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.ScriptLibrary })));
+const HealthScriptDetail = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.HealthPages.ScriptDetail })));
+const MoneyScriptHub = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.MoneyPages.ScriptHub })));
+const MoneyScriptNew = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.MoneyPages.ScriptNew })));
+const MoneyScriptLibrary = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.MoneyPages.ScriptLibrary })));
+const MoneyScriptDetail = lazy(() => import("@/pages/domain/DomainPages").then((m) => ({ default: m.MoneyPages.ScriptDetail })));
+
 
 const queryClient = new QueryClient();
+
+function RouteLoader() {
+  return (
+    <div className="flex min-h-[50dvh] items-center justify-center bg-background">
+      <div className="h-10 w-10 rounded-full soul-glow-gold animate-pulse"
+        style={{ background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.3), hsl(var(--primary) / 0.08))' }}
+      />
+    </div>
+  );
+}
 
 function AppRoutes() {
   const { user, loading } = useAuth();
@@ -86,7 +142,7 @@ function AppRoutes() {
 
   if (!user) {
     return (
-      <Routes>
+      <Suspense fallback={<RouteLoader />}><Routes>
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
@@ -94,11 +150,12 @@ function AppRoutes() {
         <Route path="/terms" element={<Terms />} />
         <Route path="*" element={<Navigate to="/welcome" replace />} />
       </Routes>
+    </Suspense>
     );
   }
 
   return (
-    <Routes>
+    <Suspense fallback={<RouteLoader />}><Routes>
       <Route path="/onboarding" element={<Onboarding />} />
       <Route element={<AppShell />}>
         <Route path="/" element={<Home />} />
@@ -151,60 +208,60 @@ function AppRoutes() {
         <Route path="/money/tracker" element={<AffirmationTracker />} />
         <Route path="/money/coach" element={<AffirmationCoach />} />
         <Route path="/money/library" element={<AffirmationLibrary />} />
-        <Route path="/money/script" element={<MoneyPages.ScriptHub />} />
-        <Route path="/money/script/new" element={<MoneyPages.ScriptNew />} />
-        <Route path="/money/script/library" element={<MoneyPages.ScriptLibrary />} />
-        <Route path="/money/script/:scriptId" element={<MoneyPages.ScriptDetail />} />
+        <Route path="/money/script" element={<MoneyScriptHub />} />
+        <Route path="/money/script/new" element={<MoneyScriptNew />} />
+        <Route path="/money/script/library" element={<MoneyScriptLibrary />} />
+        <Route path="/money/script/:scriptId" element={<MoneyScriptDetail />} />
         <Route path="/currents" element={<CurrentsHub />} />
         <Route path="/self" element={<SelfHub />} />
-        <Route path="/self/state" element={<SelfPages.State />} />
-        <Route path="/self/affirmations" element={<SelfPages.Affirmations />} />
-        <Route path="/self/gather" element={<SelfPages.Gather />} />
-        <Route path="/self/resistance" element={<SelfPages.Resistance />} />
-        <Route path="/self/openings" element={<SelfPages.Openings />} />
-        <Route path="/self/evidence" element={<SelfPages.Evidence />} />
-        <Route path="/self/script" element={<SelfPages.ScriptHub />} />
-        <Route path="/self/script/new" element={<SelfPages.ScriptNew />} />
-        <Route path="/self/script/library" element={<SelfPages.ScriptLibrary />} />
-        <Route path="/self/script/:scriptId" element={<SelfPages.ScriptDetail />} />
+        <Route path="/self/state" element={<SelfState />} />
+        <Route path="/self/affirmations" element={<SelfAffirmations />} />
+        <Route path="/self/gather" element={<SelfGather />} />
+        <Route path="/self/resistance" element={<SelfResistance />} />
+        <Route path="/self/openings" element={<SelfOpenings />} />
+        <Route path="/self/evidence" element={<SelfEvidence />} />
+        <Route path="/self/script" element={<SelfScriptHub />} />
+        <Route path="/self/script/new" element={<SelfScriptNew />} />
+        <Route path="/self/script/library" element={<SelfScriptLibrary />} />
+        <Route path="/self/script/:scriptId" element={<SelfScriptDetail />} />
         <Route path="/energy" element={<EnergyHub />} />
-        <Route path="/energy/state" element={<EnergyPages.State />} />
-        <Route path="/energy/affirmations" element={<EnergyPages.Affirmations />} />
-        <Route path="/energy/gather" element={<EnergyPages.Gather />} />
-        <Route path="/energy/resistance" element={<EnergyPages.Resistance />} />
-        <Route path="/energy/openings" element={<EnergyPages.Openings />} />
-        <Route path="/energy/evidence" element={<EnergyPages.Evidence />} />
-        <Route path="/energy/script" element={<EnergyPages.ScriptHub />} />
-        <Route path="/energy/script/new" element={<EnergyPages.ScriptNew />} />
-        <Route path="/energy/script/library" element={<EnergyPages.ScriptLibrary />} />
-        <Route path="/energy/script/:scriptId" element={<EnergyPages.ScriptDetail />} />
+        <Route path="/energy/state" element={<EnergyState />} />
+        <Route path="/energy/affirmations" element={<EnergyAffirmations />} />
+        <Route path="/energy/gather" element={<EnergyGather />} />
+        <Route path="/energy/resistance" element={<EnergyResistance />} />
+        <Route path="/energy/openings" element={<EnergyOpenings />} />
+        <Route path="/energy/evidence" element={<EnergyEvidence />} />
+        <Route path="/energy/script" element={<EnergyScriptHub />} />
+        <Route path="/energy/script/new" element={<EnergyScriptNew />} />
+        <Route path="/energy/script/library" element={<EnergyScriptLibrary />} />
+        <Route path="/energy/script/:scriptId" element={<EnergyScriptDetail />} />
         <Route path="/relationships" element={<RelationshipsHub />} />
-        <Route path="/relationships/state" element={<RelationshipsPages.State />} />
-        <Route path="/relationships/affirmations" element={<RelationshipsPages.Affirmations />} />
-        <Route path="/relationships/gather" element={<RelationshipsPages.Gather />} />
-        <Route path="/relationships/resistance" element={<RelationshipsPages.Resistance />} />
-        <Route path="/relationships/openings" element={<RelationshipsPages.Openings />} />
-        <Route path="/relationships/evidence" element={<RelationshipsPages.Evidence />} />
-        <Route path="/relationships/script" element={<RelationshipsPages.ScriptHub />} />
-        <Route path="/relationships/script/new" element={<RelationshipsPages.ScriptNew />} />
-        <Route path="/relationships/script/library" element={<RelationshipsPages.ScriptLibrary />} />
-        <Route path="/relationships/script/:scriptId" element={<RelationshipsPages.ScriptDetail />} />
+        <Route path="/relationships/state" element={<RelationshipsState />} />
+        <Route path="/relationships/affirmations" element={<RelationshipsAffirmations />} />
+        <Route path="/relationships/gather" element={<RelationshipsGather />} />
+        <Route path="/relationships/resistance" element={<RelationshipsResistance />} />
+        <Route path="/relationships/openings" element={<RelationshipsOpenings />} />
+        <Route path="/relationships/evidence" element={<RelationshipsEvidence />} />
+        <Route path="/relationships/script" element={<RelationshipsScriptHub />} />
+        <Route path="/relationships/script/new" element={<RelationshipsScriptNew />} />
+        <Route path="/relationships/script/library" element={<RelationshipsScriptLibrary />} />
+        <Route path="/relationships/script/:scriptId" element={<RelationshipsScriptDetail />} />
         <Route path="/health" element={<HealthHub />} />
-        <Route path="/health/state" element={<HealthPages.State />} />
-        <Route path="/health/affirmations" element={<HealthPages.Affirmations />} />
-        <Route path="/health/gather" element={<HealthPages.Gather />} />
-        <Route path="/health/resistance" element={<HealthPages.Resistance />} />
-        <Route path="/health/openings" element={<HealthPages.Openings />} />
-        <Route path="/health/evidence" element={<HealthPages.Evidence />} />
-        <Route path="/health/script" element={<HealthPages.ScriptHub />} />
-        <Route path="/health/script/new" element={<HealthPages.ScriptNew />} />
-        <Route path="/health/script/library" element={<HealthPages.ScriptLibrary />} />
-        <Route path="/health/script/:scriptId" element={<HealthPages.ScriptDetail />} />
+        <Route path="/health/state" element={<HealthState />} />
+        <Route path="/health/affirmations" element={<HealthAffirmations />} />
+        <Route path="/health/gather" element={<HealthGather />} />
+        <Route path="/health/resistance" element={<HealthResistance />} />
+        <Route path="/health/openings" element={<HealthOpenings />} />
+        <Route path="/health/evidence" element={<HealthEvidence />} />
+        <Route path="/health/script" element={<HealthScriptHub />} />
+        <Route path="/health/script/new" element={<HealthScriptNew />} />
+        <Route path="/health/script/library" element={<HealthScriptLibrary />} />
+        <Route path="/health/script/:scriptId" element={<HealthScriptDetail />} />
       </Route>
       <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="*" element={<NotFound />} />
-    </Routes>
+    </Routes></Suspense>
   );
 }
 
