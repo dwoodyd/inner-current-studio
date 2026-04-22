@@ -7,6 +7,7 @@ import { AppProvider } from "@/lib/AppContext";
 import { lazy, Suspense } from "react";
 import AppShell from "@/components/AppShell";
 import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotice";
+import { PremiumGate } from "@/components/PremiumGate";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
@@ -130,6 +131,8 @@ function RouteLoader() {
 
 function AppRoutes() {
   const { user, loading } = useAuth();
+  const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
+  const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
 
   if (loading) {
     return (
@@ -189,30 +192,30 @@ function AppRoutes() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
         <Route path="/profile/rituals" element={<MyRituals />} />
-        <Route path="/profile/guide" element={<CurrentGuide />} />
+        <Route path="/profile/guide" element={premium('the Current Guide', <CurrentGuide />)} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/about" element={<About />} />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/money" element={<MoneyCurrent />} />
-        <Route path="/money/state" element={<MoneyState />} />
-        <Route path="/money/deposit" element={<CurrentDeposit />} />
-        <Route path="/money/openings" element={<MoneyOpenings />} />
-        <Route path="/money/overflow" element={<OverflowSpending />} />
-        <Route path="/money/evidence" element={<EvidenceOfSupport />} />
-        <Route path="/money/resistance" element={<MoneyResistanceRelease />} />
-        <Route path="/money/payment-shift" element={<PaymentShift />} />
-        <Route path="/money/gather" element={<MoneyGatherFlow />} />
-        <Route path="/money/aligned-action" element={<AlignedAction />} />
-        <Route path="/money/wealth-rhythm" element={<WealthRhythm />} />
-        <Route path="/money/affirmations" element={<MoneyAffirmations />} />
-        <Route path="/money/tracker" element={<AffirmationTracker />} />
-        <Route path="/money/coach" element={<AffirmationCoach />} />
-        <Route path="/money/library" element={<AffirmationLibrary />} />
-        <Route path="/money/script" element={<MoneyScriptHub />} />
-        <Route path="/money/script/new" element={<MoneyScriptNew />} />
-        <Route path="/money/script/library" element={<MoneyScriptLibrary />} />
-        <Route path="/money/script/:scriptId" element={<MoneyScriptDetail />} />
+        <Route path="/money" element={current('money', <MoneyCurrent />)} />
+        <Route path="/money/state" element={current('money', <MoneyState />)} />
+        <Route path="/money/deposit" element={current('money', <CurrentDeposit />)} />
+        <Route path="/money/openings" element={current('money', <MoneyOpenings />)} />
+        <Route path="/money/overflow" element={current('money', <OverflowSpending />)} />
+        <Route path="/money/evidence" element={current('money', <EvidenceOfSupport />)} />
+        <Route path="/money/resistance" element={current('money', <MoneyResistanceRelease />)} />
+        <Route path="/money/payment-shift" element={current('money', <PaymentShift />)} />
+        <Route path="/money/gather" element={current('money', <MoneyGatherFlow />)} />
+        <Route path="/money/aligned-action" element={current('money', <AlignedAction />)} />
+        <Route path="/money/wealth-rhythm" element={current('money', <WealthRhythm />)} />
+        <Route path="/money/affirmations" element={current('money', <MoneyAffirmations />)} />
+        <Route path="/money/tracker" element={current('money', <AffirmationTracker />)} />
+        <Route path="/money/coach" element={premium('the AI Affirmation Coach', <AffirmationCoach />)} />
+        <Route path="/money/library" element={current('money', <AffirmationLibrary />)} />
+        <Route path="/money/script" element={current('money', <MoneyScriptHub />)} />
+        <Route path="/money/script/new" element={current('money', <MoneyScriptNew />)} />
+        <Route path="/money/script/library" element={current('money', <MoneyScriptLibrary />)} />
+        <Route path="/money/script/:scriptId" element={current('money', <MoneyScriptDetail />)} />
         <Route path="/currents" element={<CurrentsHub />} />
         <Route path="/self" element={<SelfHub />} />
         <Route path="/self/state" element={<SelfState />} />
