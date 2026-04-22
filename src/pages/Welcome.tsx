@@ -155,7 +155,7 @@ export default function Welcome() {
         </header>
 
         {/* Hero */}
-        <section className="mt-16 md:mt-24 text-center">
+        <section className="mt-14 text-center md:mt-24">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -169,7 +169,7 @@ export default function Welcome() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1 }}
-            className="mt-6 font-serif text-4xl leading-tight md:text-6xl md:leading-tight"
+            className="mt-6 font-serif text-[2.6rem] leading-[1.08] md:text-6xl md:leading-tight"
           >
             Return to <span className="italic text-soul-gold">center</span>,<br />
             one current at a time.
@@ -181,9 +181,8 @@ export default function Welcome() {
             transition={{ duration: 0.9, delay: 0.2 }}
             className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg"
           >
-            Inner Wake is a gentle ritual app for emotional clarity. Soften resistance, saturate in
-            affirmations that actually feel true, and tend five Currents of your life — without
-            hustle, hype, or toxic positivity.
+            Inner Wake is a gentle ritual app for emotional clarity. Soften resistance, return to center,
+            and tend the five Currents of your life — without hustle, hype, or toxic positivity.
           </motion.p>
 
           <motion.div
@@ -259,7 +258,7 @@ export default function Welcome() {
                 <p className="font-serif text-xl">Currents</p>
                 <p className="text-xs text-muted-foreground">Today’s practice field</p>
               </div>
-              <div className="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary">Open</div>
+              <div className="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary">Preview</div>
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {ALL_DOMAIN_KEYS.slice(0, 4).map((key) => {
@@ -271,7 +270,7 @@ export default function Welcome() {
                       <span className="h-2 w-2 rounded-full bg-primary/70" />
                     </div>
                     <h3 className="mt-3 font-serif text-lg">{d.label}</h3>
-                    <p className="mt-1 text-xs text-muted-foreground">{d.tagline}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">A quick doorway into today’s practice.</p>
                   </div>
                 );
               })}
@@ -398,7 +397,7 @@ export default function Welcome() {
               }}
               className="hover:text-foreground transition-colors"
             >
-              Replay intro
+               Replay opening ritual
             </button>
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
             <Link to="/terms" className="hover:text-foreground">Terms</Link>
