@@ -120,7 +120,7 @@ async function handleTransactionCompleted(data: any, env: PaddleEnv) {
   const priceId = item.price?.importMeta?.externalId || item.price?.id;
 
   // Lifetime: upsert as a permanent active subscription with no end date
-  if (priceId === 'premium_lifetime') {
+  if (priceId === 'premium_lifetime' || priceId === 'premium_lifetime_149') {
     await supabase.from('subscriptions').upsert({
       user_id: userId,
       paddle_subscription_id: `lifetime_${data.id}`,
