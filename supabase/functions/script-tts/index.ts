@@ -4,11 +4,6 @@ import { z } from "https://esm.sh/zod@3.25.76";
 
 const VOICE_ID = "M7wzTk2Y1hGQyRzr9sbS";
 const MAX_TEXT_LENGTH = 2200;
-const ALLOWED_ORIGINS = [
-  "https://current-inner-flow.lovable.app",
-  "https://id-preview--abb90f19-f92a-4a96-ac97-854b7dd51087.lovable.app",
-];
-
 const BodySchema = z.object({
   title: z.string().max(160).optional(),
   text: z.string().min(1).max(MAX_TEXT_LENGTH),

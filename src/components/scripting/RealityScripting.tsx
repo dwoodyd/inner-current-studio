@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, BookOpen, ChevronRight, Feather, Library, Loader2, Plus, Save, Sparkles, Square, Trash2, Volume2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { getPaddleEnv } from '@/lib/paddle';
 import { useAuth } from '@/hooks/useAuth';
 import { DomainConfig } from '@/lib/domains';
 import ConstellationProgress from './ConstellationProgress';
@@ -202,7 +203,7 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title: script.title, text: audioText }),
+        body: JSON.stringify({ title: script.title, text: audioText, environment: getPaddleEnv() }),
       });
       if (!response.ok) throw new Error(await response.text());
       const url = URL.createObjectURL(await response.blob());
