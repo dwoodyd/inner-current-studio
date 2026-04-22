@@ -26,6 +26,9 @@ export const hasPushSupport = (): boolean =>
   'PushManager' in window &&
   'Notification' in window;
 
+export const hasServiceWorkerSupport = (): boolean =>
+  typeof window !== 'undefined' && 'serviceWorker' in navigator;
+
 function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -37,7 +40,7 @@ function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
 }
 
 export async function registerServiceWorker(): Promise<ServiceWorkerRegistration | null> {
-  if (!hasPushSupport()) return null;
+  if (!hasServiceWorkerSupport()) return null;
   try {
     return await navigator.serviceWorker.register('/sw.js');
   } catch (e) {
