@@ -44,23 +44,25 @@ export default function Profile() {
   const handleDeleteAccount = async () => {
     setDeleting(true);
     try {
-      // Delete user data from all tables
-      const tables: Array<keyof typeof supabase extends never ? string : string> = [
-        'check_ins', 'custom_rituals', 'future_pages', 'gathered_sequences',
-        'imagine_if_entries', 'momentum_sessions', 'overflow_entries',
-        'resistance_entries', 'thought_shifts', 'today_flow', 'wheels', 'profiles',
-      ] as const;
-      for (const table of tables) {
-        await (supabase.from as any)(table).delete().eq('user_id', user!.id);
-      }
-      // Sign out (actual auth.users deletion requires admin/edge function)
+      const { error } = await supabase.functions.invoke('delete-account');
+      if (error) throw error;
       await signOut();
-      toast.success('Account data deleted. You have been signed out.');
+      toast.success('Your account and data have been deleted.');
     } catch {
       toast.error('Something went wrong. Please try again.');
     } finally {
       setDeleting(false);
       setShowDeleteDialog(false);
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('customer-portal');
+      if (error || !data?.url) throw error;
+      window.open(data.url, '_blank', 'noopener,noreferrer');
+    } catch {
+      toast.error('No active billing portal is available for this account yet.');
     }
   };
 
@@ -81,7 +83,7 @@ export default function Profile() {
     { icon: Bell, label: 'Notifications', description: 'Gentle reminders', to: '/profile/notifications' },
     { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
     { icon: Volume2, label: 'Audio', description: 'Sound and haptic settings' },
-    { icon: CreditCard, label: 'Subscription', description: 'Manage your plan' },
+    { icon: CreditCard, label: 'Subscription', description: 'Manage plan, payment, and invoices', action: handleManageSubscription },
     { icon: Download, label: 'Export & Backup', description: 'Save your data' },
     { icon: Info, label: 'About Inner Wake', description: 'Our mission & philosophy', to: '/about' },
     ...(isAdmin ? [{ icon: Shield, label: 'Admin Dashboard', description: 'Manage users & roles', to: '/admin', accent: true }] : []),
@@ -146,11 +148,11 @@ export default function Profile() {
 
         {/* Sections */}
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl overflow-hidden divide-y divide-border/10">
-          {sections.map(({ icon: Icon, label, description, to, accent }) => (
+          {sections.map(({ icon: Icon, label, description, to, action, accent }) => (
             <motion.button
               key={label}
               variants={fadeUp}
-              onClick={() => to && navigate(to)}
+              onClick={() => action ? action() : to && navigate(to)}
               className={`w-full flex items-center gap-4 px-4 sm:px-5 py-4 min-h-[56px] transition-all duration-200 hover:bg-muted/10 active:scale-[0.99] ${
                 accent ? 'bg-primary/[0.03]' : ''
               }`}
@@ -172,7 +174,7 @@ export default function Profile() {
                 <br />
                 <span className="text-[11px] text-muted-foreground">{description}</span>
               </div>
-              {to && <ChevronRight size={14} className="text-muted-foreground/40" />}
+              {(to || action) && <ChevronRight size={14} className="text-muted-foreground/40" />}
             </motion.button>
           ))}
         </motion.div>
