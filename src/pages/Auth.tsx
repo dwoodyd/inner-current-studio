@@ -2,8 +2,9 @@ import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
-import { ArrowRight, Users } from 'lucide-react';
+import { ArrowRight, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
 import brandLogo from '@/assets/inner-wake-logo.png';
 
@@ -115,6 +116,20 @@ export default function Auth() {
     } else {
       setMode('signup');
       setPhase('auth');
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    if (!checkRateLimit()) return;
+    setLoading(true);
+    try {
+      const { error } = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: window.location.origin,
+      });
+      if (error) throw error;
+    } catch {
+      toast.error('Google sign-in is unavailable right now.');
+      setLoading(false);
     }
   };
 
@@ -348,8 +363,22 @@ export default function Auth() {
                 </form>
               )
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-3">
+              <div className="space-y-4">
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  disabled={loading}
+                  className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl border border-border/30 bg-card/50 py-4 text-sm font-medium text-foreground transition-all duration-200 hover:bg-muted/10 disabled:opacity-40 active:scale-[0.98]"
+                >
+                  <Chrome size={16} /> Continue with Google
+                </button>
+                <div className="flex items-center gap-3">
+                  <div className="h-px flex-1 bg-border/20" />
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/50">or</span>
+                  <div className="h-px flex-1 bg-border/20" />
+                </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-3">
                   <input
                     type="email"
                     value={email}
@@ -367,18 +396,19 @@ export default function Auth() {
                     minLength={6}
                     className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
                   />
-                </div>
-                {mode === 'login' && (
-                  <div className="text-right">
-                    <button type="button" onClick={() => setForgotMode(true)} className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors py-1 min-h-[44px]">
-                      Forgot password?
-                    </button>
                   </div>
-                )}
-                <button type="submit" disabled={loading} className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20">
-                  {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
-                </button>
-              </form>
+                  {mode === 'login' && (
+                    <div className="text-right">
+                      <button type="button" onClick={() => setForgotMode(true)} className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors py-1 min-h-[44px]">
+                        Forgot password?
+                      </button>
+                    </div>
+                  )}
+                  <button type="submit" disabled={loading} className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20">
+                    {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
+                  </button>
+                </form>
+              </div>
             )}
 
             {/* Toggle */}
