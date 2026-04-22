@@ -14,7 +14,7 @@ interface AppContextType {
   state: AppState;
   refresh: () => void;
   addCheckIn: (state: CheckIn['state'], note?: string) => void;
-  completeOnboarding: (data: { reason: string; style: string; challenge: string }) => void;
+  completeOnboarding: (data: { reason: string; style: string; challenge: string; companionName?: string; companionSigil?: string; freeCurrent?: string }) => void;
   updateTodayFlow: (updates: Partial<TodayFlow>) => void;
   saveWheel: (wheel: Omit<Wheel, 'id' | 'createdAt' | 'updatedAt'>) => void;
   saveGatheredSequence: (seq: Omit<GatheredSequence, 'id' | 'createdAt'>) => void;
@@ -107,6 +107,9 @@ async function loadCloudState(userId: string): Promise<AppState | null> {
         reason: profile?.onboarding_reason ?? undefined,
         style: profile?.onboarding_style ?? undefined,
         challenge: profile?.onboarding_challenge ?? undefined,
+        companionName: profile?.companion_name ?? undefined,
+        companionSigil: profile?.companion_sigil ?? undefined,
+        freeCurrent: profile?.free_current ?? undefined,
       },
       checkIns: (checkInsRes.data || []).map(r => ({ id: r.id, state: r.state as any, note: r.note ?? undefined, createdAt: r.created_at })),
       wheels: (wheelsRes.data || []).map(r => ({
@@ -240,7 +243,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     );
   }, [user, optimistic]);
 
-  const completeOnboarding = useCallback((data: { reason: string; style: string; challenge: string }) => {
+  const completeOnboarding = useCallback((data: { reason: string; style: string; challenge: string; companionName?: string; companionSigil?: string; freeCurrent?: string }) => {
     const err = validateOrError(onboardingSchema, data);
     if (err) { toast.error(err); return; }
     optimistic(
@@ -250,6 +253,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         onboarding_reason: data.reason,
         onboarding_style: data.style,
         onboarding_challenge: data.challenge,
+        companion_name: data.companionName,
+        companion_sigil: data.companionSigil,
+        free_current: data.freeCurrent,
       }).eq('user_id', user!.id),
       'onboarding'
     );
