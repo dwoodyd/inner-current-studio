@@ -86,14 +86,16 @@ export default function OverflowSpending() {
             </div>
             <h2 className="font-heading text-xl font-semibold text-foreground">Overflow Complete</h2>
             <p className="text-sm text-muted-foreground max-w-[280px] mx-auto">
-              You practiced receiving {dailyAmount} today. The more you rehearse, the more natural it becomes.
+              You practiced letting {dailyAmount} have a place to go. Let the body learn that receiving can stay gentle.
             </p>
-            <button
-              onClick={() => navigate('/money')}
-              className="mt-4 px-6 py-2.5 rounded-xl soul-glass-elevated text-sm font-medium text-foreground hover:bg-muted/10 transition-colors"
-            >
-              Back to Money Current
-            </button>
+            <div className="mx-auto mt-5 grid max-w-xs gap-2">
+              <button onClick={() => navigate('/money/evidence')} className="px-5 py-3 rounded-xl bg-primary/15 text-primary text-sm font-medium hover:bg-primary/25 transition-colors">
+                Notice evidence of support
+              </button>
+              <button onClick={() => navigate('/money')} className="px-5 py-3 rounded-xl soul-glass text-sm text-foreground hover:bg-muted/10 transition-colors">
+                Return to Money Current
+              </button>
+            </div>
           </motion.div>
         ) : !dailyAmount ? (
           <motion.div key="pick" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
