@@ -38,6 +38,7 @@ export default function Profile() {
   const [deleting, setDeleting] = useState(false);
   const totalCheckIns = state.checkIns.length;
   const totalReturns = state.todayFlow.returnCount;
+  const cycleReturns = Math.max(totalReturns, state.checkIns.length);
   const totalRituals = state.wheels.length + state.momentumSessions.length;
   const sigilProgress = Math.min(1, (totalCheckIns + totalRituals * 2 + state.gatheredSequences.length) / 30);
 
@@ -110,7 +111,7 @@ export default function Profile() {
         {/* Header */}
         <motion.div variants={fadeUp} className="text-center space-y-2">
           <h1 className="font-heading text-2xl font-semibold text-foreground">Profile</h1>
-          <p className="text-sm text-muted-foreground font-heading italic">Your practice, your way</p>
+          <p className="text-sm text-muted-foreground font-heading italic">Your rhythm, not your performance</p>
         </motion.div>
 
         {hasCompanion && (
@@ -130,7 +131,7 @@ export default function Profile() {
         <motion.div variants={fadeUp} className="grid grid-cols-3 gap-3">
           {[
             { label: 'Check-ins', value: totalCheckIns },
-            { label: 'Returns today', value: totalReturns },
+            { label: 'This cycle', value: cycleReturns },
             { label: 'Rituals', value: totalRituals },
           ].map(({ label, value }, i) => (
             <motion.div
