@@ -118,8 +118,8 @@ export default function Notifications() {
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="font-heading text-lg font-semibold text-foreground">Notifications</h1>
-          <p className="text-[10px] text-muted-foreground">Gentle reminders, never noise</p>
+          <h1 className="font-heading text-lg font-semibold text-foreground">Gentle Returns</h1>
+          <p className="text-[10px] text-muted-foreground">A quiet tap back, never pressure</p>
         </div>
       </div>
 
@@ -146,9 +146,9 @@ export default function Notifications() {
                 <Bell size={16} className="text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium text-foreground">Enable Reminders</p>
+                <p className="text-sm font-medium text-foreground">Enable Gentle Returns</p>
                 <p className="text-[10px] text-muted-foreground">
-                  {permissionState === 'denied' ? 'Blocked in browser settings' : 'Receive gentle nudges'}
+                  {permissionState === 'denied' ? 'Blocked in browser settings' : 'Small invitations back to center'}
                 </p>
               </div>
             </div>
