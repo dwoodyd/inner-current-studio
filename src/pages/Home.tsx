@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 import CurrentPulse from '@/components/CurrentPulse';
 import QuickCheckIn from '@/components/QuickCheckIn';
@@ -40,6 +40,39 @@ const FAVICON_GLOW_FRAMES = [
   `/favicon-glow-2.png?v=${FAVICON_VERSION}`,
   STATIC_FAVICON,
 ];
+
+const ritualRecommendations: Record<QuickState, { title: string; reason: string; route: string; guide: string }> = {
+  tight: {
+    title: 'Resistance Release',
+    reason: 'You’re holding tension — start by giving the body somewhere safe to soften.',
+    route: '/reset/resistance',
+    guide: 'Current Guide notices contraction patterns best after a body-first release.',
+  },
+  restless: {
+    title: 'Contrast Reset',
+    reason: 'You’re scattered — name the contrast, then let one clearer preference emerge.',
+    route: '/reset/contrast',
+    guide: 'Your recent check-ins can reveal what keeps pulling attention outward.',
+  },
+  flat: {
+    title: 'Stillness Timer',
+    reason: 'You’re neutral or low-volume — use quiet presence before trying to shift anything.',
+    route: '/reset/stillness',
+    guide: 'A steady baseline helps the app learn what “center” feels like for you.',
+  },
+  open: {
+    title: 'Gather Flow',
+    reason: 'You’re receptive — gather believable words while the door is already open.',
+    route: '/align/gather',
+    guide: 'This is a strong moment for affirmation work that does not feel forced.',
+  },
+  flowing: {
+    title: 'Momentum Session',
+    reason: 'You’re in the current — let one aligned sentence turn into movement.',
+    route: '/align/momentum',
+    guide: 'When flow appears, the best ritual is often short, embodied repetition.',
+  },
+};
 
 function ensureHeadLink(selector: string, attributes: Record<string, string>) {
   const existing = document.head.querySelector<HTMLLinkElement>(selector);
