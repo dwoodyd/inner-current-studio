@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Heart, Receipt, Target, Sparkles, ChevronRight,
-  BookOpen, Zap, Trophy, Timer, ListChecks, Bot, Library,
+  BookOpen, Zap, Trophy, Timer, ListChecks, Bot, Library, Feather,
 } from 'lucide-react';
 
 const tools = [
@@ -26,6 +26,13 @@ const tools = [
     description: 'Define your top seven money desires with clarity.',
     to: '/money/openings',
     color: 'text-soul-violet',
+  },
+  {
+    icon: Feather,
+    title: 'Reality Scripting',
+    description: 'Script your money reality and track signs that match it.',
+    to: '/money/script',
+    color: 'text-soul-gold',
   },
   {
     icon: Sparkles,
