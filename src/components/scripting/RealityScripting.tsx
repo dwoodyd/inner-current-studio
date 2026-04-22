@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, BookOpen, ChevronRight, Feather, Library, Plus, Save, Sparkles, Trash2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, Feather, Library, Loader2, Plus, Save, Sparkles, Square, Trash2, Volume2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -72,6 +72,9 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
   const [feeling, setFeeling] = useState('');
   const [evidence, setEvidence] = useState('');
   const [saving, setSaving] = useState(false);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const prompt = useMemo(() => prompts[domain.key]?.[new Date().getDate() % 2] ?? prompts.self[0], [domain.key]);
   const selected = scripts.find(s => s.id === scriptId);
@@ -89,6 +92,11 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
   };
 
   useEffect(() => { load(); }, [user, domain.key]);
+
+  useEffect(() => () => {
+    audioRef.current?.pause();
+    if (audioRef.current?.src) URL.revokeObjectURL(audioRef.current.src);
+  }, []);
 
   const upsertProgress = async (nextScriptCount: number, nextEvidenceCount = progress.evidence_count) => {
     if (!user) return;
@@ -149,6 +157,40 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
   const removeScript = async (id: string) => {
     await (supabase as any).from('reality_scripts').delete().eq('id', id);
     load();
+  };
+
+  const playScriptAudio = async (script: ScriptRow) => {
+    if (audioPlaying) {
+      audioRef.current?.pause();
+      setAudioPlaying(false);
+      return;
+    }
+    setAudioLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Sign in again to play audio.');
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/script-tts`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: script.title, text: script.content }),
+      });
+      if (!response.ok) throw new Error(await response.text());
+      const url = URL.createObjectURL(await response.blob());
+      if (audioRef.current?.src) URL.revokeObjectURL(audioRef.current.src);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => setAudioPlaying(false);
+      await audio.play();
+      setAudioPlaying(true);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not play script audio');
+    } finally {
+      setAudioLoading(false);
+    }
   };
 
   const Back = () => (
@@ -217,6 +259,10 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
         {!selected ? <p className="text-center text-sm text-muted-foreground py-10">Script not found.</p> : <>
           <section className="space-y-2"><p className="text-xs uppercase tracking-[0.18em] text-primary/80">{selected.mode}</p><h1 className="font-heading text-3xl text-foreground">{selected.title}</h1></section>
           <article className="soul-glass-elevated rounded-2xl p-5 text-sm leading-7 text-foreground whitespace-pre-wrap">{selected.content}</article>
+          <button onClick={() => playScriptAudio(selected)} disabled={audioLoading} className="soul-btn-primary w-full flex items-center justify-center gap-2 rounded-2xl disabled:opacity-50">
+            {audioLoading ? <Loader2 size={16} className="animate-spin" /> : audioPlaying ? <Square size={16} /> : <Volume2 size={16} />}
+            {audioLoading ? 'Preparing audio' : audioPlaying ? 'Stop audio' : 'Listen to script'}
+          </button>
           {selected.feeling_word && <p className="text-sm text-muted-foreground">Feeling tone: <span className="text-primary">{selected.feeling_word}</span></p>}
           <div className="soul-card rounded-2xl p-4 space-y-3">
             <h2 className="font-heading text-xl text-foreground">Mark matching evidence</h2>
