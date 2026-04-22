@@ -695,6 +695,140 @@ export type Database = {
         }
         Relationships: []
       }
+      reality_evidence: {
+        Row: {
+          created_at: string
+          domain: string
+          entry_text: string
+          felt_like_match: boolean
+          id: string
+          match_strength: number
+          script_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          domain: string
+          entry_text?: string
+          felt_like_match?: boolean
+          id?: string
+          match_strength?: number
+          script_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          domain?: string
+          entry_text?: string
+          felt_like_match?: boolean
+          id?: string
+          match_strength?: number
+          script_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reality_evidence_script_id_fkey"
+            columns: ["script_id"]
+            isOneToOne: false
+            referencedRelation: "reality_scripts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reality_progress: {
+        Row: {
+          constellation_progress: number
+          created_at: string
+          current_streak: number
+          domain: string
+          evidence_count: number
+          id: string
+          last_scripted_at: string | null
+          longest_streak: number
+          script_count: number
+          tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          constellation_progress?: number
+          created_at?: string
+          current_streak?: number
+          domain: string
+          evidence_count?: number
+          id?: string
+          last_scripted_at?: string | null
+          longest_streak?: number
+          script_count?: number
+          tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          constellation_progress?: number
+          created_at?: string
+          current_streak?: number
+          domain?: string
+          evidence_count?: number
+          id?: string
+          last_scripted_at?: string | null
+          longest_streak?: number
+          script_count?: number
+          tier?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reality_scripts: {
+        Row: {
+          content: string
+          created_at: string
+          domain: string
+          feeling_word: string
+          id: string
+          mode: string
+          prompt: string
+          revisit_at: string | null
+          sensory_details: Json
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          domain: string
+          feeling_word?: string
+          id?: string
+          mode?: string
+          prompt?: string
+          revisit_at?: string | null
+          sensory_details?: Json
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          domain?: string
+          feeling_word?: string
+          id?: string
+          mode?: string
+          prompt?: string
+          revisit_at?: string | null
+          sensory_details?: Json
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       resistance_entries: {
         Row: {
           body_location: string
