@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Shield, Moon, Wifi } from 'lucide-react';
+import { Activity, ArrowRight, Eye, Moon, Play, Shield, Sparkles, Timer, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
@@ -34,10 +34,15 @@ function setLink(rel: string, href: string) {
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const [centerSeconds, setCenterSeconds] = useState(10);
+  const [centering, setCentering] = useState(false);
+  const [activePractitioners, setActivePractitioners] = useState(() => 14 + (new Date().getMinutes() % 9));
   const [showCinematic, setShowCinematic] = useState(() => {
     if (typeof window === 'undefined') return false;
     try { return !localStorage.getItem(SEEN_KEY); } catch { return false; }
   });
+
+  const centerPrompt = centerSeconds > 6 ? 'Inhale softly' : centerSeconds > 3 ? 'Let your shoulders drop' : 'Return to here';
 
   const dismissCinematic = (goToAuth: boolean) => {
     try { localStorage.setItem(SEEN_KEY, '1'); } catch {}
@@ -78,6 +83,36 @@ export default function Welcome() {
       document.getElementById(ldId)?.remove();
     };
   }, []);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      const minute = new Date().getMinutes();
+      setActivePractitioners(14 + (minute % 9));
+    }, 30000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    if (!centering) return;
+
+    const id = window.setInterval(() => {
+      setCenterSeconds((seconds) => {
+        if (seconds <= 1) {
+          window.clearInterval(id);
+          setCentering(false);
+          return 10;
+        }
+        return seconds - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(id);
+  }, [centering]);
+
+  const startCentering = () => {
+    setCenterSeconds(10);
+    setCentering(true);
+  };
 
   if (showCinematic) {
     return (
@@ -172,6 +207,78 @@ export default function Welcome() {
           <p className="mt-6 text-xs text-muted-foreground">
             Free to start · Works offline · Installs as an app
           </p>
+        </section>
+
+        {/* Instant practice hook */}
+        <section className="mt-16 grid gap-4 md:grid-cols-[1.05fr_0.95fr] md:items-stretch">
+          <div className="rounded-2xl border border-border/60 bg-card/40 p-6 backdrop-blur">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground">
+              <Timer className="h-4 w-4 text-soul-gold" /> 10-second center
+            </div>
+            <div className="mt-6 flex items-center gap-5">
+              <motion.button
+                type="button"
+                onClick={startCentering}
+                disabled={centering}
+                className="relative grid h-24 w-24 shrink-0 place-items-center rounded-full border border-primary/25 bg-primary/10 text-primary transition-colors hover:bg-primary/15 disabled:cursor-default"
+                animate={centering ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+                transition={{ duration: 3, repeat: centering ? Infinity : 0, ease: 'easeInOut' }}
+                aria-label="Start 10-second center"
+              >
+                {centering ? <span className="font-serif text-3xl">{centerSeconds}</span> : <Play className="h-7 w-7 fill-current" />}
+              </motion.button>
+              <div>
+                <h2 className="font-serif text-2xl">Try a quiet return.</h2>
+                <p className="mt-2 text-sm text-muted-foreground">{centering ? centerPrompt : 'A small reset before you create an account.'}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border/60 bg-card/30 p-6 backdrop-blur">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground">
+              <Activity className="h-4 w-4 text-soul-gold" /> Quiet community
+            </div>
+            <p className="mt-6 font-serif text-4xl text-foreground">{activePractitioners}</p>
+            <p className="mt-2 text-sm text-muted-foreground">people are practicing right now.</p>
+            <p className="mt-4 text-xs text-muted-foreground/80">12,400+ returns to center and counting.</p>
+          </div>
+        </section>
+
+        {/* Interface preview */}
+        <section className="mt-28 grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/40 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
+              <Eye className="h-3.5 w-3.5" /> Look inside
+            </div>
+            <h2 className="mt-5 font-serif text-3xl md:text-4xl">A daily dashboard for your inner weather.</h2>
+            <p className="mt-3 text-muted-foreground">
+              Open the Current that needs care, check your state, then move into a ritual that meets the moment.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border/60 bg-card/40 p-5 shadow-2xl backdrop-blur">
+            <div className="flex items-center justify-between border-b border-border/50 pb-4">
+              <div>
+                <p className="font-serif text-xl">Currents</p>
+                <p className="text-xs text-muted-foreground">Today’s practice field</p>
+              </div>
+              <div className="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary">Open</div>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {ALL_DOMAIN_KEYS.slice(0, 4).map((key) => {
+                const d = DOMAINS[key];
+                return (
+                  <div key={key} className="rounded-xl border border-border/50 bg-background/30 p-4" style={{ background: d.gradient }}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl">{d.emoji}</span>
+                      <span className="h-2 w-2 rounded-full bg-primary/70" />
+                    </div>
+                    <h3 className="mt-3 font-serif text-lg">{d.label}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">{d.tagline}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </section>
 
         {/* Currents */}

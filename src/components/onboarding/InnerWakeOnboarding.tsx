@@ -915,12 +915,11 @@ export default function InnerWakeOnboarding({
           ════════════════════════════════════════════════════════════════════ */}
       <div className="iw-overlay">
         <button className="iw-skip" onClick={skip}>
-          skip
+          Skip intro
         </button>
         {slide === 1 && (
           <button
-            className="iw-skip"
-            style={{ right: "5.2rem" }}
+            className="iw-chimes"
             onClick={() => setChimesEnabled((v) => !v)}
             aria-pressed={chimesEnabled}
             aria-label="Toggle chimes"

@@ -221,6 +221,28 @@
 
 .iw-skip {
   position: absolute;
+  bottom: 4.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(200, 164, 90, 0.08);
+  border: 1px solid rgba(200, 164, 90, 0.24);
+  color: var(--muted);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  padding: 0.58rem 1.2rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: color 300ms, border-color 300ms, background 300ms;
+}
+.iw-skip:hover {
+  color: var(--gold-bright);
+  background: rgba(200, 164, 90, 0.12);
+  border-color: rgba(200, 164, 90, 0.4);
+}
+
+.iw-chimes {
+  position: absolute;
   top: 1.4rem;
   right: 1.6rem;
   background: transparent;
@@ -234,7 +256,7 @@
   cursor: pointer;
   transition: color 300ms, border-color 300ms;
 }
-.iw-skip:hover {
+.iw-chimes:hover {
   color: var(--muted);
   border-color: rgba(255, 255, 255, 0.15);
 }
