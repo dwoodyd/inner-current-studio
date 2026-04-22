@@ -69,25 +69,34 @@ export default function Profile() {
 
   const hasCompanion = Boolean(state.onboarding.completed);
 
-  const sections = [
+  const sectionGroups = [
     {
-      icon: Heart,
-      label: hasCompanion ? 'Your companion' : 'Set up your companion',
-      description: hasCompanion ? 'Revisit your sigil & first affirmation' : 'A 2-minute personal ritual',
-      to: '/onboarding',
-      accent: !hasCompanion,
+      title: 'Practice',
+      items: [
+        { icon: Heart, label: hasCompanion ? 'Your companion' : 'Set up your companion', description: hasCompanion ? 'Sigil & first affirmation' : 'A 2-minute personal ritual', to: '/onboarding', accent: !hasCompanion },
+        { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
+        { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals' },
+      ],
     },
-    { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
-    { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns' },
-    { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', to: '/profile/insights' },
-    { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals' },
-    { icon: Bell, label: 'Notifications', description: 'Gentle reminders', to: '/profile/notifications' },
-    { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
-    { icon: Volume2, label: 'Audio', description: 'Sound and haptic settings' },
-    { icon: CreditCard, label: 'Subscription', description: 'Manage plan, payment, and invoices', action: handleManageSubscription },
-    { icon: Download, label: 'Export & Backup', description: 'Save your data' },
-    { icon: Info, label: 'About Inner Wake', description: 'Our mission & philosophy', to: '/about' },
-    ...(isAdmin ? [{ icon: Shield, label: 'Admin Dashboard', description: 'Manage users & roles', to: '/admin', accent: true }] : []),
+    {
+      title: 'Insights',
+      items: [
+        { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns' },
+        { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', to: '/profile/insights' },
+      ],
+    },
+    {
+      title: 'Account',
+      items: [
+        { icon: Bell, label: 'Notifications', description: 'Gentle reminders', to: '/profile/notifications' },
+        { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
+        { icon: Volume2, label: 'Audio', description: 'Sound and haptics' },
+        { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', action: handleManageSubscription },
+        { icon: Download, label: 'Export & Backup', description: 'Save your data' },
+        { icon: Info, label: 'About Inner Wake', description: 'Mission & philosophy', to: '/about' },
+      ],
+    },
+    ...(isAdmin ? [{ title: 'Admin', items: [{ icon: Shield, label: 'Admin Dashboard', description: 'Users & roles', to: '/admin', accent: true }] }] : []),
   ];
 
   return (
@@ -148,37 +157,34 @@ export default function Profile() {
         </motion.div>
 
         {/* Sections */}
-        <motion.div variants={fadeUp} className="soul-glass rounded-2xl overflow-hidden divide-y divide-border/10">
-          {sections.map(({ icon: Icon, label, description, to, action, accent }) => (
-            <motion.button
-              key={label}
-              variants={fadeUp}
-              onClick={() => action ? action() : to && navigate(to)}
-              className={`w-full flex items-center gap-4 px-4 sm:px-5 py-4 min-h-[56px] transition-all duration-200 hover:bg-muted/10 active:scale-[0.99] ${
-                accent ? 'bg-primary/[0.03]' : ''
-              }`}
-              whileTap={{ scale: 0.99 }}
-            >
-              <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${
-                accent
-                  ? 'bg-primary/10 border border-primary/15'
-                  : 'bg-muted/30 border border-border/20'
-              }`}>
-                <Icon
-                  size={18}
-                  className={accent ? 'text-primary' : 'text-muted-foreground'}
-                  strokeWidth={1.5}
-                />
+        <div className="space-y-4">
+          {sectionGroups.map((group) => (
+            <motion.section key={group.title} variants={fadeUp} className="space-y-2">
+              <h2 className="px-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/60">{group.title}</h2>
+              <div className="soul-glass overflow-hidden rounded-2xl divide-y divide-border/10">
+                {group.items.map(({ icon: Icon, label, description, to, action, accent }) => (
+                  <motion.button
+                    key={label}
+                    variants={fadeUp}
+                    onClick={() => action ? action() : to && navigate(to)}
+                    className={`flex min-h-[54px] w-full items-center gap-3 px-4 py-3.5 transition-all duration-200 hover:bg-muted/10 active:scale-[0.99] sm:gap-4 sm:px-5 ${accent ? 'bg-primary/[0.03]' : ''}`}
+                    whileTap={{ scale: 0.99 }}
+                  >
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${accent ? 'border border-primary/15 bg-primary/10' : 'border border-border/20 bg-muted/30'}`}>
+                      <Icon size={18} className={accent ? 'text-primary' : 'text-muted-foreground'} strokeWidth={1.5} />
+                    </div>
+                    <div className="min-w-0 flex-1 text-left">
+                      <span className={`text-sm font-medium ${accent ? 'text-primary' : 'text-foreground'}`}>{label}</span>
+                      <br />
+                      <span className="text-[11px] text-muted-foreground">{description}</span>
+                    </div>
+                    {(to || action) && <ChevronRight size={14} className="shrink-0 text-muted-foreground/40" />}
+                  </motion.button>
+                ))}
               </div>
-              <div className="flex-1 text-left">
-                <span className={`text-sm font-medium ${accent ? 'text-primary' : 'text-foreground'}`}>{label}</span>
-                <br />
-                <span className="text-[11px] text-muted-foreground">{description}</span>
-              </div>
-              {(to || action) && <ChevronRight size={14} className="text-muted-foreground/40" />}
-            </motion.button>
+            </motion.section>
           ))}
-        </motion.div>
+        </div>
 
         {/* Sign Out */}
         <motion.button
