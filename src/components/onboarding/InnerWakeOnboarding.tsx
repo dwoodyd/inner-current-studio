@@ -317,16 +317,7 @@ export default function InnerWakeOnboarding({
             transform: "translate(-50%,-50%)",
           }}
         />
-        <div
-          style={{
-            textAlign: "center",
-            position: "relative",
-            zIndex: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <div className="iw-breath-stage">
           <div
             className="iw-breath-circle"
             data-phase={breathPhase}
@@ -351,21 +342,15 @@ export default function InnerWakeOnboarding({
           </div>
           {/* Breath counter */}
           <div
+            className="iw-breath-count"
             style={{
-              marginTop: "1.4rem",
-              fontFamily: "'DM Sans', system-ui, sans-serif",
-              fontSize: "2rem",
-              fontWeight: 300,
-              color: "var(--gold-bright)",
-              letterSpacing: "0.08em",
-              minHeight: "2.4rem",
               opacity: breathCount > 0 ? 1 : 0,
               transition: "opacity 600ms ease",
-              textShadow: "0 0 20px rgba(200, 164, 90, 0.35)",
             }}
             aria-live="polite"
           >
             {breathCount > 0 ? breathCount : ""}
+            {breathCount > 0 && <span className="iw-breath-count-label">seconds</span>}
           </div>
           <div
             style={{

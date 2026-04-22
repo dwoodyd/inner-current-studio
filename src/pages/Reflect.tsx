@@ -69,7 +69,7 @@ export default function Reflect() {
         variants={stagger}
         initial="hidden"
         animate="show"
-        className="relative mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6 safe-top"
+        className="relative mx-auto max-w-lg px-4 pt-10 pb-10 space-y-5 safe-top sm:pt-12 sm:space-y-6"
       >
         <motion.div variants={fadeUp} className="text-center space-y-2">
           <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground">Reflect</h1>
@@ -84,11 +84,11 @@ export default function Reflect() {
                 key={title}
                 variants={fadeUp}
                 onClick={() => navigate(to)}
-                className={`soul-glass-elevated w-full text-left flex items-center gap-4 rounded-2xl p-4 sm:p-5 transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] min-h-[64px] group ${a.glow}`}
+                className={`group flex min-h-[60px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] soul-glass-elevated sm:min-h-[64px] sm:gap-4 sm:p-5 ${a.glow}`}
                 whileTap={{ scale: 0.98 }}
               >
                 <div
-                  className="h-11 w-11 rounded-xl flex items-center justify-center shrink-0"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11"
                   style={{ background: a.bg, border: `1px solid ${a.border}` }}
                 >
                   <Icon size={20} className={a.icon} strokeWidth={1.5} />

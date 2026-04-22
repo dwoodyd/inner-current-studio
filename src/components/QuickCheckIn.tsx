@@ -28,17 +28,17 @@ export default function QuickCheckIn({ selected, onSelect }: QuickCheckInProps) 
       <div className="px-1">
         <p className="text-xs text-muted-foreground font-heading italic">How does your energy feel right now?</p>
       </div>
-      <div className="flex items-center justify-between gap-1.5 rounded-2xl bg-card p-2 border border-border/30">
+      <div className="grid grid-cols-5 gap-1.5 rounded-2xl border border-border/30 bg-card p-1.5 sm:p-2">
         {states.map(({ value, label, emoji, hint }) => {
           const isSelected = selected === value;
           return (
             <button
               key={value}
               onClick={() => onSelect(value)}
-              className={`relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl min-h-[48px] py-2 px-1 transition-colors duration-150 ${
+              className={`relative flex min-h-[44px] flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 transition-colors duration-150 sm:min-h-[48px] ${
                 isSelected ? 'bg-primary/10' : 'hover:bg-muted/50 active:bg-muted/70'
               }`}
-              aria-label={`Check in as ${label}: ${hint}`}
+              aria-label={label}
               aria-pressed={isSelected}
               title={hint}
             >
