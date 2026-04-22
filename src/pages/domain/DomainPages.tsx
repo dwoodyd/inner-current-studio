@@ -4,6 +4,7 @@ import DomainGatherFlow from '@/components/domain/DomainGatherFlow';
 import DomainResistanceRelease from '@/components/domain/DomainResistanceRelease';
 import DomainOpenings from '@/components/domain/DomainOpenings';
 import DomainEvidence from '@/components/domain/DomainEvidence';
+import RealityScripting from '@/components/scripting/RealityScripting';
 import { DOMAINS, DomainKey } from '@/lib/domains';
 
 const make = (key: DomainKey) => ({
@@ -13,9 +14,14 @@ const make = (key: DomainKey) => ({
   Resistance: () => <DomainResistanceRelease domain={DOMAINS[key]} />,
   Openings: () => <DomainOpenings domain={DOMAINS[key]} />,
   Evidence: () => <DomainEvidence domain={DOMAINS[key]} />,
+  ScriptHub: () => <RealityScripting domain={DOMAINS[key]} view="hub" />,
+  ScriptNew: () => <RealityScripting domain={DOMAINS[key]} view="new" />,
+  ScriptLibrary: () => <RealityScripting domain={DOMAINS[key]} view="library" />,
+  ScriptDetail: () => <RealityScripting domain={DOMAINS[key]} view="detail" />,
 });
 
 export const SelfPages = make('self');
 export const EnergyPages = make('energy');
 export const RelationshipsPages = make('relationships');
 export const HealthPages = make('health');
+export const MoneyPages = make('money');
