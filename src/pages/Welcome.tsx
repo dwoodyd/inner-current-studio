@@ -5,7 +5,7 @@ import { Activity, ArrowRight, Eye, Moon, Play, Shield, Sparkles, Timer, Wifi } 
 import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
-import brandLogo from '@/assets/inner-wake-logo.png';
+import innerWakeIcon from '@/assets/inner-wake-icon.svg';
 
 const SEEN_KEY = 'iw_cinematic_seen_v1';
 
@@ -146,7 +146,7 @@ export default function Welcome() {
         {/* Nav */}
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={brandLogo} alt="Inner Wake" className="h-9 w-9 object-contain" />
+            <img src={innerWakeIcon} alt="" aria-hidden="true" className="h-9 w-9 object-contain" />
             <span className="font-serif text-xl tracking-wide">Inner Wake</span>
           </div>
           <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
