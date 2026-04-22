@@ -8,6 +8,8 @@ import { ArrowRight, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
 import brandLogo from '@/assets/inner-wake-logo.png';
 
+const INNER_WAKE_ICON = '/icon.svg';
+
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
 
@@ -323,7 +325,7 @@ export default function Auth() {
                 animate={{ scale: [1, 1.06, 1] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <img src={brandLogo} alt="Inner Wake" className="h-14 w-14 object-contain" />
+                <img src={INNER_WAKE_ICON} alt="Inner Wake" className="h-14 w-14 object-contain" />
               </motion.div>
               <div className="space-y-2">
                 <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
