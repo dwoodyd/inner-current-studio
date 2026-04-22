@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Sparkles, MessageCircle, CalendarClock, Repeat, BookmarkPlus, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { getPaddleEnv } from '@/lib/paddle';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
@@ -80,13 +82,17 @@ export default function AffirmationCoach() {
     let assistantSoFar = '';
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) throw new Error('Not signed in');
+
       const resp = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ messages: allMessages }),
+        body: JSON.stringify({ messages: allMessages, environment: getPaddleEnv() }),
       });
 
       if (!resp.ok || !resp.body) {

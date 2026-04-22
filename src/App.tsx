@@ -7,6 +7,7 @@ import { AppProvider } from "@/lib/AppContext";
 import { lazy, Suspense } from "react";
 import AppShell from "@/components/AppShell";
 import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotice";
+import { PremiumGate } from "@/components/PremiumGate";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
@@ -130,6 +131,8 @@ function RouteLoader() {
 
 function AppRoutes() {
   const { user, loading } = useAuth();
+  const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
+  const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
 
   if (loading) {
     return (
@@ -189,75 +192,75 @@ function AppRoutes() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
         <Route path="/profile/rituals" element={<MyRituals />} />
-        <Route path="/profile/guide" element={<CurrentGuide />} />
+        <Route path="/profile/guide" element={premium('the Current Guide', <CurrentGuide />)} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/about" element={<About />} />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/money" element={<MoneyCurrent />} />
-        <Route path="/money/state" element={<MoneyState />} />
-        <Route path="/money/deposit" element={<CurrentDeposit />} />
-        <Route path="/money/openings" element={<MoneyOpenings />} />
-        <Route path="/money/overflow" element={<OverflowSpending />} />
-        <Route path="/money/evidence" element={<EvidenceOfSupport />} />
-        <Route path="/money/resistance" element={<MoneyResistanceRelease />} />
-        <Route path="/money/payment-shift" element={<PaymentShift />} />
-        <Route path="/money/gather" element={<MoneyGatherFlow />} />
-        <Route path="/money/aligned-action" element={<AlignedAction />} />
-        <Route path="/money/wealth-rhythm" element={<WealthRhythm />} />
-        <Route path="/money/affirmations" element={<MoneyAffirmations />} />
-        <Route path="/money/tracker" element={<AffirmationTracker />} />
-        <Route path="/money/coach" element={<AffirmationCoach />} />
-        <Route path="/money/library" element={<AffirmationLibrary />} />
-        <Route path="/money/script" element={<MoneyScriptHub />} />
-        <Route path="/money/script/new" element={<MoneyScriptNew />} />
-        <Route path="/money/script/library" element={<MoneyScriptLibrary />} />
-        <Route path="/money/script/:scriptId" element={<MoneyScriptDetail />} />
+        <Route path="/money" element={current('money', <MoneyCurrent />)} />
+        <Route path="/money/state" element={current('money', <MoneyState />)} />
+        <Route path="/money/deposit" element={current('money', <CurrentDeposit />)} />
+        <Route path="/money/openings" element={current('money', <MoneyOpenings />)} />
+        <Route path="/money/overflow" element={current('money', <OverflowSpending />)} />
+        <Route path="/money/evidence" element={current('money', <EvidenceOfSupport />)} />
+        <Route path="/money/resistance" element={current('money', <MoneyResistanceRelease />)} />
+        <Route path="/money/payment-shift" element={current('money', <PaymentShift />)} />
+        <Route path="/money/gather" element={current('money', <MoneyGatherFlow />)} />
+        <Route path="/money/aligned-action" element={current('money', <AlignedAction />)} />
+        <Route path="/money/wealth-rhythm" element={current('money', <WealthRhythm />)} />
+        <Route path="/money/affirmations" element={current('money', <MoneyAffirmations />)} />
+        <Route path="/money/tracker" element={current('money', <AffirmationTracker />)} />
+        <Route path="/money/coach" element={premium('the AI Affirmation Coach', <AffirmationCoach />)} />
+        <Route path="/money/library" element={current('money', <AffirmationLibrary />)} />
+        <Route path="/money/script" element={current('money', <MoneyScriptHub />)} />
+        <Route path="/money/script/new" element={current('money', <MoneyScriptNew />)} />
+        <Route path="/money/script/library" element={current('money', <MoneyScriptLibrary />)} />
+        <Route path="/money/script/:scriptId" element={current('money', <MoneyScriptDetail />)} />
         <Route path="/currents" element={<CurrentsHub />} />
-        <Route path="/self" element={<SelfHub />} />
-        <Route path="/self/state" element={<SelfState />} />
-        <Route path="/self/affirmations" element={<SelfAffirmations />} />
-        <Route path="/self/gather" element={<SelfGather />} />
-        <Route path="/self/resistance" element={<SelfResistance />} />
-        <Route path="/self/openings" element={<SelfOpenings />} />
-        <Route path="/self/evidence" element={<SelfEvidence />} />
-        <Route path="/self/script" element={<SelfScriptHub />} />
-        <Route path="/self/script/new" element={<SelfScriptNew />} />
-        <Route path="/self/script/library" element={<SelfScriptLibrary />} />
-        <Route path="/self/script/:scriptId" element={<SelfScriptDetail />} />
-        <Route path="/energy" element={<EnergyHub />} />
-        <Route path="/energy/state" element={<EnergyState />} />
-        <Route path="/energy/affirmations" element={<EnergyAffirmations />} />
-        <Route path="/energy/gather" element={<EnergyGather />} />
-        <Route path="/energy/resistance" element={<EnergyResistance />} />
-        <Route path="/energy/openings" element={<EnergyOpenings />} />
-        <Route path="/energy/evidence" element={<EnergyEvidence />} />
-        <Route path="/energy/script" element={<EnergyScriptHub />} />
-        <Route path="/energy/script/new" element={<EnergyScriptNew />} />
-        <Route path="/energy/script/library" element={<EnergyScriptLibrary />} />
-        <Route path="/energy/script/:scriptId" element={<EnergyScriptDetail />} />
-        <Route path="/relationships" element={<RelationshipsHub />} />
-        <Route path="/relationships/state" element={<RelationshipsState />} />
-        <Route path="/relationships/affirmations" element={<RelationshipsAffirmations />} />
-        <Route path="/relationships/gather" element={<RelationshipsGather />} />
-        <Route path="/relationships/resistance" element={<RelationshipsResistance />} />
-        <Route path="/relationships/openings" element={<RelationshipsOpenings />} />
-        <Route path="/relationships/evidence" element={<RelationshipsEvidence />} />
-        <Route path="/relationships/script" element={<RelationshipsScriptHub />} />
-        <Route path="/relationships/script/new" element={<RelationshipsScriptNew />} />
-        <Route path="/relationships/script/library" element={<RelationshipsScriptLibrary />} />
-        <Route path="/relationships/script/:scriptId" element={<RelationshipsScriptDetail />} />
-        <Route path="/health" element={<HealthHub />} />
-        <Route path="/health/state" element={<HealthState />} />
-        <Route path="/health/affirmations" element={<HealthAffirmations />} />
-        <Route path="/health/gather" element={<HealthGather />} />
-        <Route path="/health/resistance" element={<HealthResistance />} />
-        <Route path="/health/openings" element={<HealthOpenings />} />
-        <Route path="/health/evidence" element={<HealthEvidence />} />
-        <Route path="/health/script" element={<HealthScriptHub />} />
-        <Route path="/health/script/new" element={<HealthScriptNew />} />
-        <Route path="/health/script/library" element={<HealthScriptLibrary />} />
-        <Route path="/health/script/:scriptId" element={<HealthScriptDetail />} />
+        <Route path="/self" element={current('self', <SelfHub />)} />
+        <Route path="/self/state" element={current('self', <SelfState />)} />
+        <Route path="/self/affirmations" element={current('self', <SelfAffirmations />)} />
+        <Route path="/self/gather" element={current('self', <SelfGather />)} />
+        <Route path="/self/resistance" element={current('self', <SelfResistance />)} />
+        <Route path="/self/openings" element={current('self', <SelfOpenings />)} />
+        <Route path="/self/evidence" element={current('self', <SelfEvidence />)} />
+        <Route path="/self/script" element={current('self', <SelfScriptHub />)} />
+        <Route path="/self/script/new" element={current('self', <SelfScriptNew />)} />
+        <Route path="/self/script/library" element={current('self', <SelfScriptLibrary />)} />
+        <Route path="/self/script/:scriptId" element={current('self', <SelfScriptDetail />)} />
+        <Route path="/energy" element={current('energy', <EnergyHub />)} />
+        <Route path="/energy/state" element={current('energy', <EnergyState />)} />
+        <Route path="/energy/affirmations" element={current('energy', <EnergyAffirmations />)} />
+        <Route path="/energy/gather" element={current('energy', <EnergyGather />)} />
+        <Route path="/energy/resistance" element={current('energy', <EnergyResistance />)} />
+        <Route path="/energy/openings" element={current('energy', <EnergyOpenings />)} />
+        <Route path="/energy/evidence" element={current('energy', <EnergyEvidence />)} />
+        <Route path="/energy/script" element={current('energy', <EnergyScriptHub />)} />
+        <Route path="/energy/script/new" element={current('energy', <EnergyScriptNew />)} />
+        <Route path="/energy/script/library" element={current('energy', <EnergyScriptLibrary />)} />
+        <Route path="/energy/script/:scriptId" element={current('energy', <EnergyScriptDetail />)} />
+        <Route path="/relationships" element={current('relationships', <RelationshipsHub />)} />
+        <Route path="/relationships/state" element={current('relationships', <RelationshipsState />)} />
+        <Route path="/relationships/affirmations" element={current('relationships', <RelationshipsAffirmations />)} />
+        <Route path="/relationships/gather" element={current('relationships', <RelationshipsGather />)} />
+        <Route path="/relationships/resistance" element={current('relationships', <RelationshipsResistance />)} />
+        <Route path="/relationships/openings" element={current('relationships', <RelationshipsOpenings />)} />
+        <Route path="/relationships/evidence" element={current('relationships', <RelationshipsEvidence />)} />
+        <Route path="/relationships/script" element={current('relationships', <RelationshipsScriptHub />)} />
+        <Route path="/relationships/script/new" element={current('relationships', <RelationshipsScriptNew />)} />
+        <Route path="/relationships/script/library" element={current('relationships', <RelationshipsScriptLibrary />)} />
+        <Route path="/relationships/script/:scriptId" element={current('relationships', <RelationshipsScriptDetail />)} />
+        <Route path="/health" element={current('health', <HealthHub />)} />
+        <Route path="/health/state" element={current('health', <HealthState />)} />
+        <Route path="/health/affirmations" element={current('health', <HealthAffirmations />)} />
+        <Route path="/health/gather" element={current('health', <HealthGather />)} />
+        <Route path="/health/resistance" element={current('health', <HealthResistance />)} />
+        <Route path="/health/openings" element={current('health', <HealthOpenings />)} />
+        <Route path="/health/evidence" element={current('health', <HealthEvidence />)} />
+        <Route path="/health/script" element={current('health', <HealthScriptHub />)} />
+        <Route path="/health/script/new" element={current('health', <HealthScriptNew />)} />
+        <Route path="/health/script/library" element={current('health', <HealthScriptLibrary />)} />
+        <Route path="/health/script/:scriptId" element={current('health', <HealthScriptDetail />)} />
       </Route>
       <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />

@@ -51,10 +51,11 @@ export function useSubscription(): SubscriptionState {
 
       if (cancelled) return;
 
+      const periodStillOpen = !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
       const active =
         sub &&
-        ["active", "trialing"].includes(sub.status) &&
-        (!sub.current_period_end || new Date(sub.current_period_end) > new Date());
+        (["active", "trialing"].includes(sub.status) || (sub.status === "canceled" && periodStillOpen)) &&
+        periodStillOpen;
 
       const tier = (profile?.subscription_tier as SubscriptionState["tier"]) || "free";
 
