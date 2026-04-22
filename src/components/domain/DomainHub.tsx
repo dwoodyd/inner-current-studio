@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, Sparkles, Library, Wind, Target, BookOpen, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Heart, Sparkles, Library, Wind, Target, BookOpen, ChevronRight, Feather } from 'lucide-react';
 import { DomainConfig } from '@/lib/domains';
 
 interface Props { domain: DomainConfig }
@@ -10,6 +10,7 @@ export default function DomainHub({ domain }: Props) {
 
   const tools = [
     { icon: Heart, title: `${domain.label.split(' ')[0]} State`, description: 'Check in with how you feel right now.', to: `${domain.route}/state` },
+    { icon: Feather, title: 'Reality Scripting', description: 'Script your desired reality and track matching evidence.', to: `${domain.route}/script` },
     { icon: Library, title: 'Affirmations Saturation', description: 'Soak in curated affirmations on a timer.', to: `${domain.route}/affirmations` },
     { icon: BookOpen, title: 'Gather Flow', description: 'Build and absorb supportive thought sequences.', to: `${domain.route}/gather` },
     { icon: Wind, title: 'Resistance Release', description: 'Name, feel, and soften what is in the way.', to: `${domain.route}/resistance` },

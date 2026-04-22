@@ -67,7 +67,7 @@ import SelfHub from "@/pages/domain/SelfHub";
 import EnergyHub from "@/pages/domain/EnergyHub";
 import RelationshipsHub from "@/pages/domain/RelationshipsHub";
 import HealthHub from "@/pages/domain/HealthHub";
-import { SelfPages, EnergyPages, RelationshipsPages, HealthPages } from "@/pages/domain/DomainPages";
+import { SelfPages, EnergyPages, RelationshipsPages, HealthPages, MoneyPages } from "@/pages/domain/DomainPages";
 
 const queryClient = new QueryClient();
 
@@ -151,6 +151,10 @@ function AppRoutes() {
         <Route path="/money/tracker" element={<AffirmationTracker />} />
         <Route path="/money/coach" element={<AffirmationCoach />} />
         <Route path="/money/library" element={<AffirmationLibrary />} />
+        <Route path="/money/script" element={<MoneyPages.ScriptHub />} />
+        <Route path="/money/script/new" element={<MoneyPages.ScriptNew />} />
+        <Route path="/money/script/library" element={<MoneyPages.ScriptLibrary />} />
+        <Route path="/money/script/:scriptId" element={<MoneyPages.ScriptDetail />} />
         <Route path="/currents" element={<CurrentsHub />} />
         <Route path="/self" element={<SelfHub />} />
         <Route path="/self/state" element={<SelfPages.State />} />
@@ -159,6 +163,10 @@ function AppRoutes() {
         <Route path="/self/resistance" element={<SelfPages.Resistance />} />
         <Route path="/self/openings" element={<SelfPages.Openings />} />
         <Route path="/self/evidence" element={<SelfPages.Evidence />} />
+        <Route path="/self/script" element={<SelfPages.ScriptHub />} />
+        <Route path="/self/script/new" element={<SelfPages.ScriptNew />} />
+        <Route path="/self/script/library" element={<SelfPages.ScriptLibrary />} />
+        <Route path="/self/script/:scriptId" element={<SelfPages.ScriptDetail />} />
         <Route path="/energy" element={<EnergyHub />} />
         <Route path="/energy/state" element={<EnergyPages.State />} />
         <Route path="/energy/affirmations" element={<EnergyPages.Affirmations />} />
@@ -166,6 +174,10 @@ function AppRoutes() {
         <Route path="/energy/resistance" element={<EnergyPages.Resistance />} />
         <Route path="/energy/openings" element={<EnergyPages.Openings />} />
         <Route path="/energy/evidence" element={<EnergyPages.Evidence />} />
+        <Route path="/energy/script" element={<EnergyPages.ScriptHub />} />
+        <Route path="/energy/script/new" element={<EnergyPages.ScriptNew />} />
+        <Route path="/energy/script/library" element={<EnergyPages.ScriptLibrary />} />
+        <Route path="/energy/script/:scriptId" element={<EnergyPages.ScriptDetail />} />
         <Route path="/relationships" element={<RelationshipsHub />} />
         <Route path="/relationships/state" element={<RelationshipsPages.State />} />
         <Route path="/relationships/affirmations" element={<RelationshipsPages.Affirmations />} />
@@ -173,6 +185,10 @@ function AppRoutes() {
         <Route path="/relationships/resistance" element={<RelationshipsPages.Resistance />} />
         <Route path="/relationships/openings" element={<RelationshipsPages.Openings />} />
         <Route path="/relationships/evidence" element={<RelationshipsPages.Evidence />} />
+        <Route path="/relationships/script" element={<RelationshipsPages.ScriptHub />} />
+        <Route path="/relationships/script/new" element={<RelationshipsPages.ScriptNew />} />
+        <Route path="/relationships/script/library" element={<RelationshipsPages.ScriptLibrary />} />
+        <Route path="/relationships/script/:scriptId" element={<RelationshipsPages.ScriptDetail />} />
         <Route path="/health" element={<HealthHub />} />
         <Route path="/health/state" element={<HealthPages.State />} />
         <Route path="/health/affirmations" element={<HealthPages.Affirmations />} />
@@ -180,6 +196,10 @@ function AppRoutes() {
         <Route path="/health/resistance" element={<HealthPages.Resistance />} />
         <Route path="/health/openings" element={<HealthPages.Openings />} />
         <Route path="/health/evidence" element={<HealthPages.Evidence />} />
+        <Route path="/health/script" element={<HealthPages.ScriptHub />} />
+        <Route path="/health/script/new" element={<HealthPages.ScriptNew />} />
+        <Route path="/health/script/library" element={<HealthPages.ScriptLibrary />} />
+        <Route path="/health/script/:scriptId" element={<HealthPages.ScriptDetail />} />
       </Route>
       <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
