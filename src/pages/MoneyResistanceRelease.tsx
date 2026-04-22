@@ -200,11 +200,14 @@ export default function MoneyResistanceRelease() {
                 You moved from <span className="text-foreground capitalize">{chargeBefore}</span> to{' '}
                 <span className="text-soul-gold capitalize">{chargeAfter}</span>.
               </p>
-              <div className="flex gap-3 justify-center pt-2">
+              <div className="grid gap-2 justify-center pt-2">
+                <button onClick={() => navigate('/money/gather')} className="px-4 py-2 rounded-xl text-sm bg-primary/15 text-primary hover:bg-primary/25 transition-all">
+                  Gather a steadier sequence
+                </button>
                 <button onClick={() => { setPhase('select'); setResistance(''); setBody(''); setChargeBefore(''); setChargeAfter(''); setSoftenedThought(''); }} className="px-4 py-2 rounded-xl text-sm bg-muted/20 text-muted-foreground hover:bg-muted/30 transition-all">
                   Release Another
                 </button>
-                <button onClick={() => navigate('/money')} className="px-4 py-2 rounded-xl text-sm bg-soul-gold/15 text-soul-gold hover:bg-soul-gold/25 transition-all">
+                <button onClick={() => navigate('/money')} className="px-4 py-2 rounded-xl text-sm soul-glass text-foreground hover:bg-muted/10 transition-all">
                   Done
                 </button>
               </div>
