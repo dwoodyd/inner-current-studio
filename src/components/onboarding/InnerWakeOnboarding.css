@@ -60,7 +60,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 2rem 5rem;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  padding: max(4rem, env(safe-area-inset-top, 0px)) 2rem max(4rem, env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden;
+  overflow-y: auto;
   opacity: 0;
   visibility: hidden;
   transform: translateY(30px);
@@ -221,9 +225,8 @@
 
 .iw-skip {
   position: absolute;
-  bottom: 4.2rem;
-  left: 50%;
-  transform: translateX(-50%);
+  top: max(1.15rem, env(safe-area-inset-top, 0px));
+  left: max(1.15rem, env(safe-area-inset-left, 0px));
   background: rgba(200, 164, 90, 0.08);
   border: 1px solid rgba(200, 164, 90, 0.24);
   color: var(--muted);
@@ -264,7 +267,7 @@
 /* ─── Progress bar ─── */
 .iw-progress-wrap {
   position: absolute;
-  bottom: 2rem;
+  bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -455,8 +458,50 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 600px) {
-  .iw-headline { font-size: clamp(2rem, 8vw, 3rem); }
+  .iw-slide {
+    justify-content: flex-start;
+    padding: max(5rem, env(safe-area-inset-top, 0px)) 1.25rem max(4rem, env(safe-area-inset-bottom, 0px));
+  }
+  .iw-headline {
+    font-size: clamp(1.85rem, 8vw, 2.65rem);
+    line-height: 1.08;
+  }
+  .iw-subhead {
+    font-size: 1rem;
+    line-height: 1.45;
+    margin-top: 0.9rem;
+  }
+  .iw-body {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+  .iw-eyebrow {
+    margin-bottom: 0.9rem;
+  }
+  .iw-cta {
+    margin-top: 1.3rem;
+    padding: 0.78rem 1.5rem;
+  }
+  .iw-current-card {
+    padding: 1rem;
+  }
+  .iw-slide div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    margin-top: 1rem !important;
+  }
   .iw-breath-circle { width: 180px; height: 180px; }
+  .iw-skip {
+    top: max(0.8rem, env(safe-area-inset-top, 0px));
+    left: max(0.8rem, env(safe-area-inset-left, 0px));
+    padding: 0.5rem 0.85rem;
+    font-size: 0.62rem;
+  }
+  .iw-chimes {
+    top: max(0.8rem, env(safe-area-inset-top, 0px));
+    right: max(0.8rem, env(safe-area-inset-right, 0px));
+  }
 }
 
 /* ─── Reduced motion ─── */
