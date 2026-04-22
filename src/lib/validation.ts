@@ -90,6 +90,9 @@ export const onboardingSchema = z.object({
   reason: safeText(200),
   style: safeText(200),
   challenge: safeText(200),
+  companionName: optionalText(100),
+  companionSigil: optionalText(100),
+  freeCurrent: optionalText(50),
 });
 
 // ── Helper ─────────────────────────────────────────────────────────
