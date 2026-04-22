@@ -1,19 +1,20 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const ALLOWED_ORIGINS = [
-  "https://current-inner-flow.lovable.app",
-  "https://id-preview--abb90f19-f92a-4a96-ac97-854b7dd51087.lovable.app",
-];
-
 function getCorsHeaders(req: Request) {
-  const origin = req.headers.get("Origin") ?? "";
-  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
-    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
     "Vary": "Origin",
   };
+}
+
+async function hasPremiumAccess(userId: string, environment: string) {
+  const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  const { data: profile } = await admin.from("profiles").select("subscription_tier").eq("user_id", userId).maybeSingle();
+  if (profile?.subscription_tier === "premium" || profile?.subscription_tier === "lifetime") return true;
+  const { data } = await admin.rpc("has_active_subscription", { user_uuid: userId, check_env: environment });
+  return data === true;
 }
 
 const SYSTEM_PROMPT = `You are the Current Guide — a calm, emotionally precise companion within Inner Wake.
@@ -84,7 +85,21 @@ serve(async (req) => {
       });
     }
 
-    const { messages, emotionalContext } = body as Record<string, unknown>;
+    const { messages, emotionalContext, environment = "live" } = body as Record<string, unknown>;
+
+    if (environment !== "sandbox" && environment !== "live") {
+      return new Response(JSON.stringify({ error: "Invalid billing environment" }), {
+        status: 400,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
+    if (!(await hasPremiumAccess(user.id, environment))) {
+      return new Response(JSON.stringify({ error: "Premium access is required for the Current Guide." }), {
+        status: 403,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: "messages must be a non-empty array" }), {

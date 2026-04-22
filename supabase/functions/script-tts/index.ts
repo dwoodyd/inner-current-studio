@@ -12,16 +12,23 @@ const ALLOWED_ORIGINS = [
 const BodySchema = z.object({
   title: z.string().max(160).optional(),
   text: z.string().min(1).max(MAX_TEXT_LENGTH),
+  environment: z.enum(["sandbox", "live"]).default("live"),
 });
 
 function getCorsHeaders(req: Request) {
-  const origin = req.headers.get("Origin") ?? "";
-  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
-    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
     "Vary": "Origin",
   };
+}
+
+async function hasPremiumAccess(userId: string, environment: string) {
+  const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  const { data: profile } = await admin.from("profiles").select("subscription_tier").eq("user_id", userId).maybeSingle();
+  if (profile?.subscription_tier === "premium" || profile?.subscription_tier === "lifetime") return true;
+  const { data } = await admin.rpc("has_active_subscription", { user_uuid: userId, check_env: environment });
+  return data === true;
 }
 
 serve(async (req) => {
@@ -45,6 +52,10 @@ serve(async (req) => {
     const parsed = BodySchema.safeParse(await req.json());
     if (!parsed.success) {
       return new Response(JSON.stringify({ error: "Script text is required and must be under 4,800 characters." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    if (!(await hasPremiumAccess(user.id, parsed.data.environment))) {
+      return new Response(JSON.stringify({ error: "Premium access is required for audio playback." }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const apiKey = Deno.env.get("ELEVENLABS_API_KEY");

@@ -5,6 +5,7 @@ import { ArrowLeft, Send, Sparkles, Shield } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAppState } from '@/lib/AppContext';
 import { supabase } from '@/integrations/supabase/client';
+import { getPaddleEnv } from '@/lib/paddle';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -53,7 +54,7 @@ async function streamChat({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ messages, emotionalContext }),
+    body: JSON.stringify({ messages, emotionalContext, environment: getPaddleEnv() }),
   });
 
   if (!resp.ok) {
