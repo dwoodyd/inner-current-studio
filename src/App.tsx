@@ -270,8 +270,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Sonner />
-              <EnvironmentRedirectNotice />
       <BrowserRouter>
+        <EnvironmentRedirectNotice />
         <AuthProvider>
           <AppProvider>
             <AppRoutes />
