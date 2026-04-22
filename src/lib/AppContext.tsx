@@ -36,35 +36,84 @@ function debouncedSave(state: AppState) {
   saveTimer = setTimeout(() => saveState(state), 300);
 }
 
+type PendingCloudOp =
+  | { type: 'checkIn'; payload: CheckIn }
+  | { type: 'todayFlow'; payload: TodayFlow }
+  | { type: 'momentumSession'; payload: MomentumSession };
+
+const pendingKey = (userId: string) => `innerwake_pending_cloud_${userId}`;
+
+function readPending(userId: string): PendingCloudOp[] {
+  try {
+    return JSON.parse(localStorage.getItem(pendingKey(userId)) || '[]') as PendingCloudOp[];
+  } catch {
+    return [];
+  }
+}
+
+function writePending(userId: string, queue: PendingCloudOp[]) {
+  try { localStorage.setItem(pendingKey(userId), JSON.stringify(queue)); } catch {}
+}
+
+function enqueuePending(userId: string, op: PendingCloudOp) {
+  const queue = readPending(userId).filter(item => !(item.type === op.type && 'id' in item.payload && 'id' in op.payload && item.payload.id === op.payload.id));
+  writePending(userId, [...queue, op]);
+}
+
+function shouldQueueCloudError(error: any) {
+  const message = String(error?.message || error || '').toLowerCase();
+  return !navigator.onLine || message.includes('fetch') || message.includes('network') || message.includes('offline');
+}
+
 // Helper: upsert today_flow for current user
 async function upsertTodayFlow(userId: string, updates: Partial<TodayFlow>) {
   const today = new Date().toISOString().slice(0, 10);
-  const { data: existing } = await supabase
+  const { data: existing, error: selectError } = await supabase
     .from('today_flow')
     .select('id')
     .eq('user_id', userId)
     .eq('flow_date', today)
     .maybeSingle();
+  if (selectError) return { error: selectError };
 
   if (existing) {
-    await supabase.from('today_flow').update({
+    return supabase.from('today_flow').update({
       morning_ritual: updates.morningRitual,
       reset_used: updates.resetUsed,
       reflection_completed: updates.reflectionCompleted,
       momentum_completed: updates.momentumCompleted,
       return_count: updates.returnCount,
     }).eq('id', existing.id);
-  } else {
-    await supabase.from('today_flow').insert({
-      user_id: userId,
-      flow_date: today,
-      morning_ritual: updates.morningRitual ?? false,
-      reset_used: updates.resetUsed ?? false,
-      reflection_completed: updates.reflectionCompleted ?? false,
-      momentum_completed: updates.momentumCompleted ?? false,
-      return_count: updates.returnCount ?? 1,
-    });
   }
+
+  return supabase.from('today_flow').insert({
+    user_id: userId,
+    flow_date: today,
+    morning_ritual: updates.morningRitual ?? false,
+    reset_used: updates.resetUsed ?? false,
+    reflection_completed: updates.reflectionCompleted ?? false,
+    momentum_completed: updates.momentumCompleted ?? false,
+    return_count: updates.returnCount ?? 1,
+  });
+}
+
+async function flushPendingCloudOps(userId: string) {
+  const queue = readPending(userId);
+  if (!queue.length || !navigator.onLine) return;
+
+  const remaining: PendingCloudOp[] = [];
+  for (const op of queue) {
+    let result: { error: any } = { error: null };
+    if (op.type === 'checkIn') {
+      result = await supabase.from('check_ins').insert({ user_id: userId, id: op.payload.id, state: op.payload.state, note: op.payload.note, created_at: op.payload.createdAt });
+    } else if (op.type === 'todayFlow') {
+      result = await upsertTodayFlow(userId, op.payload);
+    } else if (op.type === 'momentumSession') {
+      result = await supabase.from('momentum_sessions').insert({ user_id: userId, id: op.payload.id, phrase: op.payload.phrase, duration: op.payload.duration, completed: op.payload.completed, created_at: op.payload.createdAt });
+    }
+    if (result.error && shouldQueueCloudError(result.error)) remaining.push(op);
+  }
+  writePending(userId, remaining);
 }
 
 // Load full state from Supabase for a user
@@ -168,13 +217,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    loadCloudState(user.id).then(cloudState => {
+    flushPendingCloudOps(user.id).finally(() => loadCloudState(user.id).then(cloudState => {
       if (cloudState) {
         setState(cloudState);
         debouncedSave(cloudState);
       }
       setCloudLoaded(true);
-    });
+    }));
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user) return;
+    const flush = () => flushPendingCloudOps(user.id).then(() => loadCloudState(user.id).then(s => { if (s) setState(s); }));
+    window.addEventListener('online', flush);
+    return () => window.removeEventListener('online', flush);
   }, [user?.id]);
 
   // Migrate local data to cloud on first login
@@ -205,15 +261,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
-  // Optimistic helper: apply state change immediately, rollback on cloud failure
+  // Optimistic helper: apply state change immediately and queue network failures for the next online return
   const optimistic = useCallback((
     updater: (prev: AppState) => AppState,
     cloudOp: () => PromiseLike<{ error: any }>,
-    label: string
+    label: string,
+    pendingOp?: PendingCloudOp
   ) => {
-    let snapshot: AppState | null = null;
     setState(prev => {
-      snapshot = prev;
       const next = updater(prev);
       debouncedSave(next);
       return next;
@@ -222,11 +277,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       cloudOp().then(({ error }) => {
         if (error) {
           console.error(`Failed to save ${label}:`, error);
-          toast.error(`Couldn't save ${label}. Rolled back.`);
-          if (snapshot) {
-            setState(snapshot);
-            debouncedSave(snapshot);
-          }
+          if (pendingOp && shouldQueueCloudError(error)) enqueuePending(user.id, pendingOp);
+          else toast.error(`Couldn't save ${label}.`);
         }
       });
     }
@@ -238,8 +290,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const checkIn: CheckIn = { id: generateId(), state: emotionalState, note, createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, checkIns: [checkIn, ...prev.checkIns] }),
-      () => supabase.from('check_ins').insert({ user_id: user!.id, state: emotionalState, note }),
-      'check-in'
+      () => supabase.from('check_ins').insert({ user_id: user!.id, id: checkIn.id, state: emotionalState, note, created_at: checkIn.createdAt }),
+      'check-in',
+      { type: 'checkIn', payload: checkIn }
     );
   }, [user, optimistic]);
 
@@ -268,7 +321,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const next = { ...prev, todayFlow: merged };
       debouncedSave(next);
       // Fire-and-forget cloud sync with the merged value
-      if (user) upsertTodayFlow(user.id, merged);
+      if (user) upsertTodayFlow(user.id, merged).then(({ error }) => {
+        if (error && shouldQueueCloudError(error)) enqueuePending(user.id, { type: 'todayFlow', payload: merged });
+      });
       return next;
     });
   }, [user]);
@@ -310,9 +365,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     optimistic(
       prev => ({ ...prev, momentumSessions: [full, ...prev.momentumSessions] }),
       () => supabase.from('momentum_sessions').insert({
-        user_id: user!.id, phrase: session.phrase, duration: session.duration, completed: session.completed,
+        user_id: user!.id, id: full.id, phrase: session.phrase, duration: session.duration, completed: session.completed, created_at: full.createdAt,
       }),
-      'momentum session'
+      'momentum session',
+      { type: 'momentumSession', payload: full }
     );
   }, [user, optimistic]);
 

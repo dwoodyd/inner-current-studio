@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Pause, RotateCcw, Wind, Waves, Sun, Sparkles, Orbit } from 'lucide-react';
 import { startSound, stopSound, setVolume, speakText, stopSpeech } from '@/lib/sounds';
 import { SOUND_OPTIONS } from '@/lib/sounds';
+import { useAppState } from '@/lib/AppContext';
 
 /* ── Exercise definitions ── */
 interface BreathExercise {
@@ -103,9 +104,11 @@ const EXERCISES: BreathExercise[] = [
 ];
 
 type Screen = 'menu' | 'setup' | 'active' | 'complete';
+const BREATHWORK_SESSION_KEY = 'innerwake_breathwork_session';
 
 export default function Breathwork() {
   const navigate = useNavigate();
+  const { updateTodayFlow } = useAppState();
   const [screen, setScreen] = useState<Screen>('menu');
   const [exercise, setExercise] = useState<BreathExercise | null>(null);
 
@@ -123,6 +126,41 @@ export default function Breathwork() {
   const tickRef = useRef<ReturnType<typeof setInterval>>();
 
   useEffect(() => () => { stopSound(); stopSpeech(); }, []);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(BREATHWORK_SESSION_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as {
+        screen: Screen; exerciseId: string; voiceGuided: boolean; soundEnabled: boolean;
+        selectedSound: string; volume: number; round: number; phaseIdx: number; phaseTimer: number;
+      };
+      const restored = EXERCISES.find(item => item.id === saved.exerciseId);
+      if (!restored) return;
+      setExercise(restored);
+      setVoiceGuided(saved.voiceGuided);
+      setSoundEnabled(saved.soundEnabled);
+      setSelectedSound(saved.selectedSound);
+      setVolumeState(saved.volume);
+      setRound(saved.round);
+      setPhaseIdx(saved.phaseIdx);
+      setPhaseTimer(Math.max(1, saved.phaseTimer));
+      setPaused(true);
+      setScreen(saved.screen === 'active' ? 'active' : 'setup');
+    } catch {
+      localStorage.removeItem(BREATHWORK_SESSION_KEY);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!exercise || screen === 'menu' || screen === 'complete') return;
+    try {
+      localStorage.setItem(BREATHWORK_SESSION_KEY, JSON.stringify({
+        screen, exerciseId: exercise.id, voiceGuided, soundEnabled, selectedSound,
+        volume, round, phaseIdx, phaseTimer, paused, updatedAt: new Date().toISOString(),
+      }));
+    } catch {}
+  }, [screen, exercise, voiceGuided, soundEnabled, selectedSound, volume, round, phaseIdx, phaseTimer, paused]);
 
   const totalRoundTime = exercise ? exercise.phases.reduce((a, p) => a + p.seconds, 0) : 0;
 
@@ -153,6 +191,8 @@ export default function Breathwork() {
                   // Done
                   clearInterval(tickRef.current);
                   stopSound();
+                  localStorage.removeItem(BREATHWORK_SESSION_KEY);
+                  updateTodayFlow({ resetUsed: true });
                   setScreen('complete');
                   if (voiceGuided) speakText('Well done. Take a moment to notice how you feel.', 0.8);
                   return r;
@@ -197,6 +237,7 @@ export default function Breathwork() {
     clearInterval(tickRef.current);
     stopSound();
     stopSpeech();
+    localStorage.removeItem(BREATHWORK_SESSION_KEY);
     setScreen('menu');
   };
 
