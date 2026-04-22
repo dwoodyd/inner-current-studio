@@ -211,7 +211,7 @@ export default function Breathwork() {
     : 1.2; // Hold / Rest
 
   return (
-    <div className={`${screen === 'active' ? 'min-h-[100dvh] max-w-none px-6 pt-8' : 'mx-auto max-w-lg px-4 pt-6'} pb-6 space-y-5 soul-ambient-gold overflow-hidden`}>
+    <div className={`${screen === 'active' ? 'min-h-[100dvh] max-w-none px-6 pt-8 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--primary)/0.10),transparent_60%),hsl(var(--background))]' : 'mx-auto max-w-lg px-4 pt-6'} pb-6 space-y-5 soul-ambient-gold overflow-hidden`}>
       {/* Header */}
       <div className="mx-auto flex max-w-lg items-center gap-3">
         <button onClick={() => screen === 'menu' ? navigate('/reset') : stopSession()} className="text-muted-foreground p-2 -ml-2 hover:text-foreground transition-colors">
@@ -330,14 +330,15 @@ export default function Breathwork() {
           </div>
 
           {/* Breathing orb */}
-          <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>
+          <div className="relative flex items-center justify-center" style={{ width: 240, height: 240 }}>
+            <div className="absolute inset-0 rounded-full border border-primary/10" />
             <motion.div
               animate={{ scale: orbScale }}
               transition={{ duration: currentPhase.seconds * 0.9, ease: 'easeInOut' }}
-              className="w-32 h-32 rounded-full"
+              className="w-36 h-36 rounded-full"
               style={{
-                background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.4), hsl(var(--primary) / 0.08))',
-                boxShadow: '0 0 60px hsl(var(--primary) / 0.15)',
+                background: 'radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.72), hsl(var(--primary) / 0.32) 52%, hsl(var(--background)) 95%)',
+                boxShadow: '0 0 80px hsl(var(--primary) / 0.28)',
               }}
             />
           </div>
@@ -350,8 +351,9 @@ export default function Breathwork() {
               exit={{ opacity: 0, y: -8 }}
               className="text-center space-y-1"
             >
-              <p className="font-heading text-2xl text-foreground">{currentPhase.label}</p>
+              <p className="font-heading text-3xl text-foreground">{currentPhase.label}</p>
               <p className="text-3xl font-heading text-primary">{phaseTimer}</p>
+              <p className="mt-3 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/45">Stay with the shape</p>
             </motion.div>
           </AnimatePresence>
 
