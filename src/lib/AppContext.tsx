@@ -217,13 +217,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    loadCloudState(user.id).then(cloudState => {
+    flushPendingCloudOps(user.id).finally(() => loadCloudState(user.id).then(cloudState => {
       if (cloudState) {
         setState(cloudState);
         debouncedSave(cloudState);
       }
       setCloudLoaded(true);
-    });
+    }));
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user) return;
+    const flush = () => flushPendingCloudOps(user.id).then(() => loadCloudState(user.id).then(s => { if (s) setState(s); }));
+    window.addEventListener('online', flush);
+    return () => window.removeEventListener('online', flush);
   }, [user?.id]);
 
   // Migrate local data to cloud on first login
@@ -254,15 +261,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
-  // Optimistic helper: apply state change immediately, rollback on cloud failure
+  // Optimistic helper: apply state change immediately and queue network failures for the next online return
   const optimistic = useCallback((
     updater: (prev: AppState) => AppState,
     cloudOp: () => PromiseLike<{ error: any }>,
-    label: string
+    label: string,
+    pendingOp?: PendingCloudOp
   ) => {
-    let snapshot: AppState | null = null;
     setState(prev => {
-      snapshot = prev;
       const next = updater(prev);
       debouncedSave(next);
       return next;
@@ -271,11 +277,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       cloudOp().then(({ error }) => {
         if (error) {
           console.error(`Failed to save ${label}:`, error);
-          toast.error(`Couldn't save ${label}. Rolled back.`);
-          if (snapshot) {
-            setState(snapshot);
-            debouncedSave(snapshot);
-          }
+          if (pendingOp && shouldQueueCloudError(error)) enqueuePending(user.id, pendingOp);
+          else toast.error(`Couldn't save ${label}.`);
         }
       });
     }
