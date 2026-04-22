@@ -3,11 +3,11 @@ import { Home, Compass, Waves, RefreshCw, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const tabs = [
-  { to: '/', icon: Home, label: 'Home' },
-  { to: '/align', icon: Compass, label: 'Align' },
-  { to: '/currents', icon: Waves, label: 'Currents' },
-  { to: '/reset', icon: RefreshCw, label: 'Reset' },
-  { to: '/profile', icon: User, label: 'Profile' },
+  { to: '/', icon: Home, label: 'Home', match: ['/'] },
+  { to: '/align', icon: Compass, label: 'Align', match: ['/align'] },
+  { to: '/currents', icon: Waves, label: 'Currents', match: ['/currents', '/money', '/self', '/energy', '/relationships', '/health'] },
+  { to: '/reset', icon: RefreshCw, label: 'Reset', match: ['/reset'] },
+  { to: '/profile', icon: User, label: 'Profile', match: ['/profile', '/about', '/admin'] },
 ];
 
 export default function BottomNav() {
@@ -20,8 +20,8 @@ export default function BottomNav() {
       aria-label="Main navigation"
     >
       <div className="mx-auto flex max-w-lg items-center justify-around px-1 pt-1 pb-0.5">
-        {tabs.map(({ to, icon: Icon, label }) => {
-          const isActive = to === '/' ? location.pathname === '/' : location.pathname.startsWith(to);
+        {tabs.map(({ to, icon: Icon, label, match }) => {
+          const isActive = match.some((path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path));
           return (
             <NavLink
               key={to}

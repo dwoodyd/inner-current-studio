@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { AppProvider } from "@/lib/AppContext";
 import { lazy, Suspense } from "react";
 import AppShell from "@/components/AppShell";
+import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotice";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
@@ -270,6 +271,7 @@ const App = () => (
     <TooltipProvider>
       <Sonner />
       <BrowserRouter>
+        <EnvironmentRedirectNotice />
         <AuthProvider>
           <AppProvider>
             <AppRoutes />

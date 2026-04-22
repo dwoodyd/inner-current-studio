@@ -12,12 +12,13 @@ const pageVariants = {
 
 export default function AppShell() {
   const location = useLocation();
+  const hideBottomNav = location.pathname === '/reset/breathwork';
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background safe-x">
       <PaymentTestModeBanner />
       <OfflineBanner />
-      <main className="flex-1 overflow-y-auto pb-24">
+      <main className={`flex-1 overflow-y-auto ${hideBottomNav ? 'pb-0' : 'pb-24'}`}>
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -30,7 +31,7 @@ export default function AppShell() {
           </motion.div>
         </AnimatePresence>
       </main>
-      <BottomNav />
+      {!hideBottomNav && <BottomNav />}
     </div>
   );
 }

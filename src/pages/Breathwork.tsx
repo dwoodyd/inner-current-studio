@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Play, Pause, RotateCcw, Wind, Waves, Moon, Sun, Sparkles } from 'lucide-react';
+import { ArrowLeft, Play, Pause, RotateCcw, Wind, Waves, Sun, Sparkles, Orbit } from 'lucide-react';
 import { startSound, stopSound, setVolume, speakText, stopSpeech } from '@/lib/sounds';
 import { SOUND_OPTIONS } from '@/lib/sounds';
 
@@ -41,7 +41,7 @@ const EXERCISES: BreathExercise[] = [
     id: '478',
     name: '4-7-8 Calming',
     description: 'Deep calm breath — inhale 4, hold 7, exhale 8.',
-    icon: Moon,
+    icon: Orbit,
     iconColor: 'text-soul-violet',
     gradient: 'from-soul-violet/15 to-soul-violet/5',
     phases: [
@@ -211,9 +211,9 @@ export default function Breathwork() {
     : 1.2; // Hold / Rest
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-5 soul-ambient-gold overflow-hidden min-h-[80vh]">
+    <div className={`${screen === 'active' ? 'min-h-[100dvh] max-w-none px-6 pt-8' : 'mx-auto max-w-lg px-4 pt-6'} pb-6 space-y-5 soul-ambient-gold overflow-hidden`}>
       {/* Header */}
-      <div className="flex items-center gap-3">
+      <div className="mx-auto flex max-w-lg items-center gap-3">
         <button onClick={() => screen === 'menu' ? navigate('/reset') : stopSession()} className="text-muted-foreground p-2 -ml-2 hover:text-foreground transition-colors">
           <ArrowLeft size={20} />
         </button>
@@ -316,10 +316,18 @@ export default function Breathwork() {
 
       {/* Active */}
       {screen === 'active' && exercise && currentPhase && (
-        <div className="flex flex-col items-center justify-center min-h-[55vh] space-y-8">
-          <p className="text-[10px] text-muted-foreground/40">
-            Round {round + 1} / {exercise.rounds}
-          </p>
+        <div className="mx-auto flex min-h-[78vh] max-w-lg flex-col items-center justify-center space-y-8">
+          <div className="w-full space-y-2 text-center">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/50">
+              Round {round + 1} of {exercise.rounds}
+            </p>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted/40">
+              <div
+                className="h-full rounded-full bg-primary transition-transform duration-700 origin-left"
+                style={{ transform: `scaleX(${(round + phaseProgress / exercise.phases.length + phaseIdx / exercise.phases.length) / exercise.rounds})` }}
+              />
+            </div>
+          </div>
 
           {/* Breathing orb */}
           <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>

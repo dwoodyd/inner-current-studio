@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Feather, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -106,12 +106,16 @@ export default function MoneyState() {
             <p className="text-sm text-muted-foreground max-w-[260px] mx-auto">
               Awareness is the first shift. You've named where you are.
             </p>
-            <button
-              onClick={() => navigate('/money')}
-              className="mt-4 px-6 py-2.5 rounded-xl soul-glass-elevated text-sm font-medium text-foreground hover:bg-muted/10 transition-colors"
-            >
-              Back to Money Current
-            </button>
+            <div className="mx-auto mt-5 grid max-w-xs gap-2 text-left">
+              <button onClick={() => navigate('/money/resistance')} className="soul-glass-elevated rounded-2xl p-4 flex items-center gap-3 hover:bg-muted/10 transition-colors">
+                <ShieldCheck size={18} className="text-primary" />
+                <span className="text-sm text-foreground">Want to soften this? · 5 min</span>
+              </button>
+              <button onClick={() => navigate('/money/gather')} className="soul-glass rounded-2xl p-4 flex items-center gap-3 hover:bg-muted/10 transition-colors">
+                <Feather size={18} className="text-primary" />
+                <span className="text-sm text-foreground">Gather a steadier thought</span>
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
