@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
         await handleTransactionCompleted(event.data, env);
         break;
       case EventName.TransactionPaymentFailed:
-        console.log('Payment failed:', event.data.id, 'env:', env);
+        await handleTransactionPaymentFailed(event.data, env);
         break;
       default:
         console.log('Unhandled event:', event.eventType);
@@ -83,7 +83,7 @@ async function handleSubscriptionCreated(data: any, env: PaddleEnv) {
 async function handleSubscriptionUpdated(data: any, env: PaddleEnv) {
   const { id, status, currentBillingPeriod, scheduledChange } = data;
 
-  await supabase.from('subscriptions')
+  const { data: sub } = await supabase.from('subscriptions')
     .update({
       status,
       current_period_start: currentBillingPeriod?.startsAt,
@@ -92,7 +92,18 @@ async function handleSubscriptionUpdated(data: any, env: PaddleEnv) {
       updated_at: new Date().toISOString(),
     })
     .eq('paddle_subscription_id', id)
-    .eq('environment', env);
+    .eq('environment', env)
+    .select('user_id,current_period_end')
+    .maybeSingle();
+
+  if (sub?.user_id) {
+    const periodStillOpen = !sub.current_period_end || new Date(sub.current_period_end) > new Date();
+    const tier = ['active', 'trialing'].includes(status) || (status === 'canceled' && periodStillOpen) ? 'premium' : 'free';
+    await supabase.from('profiles')
+      .update({ subscription_tier: tier, updated_at: new Date().toISOString() })
+      .eq('user_id', sub.user_id)
+      .neq('subscription_tier', 'lifetime');
+  }
 }
 
 async function handleSubscriptionCanceled(data: any, env: PaddleEnv) {
@@ -104,10 +115,25 @@ async function handleSubscriptionCanceled(data: any, env: PaddleEnv) {
     .maybeSingle();
 
   if (sub?.user_id) {
-    await supabase.from('profiles')
-      .update({ subscription_tier: 'free', updated_at: new Date().toISOString() })
-      .eq('user_id', sub.user_id);
+    const periodStillOpen = data.currentBillingPeriod?.endsAt && new Date(data.currentBillingPeriod.endsAt) > new Date();
+    if (!periodStillOpen) {
+      await supabase.from('profiles')
+        .update({ subscription_tier: 'free', updated_at: new Date().toISOString() })
+        .eq('user_id', sub.user_id)
+        .neq('subscription_tier', 'lifetime');
+    }
   }
+}
+
+async function handleTransactionPaymentFailed(data: any, env: PaddleEnv) {
+  console.log('Payment failed:', data.id, 'env:', env);
+  const subscriptionId = data.subscriptionId;
+  if (!subscriptionId) return;
+
+  await supabase.from('subscriptions')
+    .update({ status: 'past_due', updated_at: new Date().toISOString() })
+    .eq('paddle_subscription_id', subscriptionId)
+    .eq('environment', env);
 }
 
 async function handleTransactionCompleted(data: any, env: PaddleEnv) {
