@@ -36,35 +36,84 @@ function debouncedSave(state: AppState) {
   saveTimer = setTimeout(() => saveState(state), 300);
 }
 
+type PendingCloudOp =
+  | { type: 'checkIn'; payload: CheckIn }
+  | { type: 'todayFlow'; payload: TodayFlow }
+  | { type: 'momentumSession'; payload: MomentumSession };
+
+const pendingKey = (userId: string) => `innerwake_pending_cloud_${userId}`;
+
+function readPending(userId: string): PendingCloudOp[] {
+  try {
+    return JSON.parse(localStorage.getItem(pendingKey(userId)) || '[]') as PendingCloudOp[];
+  } catch {
+    return [];
+  }
+}
+
+function writePending(userId: string, queue: PendingCloudOp[]) {
+  try { localStorage.setItem(pendingKey(userId), JSON.stringify(queue)); } catch {}
+}
+
+function enqueuePending(userId: string, op: PendingCloudOp) {
+  const queue = readPending(userId).filter(item => !(item.type === op.type && 'id' in item.payload && 'id' in op.payload && item.payload.id === op.payload.id));
+  writePending(userId, [...queue, op]);
+}
+
+function shouldQueueCloudError(error: any) {
+  const message = String(error?.message || error || '').toLowerCase();
+  return !navigator.onLine || message.includes('fetch') || message.includes('network') || message.includes('offline');
+}
+
 // Helper: upsert today_flow for current user
 async function upsertTodayFlow(userId: string, updates: Partial<TodayFlow>) {
   const today = new Date().toISOString().slice(0, 10);
-  const { data: existing } = await supabase
+  const { data: existing, error: selectError } = await supabase
     .from('today_flow')
     .select('id')
     .eq('user_id', userId)
     .eq('flow_date', today)
     .maybeSingle();
+  if (selectError) return { error: selectError };
 
   if (existing) {
-    await supabase.from('today_flow').update({
+    return supabase.from('today_flow').update({
       morning_ritual: updates.morningRitual,
       reset_used: updates.resetUsed,
       reflection_completed: updates.reflectionCompleted,
       momentum_completed: updates.momentumCompleted,
       return_count: updates.returnCount,
     }).eq('id', existing.id);
-  } else {
-    await supabase.from('today_flow').insert({
-      user_id: userId,
-      flow_date: today,
-      morning_ritual: updates.morningRitual ?? false,
-      reset_used: updates.resetUsed ?? false,
-      reflection_completed: updates.reflectionCompleted ?? false,
-      momentum_completed: updates.momentumCompleted ?? false,
-      return_count: updates.returnCount ?? 1,
-    });
   }
+
+  return supabase.from('today_flow').insert({
+    user_id: userId,
+    flow_date: today,
+    morning_ritual: updates.morningRitual ?? false,
+    reset_used: updates.resetUsed ?? false,
+    reflection_completed: updates.reflectionCompleted ?? false,
+    momentum_completed: updates.momentumCompleted ?? false,
+    return_count: updates.returnCount ?? 1,
+  });
+}
+
+async function flushPendingCloudOps(userId: string) {
+  const queue = readPending(userId);
+  if (!queue.length || !navigator.onLine) return;
+
+  const remaining: PendingCloudOp[] = [];
+  for (const op of queue) {
+    let result: { error: any } = { error: null };
+    if (op.type === 'checkIn') {
+      result = await supabase.from('check_ins').insert({ user_id: userId, id: op.payload.id, state: op.payload.state, note: op.payload.note, created_at: op.payload.createdAt });
+    } else if (op.type === 'todayFlow') {
+      result = await upsertTodayFlow(userId, op.payload);
+    } else if (op.type === 'momentumSession') {
+      result = await supabase.from('momentum_sessions').insert({ user_id: userId, id: op.payload.id, phrase: op.payload.phrase, duration: op.payload.duration, completed: op.payload.completed, created_at: op.payload.createdAt });
+    }
+    if (result.error && shouldQueueCloudError(result.error)) remaining.push(op);
+  }
+  writePending(userId, remaining);
 }
 
 // Load full state from Supabase for a user
