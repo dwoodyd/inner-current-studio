@@ -217,28 +217,28 @@ function AppRoutes() {
         <Route path="/money/script/library" element={current('money', <MoneyScriptLibrary />)} />
         <Route path="/money/script/:scriptId" element={current('money', <MoneyScriptDetail />)} />
         <Route path="/currents" element={<CurrentsHub />} />
-        <Route path="/self" element={<SelfHub />} />
-        <Route path="/self/state" element={<SelfState />} />
-        <Route path="/self/affirmations" element={<SelfAffirmations />} />
-        <Route path="/self/gather" element={<SelfGather />} />
-        <Route path="/self/resistance" element={<SelfResistance />} />
-        <Route path="/self/openings" element={<SelfOpenings />} />
-        <Route path="/self/evidence" element={<SelfEvidence />} />
-        <Route path="/self/script" element={<SelfScriptHub />} />
-        <Route path="/self/script/new" element={<SelfScriptNew />} />
-        <Route path="/self/script/library" element={<SelfScriptLibrary />} />
-        <Route path="/self/script/:scriptId" element={<SelfScriptDetail />} />
-        <Route path="/energy" element={<EnergyHub />} />
-        <Route path="/energy/state" element={<EnergyState />} />
-        <Route path="/energy/affirmations" element={<EnergyAffirmations />} />
-        <Route path="/energy/gather" element={<EnergyGather />} />
-        <Route path="/energy/resistance" element={<EnergyResistance />} />
-        <Route path="/energy/openings" element={<EnergyOpenings />} />
-        <Route path="/energy/evidence" element={<EnergyEvidence />} />
-        <Route path="/energy/script" element={<EnergyScriptHub />} />
-        <Route path="/energy/script/new" element={<EnergyScriptNew />} />
-        <Route path="/energy/script/library" element={<EnergyScriptLibrary />} />
-        <Route path="/energy/script/:scriptId" element={<EnergyScriptDetail />} />
+        <Route path="/self" element={current('self', <SelfHub />)} />
+        <Route path="/self/state" element={current('self', <SelfState />)} />
+        <Route path="/self/affirmations" element={current('self', <SelfAffirmations />)} />
+        <Route path="/self/gather" element={current('self', <SelfGather />)} />
+        <Route path="/self/resistance" element={current('self', <SelfResistance />)} />
+        <Route path="/self/openings" element={current('self', <SelfOpenings />)} />
+        <Route path="/self/evidence" element={current('self', <SelfEvidence />)} />
+        <Route path="/self/script" element={current('self', <SelfScriptHub />)} />
+        <Route path="/self/script/new" element={current('self', <SelfScriptNew />)} />
+        <Route path="/self/script/library" element={current('self', <SelfScriptLibrary />)} />
+        <Route path="/self/script/:scriptId" element={current('self', <SelfScriptDetail />)} />
+        <Route path="/energy" element={current('energy', <EnergyHub />)} />
+        <Route path="/energy/state" element={current('energy', <EnergyState />)} />
+        <Route path="/energy/affirmations" element={current('energy', <EnergyAffirmations />)} />
+        <Route path="/energy/gather" element={current('energy', <EnergyGather />)} />
+        <Route path="/energy/resistance" element={current('energy', <EnergyResistance />)} />
+        <Route path="/energy/openings" element={current('energy', <EnergyOpenings />)} />
+        <Route path="/energy/evidence" element={current('energy', <EnergyEvidence />)} />
+        <Route path="/energy/script" element={current('energy', <EnergyScriptHub />)} />
+        <Route path="/energy/script/new" element={current('energy', <EnergyScriptNew />)} />
+        <Route path="/energy/script/library" element={current('energy', <EnergyScriptLibrary />)} />
+        <Route path="/energy/script/:scriptId" element={current('energy', <EnergyScriptDetail />)} />
         <Route path="/relationships" element={<RelationshipsHub />} />
         <Route path="/relationships/state" element={<RelationshipsState />} />
         <Route path="/relationships/affirmations" element={<RelationshipsAffirmations />} />
