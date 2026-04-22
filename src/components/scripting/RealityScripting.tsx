@@ -47,6 +47,15 @@ const prompts: Record<string, string[]> = {
 };
 
 const tiers = ['Dreamer', 'Weaver', 'Architect', 'Oracle', 'Sovereign'];
+const MAX_TTS_CHARS = 2200;
+
+function prepareAudioText(text: string) {
+  const normalized = text.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= MAX_TTS_CHARS) return normalized;
+
+  const boundary = normalized.lastIndexOf('.', MAX_TTS_CHARS);
+  return normalized.slice(0, boundary > 900 ? boundary + 1 : MAX_TTS_CHARS).trim();
+}
 
 function tierFor(scripts: number, evidence: number) {
   return tiers[Math.min(tiers.length - 1, Math.floor((scripts + evidence) / 5))];
@@ -75,6 +84,7 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
   const [audioLoading, setAudioLoading] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlsRef = useRef<Map<string, string>>(new Map());
 
   const prompt = useMemo(() => prompts[domain.key]?.[new Date().getDate() % 2] ?? prompts.self[0], [domain.key]);
   const selected = scripts.find(s => s.id === scriptId);
@@ -95,7 +105,8 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
 
   useEffect(() => () => {
     audioRef.current?.pause();
-    if (audioRef.current?.src) URL.revokeObjectURL(audioRef.current.src);
+    audioUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    audioUrlsRef.current.clear();
   }, []);
 
   const upsertProgress = async (nextScriptCount: number, nextEvidenceCount = progress.evidence_count) => {
@@ -160,15 +171,30 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
   };
 
   const playScriptAudio = async (script: ScriptRow) => {
-    if (audioPlaying) {
-      audioRef.current?.pause();
+    if (audioPlaying && audioRef.current?.dataset.scriptId === script.id) {
+      audioRef.current.pause();
       setAudioPlaying(false);
       return;
     }
+
+    audioRef.current?.pause();
+
+    const cachedUrl = audioUrlsRef.current.get(script.id);
+    if (cachedUrl) {
+      const audio = new Audio(cachedUrl);
+      audio.dataset.scriptId = script.id;
+      audioRef.current = audio;
+      audio.onended = () => setAudioPlaying(false);
+      await audio.play();
+      setAudioPlaying(true);
+      return;
+    }
+
     setAudioLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) throw new Error('Sign in again to play audio.');
+      const audioText = prepareAudioText(script.content);
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/script-tts`, {
         method: 'POST',
         headers: {
@@ -176,12 +202,13 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title: script.title, text: script.content }),
+        body: JSON.stringify({ title: script.title, text: audioText }),
       });
       if (!response.ok) throw new Error(await response.text());
       const url = URL.createObjectURL(await response.blob());
-      if (audioRef.current?.src) URL.revokeObjectURL(audioRef.current.src);
+      audioUrlsRef.current.set(script.id, url);
       const audio = new Audio(url);
+      audio.dataset.scriptId = script.id;
       audioRef.current = audio;
       audio.onended = () => setAudioPlaying(false);
       await audio.play();
