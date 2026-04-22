@@ -169,12 +169,12 @@ export default function Home() {
         variants={stagger}
         initial="hidden"
         animate="show"
-        className="relative mx-auto max-w-lg px-4 pt-12 pb-6 space-y-6 safe-top"
+        className="relative mx-auto max-w-lg px-4 pt-8 pb-6 space-y-4 safe-top sm:space-y-6 sm:pt-12"
       >
         {/* Header */}
-        <motion.div variants={fadeUp} className="text-center space-y-2">
+        <motion.div variants={fadeUp} className="text-center space-y-1.5 sm:space-y-2">
           <motion.div
-            className="mx-auto h-20 w-20 rounded-2xl mb-3 flex items-center justify-center overflow-hidden"
+            className="mx-auto mb-2 flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl sm:mb-3 sm:h-20 sm:w-20"
             animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           >
@@ -185,7 +185,7 @@ export default function Home() {
         </motion.div>
 
         {/* Pulse */}
-        <motion.div variants={fadeUp} className="soul-glass-elevated rounded-2xl p-5 soul-ambient-gold">
+        <motion.div variants={fadeUp} className="soul-glass-elevated rounded-2xl p-3 soul-ambient-gold sm:p-5">
           <CurrentPulse quickState={quickState || 'flat'} />
         </motion.div>
 
@@ -197,7 +197,7 @@ export default function Home() {
         <motion.div variants={fadeUp}>
           <button
             onClick={() => navigate(recommendation.route)}
-            className="w-full soul-glass-elevated rounded-2xl p-5 text-left group hover:bg-muted/10 active:scale-[0.98] transition-all duration-200"
+            className="group w-full rounded-2xl p-4 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:p-5"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-2">
@@ -231,7 +231,7 @@ export default function Home() {
         <motion.div variants={fadeUp}>
           <button
             onClick={() => navigate('/money')}
-            className="w-full soul-glass-elevated rounded-2xl p-5 text-left group hover:bg-muted/10 active:scale-[0.98] transition-all duration-200"
+            className="group w-full rounded-2xl p-4 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:p-5"
             style={{ background: 'linear-gradient(135deg, hsl(42 65% 58% / 0.06), hsl(160 30% 40% / 0.04))' }}
           >
             <div className="flex items-center justify-between">
@@ -248,7 +248,7 @@ export default function Home() {
         </motion.div>
 
         {/* Daily Insight */}
-        <motion.div variants={fadeUp} className="soul-glass rounded-2xl p-5 soul-ambient-violet">
+        <motion.div variants={fadeUp} className="soul-glass rounded-2xl p-4 soul-ambient-violet sm:p-5">
           <DailyInsight />
         </motion.div>
       </motion.div>
