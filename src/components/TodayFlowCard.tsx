@@ -17,11 +17,11 @@ export default function TodayFlowCard({ flow }: TodayFlowCardProps) {
   const progress = completed / steps.length;
 
   return (
-    <div className="soul-card space-y-4">
+    <div className="soul-card space-y-3 p-4 sm:space-y-4 sm:p-5">
       <div className="flex items-center justify-between">
         <h3 className="font-heading text-lg font-medium text-foreground">Today's Flow</h3>
         <span className="text-xs text-muted-foreground">
-          {flow.returnCount} return{flow.returnCount !== 1 ? 's' : ''} today
+          {flow.returnCount} reset{flow.returnCount !== 1 ? 's' : ''} today
         </span>
       </div>
 
@@ -35,7 +35,7 @@ export default function TodayFlowCard({ flow }: TodayFlowCardProps) {
 
       <div className="grid grid-cols-2 gap-2">
         {steps.map(({ key, label }) => (
-          <div key={key} className="flex items-center gap-2 text-sm">
+          <div key={key} className="flex items-center gap-2 text-xs sm:text-sm">
             {flow[key] ? (
               <Check size={14} className="text-primary" />
             ) : (
