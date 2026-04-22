@@ -239,28 +239,28 @@ function AppRoutes() {
         <Route path="/energy/script/new" element={current('energy', <EnergyScriptNew />)} />
         <Route path="/energy/script/library" element={current('energy', <EnergyScriptLibrary />)} />
         <Route path="/energy/script/:scriptId" element={current('energy', <EnergyScriptDetail />)} />
-        <Route path="/relationships" element={<RelationshipsHub />} />
-        <Route path="/relationships/state" element={<RelationshipsState />} />
-        <Route path="/relationships/affirmations" element={<RelationshipsAffirmations />} />
-        <Route path="/relationships/gather" element={<RelationshipsGather />} />
-        <Route path="/relationships/resistance" element={<RelationshipsResistance />} />
-        <Route path="/relationships/openings" element={<RelationshipsOpenings />} />
-        <Route path="/relationships/evidence" element={<RelationshipsEvidence />} />
-        <Route path="/relationships/script" element={<RelationshipsScriptHub />} />
-        <Route path="/relationships/script/new" element={<RelationshipsScriptNew />} />
-        <Route path="/relationships/script/library" element={<RelationshipsScriptLibrary />} />
-        <Route path="/relationships/script/:scriptId" element={<RelationshipsScriptDetail />} />
-        <Route path="/health" element={<HealthHub />} />
-        <Route path="/health/state" element={<HealthState />} />
-        <Route path="/health/affirmations" element={<HealthAffirmations />} />
-        <Route path="/health/gather" element={<HealthGather />} />
-        <Route path="/health/resistance" element={<HealthResistance />} />
-        <Route path="/health/openings" element={<HealthOpenings />} />
-        <Route path="/health/evidence" element={<HealthEvidence />} />
-        <Route path="/health/script" element={<HealthScriptHub />} />
-        <Route path="/health/script/new" element={<HealthScriptNew />} />
-        <Route path="/health/script/library" element={<HealthScriptLibrary />} />
-        <Route path="/health/script/:scriptId" element={<HealthScriptDetail />} />
+        <Route path="/relationships" element={current('relationships', <RelationshipsHub />)} />
+        <Route path="/relationships/state" element={current('relationships', <RelationshipsState />)} />
+        <Route path="/relationships/affirmations" element={current('relationships', <RelationshipsAffirmations />)} />
+        <Route path="/relationships/gather" element={current('relationships', <RelationshipsGather />)} />
+        <Route path="/relationships/resistance" element={current('relationships', <RelationshipsResistance />)} />
+        <Route path="/relationships/openings" element={current('relationships', <RelationshipsOpenings />)} />
+        <Route path="/relationships/evidence" element={current('relationships', <RelationshipsEvidence />)} />
+        <Route path="/relationships/script" element={current('relationships', <RelationshipsScriptHub />)} />
+        <Route path="/relationships/script/new" element={current('relationships', <RelationshipsScriptNew />)} />
+        <Route path="/relationships/script/library" element={current('relationships', <RelationshipsScriptLibrary />)} />
+        <Route path="/relationships/script/:scriptId" element={current('relationships', <RelationshipsScriptDetail />)} />
+        <Route path="/health" element={current('health', <HealthHub />)} />
+        <Route path="/health/state" element={current('health', <HealthState />)} />
+        <Route path="/health/affirmations" element={current('health', <HealthAffirmations />)} />
+        <Route path="/health/gather" element={current('health', <HealthGather />)} />
+        <Route path="/health/resistance" element={current('health', <HealthResistance />)} />
+        <Route path="/health/openings" element={current('health', <HealthOpenings />)} />
+        <Route path="/health/evidence" element={current('health', <HealthEvidence />)} />
+        <Route path="/health/script" element={current('health', <HealthScriptHub />)} />
+        <Route path="/health/script/new" element={current('health', <HealthScriptNew />)} />
+        <Route path="/health/script/library" element={current('health', <HealthScriptLibrary />)} />
+        <Route path="/health/script/:scriptId" element={current('health', <HealthScriptDetail />)} />
       </Route>
       <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
