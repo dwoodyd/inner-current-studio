@@ -44,7 +44,7 @@ export default function Align() {
   const navigate = useNavigate();
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-12 pb-6 space-y-8 soul-ambient-gold overflow-hidden safe-top">
+    <div className="mx-auto max-w-lg px-4 pt-10 pb-10 space-y-6 overflow-hidden soul-ambient-gold safe-top sm:pt-12 sm:space-y-8">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -63,9 +63,9 @@ export default function Align() {
             key={title}
             variants={fadeUp}
             onClick={() => navigate(to)}
-            className="soul-glass-elevated w-full text-left flex items-center gap-4 p-4 sm:p-5 rounded-2xl transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] group min-h-[64px]"
+            className="group flex min-h-[60px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-transform duration-200 hover:scale-[1.01] active:scale-[0.98] soul-glass-elevated sm:min-h-[64px] sm:gap-4 sm:p-5"
           >
-            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shrink-0`}>
+            <div className={`h-10 w-10 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shrink-0 sm:h-11 sm:w-11`}>
               <Icon size={20} strokeWidth={1.5} className={iconColor} />
             </div>
             <div className="flex-1 space-y-1 min-w-0">

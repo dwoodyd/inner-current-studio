@@ -15,7 +15,7 @@ export default function Reset() {
   const navigate = useNavigate();
 
   return (
-    <div className="mx-auto max-w-lg px-4 pt-12 pb-8 space-y-7 safe-top">
+    <div className="mx-auto max-w-lg px-4 pt-10 pb-10 space-y-6 safe-top sm:pt-12 sm:space-y-7">
       <div className="text-center space-y-3">
         <motion.div
           className="w-14 h-14 rounded-full mx-auto flex items-center justify-center soul-glass-elevated"
@@ -36,9 +36,9 @@ export default function Reset() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             onClick={() => navigate(to)}
-            className="soul-glass-elevated w-full text-left flex items-center gap-4 p-4 sm:p-5 rounded-2xl hover:bg-muted/10 active:scale-[0.98] transition-all duration-200 min-h-[64px] group"
+            className="group flex min-h-[60px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:min-h-[64px] sm:gap-4 sm:p-5"
           >
-            <div className="w-11 h-11 rounded-xl bg-muted/30 flex items-center justify-center shrink-0">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted/30 sm:h-11 sm:w-11">
               <Icon size={20} className={color} strokeWidth={1.5} />
             </div>
             <div className="flex-1 space-y-1">
