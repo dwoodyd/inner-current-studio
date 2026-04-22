@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { z } from "https://esm.sh/zod@3.25.76";
 
 const VOICE_ID = "M7wzTk2Y1hGQyRzr9sbS";
-const MAX_TEXT_LENGTH = 4800;
+const MAX_TEXT_LENGTH = 2200;
 const ALLOWED_ORIGINS = [
   "https://current-inner-flow.lovable.app",
   "https://id-preview--abb90f19-f92a-4a96-ac97-854b7dd51087.lovable.app",
@@ -51,7 +51,7 @@ serve(async (req) => {
     if (!apiKey) throw new Error("ElevenLabs is not configured yet.");
 
     const text = parsed.data.title ? `${parsed.data.title}.\n\n${parsed.data.text}` : parsed.data.text;
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}?output_format=mp3_44100_128`, {
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}?output_format=mp3_22050_32`, {
       method: "POST",
       headers: { "xi-api-key": apiKey, "Content-Type": "application/json" },
       body: JSON.stringify({
