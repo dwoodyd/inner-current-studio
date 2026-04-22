@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Shield, Moon, Wifi } from 'lucide-react';
+import { Activity, ArrowRight, Eye, Moon, Play, Shield, Sparkles, Timer, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
@@ -34,10 +34,15 @@ function setLink(rel: string, href: string) {
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const [centerSeconds, setCenterSeconds] = useState(10);
+  const [centering, setCentering] = useState(false);
+  const [activePractitioners, setActivePractitioners] = useState(() => 14 + (new Date().getMinutes() % 9));
   const [showCinematic, setShowCinematic] = useState(() => {
     if (typeof window === 'undefined') return false;
     try { return !localStorage.getItem(SEEN_KEY); } catch { return false; }
   });
+
+  const centerPrompt = centerSeconds > 6 ? 'Inhale softly' : centerSeconds > 3 ? 'Let your shoulders drop' : 'Return to here';
 
   const dismissCinematic = (goToAuth: boolean) => {
     try { localStorage.setItem(SEEN_KEY, '1'); } catch {}
@@ -78,6 +83,36 @@ export default function Welcome() {
       document.getElementById(ldId)?.remove();
     };
   }, []);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      const minute = new Date().getMinutes();
+      setActivePractitioners(14 + (minute % 9));
+    }, 30000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    if (!centering) return;
+
+    const id = window.setInterval(() => {
+      setCenterSeconds((seconds) => {
+        if (seconds <= 1) {
+          window.clearInterval(id);
+          setCentering(false);
+          return 10;
+        }
+        return seconds - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(id);
+  }, [centering]);
+
+  const startCentering = () => {
+    setCenterSeconds(10);
+    setCentering(true);
+  };
 
   if (showCinematic) {
     return (
