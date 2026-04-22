@@ -101,6 +101,8 @@ export default function Home() {
     addCheckIn(quickToEmotional[qs]);
   };
 
+  const recommendation = ritualRecommendations[quickState || 'flat'];
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -190,6 +192,26 @@ export default function Home() {
         {/* Check-in */}
         <motion.div variants={fadeUp}>
           <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
+        </motion.div>
+
+        <motion.div variants={fadeUp}>
+          <button
+            onClick={() => navigate(recommendation.route)}
+            className="w-full soul-glass-elevated rounded-2xl p-5 text-left group hover:bg-muted/10 active:scale-[0.98] transition-all duration-200"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-primary">
+                  <Sparkles size={16} />
+                  <span className="text-[11px] uppercase tracking-[0.18em]">Recommended now</span>
+                </div>
+                <h2 className="font-heading text-xl font-medium text-foreground">{recommendation.title}</h2>
+                <p className="text-xs leading-relaxed text-muted-foreground">{recommendation.reason}</p>
+                <p className="text-[11px] leading-relaxed text-muted-foreground/70 italic">{recommendation.guide}</p>
+              </div>
+              <ArrowRight size={18} className="mt-1 shrink-0 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+            </div>
+          </button>
         </motion.div>
 
         {/* Today's Flow */}
