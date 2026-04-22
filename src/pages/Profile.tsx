@@ -5,6 +5,7 @@ import { useAppState } from '@/lib/AppContext';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/integrations/supabase/client';
+import { Sigil } from '@/components/onboarding/Sigil';
 import { toast } from 'sonner';
 import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart } from 'lucide-react';
 import {
@@ -38,6 +39,7 @@ export default function Profile() {
   const totalCheckIns = state.checkIns.length;
   const totalReturns = state.todayFlow.returnCount;
   const totalRituals = state.wheels.length + state.momentumSessions.length;
+  const sigilProgress = Math.min(1, (totalCheckIns + totalRituals * 2 + state.gatheredSequences.length) / 30);
 
   const handleDeleteAccount = async () => {
     setDeleting(true);
@@ -108,6 +110,19 @@ export default function Profile() {
           <h1 className="font-heading text-2xl font-semibold text-foreground">Profile</h1>
           <p className="text-sm text-muted-foreground font-heading italic">Your practice, your way</p>
         </motion.div>
+
+        {hasCompanion && (
+          <motion.div variants={fadeUp} className="soul-glass-elevated rounded-2xl p-5 text-center overflow-hidden">
+            <Sigil
+              seed={state.onboarding.companionSigil || state.onboarding.companionName || 'Inner Wake'}
+              progress={sigilProgress}
+              size={132}
+              className="mx-auto"
+            />
+            <h2 className="mt-2 font-heading text-xl text-foreground">{state.onboarding.companionName || 'Your companion'}</h2>
+            <p className="mt-1 text-xs text-muted-foreground">Sigil evolution · {Math.round(sigilProgress * 100)}% awakened</p>
+          </motion.div>
+        )}
 
         {/* Stats */}
         <motion.div variants={fadeUp} className="grid grid-cols-3 gap-3">

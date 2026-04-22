@@ -141,6 +141,9 @@ export interface OnboardingData {
   reason?: string;
   style?: string;
   challenge?: string;
+  companionName?: string;
+  companionSigil?: string;
+  freeCurrent?: string;
   completed: boolean;
 }
 

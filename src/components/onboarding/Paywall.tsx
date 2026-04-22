@@ -21,10 +21,10 @@ const TIERS = [
     sublabel: "$4.08 / month — save 42%",
   },
   {
-    id: "premium_lifetime",
+    id: "premium_lifetime_149",
     label: "Lifetime",
     badge: "Founding member",
-    price: "$79",
+    price: "$149",
     period: "once",
     sublabel: "Pay once. Yours forever.",
   },

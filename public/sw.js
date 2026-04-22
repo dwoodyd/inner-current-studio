@@ -1,10 +1,64 @@
-// Inner Wake — Push notification service worker
+// Inner Wake — Push notification + core ritual offline service worker
+const CORE_CACHE = 'innerwake-core-v2';
+const CORE_ROUTES = [
+  '/',
+  '/align',
+  '/align/gather',
+  '/align/momentum',
+  '/reset',
+  '/reset/contrast',
+  '/reset/stillness',
+  '/reset/breathwork',
+  '/reset/resistance',
+  '/reflect',
+  '/currents',
+];
+
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CORE_CACHE)
+      .then((cache) => cache.addAll(CORE_ROUTES))
+      .catch(() => undefined)
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((key) => key !== CORE_CACHE).map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  const url = new URL(request.url);
+
+  if (request.method !== 'GET' || url.origin !== self.location.origin || url.pathname.startsWith('/~oauth')) return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CORE_CACHE).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match('/')))
+    );
+    return;
+  }
+
+  if (url.pathname.startsWith('/assets/') || url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
+    event.respondWith(
+      caches.match(request).then((cached) => cached || fetch(request).then((response) => {
+        const copy = response.clone();
+        caches.open(CORE_CACHE).then((cache) => cache.put(request, copy));
+        return response;
+      }))
+    );
+  }
 });
 
 self.addEventListener('push', (event) => {

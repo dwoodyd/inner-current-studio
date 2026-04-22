@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 import CurrentPulse from '@/components/CurrentPulse';
 import QuickCheckIn from '@/components/QuickCheckIn';
@@ -41,6 +41,39 @@ const FAVICON_GLOW_FRAMES = [
   STATIC_FAVICON,
 ];
 
+const ritualRecommendations: Record<QuickState, { title: string; reason: string; route: string; guide: string }> = {
+  tight: {
+    title: 'Resistance Release',
+    reason: 'You’re holding tension — start by giving the body somewhere safe to soften.',
+    route: '/reset/resistance',
+    guide: 'Current Guide notices contraction patterns best after a body-first release.',
+  },
+  restless: {
+    title: 'Contrast Reset',
+    reason: 'You’re scattered — name the contrast, then let one clearer preference emerge.',
+    route: '/reset/contrast',
+    guide: 'Your recent check-ins can reveal what keeps pulling attention outward.',
+  },
+  flat: {
+    title: 'Stillness Timer',
+    reason: 'You’re neutral or low-volume — use quiet presence before trying to shift anything.',
+    route: '/reset/stillness',
+    guide: 'A steady baseline helps the app learn what “center” feels like for you.',
+  },
+  open: {
+    title: 'Gather Flow',
+    reason: 'You’re receptive — gather believable words while the door is already open.',
+    route: '/align/gather',
+    guide: 'This is a strong moment for affirmation work that does not feel forced.',
+  },
+  flowing: {
+    title: 'Momentum Session',
+    reason: 'You’re in the current — let one aligned sentence turn into movement.',
+    route: '/align/momentum',
+    guide: 'When flow appears, the best ritual is often short, embodied repetition.',
+  },
+};
+
 function ensureHeadLink(selector: string, attributes: Record<string, string>) {
   const existing = document.head.querySelector<HTMLLinkElement>(selector);
   const link = existing ?? document.createElement('link');
@@ -67,6 +100,8 @@ export default function Home() {
     setQuickState(qs);
     addCheckIn(quickToEmotional[qs]);
   };
+
+  const recommendation = ritualRecommendations[quickState || 'flat'];
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -157,6 +192,26 @@ export default function Home() {
         {/* Check-in */}
         <motion.div variants={fadeUp}>
           <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
+        </motion.div>
+
+        <motion.div variants={fadeUp}>
+          <button
+            onClick={() => navigate(recommendation.route)}
+            className="w-full soul-glass-elevated rounded-2xl p-5 text-left group hover:bg-muted/10 active:scale-[0.98] transition-all duration-200"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-primary">
+                  <Sparkles size={16} />
+                  <span className="text-[11px] uppercase tracking-[0.18em]">Recommended now</span>
+                </div>
+                <h2 className="font-heading text-xl font-medium text-foreground">{recommendation.title}</h2>
+                <p className="text-xs leading-relaxed text-muted-foreground">{recommendation.reason}</p>
+                <p className="text-[11px] leading-relaxed text-muted-foreground/70 italic">{recommendation.guide}</p>
+              </div>
+              <ArrowRight size={18} className="mt-1 shrink-0 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+            </div>
+          </button>
         </motion.div>
 
         {/* Today's Flow */}

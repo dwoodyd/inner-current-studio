@@ -99,6 +99,9 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
       reason: carrying || "felt-sense",
       style: "Guided and reflective",
       challenge: carrying || "presence",
+      companionName: companionName || "Current",
+      companionSigil: companionName || "Current",
+      freeCurrent: chosenCurrent || undefined,
     });
   };
 
