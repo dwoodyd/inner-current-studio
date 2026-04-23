@@ -22,6 +22,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
   });
 
   const normalizedCode = useMemo(() => code.trim().toUpperCase().replace(/\s+/g, '-'), [code]);
+  const publicLegalPath = typeof window !== 'undefined' && ['/privacy', '/terms'].includes(window.location.pathname);
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -36,7 +37,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
     setUnlocked(true);
   };
 
-  if (unlocked) return <>{children}</>;
+  if (unlocked || publicLegalPath) return <>{children}</>;
 
   return (
     <main className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-background px-5 py-10 text-foreground safe-x safe-top">
