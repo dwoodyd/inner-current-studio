@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
@@ -9,6 +9,7 @@ import AppShell from "@/components/AppShell";
 import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotice";
 import { PremiumGate } from "@/components/PremiumGate";
 import { BetaAccessGate } from "@/components/BetaAccessGate";
+import { useAppState } from "@/lib/AppContext";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
@@ -132,6 +133,8 @@ function RouteLoader() {
 
 function AppRoutes() {
   const { user, loading } = useAuth();
+  const location = useLocation();
+  const { state } = useAppState();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
 
@@ -157,6 +160,10 @@ function AppRoutes() {
       </Routes>
     </Suspense>
     );
+  }
+
+  if (!state.onboarding.completed && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return (
