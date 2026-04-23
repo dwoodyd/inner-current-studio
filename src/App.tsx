@@ -8,6 +8,7 @@ import { lazy, Suspense } from "react";
 import AppShell from "@/components/AppShell";
 import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotice";
 import { PremiumGate } from "@/components/PremiumGate";
+import { BetaAccessGate } from "@/components/BetaAccessGate";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
@@ -273,14 +274,16 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Sonner />
-      <BrowserRouter>
-        <EnvironmentRedirectNotice />
-        <AuthProvider>
-          <AppProvider>
-            <AppRoutes />
-          </AppProvider>
-        </AuthProvider>
-      </BrowserRouter>
+      <BetaAccessGate>
+        <BrowserRouter>
+          <EnvironmentRedirectNotice />
+          <AuthProvider>
+            <AppProvider>
+              <AppRoutes />
+            </AppProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </BetaAccessGate>
     </TooltipProvider>
   </QueryClientProvider>
 );
