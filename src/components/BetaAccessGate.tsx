@@ -1,14 +1,15 @@
 import { ReactNode, useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, KeyRound, Lock, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import innerWakeIcon from '@/assets/inner-wake-icon.svg';
-
-const STORAGE_KEY = 'iw_beta_access_v1';
-const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN'];
-// Owner bypass — kept separate from public beta codes.
-// Change this value to rotate access. Stored only client-side; the gate is
-// soft (a marketing wall), not a security boundary — real auth is Supabase.
-const OWNER_PASSWORDS = ['OWNER-IW-2026', 'innerwake-owner-2026'];
+import {
+  BETA_CODES,
+  OWNER_PASSWORDS,
+  isGateUnlocked,
+  unlockBetaSession,
+  unlockOwnerSession,
+} from '@/lib/betaAccess';
 
 interface BetaAccessGateProps {
   children: ReactNode;
@@ -22,15 +23,10 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
   })();
   const [code, setCode] = useState(initialCode);
   const [error, setError] = useState('');
-  const [unlocked, setUnlocked] = useState(() => {
-    try {
-      return localStorage.getItem(STORAGE_KEY) === 'open';
-    } catch {
-      return false;
-    }
-  });
+  const [unlocked, setUnlocked] = useState(() => isGateUnlocked());
   const [ownerOpen, setOwnerOpen] = useState(false);
   const [ownerPw, setOwnerPw] = useState('');
+  const [ownerRemember, setOwnerRemember] = useState(false);
   const [ownerError, setOwnerError] = useState('');
 
   // Auto-unlock if URL has an owner password as ?owner=
@@ -38,14 +34,15 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
     const owner = (params.get('owner') ?? '').trim();
+    const remember = params.get('remember') === '1';
     if (owner && OWNER_PASSWORDS.includes(owner)) {
-      try { localStorage.setItem(STORAGE_KEY, 'open'); } catch {}
+      unlockOwnerSession({ persist: remember });
       setUnlocked(true);
     }
   }, []);
 
   const normalizedCode = useMemo(() => code.trim().toUpperCase().replace(/\s+/g, '-'), [code]);
-  const publicPath = typeof window !== 'undefined' && ['/privacy', '/terms', '/beta'].includes(window.location.pathname);
+  const publicPath = typeof window !== 'undefined' && ['/privacy', '/terms', '/beta', '/owner'].includes(window.location.pathname);
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -53,7 +50,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
       setError('That code is not on the beta list yet.');
       return;
     }
-    try { localStorage.setItem(STORAGE_KEY, 'open'); } catch {}
+    unlockBetaSession();
     setUnlocked(true);
   };
 
@@ -63,7 +60,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
       setOwnerError('Incorrect password.');
       return;
     }
-    try { localStorage.setItem(STORAGE_KEY, 'open'); } catch {}
+    unlockOwnerSession({ persist: ownerRemember });
     setUnlocked(true);
     setOwnerOpen(false);
   };
