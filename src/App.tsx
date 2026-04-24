@@ -54,6 +54,7 @@ const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Beta = lazy(() => import("@/pages/Beta"));
+const OwnerAccess = lazy(() => import("@/pages/OwnerAccess"));
 const MoneyCurrent = lazy(() => import("@/pages/MoneyCurrent"));
 const MoneyState = lazy(() => import("@/pages/MoneyState"));
 const CurrentDeposit = lazy(() => import("@/pages/CurrentDeposit"));
@@ -154,6 +155,7 @@ function AppRoutes() {
       <Suspense fallback={<RouteLoader />}><Routes>
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/beta" element={<Beta />} />
+        <Route path="/owner" element={<OwnerAccess />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacy" element={<Privacy />} />
