@@ -11,7 +11,12 @@ interface BetaAccessGateProps {
 }
 
 export function BetaAccessGate({ children }: BetaAccessGateProps) {
-  const [code, setCode] = useState('');
+  const initialCode = (() => {
+    if (typeof window === 'undefined') return '';
+    const params = new URLSearchParams(window.location.search);
+    return (params.get('code') ?? '').trim();
+  })();
+  const [code, setCode] = useState(initialCode);
   const [error, setError] = useState('');
   const [unlocked, setUnlocked] = useState(() => {
     try {
@@ -22,7 +27,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
   });
 
   const normalizedCode = useMemo(() => code.trim().toUpperCase().replace(/\s+/g, '-'), [code]);
-  const publicLegalPath = typeof window !== 'undefined' && ['/privacy', '/terms'].includes(window.location.pathname);
+  const publicPath = typeof window !== 'undefined' && ['/privacy', '/terms', '/beta'].includes(window.location.pathname);
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -37,7 +42,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
     setUnlocked(true);
   };
 
-  if (unlocked || publicLegalPath) return <>{children}</>;
+  if (unlocked || publicPath) return <>{children}</>;
 
   return (
     <main className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-background px-5 py-10 text-foreground safe-x safe-top">
