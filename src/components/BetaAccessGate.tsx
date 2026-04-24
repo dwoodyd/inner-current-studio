@@ -119,13 +119,21 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
           Recruiting 20 early testers for gentle feedback before public launch.
         </p>
 
-        <button
-          type="button"
-          onClick={() => { setOwnerOpen(true); setOwnerError(''); setOwnerPw(''); }}
-          className="mt-4 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground/60 hover:text-primary/80 transition-colors"
-        >
-          <Lock className="h-3 w-3" /> Owner access
-        </button>
+        <div className="mt-4 flex flex-col items-center gap-2">
+          <button
+            type="button"
+            onClick={() => { setOwnerOpen(true); setOwnerError(''); setOwnerPw(''); setOwnerRemember(false); }}
+            className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground/60 hover:text-primary/80 transition-colors"
+          >
+            <Lock className="h-3 w-3" /> Owner access
+          </button>
+          <Link
+            to="/owner"
+            className="text-[11px] text-muted-foreground/50 hover:text-primary/70 transition-colors"
+          >
+            Open dedicated owner sign-in →
+          </Link>
+        </div>
       </motion.section>
 
       <AnimatePresence>
