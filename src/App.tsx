@@ -209,9 +209,6 @@ function AppRoutes() {
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/about" element={<About />} />
         <Route path="/admin" element={<AdminDashboard />} />
-      </Route>
-      <Route path="/owner" element={<OwnerAccess />} />
-      <Route element={<AppShell />}>
         <Route path="/money" element={current('money', <MoneyCurrent />)} />
         <Route path="/money/state" element={current('money', <MoneyState />)} />
         <Route path="/money/deposit" element={current('money', <CurrentDeposit />)} />
