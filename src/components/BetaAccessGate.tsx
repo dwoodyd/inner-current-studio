@@ -1,10 +1,14 @@
-import { ReactNode, useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, KeyRound } from 'lucide-react';
+import { ReactNode, useMemo, useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, KeyRound, Lock, X } from 'lucide-react';
 import innerWakeIcon from '@/assets/inner-wake-icon.svg';
 
 const STORAGE_KEY = 'iw_beta_access_v1';
-const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN', 'OWNER-IW-2026'];
+const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN'];
+// Owner bypass — kept separate from public beta codes.
+// Change this value to rotate access. Stored only client-side; the gate is
+// soft (a marketing wall), not a security boundary — real auth is Supabase.
+const OWNER_PASSWORDS = ['OWNER-IW-2026', 'innerwake-owner-2026'];
 
 interface BetaAccessGateProps {
   children: ReactNode;
@@ -25,6 +29,20 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
       return false;
     }
   });
+  const [ownerOpen, setOwnerOpen] = useState(false);
+  const [ownerPw, setOwnerPw] = useState('');
+  const [ownerError, setOwnerError] = useState('');
+
+  // Auto-unlock if URL has an owner password as ?owner=
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const owner = (params.get('owner') ?? '').trim();
+    if (owner && OWNER_PASSWORDS.includes(owner)) {
+      try { localStorage.setItem(STORAGE_KEY, 'open'); } catch {}
+      setUnlocked(true);
+    }
+  }, []);
 
   const normalizedCode = useMemo(() => code.trim().toUpperCase().replace(/\s+/g, '-'), [code]);
   const publicPath = typeof window !== 'undefined' && ['/privacy', '/terms', '/beta'].includes(window.location.pathname);
@@ -35,11 +53,19 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
       setError('That code is not on the beta list yet.');
       return;
     }
-
-    try {
-      localStorage.setItem(STORAGE_KEY, 'open');
-    } catch {}
+    try { localStorage.setItem(STORAGE_KEY, 'open'); } catch {}
     setUnlocked(true);
+  };
+
+  const submitOwner = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!OWNER_PASSWORDS.includes(ownerPw.trim())) {
+      setOwnerError('Incorrect password.');
+      return;
+    }
+    try { localStorage.setItem(STORAGE_KEY, 'open'); } catch {}
+    setUnlocked(true);
+    setOwnerOpen(false);
   };
 
   if (unlocked || publicPath) return <>{children}</>;
@@ -95,7 +121,79 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
         <p className="mt-6 text-xs leading-relaxed text-muted-foreground/70">
           Recruiting 20 early testers for gentle feedback before public launch.
         </p>
+
+        <button
+          type="button"
+          onClick={() => { setOwnerOpen(true); setOwnerError(''); setOwnerPw(''); }}
+          className="mt-4 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground/60 hover:text-primary/80 transition-colors"
+        >
+          <Lock className="h-3 w-3" /> Owner access
+        </button>
       </motion.section>
+
+      <AnimatePresence>
+        {ownerOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm px-5"
+            onClick={() => setOwnerOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.98 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-sm rounded-3xl border border-border/40 bg-card/95 p-6 shadow-2xl"
+            >
+              <button
+                type="button"
+                onClick={() => setOwnerOpen(false)}
+                aria-label="Close"
+                className="absolute right-4 top-4 text-muted-foreground/70 hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <div className="text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                  <Lock className="h-5 w-5 text-primary" />
+                </div>
+                <h2 className="mt-4 font-heading text-2xl font-light text-foreground">Owner access</h2>
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                  Enter the owner password to bypass the beta gate on this device.
+                </p>
+              </div>
+
+              <form onSubmit={submitOwner} className="mt-6 space-y-3">
+                <div className="flex min-h-[52px] items-center gap-3 rounded-2xl border border-border/40 bg-background/60 px-4">
+                  <KeyRound className="h-4 w-4 shrink-0 text-primary/70" />
+                  <input
+                    type="password"
+                    value={ownerPw}
+                    onChange={(e) => { setOwnerPw(e.target.value); setOwnerError(''); }}
+                    placeholder="Owner password"
+                    autoFocus
+                    className="min-w-0 flex-1 bg-transparent py-4 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none"
+                    autoComplete="current-password"
+                  />
+                </div>
+                {ownerError && <p className="text-xs text-destructive">{ownerError}</p>}
+                <button
+                  type="submit"
+                  className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-4 text-sm font-medium text-primary-foreground transition-transform active:scale-[0.98]"
+                >
+                  Unlock <ArrowRight className="h-4 w-4" />
+                </button>
+                <p className="text-[11px] leading-relaxed text-muted-foreground/60 text-center">
+                  Tip: you can also visit <span className="text-primary/70">?owner=YOUR-PASSWORD</span> in the URL.
+                </p>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
