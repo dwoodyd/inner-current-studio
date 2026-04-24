@@ -185,6 +185,15 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
                   />
                 </div>
                 {ownerError && <p className="text-xs text-destructive">{ownerError}</p>}
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={ownerRemember}
+                    onChange={(e) => setOwnerRemember(e.target.checked)}
+                    className="h-4 w-4 rounded border-border/40 bg-background/60 text-primary"
+                  />
+                  Trust this device (persist beyond session)
+                </label>
                 <button
                   type="submit"
                   className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-4 text-sm font-medium text-primary-foreground transition-transform active:scale-[0.98]"
@@ -192,7 +201,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
                   Unlock <ArrowRight className="h-4 w-4" />
                 </button>
                 <p className="text-[11px] leading-relaxed text-muted-foreground/60 text-center">
-                  Tip: you can also visit <span className="text-primary/70">?owner=YOUR-PASSWORD</span> in the URL.
+                  Session-only by default. Visit <span className="text-primary/70">/owner</span> for the dedicated page.
                 </p>
               </form>
             </motion.div>
