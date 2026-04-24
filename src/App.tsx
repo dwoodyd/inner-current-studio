@@ -53,6 +53,7 @@ const Terms = lazy(() => import("@/pages/Terms"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
+const Beta = lazy(() => import("@/pages/Beta"));
 const MoneyCurrent = lazy(() => import("@/pages/MoneyCurrent"));
 const MoneyState = lazy(() => import("@/pages/MoneyState"));
 const CurrentDeposit = lazy(() => import("@/pages/CurrentDeposit"));
@@ -152,6 +153,7 @@ function AppRoutes() {
     return (
       <Suspense fallback={<RouteLoader />}><Routes>
         <Route path="/welcome" element={<Welcome />} />
+        <Route path="/beta" element={<Beta />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacy" element={<Privacy />} />
@@ -271,6 +273,7 @@ function AppRoutes() {
         <Route path="/health/script/:scriptId" element={current('health', <HealthScriptDetail />)} />
       </Route>
       <Route path="/welcome" element={<Navigate to="/" replace />} />
+      <Route path="/beta" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
       <Route path="*" element={<NotFound />} />
     </Routes></Suspense>
