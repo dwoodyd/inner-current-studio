@@ -4,7 +4,7 @@ import { ArrowRight, KeyRound } from 'lucide-react';
 import innerWakeIcon from '@/assets/inner-wake-icon.svg';
 
 const STORAGE_KEY = 'iw_beta_access_v1';
-const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN'];
+const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN', 'OWNER-IW-2026'];
 
 interface BetaAccessGateProps {
   children: ReactNode;
