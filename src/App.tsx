@@ -286,16 +286,16 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Sonner />
-      <BetaAccessGate>
-        <BrowserRouter>
+      <BrowserRouter>
+        <BetaAccessGate>
           <EnvironmentRedirectNotice />
           <AuthProvider>
             <AppProvider>
               <AppRoutes />
             </AppProvider>
           </AuthProvider>
-        </BrowserRouter>
-      </BetaAccessGate>
+        </BetaAccessGate>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
