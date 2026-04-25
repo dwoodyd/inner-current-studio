@@ -602,6 +602,9 @@ export type Database = {
           onboarding_style: string | null
           onboarding_version: number
           subscription_tier: string
+          trial_ends_at: string | null
+          trial_started_at: string | null
+          trial_type: string
           updated_at: string
           user_id: string
         }
@@ -619,6 +622,9 @@ export type Database = {
           onboarding_style?: string | null
           onboarding_version?: number
           subscription_tier?: string
+          trial_ends_at?: string | null
+          trial_started_at?: string | null
+          trial_type?: string
           updated_at?: string
           user_id: string
         }
@@ -636,6 +642,9 @@ export type Database = {
           onboarding_style?: string | null
           onboarding_version?: number
           subscription_tier?: string
+          trial_ends_at?: string | null
+          trial_started_at?: string | null
+          trial_type?: string
           updated_at?: string
           user_id?: string
         }
@@ -1047,10 +1056,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      grant_beta_trial: { Args: { user_uuid: string }; Returns: undefined }
       has_active_subscription: {
         Args: { check_env?: string; user_uuid: string }
         Returns: boolean
       }
+      has_active_trial: { Args: { user_uuid: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
