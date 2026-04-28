@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import innerWakeIcon from '@/assets/inner-wake-icon.svg';
 import {
   BETA_CODES,
-  OWNER_PASSWORDS,
+  isOwnerPassword,
   isGateUnlocked,
   unlockBetaSession,
   unlockOwnerSession,
@@ -36,7 +36,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
     const params = new URLSearchParams(window.location.search);
     const owner = (params.get('owner') ?? '').trim();
     const remember = params.get('remember') === '1';
-    if (owner && OWNER_PASSWORDS.includes(owner)) {
+    if (owner && isOwnerPassword(owner)) {
       unlockOwnerSession({ persist: remember });
       setUnlocked(true);
     }
@@ -47,6 +47,11 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
+    if (isOwnerPassword(code)) {
+      unlockOwnerSession({ persist: true });
+      setUnlocked(true);
+      return;
+    }
     if (!BETA_CODES.includes(normalizedCode)) {
       setError('That code is not on the beta list yet.');
       return;
@@ -58,7 +63,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
 
   const submitOwner = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!OWNER_PASSWORDS.includes(ownerPw.trim())) {
+    if (!isOwnerPassword(ownerPw)) {
       setOwnerError('Incorrect password.');
       return;
     }
