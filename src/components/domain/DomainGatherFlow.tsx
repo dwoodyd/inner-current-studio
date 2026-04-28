@@ -21,7 +21,11 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [voice, setVoice] = useState(true);
+  // Duration in minutes; 0 = infinite (loop forever)
+  const [durationMin, setDurationMin] = useState<number>(0);
+  const [remainingSec, setRemainingSec] = useState<number>(0);
   const tickRef = useRef<number | null>(null);
+  const countdownRef = useRef<number | null>(null);
 
   const load = async () => {
     if (!user) return;
