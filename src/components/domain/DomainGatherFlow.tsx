@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash2, Play, Pause, ChevronLeft, ChevronRight, Save } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Play, Pause, ChevronLeft, ChevronRight, Save, Timer, Infinity as InfinityIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
