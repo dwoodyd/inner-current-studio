@@ -10,6 +10,7 @@ import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotic
 import { PremiumGate } from "@/components/PremiumGate";
 import { BetaAccessGate } from "@/components/BetaAccessGate";
 import { useAppState } from "@/lib/AppContext";
+import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
@@ -137,6 +138,7 @@ function AppRoutes() {
   const { user, loading } = useAuth();
   const location = useLocation();
   const { state } = useAppState();
+  useBetaTrialClaimer();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
 

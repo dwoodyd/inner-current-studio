@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import BottomNav from './BottomNav';
 import OfflineBanner from './OfflineBanner';
 import { PaymentTestModeBanner } from './PaymentTestModeBanner';
+import { TrialCountdownBanner } from './TrialCountdownBanner';
 import { useAppState } from '@/lib/AppContext';
 
 const pageVariants = {
@@ -21,6 +22,7 @@ export default function AppShell() {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background safe-x">
       <PaymentTestModeBanner />
+      <TrialCountdownBanner />
       <OfflineBanner />
       {!hideBottomNav && (
         <Link

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Check, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { usePaddleCheckout } from "@/hooks/usePaddleCheckout";
+import { useSubscription } from "@/hooks/useSubscription";
 
 interface PaywallProps {
   companionName: string;
@@ -11,7 +12,7 @@ interface PaywallProps {
   onPurchased: () => void;
 }
 
-const TIERS = [
+const STANDARD_TIERS = [
   {
     id: "premium_yearly",
     label: "Yearly",
@@ -38,10 +39,22 @@ const TIERS = [
   },
 ] as const;
 
+const BETA_LIFETIME_TIER = {
+  id: "premium_lifetime_beta_99",
+  label: "Lifetime",
+  badge: "Founder offer · $50 off",
+  price: "$99",
+  period: "once",
+  sublabel: "Beta-tester gratitude. Yours forever.",
+} as const;
+
 const INCLUDES = [
   "All five Currents — unlocked",
   "AI Affirmation Coach",
   "Unlimited gather sequences & rituals",
+  "Reality Scripting + Constellation",
+  "Future Pages, Imagine If, Pattern Mirror",
+  "Voice playback on scripts",
   "Daily insights tuned to your Current",
   "Export your reflections anytime",
 ];
@@ -54,7 +67,16 @@ export function Paywall({
 }: PaywallProps) {
   const { user } = useAuth();
   const { openCheckout, loading } = usePaddleCheckout();
-  const [selected, setSelected] = useState<string>("premium_yearly");
+  const { trialActive, trialType, trialDaysRemaining, hasPaidAccess } = useSubscription();
+
+  const isBeta = trialType === 'beta';
+  // Beta testers see the $99 lifetime instead of the $149 lifetime
+  const tiers = isBeta
+    ? [STANDARD_TIERS[0], BETA_LIFETIME_TIER, STANDARD_TIERS[2]]
+    : STANDARD_TIERS;
+
+  const defaultSelected = isBeta ? "premium_lifetime_beta_99" : "premium_yearly";
+  const [selected, setSelected] = useState<string>(defaultSelected);
 
   const handlePurchase = async () => {
     if (!user) return;
@@ -65,29 +87,59 @@ export function Paywall({
         userId: user.id,
         successUrl: `${window.location.origin}/?checkout=success`,
       });
-      // Webhook will mark them premium; optimistic redirect happens on success URL
       onPurchased();
     } catch (e) {
       console.error("checkout failed", e);
     }
   };
 
+  // Trial-aware headline
+  let eyebrow = "Act Seven";
+  let headline = "Open all five Currents";
+  let subhead = (
+    <>
+      {companionName} will walk with you in <span className="text-foreground">{chosenCurrent}</span> for free, always.
+      When you're ready, the other four open below.
+    </>
+  );
+
+  if (trialActive && trialDaysRemaining != null && !hasPaidAccess) {
+    if (isBeta) {
+      eyebrow = `Founder Trial · ${trialDaysRemaining} day${trialDaysRemaining === 1 ? '' : 's'} left`;
+      headline = "Lock in your founder lifetime";
+      subhead = (
+        <>
+          Thank you for being early. Your trial keeps going — but the $99 lifetime
+          offer is reserved only for beta testers.
+        </>
+      );
+    } else if (trialDaysRemaining <= 7) {
+      eyebrow = `${trialDaysRemaining} day${trialDaysRemaining === 1 ? '' : 's'} left in your full experience`;
+      headline = "Choose your path forward";
+      subhead = (
+        <>
+          When your trial ends, {chosenCurrent} stays open for free, always. Open all
+          five Currents below — or return to your free Current on day {trialDaysRemaining > 0 ? trialDaysRemaining : 1}.
+        </>
+      );
+    }
+  }
+
   return (
     <div className="space-y-7 text-center">
       <div className="space-y-3">
         <Sparkles className="h-6 w-6 text-primary mx-auto" />
-        <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Seven</p>
+        <p className="text-xs tracking-[0.3em] uppercase text-primary/70">{eyebrow}</p>
         <h2 className="font-heading text-3xl font-light text-foreground">
-          Open all five Currents
+          {headline}
         </h2>
         <p className="text-sm text-muted-foreground italic max-w-sm mx-auto">
-          {companionName} will walk with you in <span className="text-foreground">{chosenCurrent}</span> for free, always.
-          When you're ready, the other four open below.
+          {subhead}
         </p>
       </div>
 
       <div className="space-y-2">
-        {TIERS.map((tier, i) => {
+        {tiers.map((tier, i) => {
           const isSelected = selected === tier.id;
           return (
             <motion.button
@@ -152,7 +204,7 @@ export function Paywall({
       </div>
 
       <p className="text-[11px] text-muted-foreground/60 italic">
-        7-day refund. Cancel anytime. No tricks.
+        14-day refund. Cancel anytime. No tricks.
       </p>
     </div>
   );

@@ -9,6 +9,7 @@ import {
   isGateUnlocked,
   unlockBetaSession,
   unlockOwnerSession,
+  markBetaTester,
 } from '@/lib/betaAccess';
 
 interface BetaAccessGateProps {
@@ -51,6 +52,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
       return;
     }
     unlockBetaSession();
+    markBetaTester();
     setUnlocked(true);
   };
 
