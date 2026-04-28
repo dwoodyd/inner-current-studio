@@ -34,7 +34,7 @@ export default function AppShell() {
         </Link>
       )}
       <main className={`flex-1 overflow-y-auto ${hideBottomNav ? 'pb-0' : 'pb-32'}`}>
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           <motion.div
             key={location.pathname}
             variants={pageVariants}
