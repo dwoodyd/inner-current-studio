@@ -47,53 +47,59 @@ export function useSubscription(): SubscriptionState {
     let cancelled = false;
 
     async function load() {
-      const [{ data: sub }, { data: profile }] = await Promise.all([
-        supabase
-          .from("subscriptions")
-          .select("status,cancel_at_period_end,current_period_end,product_id")
-          .eq("user_id", user.id)
-          .eq("environment", env)
-          .maybeSingle(),
-        supabase
-          .from("profiles")
-          .select("subscription_tier,free_current,trial_ends_at,trial_type")
-          .eq("user_id", user.id)
-          .maybeSingle(),
-      ]);
+      try {
+        const [{ data: sub }, { data: profile }] = await Promise.all([
+          supabase
+            .from("subscriptions")
+            .select("status,cancel_at_period_end,current_period_end,product_id")
+            .eq("user_id", user.id)
+            .eq("environment", env)
+            .maybeSingle(),
+          supabase
+            .from("profiles")
+            .select("subscription_tier,free_current,trial_ends_at,trial_type")
+            .eq("user_id", user.id)
+            .maybeSingle(),
+        ]);
 
-      if (cancelled) return;
+        if (cancelled) return;
 
-      const periodStillOpen = !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
-      const active =
-        sub &&
-        (["active", "trialing"].includes(sub.status) || (sub.status === "canceled" && periodStillOpen)) &&
-        periodStillOpen;
+        const periodStillOpen = !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
+        const active =
+          sub &&
+          (["active", "trialing"].includes(sub.status) || (sub.status === "canceled" && periodStillOpen)) &&
+          periodStillOpen;
 
-      const tier = (profile?.subscription_tier as SubscriptionState["tier"]) || "free";
-      const hasPaidAccess = !!active || tier === "lifetime" || tier === "premium";
+        const tier = (profile?.subscription_tier as SubscriptionState["tier"]) || "free";
+        const hasPaidAccess = !!active || tier === "lifetime" || tier === "premium";
 
-      // Trial calculations
-      const trialEndsAt = profile?.trial_ends_at || null;
-      const trialActive = !!trialEndsAt && new Date(trialEndsAt) > new Date();
-      const trialDaysRemaining = trialEndsAt
-        ? Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-        : null;
-      const trialType = (profile?.trial_type as "standard" | "beta") || null;
+        // Trial calculations
+        const trialEndsAt = profile?.trial_ends_at || null;
+        const trialActive = !!trialEndsAt && new Date(trialEndsAt) > new Date();
+        const trialDaysRemaining = trialEndsAt
+          ? Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+          : null;
+        const trialType = (profile?.trial_type as "standard" | "beta") || null;
 
-      setState({
-        loading: false,
-        isPremium: hasPaidAccess || trialActive,
-        tier,
-        freeCurrent: profile?.free_current || null,
-        status: sub?.status || null,
-        cancelAtPeriodEnd: !!sub?.cancel_at_period_end,
-        currentPeriodEnd: sub?.current_period_end || null,
-        trialActive,
-        trialType,
-        trialEndsAt,
-        trialDaysRemaining,
-        hasPaidAccess,
-      });
+        setState({
+          loading: false,
+          isPremium: hasPaidAccess || trialActive,
+          tier,
+          freeCurrent: profile?.free_current || null,
+          status: sub?.status || null,
+          cancelAtPeriodEnd: !!sub?.cancel_at_period_end,
+          currentPeriodEnd: sub?.current_period_end || null,
+          trialActive,
+          trialType,
+          trialEndsAt,
+          trialDaysRemaining,
+          hasPaidAccess,
+        });
+      } catch (err) {
+        // Never leave the gate stuck on loading if a query fails.
+        console.error("useSubscription load failed", err);
+        if (!cancelled) setState((s) => ({ ...s, loading: false }));
+      }
     }
 
     load();
