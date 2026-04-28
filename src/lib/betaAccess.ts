@@ -10,6 +10,17 @@ export const BETA_TESTER_FLAG_KEY = 'iw_beta_tester_v1';
 export const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN'];
 export const OWNER_PASSWORDS = ['OWNER-IW-2026', 'innerwake-owner-2026'];
 
+const normalizePastedSecret = (value: string): string =>
+  value
+    .trim()
+    .replace(/[\u2010-\u2015\u2212]/g, '-')
+    .replace(/\s+/g, '');
+
+export function isOwnerPassword(value: string): boolean {
+  const normalized = normalizePastedSecret(value);
+  return OWNER_PASSWORDS.some((password) => normalizePastedSecret(password) === normalized);
+}
+
 /** Marks the current device as having entered via a real beta code.
  *  Used after signup to grant a 90-day trial via grant_beta_trial(). */
 export function markBetaTester(): void {
