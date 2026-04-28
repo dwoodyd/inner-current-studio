@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, KeyRound, Lock, ShieldCheck } from 'lucide-react';
 import innerWakeIcon from '@/assets/inner-wake-icon.svg';
 import {
-  OWNER_PASSWORDS,
+  isOwnerPassword,
   unlockOwnerSession,
   isGateUnlocked,
 } from '@/lib/betaAccess';
@@ -21,7 +21,7 @@ export default function OwnerAccess() {
     const params = new URLSearchParams(window.location.search);
     const owner = (params.get('owner') ?? '').trim();
     const rememberParam = params.get('remember') === '1';
-    if (owner && OWNER_PASSWORDS.includes(owner)) {
+    if (owner && isOwnerPassword(owner)) {
       unlockOwnerSession({ persist: rememberParam });
       setUnlocked(true);
       setTimeout(() => navigate('/', { replace: true }), 400);
@@ -32,7 +32,7 @@ export default function OwnerAccess() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!OWNER_PASSWORDS.includes(pw.trim())) {
+    if (!isOwnerPassword(pw)) {
       setError('Incorrect password.');
       return;
     }
