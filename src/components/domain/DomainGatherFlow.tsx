@@ -191,7 +191,39 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
       )}
 
       {tab === 'play' && (
-        <div className="space-y-8 pt-6 text-center">
+        <div className="space-y-6 pt-6 text-center">
+          {/* Duration / meditation length picker */}
+          <div className="space-y-2">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center justify-center gap-1.5">
+              <Timer size={11} strokeWidth={1.5} /> Meditation length
+            </p>
+            <div className="flex bg-muted/20 rounded-full p-1">
+              {DURATIONS.map(d => {
+                const active = durationMin === d.value;
+                return (
+                  <button
+                    key={d.value}
+                    onClick={() => {
+                      setDurationMin(d.value);
+                      // Reset countdown if currently playing
+                      if (playing) setRemainingSec(d.value > 0 ? d.value * 60 : 0);
+                      else setRemainingSec(0);
+                    }}
+                    className={`flex-1 py-1.5 rounded-full text-xs transition ${active ? 'bg-background text-foreground shadow' : 'text-muted-foreground'}`}
+                  >
+                    {d.value === 0 ? <InfinityIcon size={14} className="mx-auto" /> : d.label}
+                  </button>
+                );
+              })}
+            </div>
+            {durationMin > 0 && playing && (
+              <p className={`text-xs font-mono ${domain.accentClass}`}>{formatTime(remainingSec)} remaining</p>
+            )}
+            {durationMin > 0 && !playing && remainingSec > 0 && (
+              <p className="text-xs text-muted-foreground font-mono">{formatTime(remainingSec)} paused</p>
+            )}
+          </div>
+
           {playLines.length === 0 ? (
             <p className="text-sm text-muted-foreground py-12">Pick a sequence from the library to begin.</p>
           ) : (
@@ -202,10 +234,10 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
                     className="font-heading text-2xl text-foreground leading-relaxed px-4">{playLines[idx]}</motion.p>
                 </AnimatePresence>
               </div>
-              <p className="text-xs text-muted-foreground">{idx + 1} / {playLines.length}</p>
+              <p className="text-xs text-muted-foreground">{idx + 1} / {playLines.length} · looping</p>
               <div className="flex items-center justify-center gap-3">
                 <button onClick={() => setIdx(i => (i - 1 + playLines.length) % playLines.length)} className="soul-card p-3 rounded-full"><ChevronLeft size={20} className="text-muted-foreground" /></button>
-                <button onClick={() => setPlaying(p => !p)} className="soul-glass-elevated p-5 rounded-full">
+                <button onClick={togglePlay} className="soul-glass-elevated p-5 rounded-full">
                   {playing ? <Pause size={22} className={domain.accentClass} /> : <Play size={22} className={domain.accentClass} />}
                 </button>
                 <button onClick={() => setIdx(i => (i + 1) % playLines.length)} className="soul-card p-3 rounded-full"><ChevronRight size={20} className="text-muted-foreground" /></button>
