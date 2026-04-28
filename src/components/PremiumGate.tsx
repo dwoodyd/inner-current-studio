@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Sparkles } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useAppState } from '@/lib/AppContext';
 
 interface PremiumGateProps {
   children: ReactNode;
@@ -11,8 +12,12 @@ interface PremiumGateProps {
 
 export function PremiumGate({ children, domain, feature = 'this practice' }: PremiumGateProps) {
   const navigate = useNavigate();
+  const { state } = useAppState();
   const { loading, isPremium, freeCurrent } = useSubscription();
   const hasFreeCurrentAccess = domain && freeCurrent === domain;
+  const hasLocalFreeCurrentAccess = domain && state.onboarding.freeCurrent === domain;
+
+  if (isPremium || hasFreeCurrentAccess || hasLocalFreeCurrentAccess) return <>{children}</>;
 
   if (loading) {
     return (
@@ -21,8 +26,6 @@ export function PremiumGate({ children, domain, feature = 'this practice' }: Pre
       </div>
     );
   }
-
-  if (isPremium || hasFreeCurrentAccess) return <>{children}</>;
 
   return (
     <div className="mx-auto flex min-h-[70dvh] max-w-md flex-col items-center justify-center px-5 text-center safe-top">
