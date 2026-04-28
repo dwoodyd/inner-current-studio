@@ -22,6 +22,7 @@ export default function AppShell() {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background safe-x">
       <PaymentTestModeBanner />
+      <TrialCountdownBanner />
       <OfflineBanner />
       {!hideBottomNav && (
         <Link
