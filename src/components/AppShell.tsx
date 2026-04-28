@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import BottomNav from './BottomNav';
 import OfflineBanner from './OfflineBanner';
 import { PaymentTestModeBanner } from './PaymentTestModeBanner';
+import { TrialCountdownBanner } from './TrialCountdownBanner';
 import { useAppState } from '@/lib/AppContext';
 
 const pageVariants = {
