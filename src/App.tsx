@@ -138,6 +138,7 @@ function AppRoutes() {
   const { user, loading } = useAuth();
   const location = useLocation();
   const { state } = useAppState();
+  useBetaTrialClaimer();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
 
