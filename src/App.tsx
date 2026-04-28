@@ -10,6 +10,7 @@ import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotic
 import { PremiumGate } from "@/components/PremiumGate";
 import { BetaAccessGate } from "@/components/BetaAccessGate";
 import { useAppState } from "@/lib/AppContext";
+import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
