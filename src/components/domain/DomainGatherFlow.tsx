@@ -35,8 +35,13 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
   };
   useEffect(() => { load(); }, [user, domain.key]);
 
-  useEffect(() => () => { if (tickRef.current) window.clearInterval(tickRef.current); window.speechSynthesis?.cancel(); }, []);
+  useEffect(() => () => {
+    if (tickRef.current) window.clearInterval(tickRef.current);
+    if (countdownRef.current) window.clearInterval(countdownRef.current);
+    window.speechSynthesis?.cancel();
+  }, []);
 
+  // Line advancement loop
   useEffect(() => {
     if (!playing || playLines.length === 0) return;
     tickRef.current = window.setInterval(() => {
@@ -52,6 +57,26 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
     return () => { if (tickRef.current) window.clearInterval(tickRef.current); };
   }, [playing, playLines, voice]);
 
+  // Countdown for timed meditation sessions
+  useEffect(() => {
+    if (!playing || durationMin === 0) {
+      if (countdownRef.current) window.clearInterval(countdownRef.current);
+      return;
+    }
+    countdownRef.current = window.setInterval(() => {
+      setRemainingSec(s => {
+        if (s <= 1) {
+          setPlaying(false);
+          window.speechSynthesis?.cancel();
+          toast.success('Meditation complete');
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => { if (countdownRef.current) window.clearInterval(countdownRef.current); };
+  }, [playing, durationMin]);
+
   const save = async () => {
     if (!user || lines.length === 0) return;
     const { error } = await supabase.from('gathered_sequences').insert({
@@ -64,9 +89,37 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
     setTitle(''); setLines([]); setTab('library'); load();
   };
 
-  const startPlay = (ls: string[]) => { setPlayLines(ls); setIdx(0); setPlaying(true); setTab('play');
+  const startPlay = (ls: string[]) => {
+    setPlayLines(ls); setIdx(0); setPlaying(true); setTab('play');
+    setRemainingSec(durationMin > 0 ? durationMin * 60 : 0);
     if (voice && ls[0]) { const u = new SpeechSynthesisUtterance(ls[0]); u.rate = 0.9; window.speechSynthesis.speak(u); }
   };
+
+  const togglePlay = () => {
+    setPlaying(p => {
+      const next = !p;
+      if (!next) window.speechSynthesis?.cancel();
+      // If resuming after a timed session ended, restart the timer
+      if (next && durationMin > 0 && remainingSec === 0) {
+        setRemainingSec(durationMin * 60);
+      }
+      return next;
+    });
+  };
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  const DURATIONS: { label: string; value: number }[] = [
+    { label: '∞', value: 0 },
+    { label: '5m', value: 5 },
+    { label: '15m', value: 15 },
+    { label: '30m', value: 30 },
+    { label: '1h', value: 60 },
+  ];
 
   return (
     <div className="relative mx-auto max-w-lg px-4 pt-12 pb-8 space-y-5 safe-top min-h-[100dvh]">
