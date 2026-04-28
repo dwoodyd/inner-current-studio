@@ -52,6 +52,7 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
       return;
     }
     unlockBetaSession();
+    markBetaTester();
     setUnlocked(true);
   };
 
