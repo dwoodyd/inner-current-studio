@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash2, Play, Pause, ChevronLeft, ChevronRight, Save } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Play, Pause, ChevronLeft, ChevronRight, Save, Timer, Infinity as InfinityIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -21,7 +21,11 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [voice, setVoice] = useState(true);
+  // Duration in minutes; 0 = infinite (loop forever)
+  const [durationMin, setDurationMin] = useState<number>(0);
+  const [remainingSec, setRemainingSec] = useState<number>(0);
   const tickRef = useRef<number | null>(null);
+  const countdownRef = useRef<number | null>(null);
 
   const load = async () => {
     if (!user) return;
@@ -31,8 +35,13 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
   };
   useEffect(() => { load(); }, [user, domain.key]);
 
-  useEffect(() => () => { if (tickRef.current) window.clearInterval(tickRef.current); window.speechSynthesis?.cancel(); }, []);
+  useEffect(() => () => {
+    if (tickRef.current) window.clearInterval(tickRef.current);
+    if (countdownRef.current) window.clearInterval(countdownRef.current);
+    window.speechSynthesis?.cancel();
+  }, []);
 
+  // Line advancement loop
   useEffect(() => {
     if (!playing || playLines.length === 0) return;
     tickRef.current = window.setInterval(() => {
@@ -48,6 +57,26 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
     return () => { if (tickRef.current) window.clearInterval(tickRef.current); };
   }, [playing, playLines, voice]);
 
+  // Countdown for timed meditation sessions
+  useEffect(() => {
+    if (!playing || durationMin === 0) {
+      if (countdownRef.current) window.clearInterval(countdownRef.current);
+      return;
+    }
+    countdownRef.current = window.setInterval(() => {
+      setRemainingSec(s => {
+        if (s <= 1) {
+          setPlaying(false);
+          window.speechSynthesis?.cancel();
+          toast.success('Meditation complete');
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => { if (countdownRef.current) window.clearInterval(countdownRef.current); };
+  }, [playing, durationMin]);
+
   const save = async () => {
     if (!user || lines.length === 0) return;
     const { error } = await supabase.from('gathered_sequences').insert({
@@ -60,9 +89,37 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
     setTitle(''); setLines([]); setTab('library'); load();
   };
 
-  const startPlay = (ls: string[]) => { setPlayLines(ls); setIdx(0); setPlaying(true); setTab('play');
+  const startPlay = (ls: string[]) => {
+    setPlayLines(ls); setIdx(0); setPlaying(true); setTab('play');
+    setRemainingSec(durationMin > 0 ? durationMin * 60 : 0);
     if (voice && ls[0]) { const u = new SpeechSynthesisUtterance(ls[0]); u.rate = 0.9; window.speechSynthesis.speak(u); }
   };
+
+  const togglePlay = () => {
+    setPlaying(p => {
+      const next = !p;
+      if (!next) window.speechSynthesis?.cancel();
+      // If resuming after a timed session ended, restart the timer
+      if (next && durationMin > 0 && remainingSec === 0) {
+        setRemainingSec(durationMin * 60);
+      }
+      return next;
+    });
+  };
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  const DURATIONS: { label: string; value: number }[] = [
+    { label: '∞', value: 0 },
+    { label: '5m', value: 5 },
+    { label: '15m', value: 15 },
+    { label: '30m', value: 30 },
+    { label: '1h', value: 60 },
+  ];
 
   return (
     <div className="relative mx-auto max-w-lg px-4 pt-12 pb-8 space-y-5 safe-top min-h-[100dvh]">
@@ -134,7 +191,39 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
       )}
 
       {tab === 'play' && (
-        <div className="space-y-8 pt-6 text-center">
+        <div className="space-y-6 pt-6 text-center">
+          {/* Duration / meditation length picker */}
+          <div className="space-y-2">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center justify-center gap-1.5">
+              <Timer size={11} strokeWidth={1.5} /> Meditation length
+            </p>
+            <div className="flex bg-muted/20 rounded-full p-1">
+              {DURATIONS.map(d => {
+                const active = durationMin === d.value;
+                return (
+                  <button
+                    key={d.value}
+                    onClick={() => {
+                      setDurationMin(d.value);
+                      // Reset countdown if currently playing
+                      if (playing) setRemainingSec(d.value > 0 ? d.value * 60 : 0);
+                      else setRemainingSec(0);
+                    }}
+                    className={`flex-1 py-1.5 rounded-full text-xs transition ${active ? 'bg-background text-foreground shadow' : 'text-muted-foreground'}`}
+                  >
+                    {d.value === 0 ? <InfinityIcon size={14} className="mx-auto" /> : d.label}
+                  </button>
+                );
+              })}
+            </div>
+            {durationMin > 0 && playing && (
+              <p className={`text-xs font-mono ${domain.accentClass}`}>{formatTime(remainingSec)} remaining</p>
+            )}
+            {durationMin > 0 && !playing && remainingSec > 0 && (
+              <p className="text-xs text-muted-foreground font-mono">{formatTime(remainingSec)} paused</p>
+            )}
+          </div>
+
           {playLines.length === 0 ? (
             <p className="text-sm text-muted-foreground py-12">Pick a sequence from the library to begin.</p>
           ) : (
@@ -145,10 +234,10 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
                     className="font-heading text-2xl text-foreground leading-relaxed px-4">{playLines[idx]}</motion.p>
                 </AnimatePresence>
               </div>
-              <p className="text-xs text-muted-foreground">{idx + 1} / {playLines.length}</p>
+              <p className="text-xs text-muted-foreground">{idx + 1} / {playLines.length} · looping</p>
               <div className="flex items-center justify-center gap-3">
                 <button onClick={() => setIdx(i => (i - 1 + playLines.length) % playLines.length)} className="soul-card p-3 rounded-full"><ChevronLeft size={20} className="text-muted-foreground" /></button>
-                <button onClick={() => setPlaying(p => !p)} className="soul-glass-elevated p-5 rounded-full">
+                <button onClick={togglePlay} className="soul-glass-elevated p-5 rounded-full">
                   {playing ? <Pause size={22} className={domain.accentClass} /> : <Play size={22} className={domain.accentClass} />}
                 </button>
                 <button onClick={() => setIdx(i => (i + 1) % playLines.length)} className="soul-card p-3 rounded-full"><ChevronRight size={20} className="text-muted-foreground" /></button>
