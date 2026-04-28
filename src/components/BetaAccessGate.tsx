@@ -9,6 +9,7 @@ import {
   isGateUnlocked,
   unlockBetaSession,
   unlockOwnerSession,
+  markBetaTester,
 } from '@/lib/betaAccess';
 
 interface BetaAccessGateProps {
