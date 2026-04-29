@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { startNotificationScheduler } from "./lib/notifications";
-import { registerServiceWorker } from "./lib/push";
+
 
 createRoot(document.getElementById("root")!).render(<App />);
 
