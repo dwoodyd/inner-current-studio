@@ -214,9 +214,10 @@ function AppRoutes() {
   }
 
   return (
-    <Suspense fallback={<RouteLoader />}><Routes>
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route element={<AppShell />}>
+    <RouteErrorBoundary resetKey={location.pathname}>
+      <Suspense fallback={<RouteLoader />}><Routes>
+        <Route path="/onboarding" element={<Onboarding />} />
+        <Route element={<AppShell />}>
         <Route path="/" element={<Home />} />
         <Route path="/align" element={<Align />} />
         <Route path="/align/wheel" element={<AlignmentWheel />} />
@@ -320,8 +321,9 @@ function AppRoutes() {
       <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/beta" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes></Suspense>
+        <Route path="*" element={<NotFound />} />
+      </Routes></Suspense>
+    </RouteErrorBoundary>
   );
 }
 
