@@ -9,17 +9,6 @@ createRoot(document.getElementById("root")!).render(<App />);
 // Start notification scheduler if enabled
 startNotificationScheduler();
 
-const isPreviewHost =
-  window.location.hostname.includes("id-preview--") ||
-  window.location.hostname.includes("lovableproject.com");
-
-const isInIframe = (() => {
-  try {
-    return window.self !== window.top;
-  } catch {
-    return true;
-  }
-})();
 
 // Always unregister any existing service worker + nuke caches.
 // The previous SW cached JS chunks aggressively and broke navigation after
