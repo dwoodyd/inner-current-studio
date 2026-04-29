@@ -1,16 +1,9 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
 import BottomNav from './BottomNav';
 import OfflineBanner from './OfflineBanner';
 import { PaymentTestModeBanner } from './PaymentTestModeBanner';
 import { TrialCountdownBanner } from './TrialCountdownBanner';
 import { useAppState } from '@/lib/AppContext';
-
-const pageVariants = {
-  initial: { opacity: 0, y: 6, willChange: 'transform, opacity' as const },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
-  exit: { opacity: 0, y: -4, transition: { duration: 0.15 } },
-};
 
 export default function AppShell() {
   const location = useLocation();
@@ -34,17 +27,7 @@ export default function AppShell() {
         </Link>
       )}
       <main className={`flex-1 overflow-y-auto ${hideBottomNav ? 'pb-0' : 'pb-32'}`}>
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={location.pathname}
-            variants={pageVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <Outlet />
-          </motion.div>
-        </AnimatePresence>
+        <Outlet />
       </main>
       {!hideBottomNav && <BottomNav />}
     </div>
