@@ -1,5 +1,5 @@
 // Inner Wake — Push notification + core ritual offline service worker
-const CORE_CACHE = 'innerwake-core-v2';
+const CORE_CACHE = 'innerwake-core-v3';
 const CORE_ROUTES = [
   '/',
   '/align',
@@ -52,11 +52,13 @@ self.addEventListener('fetch', (event) => {
 
   if (url.pathname.startsWith('/assets/') || url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
     event.respondWith(
-      caches.match(request).then((cached) => cached || fetch(request).then((response) => {
-        const copy = response.clone();
-        caches.open(CORE_CACHE).then((cache) => cache.put(request, copy));
-        return response;
-      }))
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CORE_CACHE).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request))
     );
   }
 });
