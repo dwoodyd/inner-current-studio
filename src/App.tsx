@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { AppProvider } from "@/lib/AppContext";
-import { lazy, Suspense } from "react";
+import { Component, lazy, Suspense, type ErrorInfo, type ReactNode } from "react";
 import AppShell from "@/components/AppShell";
 import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotice";
 import { PremiumGate } from "@/components/PremiumGate";
@@ -124,6 +124,47 @@ const MoneyScriptDetail = lazy(() => import("@/pages/domain/DomainPages").then((
 
 const queryClient = new QueryClient();
 
+class RouteErrorBoundary extends Component<
+  { children: ReactNode; resetKey: string },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('Route render failed', error, info);
+  }
+
+  componentDidUpdate(prevProps: { resetKey: string }) {
+    if (this.state.hasError && prevProps.resetKey !== this.props.resetKey) {
+      this.setState({ hasError: false });
+    }
+  }
+
+  render() {
+    if (!this.state.hasError) return this.props.children;
+
+    return (
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-5 text-center text-foreground">
+        <h1 className="font-heading text-3xl font-semibold">This Current needs a refresh</h1>
+        <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
+          The app updated while this page was cached. Refresh once and it will reopen cleanly.
+        </p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="mt-7 min-h-[48px] rounded-2xl bg-primary px-6 text-sm font-medium text-primary-foreground"
+        >
+          Refresh app
+        </button>
+      </div>
+    );
+  }
+}
+
 function RouteLoader() {
   return (
     <div className="flex min-h-[50dvh] items-center justify-center bg-background">
@@ -173,9 +214,10 @@ function AppRoutes() {
   }
 
   return (
-    <Suspense fallback={<RouteLoader />}><Routes>
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route element={<AppShell />}>
+    <RouteErrorBoundary resetKey={location.pathname}>
+      <Suspense fallback={<RouteLoader />}><Routes>
+        <Route path="/onboarding" element={<Onboarding />} />
+        <Route element={<AppShell />}>
         <Route path="/" element={<Home />} />
         <Route path="/align" element={<Align />} />
         <Route path="/align/wheel" element={<AlignmentWheel />} />
@@ -279,8 +321,9 @@ function AppRoutes() {
       <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/beta" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes></Suspense>
+        <Route path="*" element={<NotFound />} />
+      </Routes></Suspense>
+    </RouteErrorBoundary>
   );
 }
 
