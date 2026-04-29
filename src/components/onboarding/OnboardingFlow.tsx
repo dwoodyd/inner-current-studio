@@ -412,12 +412,11 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
               chosenCurrent={current?.name || ""}
               onContinueFree={() => {
                 finishOnboarding();
-                onSkipPaywall();
-                navigate(`/${chosenCurrent}`);
+                navigate(`/${chosenCurrent || ""}`, { replace: true });
               }}
               onPurchased={() => {
                 finishOnboarding();
-                navigate(`/${chosenCurrent || ""}`);
+                navigate(`/${chosenCurrent || ""}`, { replace: true });
               }}
             />
           </motion.div>
