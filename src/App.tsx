@@ -51,6 +51,7 @@ const About = lazy(() => import("@/pages/About"));
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
 const Privacy = lazy(() => import("@/pages/Privacy"));
 const Terms = lazy(() => import("@/pages/Terms"));
+const Refund = lazy(() => import("@/pages/Refund"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -203,6 +204,7 @@ function AppRoutes() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/refund" element={<Refund />} />
         <Route path="*" element={<Navigate to="/welcome" replace />} />
       </Routes>
     </Suspense>
