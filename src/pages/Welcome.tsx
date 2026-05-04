@@ -401,6 +401,7 @@ export default function Welcome() {
             </button>
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
             <Link to="/terms" className="hover:text-foreground">Terms</Link>
+            <Link to="/refund" className="hover:text-foreground">Refunds</Link>
             <Link to="/auth" className="hover:text-foreground">Sign in</Link>
           </div>
         </footer>

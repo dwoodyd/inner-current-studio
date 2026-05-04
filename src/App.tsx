@@ -254,6 +254,9 @@ function AppRoutes() {
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/about" element={<About />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/refund" element={<Refund />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/money" element={current('money', <MoneyCurrent />)} />
         <Route path="/money/state" element={current('money', <MoneyState />)} />
