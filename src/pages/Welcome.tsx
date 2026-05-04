@@ -371,6 +371,48 @@ export default function Welcome() {
           ))}
         </section>
 
+        {/* Pricing */}
+        <section id="pricing" className="mt-28">
+          <div className="text-center">
+            <h2 className="font-serif text-3xl md:text-4xl">Simple, honest pricing.</h2>
+            <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+              Begin with a free trial. Choose what fits when you're ready. 30-day money-back guarantee on every plan.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {[
+              { name: 'Monthly', price: '$7', period: '/ month', tagline: 'Practice at your own pace. Cancel anytime.' },
+              { name: 'Yearly', price: '$49', period: '/ year', tagline: 'Save 42%. About $4.08 / month.', highlight: true },
+              { name: 'Lifetime', price: '$149', period: 'one time', tagline: 'Pay once. Inner Wake is yours forever.' },
+            ].map((tier) => (
+              <div
+                key={tier.name}
+                className={`rounded-2xl border bg-card/40 p-6 backdrop-blur ${tier.highlight ? 'border-soul-gold/60 shadow-[0_0_40px_-10px_hsl(42_65%_58%/0.3)]' : 'border-border/60'}`}
+              >
+                {tier.highlight && (
+                  <div className="mb-3 inline-block rounded-full bg-soul-gold/15 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-soul-gold">
+                    Most chosen
+                  </div>
+                )}
+                <h3 className="font-serif text-xl">{tier.name}</h3>
+                <div className="mt-3 flex items-baseline gap-1.5">
+                  <span className="font-serif text-4xl text-foreground">{tier.price}</span>
+                  <span className="text-sm text-muted-foreground">{tier.period}</span>
+                </div>
+                <p className="mt-3 text-sm text-muted-foreground">{tier.tagline}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-8 text-center text-xs text-muted-foreground">
+            Prices in USD. All plans include all five Currents, AI Current Guide, and full ritual library.
+            Billing handled securely by our reseller, Paddle. See our{' '}
+            <Link to="/refund" className="underline hover:text-foreground">refund policy</Link> and{' '}
+            <Link to="/terms" className="underline hover:text-foreground">terms</Link>.
+          </p>
+        </section>
+
         {/* Final CTA */}
         <section className="mt-28 rounded-3xl border border-border/60 bg-card/40 p-10 text-center backdrop-blur md:p-16">
           <h2 className="font-serif text-3xl md:text-5xl">
@@ -401,6 +443,7 @@ export default function Welcome() {
             </button>
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
             <Link to="/terms" className="hover:text-foreground">Terms</Link>
+            <Link to="/refund" className="hover:text-foreground">Refunds</Link>
             <Link to="/auth" className="hover:text-foreground">Sign in</Link>
           </div>
         </footer>
