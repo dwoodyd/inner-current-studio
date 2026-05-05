@@ -5,8 +5,9 @@ import { ArrowLeft, Play, Pause, RotateCcw, Timer, Hash, Volume2, VolumeX } from
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { speakText, stopSpeech } from '@/lib/sounds';
+import { ALL_WEALTH_AFFIRMATIONS } from '@/lib/wealthAffirmations';
 
-const AFFIRMATIONS = [
+const BASE_AFFIRMATIONS = [
   "I am wealthy and abundant right now.",
   "Money flows to me easily and effortlessly.",
   "I am grateful for the abundance I already have.",
@@ -77,6 +78,12 @@ const AFFIRMATIONS = [
   "I stopped asking if I can have it, I know it is mine.",
   "I am someone who already has $10K, $50K, $100K, $1M and more.",
 ];
+
+// Merge curated wealth library with the original base set, deduped.
+const AFFIRMATIONS: string[] = Array.from(new Set([
+  ...BASE_AFFIRMATIONS,
+  ...ALL_WEALTH_AFFIRMATIONS,
+]));
 
 const DURATIONS = [
   { label: '2 min', seconds: 120 },
