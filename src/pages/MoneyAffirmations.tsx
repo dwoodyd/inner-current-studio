@@ -5,8 +5,9 @@ import { ArrowLeft, Play, Pause, RotateCcw, Timer, Hash, Volume2, VolumeX } from
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { speakText, stopSpeech } from '@/lib/sounds';
+import { ALL_WEALTH_AFFIRMATIONS } from '@/lib/wealthAffirmations';
 
-const AFFIRMATIONS = [
+const BASE_AFFIRMATIONS = [
   "I am wealthy and abundant right now.",
   "Money flows to me easily and effortlessly.",
   "I am grateful for the abundance I already have.",
