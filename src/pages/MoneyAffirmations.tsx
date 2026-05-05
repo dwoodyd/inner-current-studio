@@ -79,6 +79,12 @@ const BASE_AFFIRMATIONS = [
   "I am someone who already has $10K, $50K, $100K, $1M and more.",
 ];
 
+// Merge curated wealth library with the original base set, deduped.
+const AFFIRMATIONS: string[] = Array.from(new Set([
+  ...BASE_AFFIRMATIONS,
+  ...ALL_WEALTH_AFFIRMATIONS,
+]));
+
 const DURATIONS = [
   { label: '2 min', seconds: 120 },
   { label: '5 min', seconds: 300 },
