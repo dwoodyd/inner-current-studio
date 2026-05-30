@@ -2,9 +2,14 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { ALL_DOMAIN_KEYS, DOMAINS } from '@/lib/domains';
+import { useSubscription } from '@/hooks/useSubscription';
+import { useAppState } from '@/lib/AppContext';
 
 export default function CurrentsHub() {
   const navigate = useNavigate();
+  const { isPremium, freeCurrent } = useSubscription();
+  const { state } = useAppState();
+  const localFree = state.onboarding.freeCurrent;
 
   return (
     <div className="relative">
@@ -26,14 +31,32 @@ export default function CurrentsHub() {
         <div className="space-y-3">
           {ALL_DOMAIN_KEYS.map((key, i) => {
             const d = DOMAINS[key];
+            const isOpen = isPremium || freeCurrent === key || localFree === key;
+            const isActiveFocus = !isPremium && (freeCurrent === key || localFree === key);
+            const badge = isPremium
+              ? null
+              : isActiveFocus
+                ? { label: 'Active focus', tone: 'active' as const }
+                : { label: 'Premium', tone: 'locked' as const };
             return (
               <motion.button key={key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
                 onClick={() => navigate(d.route)}
-                className="group flex min-h-[68px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:min-h-[80px] sm:gap-4 sm:p-5">
+                className={`group flex min-h-[68px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:min-h-[80px] sm:gap-4 sm:p-5 ${!isOpen ? 'opacity-70' : ''}`}>
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-xl sm:h-14 sm:w-14 sm:text-2xl"
                   style={{ background: d.gradient }}>{d.emoji}</div>
                 <div className="flex-1 space-y-1">
-                  <h3 className="font-heading text-lg font-medium text-foreground tracking-tight">{d.label}</h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-heading text-lg font-medium text-foreground tracking-tight">{d.label}</h3>
+                    {badge && (
+                      <span className={`rounded-full px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] font-medium ${
+                        badge.tone === 'active'
+                          ? 'border border-primary/25 bg-primary/10 text-primary'
+                          : 'border border-border/30 bg-muted/40 text-muted-foreground'
+                      }`}>
+                        {badge.label}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{d.tagline}</p>
                 </div>
                 <ChevronRight size={16} className="text-muted-foreground/30 shrink-0 group-hover:text-muted-foreground/60 transition-colors" />
@@ -45,3 +68,4 @@ export default function CurrentsHub() {
     </div>
   );
 }
+

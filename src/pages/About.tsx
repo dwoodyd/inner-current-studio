@@ -170,6 +170,50 @@ export default function About() {
           </p>
         </motion.div>
 
+        {/* Companion Book */}
+        <motion.div
+          variants={fadeUp}
+          className="soul-glass-elevated rounded-2xl px-6 py-6 space-y-3"
+        >
+          <p className="text-[11px] uppercase tracking-[0.22em] text-primary/70">The Companion Book</p>
+          <h2 className="font-heading text-xl text-foreground">Before the Words</h2>
+          <p className="text-xs text-muted-foreground/70 italic">by DeWayne Woods</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            A practice guide for the territory Inner Wake lives in — the quiet before speech,
+            the awareness underneath action, the still place from which everything else moves.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Inner Wake gives you the practice. <em>Before the Words</em> gives you the philosophy.
+            They were made together.
+          </p>
+        </motion.div>
+
+        {/* Soul Engineer Ecosystem */}
+        <motion.div
+          variants={fadeUp}
+          className="soul-glass rounded-2xl px-6 py-6 space-y-3"
+        >
+          <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/70">
+            Part of the Soul Engineer ecosystem
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Inner Wake is one of several apps in the Soul Engineer ecosystem, each built around a
+            single practice. Continuary holds your work and continuity. Lifewoven weaves the daily
+            life. Inner Wake wakes the inner current. They’re separate apps — use one or use all —
+            but they’re built by the same hands with the same belief: that you are not broken, and
+            that small daily returns hold more power than effort.
+          </p>
+          <a
+            href="https://soulengineer.online"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors pt-1"
+          >
+            See the full ecosystem
+            <span aria-hidden>→</span>
+          </a>
+        </motion.div>
+
         {/* Version & credits */}
         <motion.div variants={fadeUp} className="text-center space-y-3 pt-4 pb-8">
           <p className="text-xs text-muted-foreground/50">Inner Wake v1.0</p>

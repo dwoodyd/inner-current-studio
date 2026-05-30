@@ -20,8 +20,8 @@ export default function TodayFlowCard({ flow }: TodayFlowCardProps) {
     <div className="soul-card space-y-3 p-4 sm:space-y-4 sm:p-5">
       <div className="flex items-center justify-between">
         <h3 className="font-heading text-lg font-medium text-foreground">Today's Flow</h3>
-        <span className="text-xs text-muted-foreground">
-          {flow.returnCount} reset{flow.returnCount !== 1 ? 's' : ''} today
+        <span className="text-xs text-muted-foreground font-heading italic">
+          {completed === 0 ? "You're here today" : `${completed} of ${steps.length} complete`}
         </span>
       </div>
 

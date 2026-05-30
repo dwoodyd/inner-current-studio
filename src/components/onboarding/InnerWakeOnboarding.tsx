@@ -871,6 +871,10 @@ export default function InnerWakeOnboarding({
             Inner Wake is the quiet room you return to.
             <br />
             Free to begin. Yours to keep.
+            <br />
+            <span style={{ opacity: 0.55, fontSize: "0.78em" }}>
+              Part of the Soul Engineer ecosystem · companion book <em>Before the Words</em> by DeWayne Woods.
+            </span>
           </p>
           <div
             style={{

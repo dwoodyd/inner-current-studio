@@ -45,6 +45,7 @@ const MyRituals = lazy(() => import("@/pages/MyRituals"));
 const CurrentGuide = lazy(() => import("@/pages/CurrentGuide"));
 const PatternMirror = lazy(() => import("@/pages/PatternMirror"));
 const Notifications = lazy(() => import("@/pages/Notifications"));
+const Subscription = lazy(() => import("@/pages/Subscription"));
 const Onboarding = lazy(() => import("@/pages/Onboarding"));
 const Auth = lazy(() => import("@/pages/Auth"));
 const About = lazy(() => import("@/pages/About"));
@@ -150,17 +151,25 @@ class RouteErrorBoundary extends Component<
 
     return (
       <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-5 text-center text-foreground">
-        <h1 className="font-heading text-3xl font-semibold">This Current needs a refresh</h1>
+        <h1 className="font-heading text-3xl font-semibold">This page needs a moment</h1>
         <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
-          The app updated while this page was cached. Refresh once and it will reopen cleanly.
+          Something didn’t load cleanly. Try refreshing, or return home and try again.
         </p>
-        <button
-          type="button"
-          onClick={() => window.location.reload()}
-          className="mt-7 min-h-[48px] rounded-2xl bg-primary px-6 text-sm font-medium text-primary-foreground"
-        >
-          Refresh app
-        </button>
+        <div className="mt-7 flex flex-col gap-2.5 w-full max-w-xs">
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="min-h-[48px] rounded-2xl bg-primary px-6 text-sm font-medium text-primary-foreground"
+          >
+            Refresh
+          </button>
+          <a
+            href="/"
+            className="min-h-[44px] flex items-center justify-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Return home
+          </a>
+        </div>
       </div>
     );
   }
@@ -253,6 +262,7 @@ function AppRoutes() {
         <Route path="/profile/guide" element={premium('the Current Guide', <CurrentGuide />)} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
+        <Route path="/profile/subscription" element={<Subscription />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />

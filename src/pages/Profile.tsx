@@ -57,15 +57,8 @@ export default function Profile() {
     }
   };
 
-  const handleManageSubscription = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
-      if (error || !data?.url) throw error;
-      window.open(data.url, '_blank', 'noopener,noreferrer');
-    } catch {
-      toast.error('No active billing portal is available for this account yet.');
-    }
-  };
+  // Subscription tile now routes to the dedicated /profile/subscription page,
+  // which itself offers a "View invoices & payment details" portal launcher.
 
   const hasCompanion = Boolean(state.onboarding.completed);
 
@@ -91,7 +84,7 @@ export default function Profile() {
         { icon: Bell, label: 'Notifications', description: 'Gentle reminders', to: '/profile/notifications' },
         { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
         { icon: Volume2, label: 'Audio', description: 'Sound and haptics' },
-        { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', action: handleManageSubscription },
+        { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', to: '/profile/subscription' },
         { icon: Download, label: 'Export & Backup', description: 'Save your data' },
         { icon: Info, label: 'About Inner Wake', description: 'Mission & philosophy', to: '/about' },
       ],
@@ -132,7 +125,7 @@ export default function Profile() {
               className="mx-auto"
             />
             <h2 className="mt-2 font-heading text-xl text-foreground">{state.onboarding.companionName || 'Your companion'}</h2>
-            <p className="mt-1 text-xs text-muted-foreground">Sigil evolution · {Math.round(sigilProgress * 100)}% awakened</p>
+            <p className="mt-1 text-xs text-muted-foreground font-heading italic">Your sigil is awakening · {cycleReturns} return{cycleReturns === 1 ? '' : 's'} this cycle</p>
           </motion.div>
         )}
 
@@ -210,6 +203,14 @@ export default function Profile() {
         <motion.div variants={fadeUp} className="text-center pt-2 space-y-1.5">
           <p className="text-[10px] text-muted-foreground/40 truncate">{user?.email}</p>
           <p className="text-xs text-muted-foreground/50">Inner Wake v1.0</p>
+          <a
+            href="https://soulengineer.online"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[11px] text-muted-foreground/50 hover:text-primary transition-colors min-h-[44px]"
+          >
+            An app from Soul Engineer →
+          </a>
           <div className="flex items-center justify-center gap-4 pt-1">
             <a href="/privacy" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Privacy Policy</a>
             <span className="text-[11px] text-muted-foreground/20">·</span>
