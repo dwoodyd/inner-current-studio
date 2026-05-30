@@ -144,11 +144,11 @@ async function loadCloudState(userId: string): Promise<AppState | null> {
       resetUsed: tfRes.data.reset_used,
       reflectionCompleted: tfRes.data.reflection_completed,
       momentumCompleted: tfRes.data.momentum_completed,
-      returnCount: (tfRes.data.return_count || 0) + 1,
-    } : { morningRitual: false, resetUsed: false, reflectionCompleted: false, momentumCompleted: false, returnCount: 1 };
+      returnCount: tfRes.data.return_count || 0,
+    } : { morningRitual: false, resetUsed: false, reflectionCompleted: false, momentumCompleted: false, returnCount: 0 };
 
-    // Bump return count (fire-and-forget)
-    upsertTodayFlow(userId, todayFlow);
+    // Note: returnCount intentionally not auto-incremented on cloud load.
+    // It now reflects actual ritual/reset completions only (see Audit §6).
 
     return {
       onboarding: {
