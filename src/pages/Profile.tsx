@@ -57,15 +57,8 @@ export default function Profile() {
     }
   };
 
-  const handleManageSubscription = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
-      if (error || !data?.url) throw error;
-      window.open(data.url, '_blank', 'noopener,noreferrer');
-    } catch {
-      toast.error('No active billing portal is available for this account yet.');
-    }
-  };
+  // Subscription tile now routes to the dedicated /profile/subscription page,
+  // which itself offers a "View invoices & payment details" portal launcher.
 
   const hasCompanion = Boolean(state.onboarding.completed);
 
