@@ -203,6 +203,14 @@ export default function Profile() {
         <motion.div variants={fadeUp} className="text-center pt-2 space-y-1.5">
           <p className="text-[10px] text-muted-foreground/40 truncate">{user?.email}</p>
           <p className="text-xs text-muted-foreground/50">Inner Wake v1.0</p>
+          <a
+            href="https://soulengineer.online"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[11px] text-muted-foreground/50 hover:text-primary transition-colors min-h-[44px]"
+          >
+            An app from Soul Engineer →
+          </a>
           <div className="flex items-center justify-center gap-4 pt-1">
             <a href="/privacy" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Privacy Policy</a>
             <span className="text-[11px] text-muted-foreground/20">·</span>
