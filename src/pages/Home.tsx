@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronRight, Moon, Sparkles, Sun } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 import CurrentPulse from '@/components/CurrentPulse';
 import QuickCheckIn from '@/components/QuickCheckIn';
