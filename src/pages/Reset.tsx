@@ -7,8 +7,8 @@ const tools = [
   { icon: RefreshCw, title: 'Contrast Reset', description: 'Fast, frictionless emotional redirection.', to: '/reset/contrast', color: 'text-soul-blue' },
   { icon: Shield, title: 'Resistance Release', description: 'Identify, soften, and clear resistance without forcing positivity.', to: '/reset/resistance', color: 'text-soul-gold' },
   { icon: BrainCircuit, title: 'Quiet the Mind', description: 'Tools for mental noise, thought loops, and inner overactivity.', to: '/reset/quiet', color: 'text-soul-green' },
-  { icon: Timer, title: 'Stillness Timer', description: 'Simple premium breathing and stillness ritual.', to: '/reset/stillness', color: 'text-soul-warm' },
-  { icon: Wind, title: 'Breathwork', description: 'Guided breathing exercises with voice guidance and soundscapes.', to: '/reset/breathwork', color: 'text-primary' },
+  { icon: Timer, title: 'Stillness Timer', description: 'A simple breathing and stillness ritual.', to: '/reset/stillness', color: 'text-soul-warm' },
+  { icon: Wind, title: 'Breathwork', description: 'Guided breathing patterns with optional ambient soundscapes.', to: '/reset/breathwork', color: 'text-primary' },
 ];
 
 export default function Reset() {
