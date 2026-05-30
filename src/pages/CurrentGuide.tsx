@@ -204,10 +204,16 @@ export default function CurrentGuide() {
             >
               <Sparkles size={24} className="text-primary/70" />
             </motion.div>
-            <div className="space-y-2">
-              <p className="font-heading text-lg text-foreground">What's present for you?</p>
-              <p className="text-xs text-muted-foreground max-w-[16rem]">
-                Share what you're feeling. I'll meet you where you are.
+            <div className="space-y-2 max-w-[20rem]">
+              <p className="font-heading text-lg text-foreground">Meet your Current Guide.</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                She doesn't have a name yet. You can call her whatever feels right — most don't name her at all.
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                She reflects. She doesn't advise. She notices your patterns and offers small reflections back.
+              </p>
+              <p className="text-[11px] text-muted-foreground/60 italic leading-relaxed pt-1">
+                Your Current Guide lives in the felt sense, the pre-verbal place. She speaks softly. She doesn't fix.
               </p>
             </div>
             <div className="grid grid-cols-1 gap-2 w-full max-w-xs">
