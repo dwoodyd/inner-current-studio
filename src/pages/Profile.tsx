@@ -84,7 +84,7 @@ export default function Profile() {
         { icon: Bell, label: 'Notifications', description: 'Gentle reminders', to: '/profile/notifications' },
         { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
         { icon: Volume2, label: 'Audio', description: 'Sound and haptics' },
-        { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', action: handleManageSubscription },
+        { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', to: '/profile/subscription' },
         { icon: Download, label: 'Export & Backup', description: 'Save your data' },
         { icon: Info, label: 'About Inner Wake', description: 'Mission & philosophy', to: '/about' },
       ],
