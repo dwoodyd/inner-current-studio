@@ -88,6 +88,7 @@ export default function Profile() {
         { icon: Download, label: 'Export & Backup', description: 'Save your data' },
         { icon: Info, label: 'About Inner Wake', description: 'Mission & philosophy', to: '/about' },
         { icon: Sparkles, label: 'About Soul Engineer', description: 'The ecosystem & DeWayne Woods', action: () => window.open('https://soulengineer.online', '_blank', 'noopener,noreferrer') },
+      ],
     },
     ...(isAdmin ? [{ title: 'Admin', items: [{ icon: Shield, label: 'Admin Dashboard', description: 'Users & roles', to: '/admin', accent: true }] }] : []),
   ];
