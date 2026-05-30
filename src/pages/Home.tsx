@@ -90,11 +90,21 @@ function ensureHeadLink(selector: string, attributes: Record<string, string>) {
 export default function Home() {
   const navigate = useNavigate();
   const { state, addCheckIn } = useAppState();
-  const [quickState, setQuickState] = useState<QuickState | undefined>(
-    state.checkIns.length > 0
-      ? (Object.entries(quickToEmotional).find(([, v]) => v === state.checkIns[0]?.state)?.[0] as QuickState)
-      : undefined
-  );
+
+  // Derive last persisted state from most recent check-in.
+  // Reactively syncs after cloud-state loads — no longer defaults to "flat" forever.
+  const persistedQuickState = useMemo<QuickState | undefined>(() => {
+    const last = state.checkIns[0];
+    if (!last) return undefined;
+    return Object.entries(quickToEmotional).find(([, v]) => v === last.state)?.[0] as QuickState | undefined;
+  }, [state.checkIns]);
+
+  const [quickState, setQuickState] = useState<QuickState | undefined>(persistedQuickState);
+
+  // Keep local picker in sync when cloud check-ins arrive after first render.
+  useEffect(() => {
+    if (!quickState && persistedQuickState) setQuickState(persistedQuickState);
+  }, [persistedQuickState, quickState]);
 
   const handleQuickCheckIn = (qs: QuickState) => {
     setQuickState(qs);
