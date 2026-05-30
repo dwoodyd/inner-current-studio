@@ -125,7 +125,7 @@ export default function Profile() {
               className="mx-auto"
             />
             <h2 className="mt-2 font-heading text-xl text-foreground">{state.onboarding.companionName || 'Your companion'}</h2>
-            <p className="mt-1 text-xs text-muted-foreground">Sigil evolution · {Math.round(sigilProgress * 100)}% awakened</p>
+            <p className="mt-1 text-xs text-muted-foreground font-heading italic">Your sigil is awakening · {cycleReturns} return{cycleReturns === 1 ? '' : 's'} this cycle</p>
           </motion.div>
         )}
 
