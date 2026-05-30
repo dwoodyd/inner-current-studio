@@ -254,6 +254,7 @@ function AppRoutes() {
         <Route path="/profile/guide" element={premium('the Current Guide', <CurrentGuide />)} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
+        <Route path="/profile/subscription" element={<Subscription />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
