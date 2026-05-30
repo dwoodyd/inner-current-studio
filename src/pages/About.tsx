@@ -217,8 +217,9 @@ export default function About() {
         {/* Version & credits */}
         <motion.div variants={fadeUp} className="text-center space-y-3 pt-4 pb-8">
           <p className="text-xs text-muted-foreground/50">Inner Wake v1.0</p>
-          <p className="text-[10px] text-muted-foreground/30">
-            Crafted with intention. All content is original.
+          <p className="text-[10px] text-muted-foreground/50 leading-relaxed max-w-[20rem] mx-auto">
+            Built by DeWayne Woods. Designed with intention. All content is original —
+            no borrowed mantras, no recycled affirmations. Every word is here on purpose.
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link to="/privacy" className="text-[10px] text-muted-foreground/40 hover:text-muted-foreground underline transition-colors">
