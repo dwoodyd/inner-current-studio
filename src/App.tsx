@@ -232,6 +232,8 @@ function AppRoutes() {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route element={<AppShell />}>
         <Route path="/" element={<Home />} />
+        <Route path="/ritual/morning" element={<MorningRitual />} />
+        <Route path="/ritual/evening" element={<EveningRitual />} />
         <Route path="/align" element={<Align />} />
         <Route path="/align/wheel" element={<AlignmentWheel />} />
         <Route path="/align/relief" element={<ReliefWheel />} />
