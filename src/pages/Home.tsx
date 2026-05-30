@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronRight, Moon, Sparkles, Sun } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 import CurrentPulse from '@/components/CurrentPulse';
 import QuickCheckIn from '@/components/QuickCheckIn';
@@ -90,11 +90,21 @@ function ensureHeadLink(selector: string, attributes: Record<string, string>) {
 export default function Home() {
   const navigate = useNavigate();
   const { state, addCheckIn } = useAppState();
-  const [quickState, setQuickState] = useState<QuickState | undefined>(
-    state.checkIns.length > 0
-      ? (Object.entries(quickToEmotional).find(([, v]) => v === state.checkIns[0]?.state)?.[0] as QuickState)
-      : undefined
-  );
+
+  // Derive last persisted state from most recent check-in.
+  // Reactively syncs after cloud-state loads — no longer defaults to "flat" forever.
+  const persistedQuickState = useMemo<QuickState | undefined>(() => {
+    const last = state.checkIns[0];
+    if (!last) return undefined;
+    return Object.entries(quickToEmotional).find(([, v]) => v === last.state)?.[0] as QuickState | undefined;
+  }, [state.checkIns]);
+
+  const [quickState, setQuickState] = useState<QuickState | undefined>(persistedQuickState);
+
+  // Keep local picker in sync when cloud check-ins arrive after first render.
+  useEffect(() => {
+    if (!quickState && persistedQuickState) setQuickState(persistedQuickState);
+  }, [persistedQuickState, quickState]);
 
   const handleQuickCheckIn = (qs: QuickState) => {
     setQuickState(qs);
@@ -212,6 +222,47 @@ export default function Home() {
               <ArrowRight size={18} className="mt-1 shrink-0 text-muted-foreground/40 group-hover:text-primary transition-colors" />
             </div>
           </button>
+        </motion.div>
+
+        {/* Daily Rituals — Morning Awakening & Evening Settling */}
+        <motion.div variants={fadeUp} className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="font-heading text-lg font-medium text-foreground">Daily Rituals</h2>
+            <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/50">
+              {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening'}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              {
+                to: '/ritual/morning', icon: Sun, label: 'Morning Awakening',
+                hint: 'Breath, intention, state.',
+                accent: new Date().getHours() < 12,
+                bg: 'linear-gradient(135deg, hsl(42 70% 60% / 0.10), hsl(42 60% 50% / 0.04))',
+                ring: 'border-primary/20',
+                iconClass: 'text-primary',
+              },
+              {
+                to: '/ritual/evening', icon: Moon, label: 'Evening Settling',
+                hint: 'Exhale, soften, close.',
+                accent: new Date().getHours() >= 18,
+                bg: 'linear-gradient(135deg, hsl(265 50% 55% / 0.10), hsl(265 40% 40% / 0.04))',
+                ring: 'border-soul-violet/20',
+                iconClass: 'text-soul-violet',
+              },
+            ].map(({ to, icon: Icon, label, hint, accent, bg, ring, iconClass }) => (
+              <button
+                key={to}
+                onClick={() => navigate(to)}
+                style={{ background: bg }}
+                className={`group rounded-2xl border ${ring} p-4 text-left transition-all duration-200 hover:brightness-110 active:scale-[0.98] ${accent ? 'soul-glow-gold' : ''}`}
+              >
+                <Icon size={18} className={`${iconClass} mb-2`} strokeWidth={1.5} />
+                <p className="font-heading text-sm text-foreground">{label}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{hint}</p>
+              </button>
+            ))}
+          </div>
         </motion.div>
 
         {/* Today's Flow */}

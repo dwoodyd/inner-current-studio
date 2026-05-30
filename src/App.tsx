@@ -59,6 +59,8 @@ const NotFound = lazy(() => import("@/pages/NotFound"));
 const Beta = lazy(() => import("@/pages/Beta"));
 const OwnerAccess = lazy(() => import("@/pages/OwnerAccess"));
 const MoneyCurrent = lazy(() => import("@/pages/MoneyCurrent"));
+const MorningRitual = lazy(() => import("@/pages/MorningRitual"));
+const EveningRitual = lazy(() => import("@/pages/EveningRitual"));
 const MoneyState = lazy(() => import("@/pages/MoneyState"));
 const CurrentDeposit = lazy(() => import("@/pages/CurrentDeposit"));
 const MoneyOpenings = lazy(() => import("@/pages/MoneyOpenings"));
@@ -230,6 +232,8 @@ function AppRoutes() {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route element={<AppShell />}>
         <Route path="/" element={<Home />} />
+        <Route path="/ritual/morning" element={<MorningRitual />} />
+        <Route path="/ritual/evening" element={<EveningRitual />} />
         <Route path="/align" element={<Align />} />
         <Route path="/align/wheel" element={<AlignmentWheel />} />
         <Route path="/align/relief" element={<ReliefWheel />} />

@@ -87,6 +87,7 @@ export default function Profile() {
         { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', to: '/profile/subscription' },
         { icon: Download, label: 'Export & Backup', description: 'Save your data' },
         { icon: Info, label: 'About Inner Wake', description: 'Mission & philosophy', to: '/about' },
+        { icon: Sparkles, label: 'About Soul Engineer', description: 'The ecosystem & DeWayne Woods', action: () => window.open('https://soulengineer.online', '_blank', 'noopener,noreferrer') },
       ],
     },
     ...(isAdmin ? [{ title: 'Admin', items: [{ icon: Shield, label: 'Admin Dashboard', description: 'Users & roles', to: '/admin', accent: true }] }] : []),
@@ -207,10 +208,13 @@ export default function Profile() {
             href="https://soulengineer.online"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] text-muted-foreground/50 hover:text-primary transition-colors min-h-[44px]"
+            className="inline-flex items-center gap-1 text-[11px] text-muted-foreground/60 hover:text-primary transition-colors min-h-[44px]"
           >
             An app from Soul Engineer →
           </a>
+          <p className="text-[10px] text-muted-foreground/40 leading-relaxed max-w-[18rem] mx-auto px-4">
+            Inner Wake is part of a small ecosystem of practice tools by DeWayne Woods.
+          </p>
           <div className="flex items-center justify-center gap-4 pt-1">
             <a href="/privacy" className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground underline min-h-[44px] flex items-center">Privacy Policy</a>
             <span className="text-[11px] text-muted-foreground/20">·</span>
