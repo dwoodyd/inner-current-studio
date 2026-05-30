@@ -224,6 +224,47 @@ export default function Home() {
           </button>
         </motion.div>
 
+        {/* Daily Rituals — Morning Awakening & Evening Settling */}
+        <motion.div variants={fadeUp} className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="font-heading text-lg font-medium text-foreground">Daily Rituals</h2>
+            <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/50">
+              {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening'}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              {
+                to: '/ritual/morning', icon: Sun, label: 'Morning Awakening',
+                hint: 'Breath, intention, state.',
+                accent: new Date().getHours() < 12,
+                bg: 'linear-gradient(135deg, hsl(42 70% 60% / 0.10), hsl(42 60% 50% / 0.04))',
+                ring: 'border-primary/20',
+                iconClass: 'text-primary',
+              },
+              {
+                to: '/ritual/evening', icon: Moon, label: 'Evening Settling',
+                hint: 'Exhale, soften, close.',
+                accent: new Date().getHours() >= 18,
+                bg: 'linear-gradient(135deg, hsl(265 50% 55% / 0.10), hsl(265 40% 40% / 0.04))',
+                ring: 'border-soul-violet/20',
+                iconClass: 'text-soul-violet',
+              },
+            ].map(({ to, icon: Icon, label, hint, accent, bg, ring, iconClass }) => (
+              <button
+                key={to}
+                onClick={() => navigate(to)}
+                style={{ background: bg }}
+                className={`group rounded-2xl border ${ring} p-4 text-left transition-all duration-200 hover:brightness-110 active:scale-[0.98] ${accent ? 'soul-glow-gold' : ''}`}
+              >
+                <Icon size={18} className={`${iconClass} mb-2`} strokeWidth={1.5} />
+                <p className="font-heading text-sm text-foreground">{label}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{hint}</p>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
         {/* Today's Flow */}
         <motion.div variants={fadeUp} className="soul-glass-elevated rounded-2xl p-5">
           <TodayFlowCard flow={state.todayFlow} />
