@@ -48,7 +48,7 @@ export function useSubscription(): SubscriptionState {
 
     async function load() {
       try {
-        const [{ data: sub }, { data: profile }] = await Promise.all([
+        const [{ data: sub }, { data: profile }, { data: adminRole }] = await Promise.all([
           supabase
             .from("subscriptions")
             .select("status,cancel_at_period_end,current_period_end,product_id")
@@ -60,22 +60,30 @@ export function useSubscription(): SubscriptionState {
             .select("subscription_tier,free_current,trial_ends_at,trial_type")
             .eq("user_id", user.id)
             .maybeSingle(),
+          supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", user.id)
+            .eq("role", "admin")
+            .maybeSingle(),
         ]);
 
         if (cancelled) return;
 
+        const isAdmin = !!adminRole;
         const periodStillOpen = !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
         const active =
           sub &&
           (["active", "trialing"].includes(sub.status) || (sub.status === "canceled" && periodStillOpen)) &&
           periodStillOpen;
 
-        const tier = (profile?.subscription_tier as SubscriptionState["tier"]) || "free";
-        const hasPaidAccess = !!active || tier === "lifetime" || tier === "premium";
+        const baseTier = (profile?.subscription_tier as SubscriptionState["tier"]) || "free";
+        const tier: SubscriptionState["tier"] = isAdmin ? "lifetime" : baseTier;
+        const hasPaidAccess = isAdmin || !!active || tier === "lifetime" || tier === "premium";
 
-        // Trial calculations
+        // Trial calculations — admins skip the trial UI entirely
         const trialEndsAt = profile?.trial_ends_at || null;
-        const trialActive = !!trialEndsAt && new Date(trialEndsAt) > new Date();
+        const trialActive = !isAdmin && !!trialEndsAt && new Date(trialEndsAt) > new Date();
         const trialDaysRemaining = trialEndsAt
           ? Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
           : null;
@@ -86,7 +94,7 @@ export function useSubscription(): SubscriptionState {
           isPremium: hasPaidAccess || trialActive,
           tier,
           freeCurrent: profile?.free_current || null,
-          status: sub?.status || null,
+          status: sub?.status || (isAdmin ? "owner" : null),
           cancelAtPeriodEnd: !!sub?.cancel_at_period_end,
           currentPeriodEnd: sub?.current_period_end || null,
           trialActive,
