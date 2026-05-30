@@ -45,6 +45,7 @@ const MyRituals = lazy(() => import("@/pages/MyRituals"));
 const CurrentGuide = lazy(() => import("@/pages/CurrentGuide"));
 const PatternMirror = lazy(() => import("@/pages/PatternMirror"));
 const Notifications = lazy(() => import("@/pages/Notifications"));
+const Subscription = lazy(() => import("@/pages/Subscription"));
 const Onboarding = lazy(() => import("@/pages/Onboarding"));
 const Auth = lazy(() => import("@/pages/Auth"));
 const About = lazy(() => import("@/pages/About"));
