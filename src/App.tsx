@@ -14,6 +14,7 @@ import { BetaAccessGate } from "@/components/BetaAccessGate";
 import { useAppState } from "@/lib/AppContext";
 import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
+import { useCurrentsCloudSync } from "@/hooks/useCurrentsCloudSync";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
