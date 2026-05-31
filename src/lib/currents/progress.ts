@@ -102,6 +102,23 @@ export function useCurrentProgress(slug: DomainKey) {
   return { progress, stage: stageForCount(progress.practicesCompleted), touch, recordPractice, recordSequence, landBelief };
 }
 
+// Non-hook helper for shared domain components that just need to bump
+// the practice counter from inside an async handler.
+export function recordPracticeFor(slug: DomainKey) {
+  try {
+    const raw = localStorage.getItem(KEY(slug));
+    const cur: CurrentProgress = raw ? { ...EMPTY, ...JSON.parse(raw) } : { ...EMPTY };
+    const next: CurrentProgress = {
+      ...cur,
+      practicesCompleted: cur.practicesCompleted + 1,
+      lastVisitedAt: new Date().toISOString(),
+      firstVisitedAt: cur.firstVisitedAt ?? new Date().toISOString(),
+    };
+    localStorage.setItem(KEY(slug), JSON.stringify(next));
+    window.dispatchEvent(new CustomEvent('iw:current-progress', { detail: { slug } }));
+  } catch {}
+}
+
 export function readAllProgress(): Record<DomainKey, CurrentProgress> {
   const keys: DomainKey[] = ['money', 'self', 'energy', 'relationships', 'health'];
   const out = {} as Record<DomainKey, CurrentProgress>;
