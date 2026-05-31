@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import "./hooks/useTheme"; // side-effect: apply persisted theme before first paint
 import { startNotificationScheduler } from "./lib/notifications";
 
 
