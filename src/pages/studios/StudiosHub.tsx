@@ -53,7 +53,7 @@ export default function StudiosHub() {
                     </span>
                     <div className="flex items-center gap-1">
                       {s.steps.map((st) => (
-                        <span key={st.sequenceId} className="text-[10px]">{DOMAINS[st.slug].symbol ?? '·'}</span>
+                        <span key={st.sequenceId} className="text-[10px]">{CURRENT_SPECS[st.slug].symbol}</span>
                       ))}
                       <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/60 ml-1">
                         {s.steps.length} current{s.steps.length === 1 ? '' : 's'}
