@@ -73,7 +73,7 @@ function Group({ label, tone, beliefs }: { label: string; tone: 'primary' | 'mut
         <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">{label}</p>
       </div>
       <div className="space-y-2">
-        {beliefs.map((b: any, i: number) => (
+        {beliefs.map((b, i) => (
           <motion.div
             key={b.id}
             initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
