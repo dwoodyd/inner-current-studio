@@ -56,6 +56,7 @@ const Onboarding = lazy(() => import("@/pages/Onboarding"));
 const Auth = lazy(() => import("@/pages/Auth"));
 const About = lazy(() => import("@/pages/About"));
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
+const FoundingApplications = lazy(() => import("@/pages/FoundingApplications"));
 const Privacy = lazy(() => import("@/pages/Privacy"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Refund = lazy(() => import("@/pages/Refund"));
