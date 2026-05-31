@@ -27,6 +27,8 @@ export interface StateDef {
   tagline: string;
   description: string;
   orb: string;
+  /** Looping MP4 of the living orb for this state. */
+  orbVideo: string;
   /** Soundscape id from src/lib/sounds.ts SOUND_OPTIONS — state-matched ambient. */
   soundscape: string;
 }
@@ -35,6 +37,49 @@ export const STATE_DEFS: Record<QuickState, StateDef> = {
   tight: {
     id: 'tight',
     label: 'Tight',
+    tagline: 'Contracted, holding on',
+    description: 'Contracted. Focused. Holding energy close.',
+    orb: orbTightImg,
+    orbVideo: orbTightVid,
+    soundscape: 'bowl',
+  },
+  restless: {
+    id: 'restless',
+    label: 'Restless',
+    tagline: 'Agitated, in motion',
+    description: 'Agitated. Unsettled. Energy in motion.',
+    orb: orbRestlessImg,
+    orbVideo: orbRestlessVid,
+    soundscape: 'stream',
+  },
+  flat: {
+    id: 'flat',
+    label: 'Flat',
+    tagline: 'Steady, present',
+    description: 'Steady. Even. Balanced and calm.',
+    orb: orbFlatImg,
+    orbVideo: orbFlatVid,
+    soundscape: 'drone',
+  },
+  open: {
+    id: 'open',
+    label: 'Open',
+    tagline: 'Expansive, available',
+    description: 'Expansive. Receptive. Open and available.',
+    orb: orbOpenImg,
+    orbVideo: orbOpenVid,
+    soundscape: 'wind',
+  },
+  flowing: {
+    id: 'flowing',
+    label: 'Flowing',
+    tagline: 'In flow, at ease',
+    description: 'In flow. Effortless. Aligned and at ease.',
+    orb: orbFlowingImg,
+    orbVideo: orbFlowingVid,
+    soundscape: 'ocean',
+  },
+};
     tagline: 'Contracted, holding on',
     description: 'Contracted. Focused. Holding energy close.',
     orb: orbTight,
