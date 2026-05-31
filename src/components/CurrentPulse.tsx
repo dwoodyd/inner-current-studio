@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { QuickState } from '@/lib/types';
 import { STATE_DEFS } from '@/lib/states';
+import OrbVideo from '@/components/OrbVideo';
+
 
 interface CurrentPulseProps {
   quickState?: QuickState;
@@ -65,26 +67,15 @@ const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: C
           transition={{ duration: speed, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
         />
 
-        {/* Inner orb */}
+        {/* Living orb video */}
         <motion.div
-          className={`h-20 w-20 rounded-full ${colors.inner} backdrop-blur-md sm:h-24 sm:w-24`}
-          style={{
-            background: quickState === 'flowing'
-              ? 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.6), hsl(35 70% 45% / 0.3))'
-              : quickState === 'open'
-              ? 'radial-gradient(circle at 40% 35%, hsl(265 25% 45% / 0.5), hsl(280 30% 35% / 0.2))'
-              : undefined,
-          }}
+          className="relative h-20 w-20 sm:h-24 sm:w-24"
           animate={{ scale: [1, 1.06, 1] }}
           transition={{ duration: speed, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        >
+          <OrbVideo state={quickState} size={96} className="h-full w-full" />
+        </motion.div>
 
-        {/* Center dot */}
-        <motion.div
-          className="absolute h-3 w-3 rounded-full bg-primary/70"
-          animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.9, 0.5] }}
-          transition={{ duration: speed - 1, repeat: Infinity, ease: 'easeInOut' }}
-        />
       </div>
       <motion.div
         key={quickState}
