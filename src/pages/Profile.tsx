@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppState } from '@/lib/AppContext';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
+import { useSubscription } from '@/hooks/useSubscription';
 import { supabase } from '@/integrations/supabase/client';
 import { Sigil } from '@/components/onboarding/Sigil';
 import PracticeConstellation from '@/components/PracticeConstellation';
@@ -35,6 +36,7 @@ export default function Profile() {
   const { state } = useAppState();
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdmin();
+  const { isFoundingMember, detailedTier } = useSubscription();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const totalCheckIns = state.checkIns.length;
@@ -117,6 +119,16 @@ export default function Profile() {
         <motion.div variants={fadeUp} className="text-center space-y-2">
           <h1 className="font-heading text-2xl font-semibold text-foreground">Profile</h1>
           <p className="text-sm text-muted-foreground font-heading italic">Your rhythm, not your performance</p>
+          {isFoundingMember && (
+            <button
+              type="button"
+              onClick={() => navigate('/profile/subscription')}
+              className="mx-auto mt-2 inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-primary transition-colors hover:bg-primary/15"
+            >
+              <Sparkles size={11} strokeWidth={2} />
+              Founding Member{detailedTier === 'lifetime' ? ' · Lifetime' : ''}
+            </button>
+          )}
         </motion.div>
 
         {hasCompanion && (
