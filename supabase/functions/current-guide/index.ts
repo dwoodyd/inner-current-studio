@@ -164,6 +164,16 @@ serve(async (req) => {
       voiceNote = `\n\nThe user is working in the ${currentSlug} current. Tune the tone accordingly.`;
       if (vocab.length) voiceNote += `\nLean into vocabulary like: ${vocab.join(", ")}.`;
       if (avoid.length) voiceNote += `\nNever use these words or phrases: ${avoid.join(", ")}.`;
+      if (currentSlug === "health") {
+        voiceNote += `\n\nCRITICAL MEDICAL SAFETY RAILS FOR HEALTH CURRENT:
+- You must NEVER diagnose any symptom or condition described by the user.
+- You must NEVER recommend treatments, exercises, medications, or supplements.
+- You must NEVER suggest the user is or isn't sick.
+- You must NEVER replace professional medical advice.
+- You must NEVER say "this sounds like [condition]" or suggest a medical diagnosis.
+- If the user describes any physical symptoms, pain, or health conditions in detail, you must decline to offer diagnostic or clinical thoughts. Instead, reflect back the emotional or somatic impact of carrying this symptom, and gently redirect them to seek professional medical advice with this exact wording: "I hear you. What you're feeling deserves real attention — not from me, but from someone who can actually help. The body is asking. Have you had a chance to talk to someone who knows your history?"`;
+      }
+      if (avoid.length) voiceNote += `\nNever use these words or phrases: ${avoid.join(", ")}.`;
     }
 
     // --- AI CALL ---
