@@ -1,4 +1,5 @@
 import { Heart, Sparkles, Users, Activity, Coins, type LucideIcon } from 'lucide-react';
+import { ALL_WEALTH_AFFIRMATIONS } from '@/lib/wealthAffirmations';
 
 export type DomainKey = 'self' | 'energy' | 'relationships' | 'health' | 'money';
 
