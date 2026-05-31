@@ -6,7 +6,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useAuth } from '@/hooks/useAuth';
 import { useFounderSlots } from '@/hooks/useFounderSlots';
 import { usePaddleCheckout } from '@/hooks/usePaddleCheckout';
-import { FOUNDING_PRICES } from '@/lib/pricing';
+import { FOUNDING_PRICES, RETAIL_PRICES } from '@/lib/pricing';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -62,7 +62,12 @@ export default function Subscription() {
   const inFounderWindow = sub.founderWindowActive;
   const ctaVerb = inFounderWindow ? 'Reserve' : 'Upgrade to';
 
-  const proPriceId = cadence === 'annual' ? FOUNDING_PRICES.annual : FOUNDING_PRICES.monthly;
+  // Founding rate is reserved for life for founding members + anyone still inside their founder window.
+  // Everyone else (new signups after the 100 lifetime slots fill) sees retail pricing.
+  const eligibleForFounding = sub.isFoundingMember || inFounderWindow || !slots.soldOut;
+  const proPriceId = eligibleForFounding
+    ? (cadence === 'annual' ? FOUNDING_PRICES.annual : FOUNDING_PRICES.monthly)
+    : (cadence === 'annual' ? RETAIL_PRICES.annual : RETAIL_PRICES.monthly);
   const lifetimeAvailable = !slots.soldOut || sub.detailedTier === 'lifetime';
 
   const startCheckout = async (priceId: string) => {
@@ -193,14 +198,26 @@ export default function Subscription() {
           <TierCard
             highlight
             name={cadence === 'annual' ? 'Pro Annual' : 'Pro Monthly'}
-            price={cadence === 'annual' ? '$39' : '$4.99'}
+            price={
+              eligibleForFounding
+                ? (cadence === 'annual' ? '$39' : '$4.99')
+                : (cadence === 'annual' ? '$59' : '$7.99')
+            }
             period={cadence === 'annual' ? '/yr' : '/mo'}
-            badge="Founding Rate"
-            sub={cadence === 'annual' ? '$59/yr retail · ≈ $3.25/mo' : '$7.99/mo retail'}
-            tagline="Locked for life."
+            badge={eligibleForFounding ? 'Founding Rate' : undefined}
+            sub={
+              eligibleForFounding
+                ? (cadence === 'annual' ? '$59/yr retail · ≈ $3.25/mo' : '$7.99/mo retail')
+                : (cadence === 'annual' ? '≈ $4.92/mo · save 38%' : undefined)
+            }
+            tagline={eligibleForFounding ? 'Locked for life.' : 'Full Pro access.'}
             features={PRO_FEATURES.slice(0, 6)}
             cta={`${ctaVerb} Pro ${cadence === 'annual' ? 'Annual' : 'Monthly'}`}
-            ctaNote={inFounderWindow ? 'No card now — founding rate locked for life.' : 'Founding rate locked for life.'}
+            ctaNote={
+              eligibleForFounding
+                ? (inFounderWindow ? 'No card now — founding rate locked for life.' : 'Founding rate locked for life.')
+                : 'Cancel anytime.'
+            }
             onCta={() => startCheckout(proPriceId)}
             ctaDisabled={sub.detailedTier === 'pro_annual' || sub.detailedTier === 'pro_monthly' || sub.detailedTier === 'lifetime'}
             loading={checkout.loading}

@@ -45,12 +45,14 @@ After Phase 1, the live app shows the new pricing structure and the broken route
 19. **Migration notice** — one-time toast/modal shown on next login per §10 copy.
 20. **Free tier** — default `tier='free'`, `free_current='money'`, slot count untouched.
 
-## Phase 4 — Post-beta (manual trigger when 100 slots fill)
+## Phase 4 — Post-beta retail switch ✅ shipped
 
-21. Create Paddle retail prices: `iw_pro_monthly_retail` ($7.99/mo), `iw_pro_annual_retail` ($59/yr).
-22. Pricing-page logic switches non-founding new users to retail prices.
-23. Hide the Lifetime card from non-founding users.
-24. Existing founders keep the founding-rate prices in their checkout flow forever.
+21. ✅ Created Paddle retail prices: `iw_pro_monthly_retail` ($7.99/mo), `iw_pro_annual_retail` ($59/yr).
+22. ✅ Subscription page auto-switches non-eligible users to retail prices via `eligibleForFounding` gate (founding member, founder window active, or slots still remaining → founding rate; otherwise retail).
+23. ✅ Lifetime card hides automatically once all 100 slots are claimed (existing `lifetimeAvailable` logic).
+24. ✅ Existing founding members + founder-window users keep the founding-rate price IDs forever.
+
+**Manual trigger when 100 slots fill**: update `handle_new_user` trigger to default `is_founding_member=false` and remove the auto-90-day founder window so new signups land on retail. Existing rows are untouched.
 
 ## Out of scope (explicitly not in this build)
 
