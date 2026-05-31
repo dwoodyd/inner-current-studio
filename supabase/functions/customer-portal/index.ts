@@ -26,10 +26,21 @@ serve(async (req) => {
     }
 
     const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    // Read the env the caller is in so a sandbox preview can't return a live
+    // portal URL (or vice versa). Body is optional; default to sandbox.
+    let bodyEnv: PaddleEnv = "sandbox";
+    try {
+      const body = await req.json();
+      if (body?.environment === "live" || body?.environment === "sandbox") {
+        bodyEnv = body.environment;
+      }
+    } catch { /* no body — keep default */ }
+
     const { data: subscription, error } = await admin
       .from("subscriptions")
       .select("paddle_customer_id,paddle_subscription_id,environment")
       .eq("user_id", user.id)
+      .eq("environment", bodyEnv)
       .in("status", ["active", "trialing", "past_due", "canceled"])
       .order("updated_at", { ascending: false })
       .limit(1)

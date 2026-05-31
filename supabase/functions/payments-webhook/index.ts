@@ -6,14 +6,25 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 );
 
-// Map a Paddle external_id to the canonical subscription tier we store on profiles.
+// Map a canonical external_id (e.g. "iw_pro_monthly_founding") to the coarse
+// tier we store on profiles. Pattern match is intentional and safe because
+// every external_id we create includes 'lifetime' | 'annual' | 'monthly'.
 function priceIdToTier(priceId: string | undefined | null): 'premium' | 'lifetime' | 'free' {
   if (!priceId) return 'free';
   if (priceId.includes('lifetime') || priceId === 'premium_lifetime' || priceId === 'premium_lifetime_149') {
     return 'lifetime';
   }
-  if (priceId.includes('monthly') || priceId.includes('annual')) return 'premium';
+  if (priceId.includes('monthly') || priceId.includes('annual') || priceId.includes('yearly')) return 'premium';
   return 'free';
+}
+
+// Extract the human-readable external_id Lovable set when creating the price.
+// If it's missing the row was created outside create_product/create_price and
+// we cannot reliably map it to a tier — skip and log instead of writing
+// a raw `pri_...` string that would silently break tier gating after publish.
+function externalIdFrom(meta: any): string | null {
+  const ext = meta?.importMeta?.externalId ?? meta?.import_meta?.external_id;
+  return typeof ext === 'string' && ext.length > 0 ? ext : null;
 }
 
 Deno.serve(async (req) => {
@@ -68,15 +79,31 @@ async function handleSubscriptionCreated(data: any, env: PaddleEnv) {
 
   const userId = customData?.userId;
   if (!userId) {
-    console.error('No userId in customData');
+    console.error('No userId in customData for subscription', id);
     return;
   }
 
-  const item = items[0];
-  const priceId = item.price.importMeta?.externalId || item.price.id;
-  const productId = item.product.importMeta?.externalId || item.product.id;
+  const item = items?.[0];
+  if (!item) {
+    console.error('Subscription has no items', id);
+    return;
+  }
+
+  const priceId = externalIdFrom(item.price);
+  const productId = externalIdFrom(item.product);
+  if (!priceId || !productId) {
+    console.warn('Skipping subscription: missing importMeta.externalId', {
+      subscriptionId: id,
+      rawPriceId: item.price?.id,
+      rawProductId: item.product?.id,
+    });
+    return;
+  }
+
   const tier = priceIdToTier(priceId);
 
+  // Key on paddle_subscription_id so re-subscribing after a cancel inserts
+  // a new row instead of overwriting the canceled one (preserves history).
   await supabase.from('subscriptions').upsert({
     user_id: userId,
     paddle_subscription_id: id,
@@ -88,11 +115,10 @@ async function handleSubscriptionCreated(data: any, env: PaddleEnv) {
     current_period_end: currentBillingPeriod?.endsAt,
     environment: env,
     updated_at: new Date().toISOString(),
-  }, { onConflict: 'user_id,environment' });
+  }, { onConflict: 'paddle_subscription_id' });
 
-  // Do NOT hard-code is_founding_member here. Founder status is granted only
-  // via lifetime-founding purchase (see handleTransactionCompleted) or via the
-  // signup-window flag on profiles. Subscriptions should not flip that bit.
+  // Founding Member badge is reserved for paid lifetime purchases only —
+  // never granted from a subscription event.
   await supabase.from('profiles')
     .update({ subscription_tier: tier === 'free' ? 'premium' : tier, updated_at: new Date().toISOString() })
     .eq('user_id', userId);
@@ -116,7 +142,11 @@ async function handleSubscriptionUpdated(data: any, env: PaddleEnv) {
 
   if (sub?.user_id) {
     const periodStillOpen = !sub.current_period_end || new Date(sub.current_period_end) > new Date();
-    const active = ['active', 'trialing'].includes(status) || (status === 'canceled' && periodStillOpen);
+    // Grace period: active, trialing, past_due (Paddle retrying), and
+    // canceled-but-paid-through all keep premium access until period_end.
+    const active =
+      ['active', 'trialing', 'past_due'].includes(status) ||
+      (status === 'canceled' && periodStillOpen);
     const tier = active ? (priceIdToTier(sub.price_id) === 'free' ? 'premium' : priceIdToTier(sub.price_id)) : 'free';
     await supabase.from('profiles')
       .update({ subscription_tier: tier, updated_at: new Date().toISOString() })
@@ -149,6 +179,9 @@ async function handleTransactionPaymentFailed(data: any, env: PaddleEnv) {
   const subscriptionId = data.subscriptionId;
   if (!subscriptionId) return;
 
+  // Mark past_due — DO NOT downgrade profile tier here. The user keeps
+  // premium until current_period_end so Paddle's dunning retries can run.
+  // useSubscription respects the grace window.
   await supabase.from('subscriptions')
     .update({ status: 'past_due', updated_at: new Date().toISOString() })
     .eq('paddle_subscription_id', subscriptionId)
@@ -156,20 +189,30 @@ async function handleTransactionPaymentFailed(data: any, env: PaddleEnv) {
 }
 
 async function handleTransactionCompleted(data: any, env: PaddleEnv) {
-  // Handle one-time lifetime purchases (no subscription).
+  // Handle one-time lifetime purchases (no subscription gets created for these).
   const { customerId, items, customData } = data;
   const userId = customData?.userId;
   if (!userId) return;
 
-  const item = items[0];
-  const priceId = item.price?.importMeta?.externalId || item.price?.id;
-  const tier = priceIdToTier(priceId);
+  const item = items?.[0];
+  if (!item?.price) return;
 
+  const priceId = externalIdFrom(item.price);
+  if (!priceId) {
+    console.warn('Skipping transaction: missing price importMeta.externalId', {
+      transactionId: data.id,
+      rawPriceId: item.price?.id,
+    });
+    return;
+  }
+
+  const tier = priceIdToTier(priceId);
   if (tier !== 'lifetime') return;
 
+  const lifetimeSubId = `lifetime_${data.id}`;
   await supabase.from('subscriptions').upsert({
     user_id: userId,
-    paddle_subscription_id: `lifetime_${data.id}`,
+    paddle_subscription_id: lifetimeSubId,
     paddle_customer_id: customerId,
     product_id: 'inner_wake_pro',
     price_id: priceId,
@@ -178,7 +221,7 @@ async function handleTransactionCompleted(data: any, env: PaddleEnv) {
     current_period_end: null,
     environment: env,
     updated_at: new Date().toISOString(),
-  }, { onConflict: 'user_id,environment' });
+  }, { onConflict: 'paddle_subscription_id' });
 
   // Only the founding lifetime price grants the Founding Member badge.
   const isFoundingLifetime = priceId === 'iw_pro_lifetime_founding';
@@ -194,7 +237,7 @@ async function handleTransactionCompleted(data: any, env: PaddleEnv) {
   if (isFoundingLifetime) {
     await supabase.from('founder_lifetime_slots').upsert({
       user_id: userId,
-      paddle_subscription_id: `lifetime_${data.id}`,
+      paddle_subscription_id: lifetimeSubId,
       environment: env,
     }, { onConflict: 'user_id' });
   }

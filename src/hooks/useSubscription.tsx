@@ -92,9 +92,12 @@ export function useSubscription(): SubscriptionState {
 
         const isAdmin = !!adminRole;
         const periodStillOpen = !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
+        // Grace-period rule: active, trialing, past_due (Paddle retrying), and
+        // canceled-but-paid-through all keep premium access until period_end.
         const active =
           sub &&
-          (["active", "trialing"].includes(sub.status) || (sub.status === "canceled" && periodStillOpen)) &&
+          (["active", "trialing", "past_due"].includes(sub.status) ||
+            (sub.status === "canceled" && periodStillOpen)) &&
           periodStillOpen;
 
         const baseTier = (profile?.subscription_tier as SubscriptionState["tier"]) || "free";

@@ -8,12 +8,16 @@ const corsHeaders = {
 };
 
 const USER_TABLES = [
-  "affirmation_sessions", "check_ins", "current_deposits", "custom_rituals", "domain_evidence",
-  "domain_openings", "domain_resistance", "domain_states", "evidence_of_support", "future_pages",
-  "gathered_sequences", "imagine_if_entries", "momentum_sessions", "money_openings", "money_resistance",
-  "money_states", "overflow_entries", "overflow_spending", "payment_shifts", "push_subscriptions",
-  "reality_evidence", "reality_progress", "reality_scripts", "resistance_entries", "thought_shifts",
-  "today_flow", "user_roles", "wheels", "profiles",
+  "affirmation_sessions", "check_ins", "current_deposits", "current_progress",
+  "custom_rituals", "daily_usage", "domain_evidence", "domain_openings",
+  "domain_resistance", "domain_states", "evidence_of_support",
+  "founder_lifetime_slots", "founding_member_applications", "future_pages",
+  "gathered_sequences", "imagine_if_entries", "momentum_sessions",
+  "money_openings", "money_resistance", "money_states", "overflow_entries",
+  "overflow_spending", "payment_shifts", "push_subscriptions",
+  "reality_evidence", "reality_progress", "reality_scripts",
+  "resistance_entries", "thought_shifts", "today_flow", "user_roles",
+  "wheels", "profiles",
 ];
 
 serve(async (req) => {
