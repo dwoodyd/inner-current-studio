@@ -13,6 +13,7 @@ import CurrentSigil from '@/components/currents/CurrentSigil';
 import TodayBelief from '@/components/currents/TodayBelief';
 import PatternMirror from '@/components/currents/PatternMirror';
 import ResonanceLibrary from '@/components/currents/ResonanceLibrary';
+import ResonanceCardExport from '@/components/currents/ResonanceCardExport';
 import AmbientPlayer from '@/components/currents/AmbientPlayer';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';
