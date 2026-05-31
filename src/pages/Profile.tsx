@@ -86,7 +86,7 @@ export default function Profile() {
     {
       title: 'Account',
       items: [
-        { icon: Palette, label: 'Theme', description: 'Dark or light mode', soon: true },
+        { icon: Palette, label: 'Theme', description: 'Dark or light mode', to: '/profile/theme' },
         { icon: Volume2, label: 'Audio', description: 'Sound and haptics', soon: true },
         { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', to: '/profile/subscription' },
         { icon: Download, label: 'Export & Backup', description: 'Save your data', soon: true },
