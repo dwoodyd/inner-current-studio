@@ -25,6 +25,7 @@ interface AppContextType {
   saveCustomRitual: (ritual: Omit<CustomRitual, 'id' | 'createdAt'>) => void;
   saveResistanceEntry: (entry: Omit<ResistanceEntry, 'id' | 'createdAt'>) => void;
   saveThoughtShift: (shift: Omit<ThoughtShift, 'id' | 'createdAt'>) => void;
+  pendingSyncCount: number;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
