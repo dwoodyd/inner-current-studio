@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Check, Sun } from 'lucide-react';
 import { BreathingOrb } from '@/components/onboarding/BreathingOrb';
 import QuickCheckIn from '@/components/QuickCheckIn';
 import { useAppState } from '@/lib/AppContext';
+import { useCurrentProgress } from '@/lib/currents/progress';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {
@@ -20,6 +21,7 @@ type Step = typeof STEPS[number];
 export default function MorningRitual() {
   const navigate = useNavigate();
   const { addCheckIn, updateTodayFlow, state } = useAppState();
+  const { recordPractice } = useCurrentProgress('money');
   const [step, setStep] = useState<Step>('breath');
   const [intention, setIntention] = useState('');
   const [picked, setPicked] = useState<QuickState | undefined>();
@@ -52,6 +54,7 @@ export default function MorningRitual() {
     } catch {}
     if (picked) addCheckIn(quickToEmotional[picked]);
     updateTodayFlow({ morningRitual: true });
+    recordPractice();
     navigate('/');
   };
 
