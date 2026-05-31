@@ -94,7 +94,7 @@ export default function PaymentShift() {
       </div>
 
       <div className="relative mx-auto max-w-lg px-4 pt-12 pb-8 space-y-6 safe-top">
-        <button onClick={() => navigate('/money')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+        <button onClick={() => navigate('/money/hub')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft size={18} strokeWidth={1.5} />
           <span className="text-sm">Money Current</span>
         </button>
@@ -197,7 +197,7 @@ export default function PaymentShift() {
                 <button onClick={reset} className="px-4 py-2 rounded-xl text-sm bg-muted/20 text-muted-foreground hover:bg-muted/30 transition-all">
                   Shift Another
                 </button>
-                <button onClick={() => navigate('/money')} className="px-4 py-2 rounded-xl text-sm bg-soul-gold/15 text-soul-gold hover:bg-soul-gold/25 transition-all">
+                <button onClick={() => navigate('/money/hub')} className="px-4 py-2 rounded-xl text-sm bg-soul-gold/15 text-soul-gold hover:bg-soul-gold/25 transition-all">
                   Done
                 </button>
               </div>

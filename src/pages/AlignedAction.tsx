@@ -62,7 +62,7 @@ export default function AlignedAction() {
           <p className="text-sm text-muted-foreground mt-4">From steadiness:</p>
           <p className="text-foreground">{answers[2]}</p>
         </div>
-        <button onClick={() => navigate('/money')} className="w-full py-3 rounded-2xl bg-soul-gold/20 text-soul-gold font-medium hover:bg-soul-gold/30 transition-colors">
+        <button onClick={() => navigate('/money/hub')} className="w-full py-3 rounded-2xl bg-soul-gold/20 text-soul-gold font-medium hover:bg-soul-gold/30 transition-colors">
           Return to Money Current
         </button>
       </div>
@@ -79,7 +79,7 @@ export default function AlignedAction() {
         />
       </div>
       <div className="relative mx-auto max-w-lg px-4 pt-12 pb-8 space-y-6 safe-top">
-        <button onClick={() => navigate('/money')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+        <button onClick={() => navigate('/money/hub')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft size={18} strokeWidth={1.5} /><span className="text-sm">Money Current</span>
         </button>
 

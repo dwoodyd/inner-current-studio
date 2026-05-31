@@ -158,7 +158,7 @@ export default function AffirmationCoach() {
       {/* Header */}
       <div className="px-4 pt-12 pb-3 border-b border-border/20">
         <div className="flex items-center justify-between max-w-lg mx-auto">
-          <button onClick={() => navigate('/money')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => navigate('/money/hub')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={18} strokeWidth={1.5} /><span className="text-sm">Money Current</span>
           </button>
           <h1 className="font-heading text-lg font-semibold text-foreground">Affirmation Coach</h1>

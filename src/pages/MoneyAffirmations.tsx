@@ -201,7 +201,7 @@ export default function MoneyAffirmations() {
   if (phase === 'setup') {
     return (
       <div className="relative mx-auto max-w-lg px-4 pt-12 pb-8 space-y-6 safe-top">
-        <button onClick={() => navigate('/money')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+        <button onClick={() => navigate('/money/hub')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft size={18} strokeWidth={1.5} /><span className="text-sm">Money Current</span>
         </button>
 
@@ -365,7 +365,7 @@ export default function MoneyAffirmations() {
         <button onClick={start} className="flex-1 py-3 rounded-2xl border border-border/30 text-muted-foreground hover:text-foreground transition-colors">
           Go Again
         </button>
-        <button onClick={() => navigate('/money')} className="flex-1 py-3 rounded-2xl bg-soul-gold/20 text-soul-gold font-medium hover:bg-soul-gold/30 transition-colors">
+        <button onClick={() => navigate('/money/hub')} className="flex-1 py-3 rounded-2xl bg-soul-gold/20 text-soul-gold font-medium hover:bg-soul-gold/30 transition-colors">
           Done
         </button>
       </div>
