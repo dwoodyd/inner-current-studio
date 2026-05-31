@@ -10,11 +10,16 @@
  *                  and the Resonance Library archive (sentence case, period per phrase)
  */
 import type { QuickState } from '@/lib/types';
-import orbTight from '@/assets/orb-tight.png';
-import orbRestless from '@/assets/orb-restless.png';
-import orbFlat from '@/assets/orb-flat.png';
-import orbOpen from '@/assets/orb-open.png';
-import orbFlowing from '@/assets/orb-flowing.png';
+import orbTightImg from '@/assets/orb-tight.png';
+import orbRestlessImg from '@/assets/orb-restless.png';
+import orbFlatImg from '@/assets/orb-flat.png';
+import orbOpenImg from '@/assets/orb-open.png';
+import orbFlowingImg from '@/assets/orb-flowing.png';
+import orbTightVid from '@/assets/orbs/orb-tight.mp4';
+import orbRestlessVid from '@/assets/orbs/orb-restless.mp4';
+import orbFlatVid from '@/assets/orbs/orb-flat.mp4';
+import orbOpenVid from '@/assets/orbs/orb-open.mp4';
+import orbFlowingVid from '@/assets/orbs/orb-flowing.mp4';
 
 export interface StateDef {
   id: QuickState;
@@ -22,6 +27,8 @@ export interface StateDef {
   tagline: string;
   description: string;
   orb: string;
+  /** Looping MP4 of the living orb for this state. */
+  orbVideo: string;
   /** Soundscape id from src/lib/sounds.ts SOUND_OPTIONS — state-matched ambient. */
   soundscape: string;
 }
@@ -32,7 +39,8 @@ export const STATE_DEFS: Record<QuickState, StateDef> = {
     label: 'Tight',
     tagline: 'Contracted, holding on',
     description: 'Contracted. Focused. Holding energy close.',
-    orb: orbTight,
+    orb: orbTightImg,
+    orbVideo: orbTightVid,
     soundscape: 'bowl',
   },
   restless: {
@@ -40,7 +48,8 @@ export const STATE_DEFS: Record<QuickState, StateDef> = {
     label: 'Restless',
     tagline: 'Agitated, in motion',
     description: 'Agitated. Unsettled. Energy in motion.',
-    orb: orbRestless,
+    orb: orbRestlessImg,
+    orbVideo: orbRestlessVid,
     soundscape: 'stream',
   },
   flat: {
@@ -48,7 +57,8 @@ export const STATE_DEFS: Record<QuickState, StateDef> = {
     label: 'Flat',
     tagline: 'Steady, present',
     description: 'Steady. Even. Balanced and calm.',
-    orb: orbFlat,
+    orb: orbFlatImg,
+    orbVideo: orbFlatVid,
     soundscape: 'drone',
   },
   open: {
@@ -56,7 +66,8 @@ export const STATE_DEFS: Record<QuickState, StateDef> = {
     label: 'Open',
     tagline: 'Expansive, available',
     description: 'Expansive. Receptive. Open and available.',
-    orb: orbOpen,
+    orb: orbOpenImg,
+    orbVideo: orbOpenVid,
     soundscape: 'wind',
   },
   flowing: {
@@ -64,7 +75,8 @@ export const STATE_DEFS: Record<QuickState, StateDef> = {
     label: 'Flowing',
     tagline: 'In flow, at ease',
     description: 'In flow. Effortless. Aligned and at ease.',
-    orb: orbFlowing,
+    orb: orbFlowingImg,
+    orbVideo: orbFlowingVid,
     soundscape: 'ocean',
   },
 };

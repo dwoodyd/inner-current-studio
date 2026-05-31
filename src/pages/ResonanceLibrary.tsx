@@ -89,11 +89,16 @@ export default function ResonanceLibrary() {
                       transition={{ delay: 0.05 + i * 0.03 }}
                       className="flex items-start gap-3 px-4 py-3.5"
                     >
-                      <img
-                        src={def.orb}
-                        alt=""
-                        className="h-12 w-12 shrink-0 object-contain"
-                        loading="lazy"
+                      <video
+                        src={def.orbVideo}
+                        poster={def.orb}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="metadata"
+                        aria-hidden="true"
+                        className="h-12 w-12 shrink-0 rounded-full object-cover pointer-events-none"
                       />
                       <div className="min-w-0 flex-1 space-y-1">
                         <div className="flex items-baseline justify-between gap-2">
