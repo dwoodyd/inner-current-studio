@@ -217,7 +217,7 @@ export default function Profile() {
           <p className="text-[10px] text-muted-foreground/40 truncate">{user?.email}</p>
           <p className="text-xs text-muted-foreground/50">Inner Wake v1.0</p>
           <a
-            href="https://soulengineer.online"
+            href="https://www.soulengineer.online"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[11px] text-muted-foreground/60 hover:text-primary transition-colors min-h-[44px]"
