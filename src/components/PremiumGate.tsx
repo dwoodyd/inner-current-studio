@@ -35,15 +35,15 @@ export function PremiumGate({ children, domain, feature = 'this practice' }: Pre
       <p className="mb-2 text-xs uppercase tracking-[0.28em] text-primary/70">Premium Current</p>
       <h1 className="font-heading text-2xl font-semibold text-foreground">Open all five Currents</h1>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        Your free Current stays open. Upgrade when you’re ready to enter {feature}.
+        Your free Current stays open. Unlock {feature} with the lifetime founder plan ($99) — one payment, all five Currents, forever.
       </p>
       <div className="mt-7 flex w-full flex-col gap-3">
         <button
           type="button"
-          onClick={() => navigate('/onboarding')}
+          onClick={() => navigate('/profile/subscription')}
           className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-transform active:scale-[0.98]"
         >
-          <Sparkles size={16} /> Upgrade
+          <Sparkles size={16} /> View plan & unlock
         </button>
         <button
           type="button"
