@@ -24,7 +24,6 @@ const OrbVideo = React.memo(function OrbVideo({
     <video
       key={def.id}
       src={def.orbVideo}
-      poster={def.orb}
       width={size}
       height={size}
       autoPlay
