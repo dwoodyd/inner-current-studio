@@ -83,6 +83,8 @@ const CurrentsHub = lazy(() => import("@/pages/CurrentsHub"));
 const CurrentSpecPage = lazy(() => import("@/pages/currents/CurrentSpecPage"));
 const CurrentBeliefsPage = lazy(() => import("@/pages/currents/CurrentBeliefsPage"));
 const CurrentSequencePage = lazy(() => import("@/pages/currents/CurrentSequencePage"));
+const StudiosHub = lazy(() => import("@/pages/studios/StudiosHub"));
+const StudioRunner = lazy(() => import("@/pages/studios/StudioRunner"));
 const SelfHub = lazy(() => import("@/pages/domain/SelfHub"));
 const EnergyHub = lazy(() => import("@/pages/domain/EnergyHub"));
 const RelationshipsHub = lazy(() => import("@/pages/domain/RelationshipsHub"));
