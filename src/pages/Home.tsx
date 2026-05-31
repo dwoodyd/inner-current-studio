@@ -10,6 +10,10 @@ import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
 import StateSoundscape from '@/components/StateSoundscape';
 import brandLogo from '@/assets/inner-wake-logo.svg';
+import { useAuth } from '@/hooks/useAuth';
+import { useSubscription } from '@/hooks/useSubscription';
+import { DOMAINS, type DomainKey } from '@/lib/domains';
+import { useWeeklyDigest } from '@/lib/currents/progress';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {
