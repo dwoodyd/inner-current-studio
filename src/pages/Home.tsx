@@ -89,6 +89,21 @@ function ensureHeadLink(selector: string, attributes: Record<string, string>) {
 export default function Home() {
   const navigate = useNavigate();
   const { state, addCheckIn } = useAppState();
+  const { user } = useAuth();
+  const { freeCurrent } = useSubscription();
+  const digest = useWeeklyDigest();
+
+  const featuredCurrent = useMemo<DomainKey>(() => {
+    const accountAgeMs = user?.created_at ? Date.now() - new Date(user.created_at).getTime() : 0;
+    const isNew = accountAgeMs > 0 && accountAgeMs < 30 * 24 * 60 * 60 * 1000;
+    const localFree = state.onboarding.freeCurrent as DomainKey | undefined;
+    if (isNew) {
+      return (freeCurrent as DomainKey) || localFree || digest.topCurrent || 'money';
+    }
+    return digest.topCurrent || (freeCurrent as DomainKey) || localFree || 'money';
+  }, [user?.created_at, freeCurrent, state.onboarding.freeCurrent, digest.topCurrent]);
+
+  const featured = DOMAINS[featuredCurrent];
 
   // Derive last persisted state from most recent check-in.
   // Reactively syncs after cloud-state loads — no longer defaults to "flat" forever.
