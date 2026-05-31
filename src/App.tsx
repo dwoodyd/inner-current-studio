@@ -79,6 +79,9 @@ const AffirmationTracker = lazy(() => import("@/pages/AffirmationTracker"));
 const AffirmationCoach = lazy(() => import("@/pages/AffirmationCoach"));
 const AffirmationLibrary = lazy(() => import("@/pages/AffirmationLibrary"));
 const CurrentsHub = lazy(() => import("@/pages/CurrentsHub"));
+const CurrentSpecPage = lazy(() => import("@/pages/currents/CurrentSpecPage"));
+const CurrentBeliefsPage = lazy(() => import("@/pages/currents/CurrentBeliefsPage"));
+const CurrentSequencePage = lazy(() => import("@/pages/currents/CurrentSequencePage"));
 const SelfHub = lazy(() => import("@/pages/domain/SelfHub"));
 const EnergyHub = lazy(() => import("@/pages/domain/EnergyHub"));
 const RelationshipsHub = lazy(() => import("@/pages/domain/RelationshipsHub"));
@@ -297,6 +300,9 @@ function AppRoutes() {
         <Route path="/money/script/library" element={current('money', <MoneyScriptLibrary />)} />
         <Route path="/money/script/:scriptId" element={current('money', <MoneyScriptDetail />)} />
         <Route path="/currents" element={<CurrentsHub />} />
+        <Route path="/currents/:slug" element={<CurrentSpecPage />} />
+        <Route path="/currents/:slug/beliefs" element={<CurrentBeliefsPage />} />
+        <Route path="/currents/:slug/sequence/:sequenceId" element={<CurrentSequencePage />} />
         <Route path="/self" element={current('self', <SelfHub />)} />
         <Route path="/self/state" element={current('self', <SelfState />)} />
         <Route path="/self/affirmations" element={current('self', <SelfAffirmations />)} />
