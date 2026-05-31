@@ -371,28 +371,76 @@ export default function Welcome() {
           ))}
         </section>
 
-        {/* Pricing */}
+        {/* Pricing — three-tier (Free / Pro / Lifetime) */}
         <section id="pricing" className="mt-28">
           <div className="text-center">
-            <h2 className="font-serif text-3xl md:text-4xl">Simple, honest pricing.</h2>
+            <p className="text-xs uppercase tracking-[0.28em] text-soul-gold">Three ways in.</p>
+            <h2 className="mt-3 font-serif text-3xl md:text-4xl">Simple, honest pricing.</h2>
             <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-              Begin with a free trial. Choose what fits when you're ready. 30-day money-back guarantee on every plan.
+              Begin free. Lock a founding rate when you're ready — yours for life.
             </p>
           </div>
 
           <div className="mt-12 grid gap-4 md:grid-cols-3">
             {[
-              { name: 'Monthly', price: '$7', period: '/ month', tagline: 'Practice at your own pace. Cancel anytime.' },
-              { name: 'Yearly', price: '$49', period: '/ year', tagline: 'Save 42%. About $4.08 / month.', highlight: true },
-              { name: 'Lifetime', price: '$149', period: 'one time', tagline: 'Pay once. Inner Wake is yours forever.' },
+              {
+                name: 'Free',
+                price: '$0',
+                period: 'forever',
+                badge: null as string | null,
+                tagline: 'Begin the practice. No card required.',
+                bullets: [
+                  'Living Orb · energy check-ins',
+                  'Money Current — fully open',
+                  '1 daily Alignment Wheel · Breathwork · Reset',
+                  '3 daily Current Guide reflections',
+                  'Stillness Timer — unlimited',
+                ],
+                cta: 'Begin free',
+              },
+              {
+                name: 'Pro Annual',
+                price: '$39',
+                period: '/ year',
+                badge: 'Founding Rate · Best Value',
+                tagline: '$59/yr retail after beta · ≈ $3.25/mo',
+                bullets: [
+                  'Everything in Free, unlimited',
+                  'All 5 Currents · custom Sigils',
+                  'Resonance Library · Practice Constellation',
+                  'Pattern Mirror — multi-month history',
+                  'Save 35% vs monthly',
+                ],
+                cta: 'Reserve Pro Annual',
+                highlight: true,
+              },
+              {
+                name: 'Pro Lifetime',
+                price: '$99',
+                period: 'one-time',
+                badge: 'Founder-only · 100 slots',
+                tagline: 'Retiring with the founding member program.',
+                bullets: [
+                  'Everything in Pro',
+                  'Never billed again',
+                  'Founding Member badge',
+                  'Direct line to DeWayne (quarterly)',
+                  'Free copy of Before the Words at release',
+                ],
+                cta: 'Lock in Lifetime $99',
+              },
             ].map((tier) => (
               <div
                 key={tier.name}
-                className={`rounded-2xl border bg-card/40 p-6 backdrop-blur ${tier.highlight ? 'border-soul-gold/60 shadow-[0_0_40px_-10px_hsl(42_65%_58%/0.3)]' : 'border-border/60'}`}
+                className={`relative rounded-2xl border bg-card/40 p-6 backdrop-blur ${
+                  (tier as any).highlight
+                    ? 'border-soul-gold/60 shadow-[0_0_40px_-10px_hsl(42_65%_58%/0.3)]'
+                    : 'border-border/60'
+                }`}
               >
-                {tier.highlight && (
+                {tier.badge && (
                   <div className="mb-3 inline-block rounded-full bg-soul-gold/15 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-soul-gold">
-                    Most chosen
+                    {tier.badge}
                   </div>
                 )}
                 <h3 className="font-serif text-xl">{tier.name}</h3>
@@ -401,13 +449,29 @@ export default function Welcome() {
                   <span className="text-sm text-muted-foreground">{tier.period}</span>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground">{tier.tagline}</p>
+                <ul className="mt-4 space-y-1.5 text-sm text-foreground/85">
+                  {tier.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-soul-gold/70" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  asChild
+                  size="sm"
+                  variant={(tier as any).highlight ? 'default' : 'outline'}
+                  className={`mt-5 w-full ${(tier as any).highlight ? 'bg-soul-gold text-background hover:bg-soul-gold/90' : ''}`}
+                >
+                  <Link to="/auth">{tier.cta} <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
+                </Button>
               </div>
             ))}
           </div>
 
           <p className="mt-8 text-center text-xs text-muted-foreground">
-            Prices in USD. All plans include all five Currents, AI Current Guide, and full ritual library.
-            Billing handled securely by our reseller, Paddle. See our{' '}
+            Founding rates are locked for life. Prices in USD. Billing handled securely by our reseller, Paddle.
+            See our{' '}
             <Link to="/refund" className="underline hover:text-foreground">refund policy</Link> and{' '}
             <Link to="/terms" className="underline hover:text-foreground">terms</Link>.
           </p>
