@@ -21,8 +21,7 @@ function preloadOrbVideos() {
     v.src = def.orbVideo;
     v.preload = 'auto';
     v.muted = true;
-    // @ts-expect-error - iOS hint
-    v.playsInline = true;
+    (v as HTMLVideoElement & { playsInline: boolean }).playsInline = true;
     v.load();
   });
 }
