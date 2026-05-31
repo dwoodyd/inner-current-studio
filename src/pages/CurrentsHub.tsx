@@ -40,7 +40,7 @@ export default function CurrentsHub() {
                 : { label: 'Premium', tone: 'locked' as const };
             return (
               <motion.button key={key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                onClick={() => navigate(d.route)}
+                onClick={() => navigate(`/currents/${key}`)}
                 className={`group flex min-h-[68px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:min-h-[80px] sm:gap-4 sm:p-5 ${!isOpen ? 'opacity-70' : ''}`}>
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-xl sm:h-14 sm:w-14 sm:text-2xl"
                   style={{ background: d.gradient }}>{d.emoji}</div>
