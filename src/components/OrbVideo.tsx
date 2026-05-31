@@ -112,8 +112,7 @@ const OrbVideo = React.memo(function OrbVideo({
           loop
           muted
           playsInline
-          // @ts-expect-error - iOS Safari hint
-          webkit-playsinline="true"
+          {...({ 'webkit-playsinline': 'true' } as Record<string, string>)}
           disablePictureInPicture
           preload="auto"
           aria-hidden="true"
