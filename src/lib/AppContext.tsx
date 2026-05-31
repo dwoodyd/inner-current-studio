@@ -106,7 +106,7 @@ async function flushPendingCloudOps(userId: string) {
   for (const op of queue) {
     let result: { error: any } = { error: null };
     if (op.type === 'checkIn') {
-      result = await supabase.from('check_ins').insert({ user_id: userId, id: op.payload.id, state: op.payload.state, note: op.payload.note, created_at: op.payload.createdAt });
+      result = await supabase.from('check_ins').insert({ user_id: userId, state: op.payload.state, note: op.payload.note, created_at: op.payload.createdAt });
     } else if (op.type === 'todayFlow') {
       result = await upsertTodayFlow(userId, op.payload);
     } else if (op.type === 'momentumSession') {
