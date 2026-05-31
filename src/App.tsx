@@ -375,18 +375,20 @@ function AppRoutes() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Sonner />
-      <BrowserRouter>
-        <BetaAccessGate>
-          <EnvironmentRedirectNotice />
-          <AuthProvider>
-            <AppProvider>
-              <AppRoutes />
-              <StageUpOverlay />
-            </AppProvider>
-          </AuthProvider>
-        </BetaAccessGate>
-      </BrowserRouter>
+      <ThemeProvider>
+        <Sonner />
+        <BrowserRouter>
+          <BetaAccessGate>
+            <EnvironmentRedirectNotice />
+            <AuthProvider>
+              <AppProvider>
+                <AppRoutes />
+                <StageUpOverlay />
+              </AppProvider>
+            </AuthProvider>
+          </BetaAccessGate>
+        </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
