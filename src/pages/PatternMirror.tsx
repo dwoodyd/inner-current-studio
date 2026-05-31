@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
+import { useSubscription } from '@/hooks/useSubscription';
 import { STATE_DEFS } from '@/lib/states';
 import type { EmotionalState, QuickState } from '@/lib/types';
 
@@ -32,9 +33,18 @@ function bucketIndex(s: EmotionalState): number {
 export default function PatternMirror() {
   const navigate = useNavigate();
   const { state } = useAppState();
+  const { isPremium } = useSubscription();
+  // Free users see the last 7 days only; Pro users see full history.
+  const WEEK_MS = 7 * 86400000;
+  const scopedCheckIns = useMemo(
+    () => isPremium
+      ? state.checkIns
+      : state.checkIns.filter(c => Date.now() - new Date(c.createdAt).getTime() < WEEK_MS),
+    [state.checkIns, isPremium],
+  );
 
   const analysis = useMemo(() => {
-    const checkIns = state.checkIns;
+    const checkIns = scopedCheckIns;
     if (checkIns.length === 0) return null;
 
     // Frequency by bucket
@@ -70,7 +80,7 @@ export default function PatternMirror() {
     const mostCommon = STATE_BUCKETS.reduce((a, b) => (freq[a.key] >= freq[b.key] ? a : b)).key;
 
     return { freq, maxFreq, weekData, trend, mostCommon, total: checkIns.length };
-  }, [state.checkIns]);
+  }, [scopedCheckIns]);
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-6">
