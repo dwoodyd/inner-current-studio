@@ -86,10 +86,10 @@ export default function Profile() {
     {
       title: 'Account',
       items: [
-        { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
-        { icon: Volume2, label: 'Audio', description: 'Sound and haptics' },
+        { icon: Palette, label: 'Theme', description: 'Dark or light mode', soon: true },
+        { icon: Volume2, label: 'Audio', description: 'Sound and haptics', soon: true },
         { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', to: '/profile/subscription' },
-        { icon: Download, label: 'Export & Backup', description: 'Save your data' },
+        { icon: Download, label: 'Export & Backup', description: 'Save your data', soon: true },
         { icon: Info, label: 'About Inner Wake', description: 'Mission & philosophy', to: '/about' },
         { icon: Sparkles, label: 'About Soul Engineer', description: 'The ecosystem & DeWayne Woods', action: () => window.open('https://soulengineer.online', '_blank', 'noopener,noreferrer') },
       ],
