@@ -1,82 +1,66 @@
-# Inner Wake — Three-Tier Pricing Build Plan
+# Launch-Readiness Audit — Execution Plan
 
-This consolidates the audit fixes with the new Free / Pro Monthly / Pro Annual / Pro Lifetime structure. Shipping in 4 phases per Section 11 of the spec.
+I read the full audit (9 blockers, 16 launch-impacting, 5 polish). Rather than touch all 28 items at once, I'll sequence them in dependency order so we ship a working app fast, then layer in gating, pricing correctness, and polish.
 
-## Before I start — three blockers I need you to confirm
+## Phase 1 — Unbreak the app (blockers #1, #2, #5, #9)
 
-1. **Payment provider.** The spec says "PayPal Plans." This project is already wired end-to-end on **Paddle** (Paddle SDK, webhooks, `subscriptions.paddle_subscription_id`, `useSubscription` reading Paddle status, sandbox + live keys configured). Switching to PayPal would mean disconnecting Paddle, recreating all webhooks, and rebuilding `useSubscription`. **I'll implement the three-tier structure on Paddle** (creating Paddle Prices instead of PayPal Plans) unless you explicitly want a provider switch. The customer-facing experience is identical; only the back-end provider differs.
-2. **Existing-trial-user migration.** Reset every existing trial user to a fresh 90-day founder window (your recommendation, my recommendation, simpler). **Defaulting to fresh 90** unless you say otherwise.
-3. **The four Section-12 sign-offs** — Calendly link for the 1-on-1 call, quarterly cadence for "direct line to DeWayne", *Before the Words* confirmed as the companion-book pairing, and confirmation the 1-on-1 call is real. **Defaults:** Calendly link is a `calendlyUrl` env var the Lifetime user can edit later; quarterly cadence; *Before the Words* confirmed (already in About + Onboarding); 1-on-1 call shown as a Lifetime perk with "schedule via the link in your Subscription page" copy.
+**Goal:** every route loads. Without this, nothing else matters.
 
-## Phase 1 — Foundational (ships first, unblocks everything)
+1. **Realtime crash (#1)** — grep every `supabase.channel(...)` site, audit that all `.on('postgres_changes', …)` calls happen *before* `.subscribe()`. Likely suspects: `useCurrentsCloudSync`, `useSubscription`, `useFounderSlots`, daily-limit hook. Refactor so any conditional listener creates a *new* channel inside its own effect.
+2. **Service worker (#9)** — confirm `public/sw.js` isn't self-unregistering and stomping fresh assets. If it is, replace with a safe shell (network-first for HTML, cache-first for hashed assets) or unregister cleanly on first load post-fix.
+3. **Verify #2 routes** (`/profile/guide`, `/money` → `/currents/money`, `/profile/subscription`) load after the Realtime fix; only investigate further if they still break.
+4. **Onboarding handoff (#5)** — confirm the final step routes into the now-working home and that the ecosystem card renders.
 
-This phase combines audit fixes with new pricing surfaces.
+## Phase 2 — Close the pricing leaks (blockers #6, #7, #8, #20, #23)
 
-1. **Create Paddle products & prices** (founding tier):
-   - `inner_wake_pro` product with three prices:
-     - `iw_pro_monthly_founding` — $4.99/mo recurring
-     - `iw_pro_annual_founding` — $39/yr recurring
-     - `iw_pro_lifetime_founding` — $99 one-time
-2. **Extend `useSubscription`** to expose `tier` as `free | pro_monthly | pro_annual | lifetime | founder_trial`, plus `isFoundingMember`, `founderDaysRemaining`, `slotsRemaining` (founding slot count).
-3. **Build the new `/profile/subscription` page** per spec §8.2 — replaces the existing single-CTA Subscription page. Includes tier cards, Monthly/Annual toggle, "Reserve at this rate" CTAs (during founder window) vs "Upgrade to" (post-window), full feature comparison expander, and a "Founding Member · slot N/100" indicator.
-4. **Update Founder Trial banner** per §8.1 — copy varies by state (founder window / Free post-window / paid member confirmation pill). All variants route to `/profile/subscription`.
-5. **Wire Paddle checkout** to the three founding prices using the existing `usePaddleCheckout` hook.
-6. **Webhook handler** for the three new price IDs in the existing Paddle webhook function — sets `tier` correctly on `profiles` based on which price was purchased; flags lifetime customers as founding members.
-7. **Profile → Subscription menu item** — already routes to `/profile/subscription`; just confirm wiring after page rebuild.
-8. **DB migration** — add columns to `profiles`: `is_founding_member boolean`, `founder_window_ends_at timestamptz`. Add `founder_lifetime_slots` table or counter for slot tracking.
+**Goal:** Pro tier is actually a paywall, founder flag isn't free for everyone, Paddle webhook is trustworthy.
 
-After Phase 1, the live app shows the new pricing structure and the broken routes are fixed. Audit-spec critical bugs #1, #2, #3 closed.
+1. **Gate Pro routes (#6)** — wrap `/profile/resonance`, `/profile/patterns`, `/profile/rituals`, `/studios`, `/studios/:id` in `PremiumGate`.
+2. **Founder flag (#7)** — `payments-webhook/index.ts:94` stops hard-coding `is_founding_member: true`; derive it from `founder_slots_remaining()` + the user's existing slot record.
+3. **Tier mapping (#20)** — switch webhook to a server-side Price-ID → tier lookup; keep `customData.externalId` only as a fallback; verify Paddle signature on every event.
+4. **Webhook URL path (#23)** — confirm Paddle dashboard (sandbox + live) points at the deployed `payments-webhook` function URL, not the legacy `paddle-webhook/` path referenced in old plan docs.
+5. **Advertised-but-missing Pro features (#8)** — for Sigil generation, Practice Constellation, state-matched soundscapes, Wisdom Streams: deliver minimal v1 for the first two (they tie into existing Currents work), label the latter two "Coming soon" on `/profile/subscription` and marketing copy.
 
-## Phase 2 — Feature gating & paywall modals
+## Phase 3 — Pricing structure rollout (blockers #4, #3, item #13)
 
-9. **Daily-usage tracker** — new `daily_usage` table keyed by `(user_id, tool, date)`. Increment on completion of: Alignment Wheel, Breathwork session, Reset tool (any of State Ladder / Contrast / Resistance / Quiet Mind), Current Guide message.
-10. **`useDailyLimit(tool)` hook** — returns `{ used, limit, canUse, isFree }`. Free tier limits per §3: Alignment Wheel 1, Breathwork 1, Reset tools 1 combined, Current Guide 3.
-11. **`<PaywallModal />` component** per §3 — gentle copy, "See Pro options →" routes to `/profile/subscription`, secondary "Continue with what's free" closes.
-12. **Gate the tools** — wrap entry points to AlignmentWheel, Breathwork, the four Reset tools, and CurrentGuide messaging with the daily-limit check + modal.
-13. **Currents hub badge update** — Free non-money currents show "Pro" badge (already exists), Money shows "Free" pill, Pro users see no badges.
-14. **Pro-only features** marked but not built here — Resonance Library, Practice Constellation, Sigil generation, soundscapes, Pattern Mirror history, Wisdom Streams full library, unlimited Custom Rituals. Gate these with `useSubscription().isPremium`. The features themselves already exist; this just wraps their entry points.
-15. **Sign-up flow** per §8.4 — strip any forced pricing decision; new users land in the 90-day founder window automatically.
-16. **"Reserve" vs "Upgrade" copy** — single helper that swaps CTA labels based on whether the user is inside their founder window.
+1. **Paddle sweep (#3)** — `rg -i 'stripe|paypal'` across the repo; remove any stale references; ensure all CTAs route through `usePaddleCheckout`; set footer copy to "Secure checkout · Cancel anytime · No hidden fees" (default; ask before switching to the Paddle-branded variant).
+2. **Pattern C banner + page (#4, #13)** — Founder Trial banner text becomes state-aware (beta / post-beta Free / post-upgrade); banner click routes to `/profile/subscription`, not `/onboarding`; verify the three-tier page renders per spec; add the Day-91 downgrade path (edge function cron or on-load check that flips tier to Free and rewrites banner copy).
+3. **Free-tier limits (#4)** — confirm `useDailyLimit` enforces the documented caps (Alignment Wheel 1/day, Breathwork 1/day, Reset tools 1/day, Current Guide 3/day, 1 active Current, Pattern Mirror current-week only).
 
-## Phase 3 — Migration
+## Phase 4 — Launch-impacting cleanup (items #14, #15, #16, #18, #22, #24, #25, #26, #27)
 
-17. **Existing $99 lifetime customers** — already in `subscriptions` with `tier='lifetime'`. Add the founding-member flag, surface "Founding Member · Lifetime" badge in Profile.
-18. **Existing trial users** — migration sets `trial_ends_at = now() + 90 days`, `trial_type='beta'`, `is_founding_member=true`.
-19. **Migration notice** — one-time toast/modal shown on next login per §10 copy.
-20. **Free tier** — default `tier='free'`, `free_current='money'`, slot count untouched.
+- Pattern Mirror history gate (#24) — current-week only on Free, full history on Pro.
+- ResonanceLibrary / Pattern Mirror / My Rituals lock badges in Profile menu (#25).
+- My Rituals Free cap = 1, paywall on 2nd create (#26).
+- Service worker push (#18) — either revive it or hide the Notifications opt-in (#27). Default: hide for V1 with a "coming soon" caption; revive later.
+- Currents "Coming Soon" pills (#16) on Self/Energy/Relationships/Health cards while only Money is fully built.
+- Drop the word "premium" from Stillness Timer copy (#15).
+- Regenerate Supabase types (#22) so `founder_slots_remaining` / `daily_usage` are typed.
+- PWA splash + safe-area verification (#14) — quick CSS audit + manifest review.
 
-## Phase 4 — Post-beta retail switch ✅ shipped
+## Phase 5 — Polish (items #19–22 in polish section, plus #10–12, #17)
 
-21. ✅ Created Paddle retail prices: `iw_pro_monthly_retail` ($7.99/mo), `iw_pro_annual_retail` ($59/yr).
-22. ✅ Subscription page auto-switches non-eligible users to retail prices via `eligibleForFounding` gate (founding member, founder window active, or slots still remaining → founding rate; otherwise retail).
-23. ✅ Lifetime card hides automatically once all 100 slots are claimed (existing `lifetimeAvailable` logic).
-24. ✅ Existing founding members + founder-window users keep the founding-rate price IDs forever.
+- Voice pass on Currents tagline.
+- Today dashboard "Recommended Now" prominence.
+- 1am–5am vibe shift (post-launch).
+- Founding-member intake form / admin queue / Resend transactional emails (#17) — surfaces only if launch needs an in-app application path; otherwise marketing-site form is acceptable for V1.
+- Google OAuth / email confirmation smoke test (#21).
+- Sidebar audit for stray Continuary-only features (#12).
 
-**Manual trigger when 100 slots fill**: update `handle_new_user` trigger to default `is_founding_member=false` and remove the auto-90-day founder window so new signups land on retail. Existing rows are untouched.
+## How I'll work
 
-## Out of scope (explicitly not in this build)
-
-- Marketing site Section 8 updates (§9 of spec) — different repo / surface.
-- Studios feature (Phase 2 of spec, not Phase 2 of this plan).
-- Wind-Down Sleep Mode and Pop-out window (marked "when shipped" in the spec).
-- The Manus OAuth provider mentioned in §8.4 — current project uses Supabase Auth. New users land in the founder window after standard email/Google sign-up.
+- I will ship each phase as its own message so you can verify before I move on.
+- I will *not* run any DB migrations without showing you the SQL first.
+- Polish items only land after Phases 1–3 are green.
+- I'll keep `inner-wake-logo.svg` as the single brand asset — no PNG regressions.
 
 ## Technical notes
 
-- **Provider**: Paddle, not PayPal — see blocker #1.
-- **Routing**: `/profile/subscription` route already exists; this rebuild replaces the page contents.
-- **`useSubscription`**: rather than rewrite, extend with derived `tier` enum and founding-member flags.
-- **Banner**: `TrialCountdownBanner.tsx` is the right surface — rewrite copy switch.
-- **Webhook**: `supabase/functions/paddle-webhook/` (existing) handles price-id → tier mapping. Need to add the three new IDs to the switch.
-- **DB migrations**: profiles columns + `daily_usage` table + founding-slot tracking. All GRANTed properly, RLS on every table.
-- **Founding slot count**: server-side counter to avoid TOCTOU on slot allocation. Reserved on checkout success in the webhook, not on click.
+- Realtime fix uses `.on(...).on(...).subscribe()` chaining; never call `.on` post-subscribe. Hooks that need dynamic listeners create a fresh channel keyed on the dependency.
+- Webhook lookup table lives in `supabase/functions/_shared/paddle.ts` so the price→tier map has one source of truth used by both checkout and webhook.
+- Free-tier gates use the existing `useDailyLimit` + `PremiumGate` / `DailyLimitGate` primitives — no new gating pattern.
+- Day-91 transition runs on `useSubscription` mount (cheap, deterministic) plus an edge function nightly sweep for users who never open the app.
 
-## Open questions in the body (re-listing for visibility)
+## Ready to start?
 
-- Paddle vs PayPal (blocker #1)
-- Reset trial users to fresh 90 days (default yes)
-- Calendly URL — env var, you provide value later
-- Quarterly cadence for direct-line — confirmed unless you say otherwise
-- *Before the Words* pairing — confirmed
-
-Approve, and I'll ship Phase 1 first (Paddle prices + new Subscription page + banner + webhook + DB migration). Phases 2–4 after that.
+Confirm and I'll begin with **Phase 1 (Realtime crash + SW)** in the next message. If you want a different starting point (e.g., webhook first, or shipping Phase 4 polish alongside Phase 1), say so and I'll resequence.
