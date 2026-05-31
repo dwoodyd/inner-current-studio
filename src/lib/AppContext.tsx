@@ -226,11 +226,43 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }));
   }, [user?.id]);
 
+  // Pending-sync count exposed via context so banners can surface it.
+  const [pendingSyncCount, setPendingSyncCount] = useState(0);
+
+  // Resilient flush: the `online` event is unreliable on mobile (especially
+  // iOS Safari and PWAs), so also retry on tab focus, visibility change, and
+  // a 30s interval while pending ops exist. Cheap no-op when queue is empty.
   useEffect(() => {
-    if (!user) return;
-    const flush = () => flushPendingCloudOps(user.id).then(() => loadCloudState(user.id).then(s => { if (s) setState(s); }));
+    if (!user) { setPendingSyncCount(0); return; }
+    let inFlight = false;
+    const refreshCount = () => setPendingSyncCount(readPending(user.id).length);
+    const flush = async () => {
+      if (inFlight || !navigator.onLine) return;
+      if (readPending(user.id).length === 0) { refreshCount(); return; }
+      inFlight = true;
+      try {
+        await flushPendingCloudOps(user.id);
+        const s = await loadCloudState(user.id);
+        if (s) setState(s);
+      } finally {
+        inFlight = false;
+        refreshCount();
+      }
+    };
+    const onVisible = () => { if (document.visibilityState === 'visible') flush(); };
+    refreshCount();
     window.addEventListener('online', flush);
-    return () => window.removeEventListener('online', flush);
+    window.addEventListener('focus', flush);
+    document.addEventListener('visibilitychange', onVisible);
+    const flushInterval = window.setInterval(flush, 30_000);
+    const countInterval = window.setInterval(refreshCount, 2_000);
+    return () => {
+      window.removeEventListener('online', flush);
+      window.removeEventListener('focus', flush);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.clearInterval(flushInterval);
+      window.clearInterval(countInterval);
+    };
   }, [user?.id]);
 
   // Migrate local data to cloud on first login
