@@ -62,7 +62,12 @@ export default function Subscription() {
   const inFounderWindow = sub.founderWindowActive;
   const ctaVerb = inFounderWindow ? 'Reserve' : 'Upgrade to';
 
-  const proPriceId = cadence === 'annual' ? FOUNDING_PRICES.annual : FOUNDING_PRICES.monthly;
+  // Founding rate is reserved for life for founding members + anyone still inside their founder window.
+  // Everyone else (new signups after the 100 lifetime slots fill) sees retail pricing.
+  const eligibleForFounding = sub.isFoundingMember || inFounderWindow || !slots.soldOut;
+  const proPriceId = eligibleForFounding
+    ? (cadence === 'annual' ? FOUNDING_PRICES.annual : FOUNDING_PRICES.monthly)
+    : (cadence === 'annual' ? RETAIL_PRICES.annual : RETAIL_PRICES.monthly);
   const lifetimeAvailable = !slots.soldOut || sub.detailedTier === 'lifetime';
 
   const startCheckout = async (priceId: string) => {
