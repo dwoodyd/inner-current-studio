@@ -7,6 +7,7 @@ import { useAppState } from '@/lib/AppContext';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { useCurrentProgress } from '@/lib/currents/progress';
 import CurrentSigil from '@/components/currents/CurrentSigil';
+import WeeklyDigest from '@/components/currents/WeeklyDigest';
 
 const STAGE_LABEL: Record<1 | 2 | 3 | 4, string> = {
   1: 'Seed', 2: 'Sprout', 3: 'Bloom', 4: 'Resonance',
