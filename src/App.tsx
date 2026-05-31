@@ -274,12 +274,12 @@ function AppRoutes() {
         <Route path="/reflect/archive" element={<MyCurrent />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
-        <Route path="/profile/rituals" element={<MyRituals />} />
+        <Route path="/profile/rituals" element={premium('unlimited custom Rituals', <MyRituals />)} />
         <Route path="/profile/guide" element={daily('current_guide', <CurrentGuide />)} />
-        <Route path="/profile/patterns" element={<PatternMirror />} />
+        <Route path="/profile/patterns" element={premium('the Pattern Mirror history view', <PatternMirror />)} />
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/profile/subscription" element={<Subscription />} />
-        <Route path="/profile/resonance" element={<ResonanceLibrary />} />
+        <Route path="/profile/resonance" element={premium('the Resonance Library', <ResonanceLibrary />)} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
@@ -308,8 +308,8 @@ function AppRoutes() {
         <Route path="/currents/:slug" element={<CurrentSpecPage />} />
         <Route path="/currents/:slug/beliefs" element={<CurrentBeliefsPage />} />
         <Route path="/currents/:slug/sequence/:sequenceId" element={<CurrentSequencePage />} />
-        <Route path="/studios" element={<StudiosHub />} />
-        <Route path="/studios/:studioId" element={<StudioRunner />} />
+        <Route path="/studios" element={premium('Studios journeys', <StudiosHub />)} />
+        <Route path="/studios/:studioId" element={premium('Studios journeys', <StudioRunner />)} />
         <Route path="/self" element={current('self', <SelfHub />)} />
         <Route path="/self/state" element={current('self', <SelfState />)} />
         <Route path="/self/affirmations" element={current('self', <SelfAffirmations />)} />

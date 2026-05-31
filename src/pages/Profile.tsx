@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Sigil } from '@/components/onboarding/Sigil';
 import PracticeConstellation from '@/components/PracticeConstellation';
 import { toast } from 'sonner';
-import { BarChart3, Layers, Sparkles, Activity, Archive, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart } from 'lucide-react';
+import { BarChart3, Layers, Sparkles, Activity, Archive, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart, Lock } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,7 +36,8 @@ export default function Profile() {
   const { state } = useAppState();
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdmin();
-  const { isFoundingMember, detailedTier } = useSubscription();
+  const { isFoundingMember, detailedTier, isPremium } = useSubscription();
+  const proGated = !isPremium;
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const totalCheckIns = state.checkIns.length;
@@ -71,14 +72,14 @@ export default function Profile() {
       items: [
         { icon: Heart, label: hasCompanion ? 'Your companion' : 'Set up your companion', description: hasCompanion ? 'Sigil & first affirmation' : 'A 2-minute personal ritual', to: '/onboarding', accent: !hasCompanion },
         { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
-        { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals' },
+        { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals', proLock: proGated },
       ],
     },
     {
       title: 'Insights',
       items: [
-        { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns' },
-        { icon: Archive, label: 'Resonance Library', description: 'Every state, honored', to: '/profile/resonance' },
+        { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns', proLock: proGated },
+        { icon: Archive, label: 'Resonance Library', description: 'Every state, honored', to: '/profile/resonance', proLock: proGated },
         { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', to: '/profile/insights' },
       ],
     },
@@ -156,7 +157,7 @@ export default function Profile() {
             <motion.section key={group.title} variants={fadeUp} className="space-y-2">
               <h2 className="px-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/60">{group.title}</h2>
               <div className="soul-glass overflow-hidden rounded-2xl divide-y divide-border/10">
-                {group.items.map(({ icon: Icon, label, description, to, action, accent }) => (
+                {group.items.map(({ icon: Icon, label, description, to, action, accent, proLock }: any) => (
                   <motion.button
                     key={label}
                     variants={fadeUp}
@@ -172,6 +173,12 @@ export default function Profile() {
                       <br />
                       <span className="text-[11px] text-muted-foreground">{description}</span>
                     </div>
+                    {proLock && (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] font-medium text-primary">
+                        <Lock size={9} strokeWidth={2} />
+                        Pro
+                      </span>
+                    )}
                     {(to || action) && <ChevronRight size={14} className="shrink-0 text-muted-foreground/40" />}
                   </motion.button>
                 ))}
