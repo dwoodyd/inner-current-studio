@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { QuickState } from '@/lib/types';
+import { STATE_DEFS } from '@/lib/states';
 
 interface CurrentPulseProps {
   quickState?: QuickState;
@@ -14,14 +15,6 @@ const stateColors: Record<QuickState, { inner: string; outer: string; glow: stri
   flowing: { inner: 'bg-soul-gold/50', outer: 'border-soul-gold/40', glow: 'soul-glow-gold', particle: 'bg-primary/15' },
 };
 
-const stateLabels: Record<QuickState, string> = {
-  tight: 'Contracted',
-  restless: 'Restless',
-  flat: 'Still',
-  open: 'Opening',
-  flowing: 'Flowing',
-};
-
 const breathSpeeds: Record<QuickState, number> = {
   tight: 6,
   restless: 4.5,
@@ -29,6 +22,7 @@ const breathSpeeds: Record<QuickState, number> = {
   open: 4,
   flowing: 3.5,
 };
+
 
 const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: CurrentPulseProps) {
   const colors = stateColors[quickState];
@@ -92,14 +86,20 @@ const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: C
           transition={{ duration: speed - 1, repeat: Infinity, ease: 'easeInOut' }}
         />
       </div>
-      <motion.p
+      <motion.div
         key={quickState}
         initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-xs font-medium tracking-wide text-muted-foreground sm:text-sm"
+        className="flex flex-col items-center gap-0.5"
       >
-        {stateLabels[quickState]}
-      </motion.p>
+        <p className="text-xs font-medium tracking-wide text-foreground sm:text-sm">
+          {STATE_DEFS[quickState].label}
+        </p>
+        <p className="text-[10px] text-muted-foreground/70 italic sm:text-[11px]">
+          {STATE_DEFS[quickState].tagline}
+        </p>
+      </motion.div>
+
     </div>
   );
 });

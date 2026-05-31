@@ -3,7 +3,16 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
-import type { EmotionalState } from '@/lib/types';
+import { STATE_DEFS } from '@/lib/states';
+import type { EmotionalState, QuickState } from '@/lib/types';
+
+const emotionalToQuick: Record<EmotionalState, QuickState> = {
+  'shut-down': 'tight', raw: 'tight', tense: 'tight', discouraged: 'tight',
+  scattered: 'restless', doubtful: 'restless', restless: 'restless',
+  flat: 'flat', neutral: 'flat',
+  open: 'open', steady: 'open', hopeful: 'open',
+  uplifted: 'flowing', clear: 'flowing', energized: 'flowing', flowing: 'flowing',
+};
 
 const STATE_BUCKETS: { key: string; label: string; color: string; states: EmotionalState[] }[] = [
   { key: 'contracted', label: 'Contracted', color: 'bg-soul-dim', states: ['shut-down', 'raw', 'tense', 'discouraged'] },
@@ -168,6 +177,24 @@ export default function PatternMirror() {
             </div>
           </motion.div>
 
+          {/* Most recent — canonical retrospective using locked descriptions */}
+          {state.checkIns[0] && (() => {
+            const qs = emotionalToQuick[state.checkIns[0].state] ?? 'flat';
+            const def = STATE_DEFS[qs];
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.28 }}
+                className="soul-card-raised text-center space-y-2"
+              >
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">Most recent</p>
+                <p className="font-heading text-lg text-foreground">You were {def.label} today.</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{def.description}</p>
+              </motion.div>
+            );
+          })()}
+
           {/* Insight */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -183,6 +210,7 @@ export default function PatternMirror() {
               {analysis.mostCommon === 'contracted' && '"Contraction isn\'t failure — it\'s information. You\'re paying attention."'}
             </p>
           </motion.div>
+
         </>
       )}
     </div>

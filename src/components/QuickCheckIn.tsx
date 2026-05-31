@@ -1,18 +1,23 @@
 import { QuickState } from '@/lib/types';
 import { motion } from 'framer-motion';
+import { STATE_DEFS, STATE_ORDER } from '@/lib/states';
 
 interface QuickCheckInProps {
   selected?: QuickState;
   onSelect: (state: QuickState) => void;
 }
 
-const states: { value: QuickState; label: string; emoji: string; hint: string }[] = [
-  { value: 'tight', label: 'Tight', emoji: '◉', hint: 'Contracted, holding on' },
-  { value: 'restless', label: 'Restless', emoji: '◈', hint: 'Scattered, unsettled' },
-  { value: 'flat', label: 'Flat', emoji: '○', hint: 'Neutral, still' },
-  { value: 'open', label: 'Open', emoji: '◎', hint: 'Receptive, softening' },
-  { value: 'flowing', label: 'Flowing', emoji: '✦', hint: 'Aligned, in the current' },
-];
+const emojiByState: Record<QuickState, string> = {
+  tight: '◉', restless: '◈', flat: '○', open: '◎', flowing: '✦',
+};
+
+const states = STATE_ORDER.map(id => ({
+  value: id,
+  label: STATE_DEFS[id].label,
+  emoji: emojiByState[id],
+  hint: STATE_DEFS[id].tagline,
+}));
+
 
 const pulseVariants: Record<QuickState, import('framer-motion').TargetAndTransition> = {
   tight: { scale: [1, 0.92, 1], transition: { duration: 1.8, repeat: Infinity, ease: 'easeInOut' } },
