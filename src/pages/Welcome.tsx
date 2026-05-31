@@ -5,7 +5,7 @@ import { Activity, ArrowRight, Eye, Moon, Play, Shield, Sparkles, Timer, Wifi } 
 import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
-import innerWakeIcon from '@/assets/inner-wake-icon.svg';
+import innerWakeIcon from '@/assets/master-mark.png';
 
 const SEEN_KEY = 'iw_cinematic_seen_v1';
 

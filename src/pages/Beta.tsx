@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check, KeyRound, Sparkles } from 'lucide-react';
-import innerWakeIcon from '@/assets/inner-wake-icon.svg';
+import innerWakeIcon from '@/assets/master-mark.png';
 
 const STORAGE_KEY = 'iw_beta_access_v1';
 const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN'] as const;
