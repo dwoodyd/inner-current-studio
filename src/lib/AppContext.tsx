@@ -323,7 +323,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const checkIn: CheckIn = { id: generateId(), state: emotionalState, note, createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, checkIns: [checkIn, ...prev.checkIns] }),
-      () => supabase.from('check_ins').insert({ user_id: user!.id, id: checkIn.id, state: emotionalState, note, created_at: checkIn.createdAt }),
+      () => supabase.from('check_ins').insert({ user_id: user!.id, state: emotionalState, note, created_at: checkIn.createdAt }),
       'check-in',
       { type: 'checkIn', payload: checkIn }
     );
