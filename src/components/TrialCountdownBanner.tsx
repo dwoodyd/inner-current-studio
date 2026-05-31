@@ -32,7 +32,7 @@ export function TrialCountdownBanner() {
         className="flex w-full items-center justify-center gap-2 border-b border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-primary/90 transition-colors hover:bg-primary/15"
       >
         <Sparkles className="h-3 w-3" />
-        Founder Trial · {trialDaysRemaining} {dayLabel} left · Lifetime $99
+        Founder Trial · {trialDaysRemaining} {dayLabel} left · $99 locks lifetime access
       </button>
     );
   }
