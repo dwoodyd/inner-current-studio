@@ -117,8 +117,8 @@ function StepView({ step, value, onChange, domain, spec, stage }: {
   step: SequenceStep;
   value: string;
   onChange: (v: string) => void;
-  domain: ReturnType<typeof DOMAINS[DomainKey]> extends infer T ? T : never;
-  spec: ReturnType<typeof CURRENT_SPECS[DomainKey]> extends infer T ? T : never;
+  domain: typeof DOMAINS[DomainKey];
+  spec: typeof CURRENT_SPECS[DomainKey];
   stage: 1 | 2 | 3 | 4;
 }) {
   switch (step.type) {
