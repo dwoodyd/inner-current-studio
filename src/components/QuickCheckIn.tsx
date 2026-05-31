@@ -1,12 +1,25 @@
 import { QuickState } from '@/lib/types';
 import { motion } from 'framer-motion';
+import { STATE_DEFS, STATE_ORDER } from '@/lib/states';
 
 interface QuickCheckInProps {
   selected?: QuickState;
   onSelect: (state: QuickState) => void;
 }
 
-const states: { value: QuickState; label: string; emoji: string; hint: string }[] = [
+const emojiByState: Record<QuickState, string> = {
+  tight: '◉', restless: '◈', flat: '○', open: '◎', flowing: '✦',
+};
+
+const states = STATE_ORDER.map(id => ({
+  value: id,
+  label: STATE_DEFS[id].label,
+  emoji: emojiByState[id],
+  hint: STATE_DEFS[id].tagline,
+}));
+
+// Legacy inline state list (now sourced from STATE_DEFS above):
+const _unused = [
   { value: 'tight', label: 'Tight', emoji: '◉', hint: 'Contracted, holding on' },
   { value: 'restless', label: 'Restless', emoji: '◈', hint: 'Scattered, unsettled' },
   { value: 'flat', label: 'Flat', emoji: '○', hint: 'Neutral, still' },
