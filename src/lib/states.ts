@@ -80,43 +80,5 @@ export const STATE_DEFS: Record<QuickState, StateDef> = {
     soundscape: 'ocean',
   },
 };
-    tagline: 'Contracted, holding on',
-    description: 'Contracted. Focused. Holding energy close.',
-    orb: orbTight,
-    soundscape: 'bowl',
-  },
-  restless: {
-    id: 'restless',
-    label: 'Restless',
-    tagline: 'Agitated, in motion',
-    description: 'Agitated. Unsettled. Energy in motion.',
-    orb: orbRestless,
-    soundscape: 'stream',
-  },
-  flat: {
-    id: 'flat',
-    label: 'Flat',
-    tagline: 'Steady, present',
-    description: 'Steady. Even. Balanced and calm.',
-    orb: orbFlat,
-    soundscape: 'drone',
-  },
-  open: {
-    id: 'open',
-    label: 'Open',
-    tagline: 'Expansive, available',
-    description: 'Expansive. Receptive. Open and available.',
-    orb: orbOpen,
-    soundscape: 'wind',
-  },
-  flowing: {
-    id: 'flowing',
-    label: 'Flowing',
-    tagline: 'In flow, at ease',
-    description: 'In flow. Effortless. Aligned and at ease.',
-    orb: orbFlowing,
-    soundscape: 'ocean',
-  },
-};
 
 export const STATE_ORDER: QuickState[] = ['tight', 'restless', 'flat', 'open', 'flowing'];
