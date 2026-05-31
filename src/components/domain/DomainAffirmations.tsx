@@ -5,6 +5,7 @@ import { ArrowLeft, Play, Pause, RotateCcw, Volume2, VolumeX } from 'lucide-reac
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { DomainConfig } from '@/lib/domains';
+import { recordPracticeFor } from '@/lib/currents/progress';
 
 const DURATIONS = [
   { label: '3 min', seconds: 180 },
@@ -55,6 +56,7 @@ export default function DomainAffirmations({ domain }: { domain: DomainConfig })
               affirmation_text: `${domain.label} session`,
             });
           }
+          recordPracticeFor(domain.key);
           setPhase('done');
           return 0;
         }
