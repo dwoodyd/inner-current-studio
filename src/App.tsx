@@ -282,6 +282,7 @@ function AppRoutes() {
         {/* Notifications hidden for V1 — service worker self-unregister bug needs root-cause time. Page component preserved for V1.1 revival. */}
         <Route path="/profile/notifications" element={<Navigate to="/profile/subscription" replace />} />
         <Route path="/profile/subscription" element={<Subscription />} />
+        <Route path="/founding-member" element={<FoundingMember />} />
         <Route path="/profile/resonance" element={premium('the Resonance Library', <ResonanceLibrary />)} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
