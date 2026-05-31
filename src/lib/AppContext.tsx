@@ -110,7 +110,7 @@ async function flushPendingCloudOps(userId: string) {
     } else if (op.type === 'todayFlow') {
       result = await upsertTodayFlow(userId, op.payload);
     } else if (op.type === 'momentumSession') {
-      result = await supabase.from('momentum_sessions').insert({ user_id: userId, id: op.payload.id, phrase: op.payload.phrase, duration: op.payload.duration, completed: op.payload.completed, created_at: op.payload.createdAt });
+      result = await supabase.from('momentum_sessions').insert({ user_id: userId, phrase: op.payload.phrase, duration: op.payload.duration, completed: op.payload.completed, created_at: op.payload.createdAt });
     }
     if (result.error && shouldQueueCloudError(result.error)) remaining.push(op);
   }
