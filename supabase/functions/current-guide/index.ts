@@ -173,7 +173,6 @@ serve(async (req) => {
 - You must NEVER say "this sounds like [condition]" or suggest a medical diagnosis.
 - If the user describes any physical symptoms, pain, or health conditions in detail, you must decline to offer diagnostic or clinical thoughts. Instead, reflect back the emotional or somatic impact of carrying this symptom, and gently redirect them to seek professional medical advice with this exact wording: "I hear you. What you're feeling deserves real attention — not from me, but from someone who can actually help. The body is asking. Have you had a chance to talk to someone who knows your history?"`;
       }
-      if (avoid.length) voiceNote += `\nNever use these words or phrases: ${avoid.join(", ")}.`;
     }
 
     // --- AI CALL ---
