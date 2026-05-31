@@ -48,7 +48,8 @@ const CurrentInsights = lazy(() => import("@/pages/CurrentInsights"));
 const MyRituals = lazy(() => import("@/pages/MyRituals"));
 const CurrentGuide = lazy(() => import("@/pages/CurrentGuide"));
 const PatternMirror = lazy(() => import("@/pages/PatternMirror"));
-const Notifications = lazy(() => import("@/pages/Notifications"));
+// Notifications page kept in repo for V1.1 revival; route redirects to Subscription for V1.
+// const Notifications = lazy(() => import("@/pages/Notifications"));
 const Subscription = lazy(() => import("@/pages/Subscription"));
 const ResonanceLibrary = lazy(() => import("@/pages/ResonanceLibrary"));
 const Onboarding = lazy(() => import("@/pages/Onboarding"));
@@ -274,10 +275,11 @@ function AppRoutes() {
         <Route path="/reflect/archive" element={<MyCurrent />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
-        <Route path="/profile/rituals" element={premium('unlimited custom Rituals', <MyRituals />)} />
+        <Route path="/profile/rituals" element={<MyRituals />} />
         <Route path="/profile/guide" element={daily('current_guide', <CurrentGuide />)} />
-        <Route path="/profile/patterns" element={premium('the Pattern Mirror history view', <PatternMirror />)} />
-        <Route path="/profile/notifications" element={<Notifications />} />
+        <Route path="/profile/patterns" element={<PatternMirror />} />
+        {/* Notifications hidden for V1 — service worker self-unregister bug needs root-cause time. Page component preserved for V1.1 revival. */}
+        <Route path="/profile/notifications" element={<Navigate to="/profile/subscription" replace />} />
         <Route path="/profile/subscription" element={<Subscription />} />
         <Route path="/profile/resonance" element={premium('the Resonance Library', <ResonanceLibrary />)} />
         <Route path="/about" element={<About />} />

@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
+import { useSubscription } from '@/hooks/useSubscription';
 import { STATE_DEFS } from '@/lib/states';
 import type { EmotionalState, QuickState } from '@/lib/types';
 
@@ -32,9 +33,18 @@ function bucketIndex(s: EmotionalState): number {
 export default function PatternMirror() {
   const navigate = useNavigate();
   const { state } = useAppState();
+  const { isPremium } = useSubscription();
+  // Free users see the last 7 days only; Pro users see full history.
+  const WEEK_MS = 7 * 86400000;
+  const scopedCheckIns = useMemo(
+    () => isPremium
+      ? state.checkIns
+      : state.checkIns.filter(c => Date.now() - new Date(c.createdAt).getTime() < WEEK_MS),
+    [state.checkIns, isPremium],
+  );
 
   const analysis = useMemo(() => {
-    const checkIns = state.checkIns;
+    const checkIns = scopedCheckIns;
     if (checkIns.length === 0) return null;
 
     // Frequency by bucket
@@ -70,7 +80,7 @@ export default function PatternMirror() {
     const mostCommon = STATE_BUCKETS.reduce((a, b) => (freq[a.key] >= freq[b.key] ? a : b)).key;
 
     return { freq, maxFreq, weekData, trend, mostCommon, total: checkIns.length };
-  }, [state.checkIns]);
+  }, [scopedCheckIns]);
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-6">
@@ -80,7 +90,9 @@ export default function PatternMirror() {
         </button>
         <div>
           <h1 className="font-heading text-lg font-semibold text-foreground">Pattern Mirror</h1>
-          <p className="text-[10px] text-muted-foreground">Your emotional rhythms, reflected</p>
+          <p className="text-[10px] text-muted-foreground">
+            {isPremium ? 'Your emotional rhythms, reflected' : 'Your last 7 days, reflected'}
+          </p>
         </div>
       </div>
 
@@ -212,6 +224,32 @@ export default function PatternMirror() {
           </motion.div>
 
         </>
+      )}
+
+      {/* Free → upsell to full history. Voice: one observation, one invitation. */}
+      {!isPremium && (
+        <motion.button
+          type="button"
+          onClick={() => navigate('/profile/subscription')}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="soul-glass-elevated w-full rounded-2xl border border-primary/15 px-5 py-5 text-left transition-all hover:bg-primary/[0.04] active:scale-[0.99]"
+        >
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10">
+              <Sparkles size={15} className="text-primary" strokeWidth={1.5} />
+            </div>
+            <div className="min-w-0 flex-1 space-y-1">
+              <p className="font-heading text-sm text-foreground leading-snug">
+                Your patterns go back further than this week.
+              </p>
+              <p className="text-xs text-primary inline-flex items-center gap-1">
+                See your full history with Pro <ArrowRight size={12} />
+              </p>
+            </div>
+          </div>
+        </motion.button>
       )}
     </div>
   );
