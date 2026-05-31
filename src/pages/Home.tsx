@@ -304,20 +304,20 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Money Current */}
+        {/* Featured Current */}
         <motion.div variants={fadeUp}>
           <button
-            onClick={() => navigate('/money')}
+            onClick={() => navigate(`/currents/${featured.key}`)}
             className="group w-full rounded-2xl p-4 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:p-5"
-            style={{ background: 'linear-gradient(135deg, hsl(42 65% 58% / 0.06), hsl(160 30% 40% / 0.04))' }}
+            style={{ background: featured.gradient }}
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">💰</span>
-                  <h2 className="font-heading text-lg font-medium text-foreground">Money Current</h2>
+                  <span className="text-lg">{featured.emoji}</span>
+                  <h2 className="font-heading text-lg font-medium text-foreground">{featured.label}</h2>
                 </div>
-                <p className="text-xs text-muted-foreground">Release resistance. Rehearse receiving.</p>
+                <p className="text-xs text-muted-foreground">{featured.tagline}</p>
               </div>
               <ChevronRight size={18} className="text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors" />
             </div>
