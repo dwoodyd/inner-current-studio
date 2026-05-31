@@ -32,7 +32,7 @@ const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: C
 
   return (
     <div className="flex flex-col items-center gap-2 sm:gap-3">
-      <div className={`relative flex items-center justify-center ${colors.glow}`}>
+      <div className={`relative grid h-32 w-32 place-items-center sm:h-40 sm:w-40 ${colors.glow}`}>
         {/* Ambient particles */}
         {[...Array(6)].map((_, i) => (
           <motion.div
@@ -56,21 +56,22 @@ const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: C
         {/* Outer ring */}
         <motion.div
           className={`absolute h-28 w-28 rounded-full border ${colors.outer} opacity-30 sm:h-36 sm:w-36`}
-          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+          animate={{ scale: [1, 1.08, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: speed + 1, repeat: Infinity, ease: 'easeInOut' }}
         />
 
         {/* Mid ring */}
         <motion.div
-          className={`absolute h-24 w-24 rounded-full border ${colors.outer} opacity-20 sm:h-28 sm:w-28`}
-          animate={{ scale: [1.05, 1, 1.05], opacity: [0.15, 0.3, 0.15] }}
+          className={`absolute h-24 w-24 rounded-full border ${colors.outer} opacity-20 sm:h-30 sm:w-30`}
+          style={{ width: undefined }}
+          animate={{ scale: [1.04, 1, 1.04], opacity: [0.15, 0.3, 0.15] }}
           transition={{ duration: speed, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
         />
 
         {/* Living orb video */}
         <motion.div
           className="relative h-20 w-20 sm:h-24 sm:w-24"
-          animate={{ scale: [1, 1.06, 1] }}
+          animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: speed, repeat: Infinity, ease: 'easeInOut' }}
         >
           <OrbVideo state={quickState} size={96} className="h-full w-full" />
