@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, GripVertical, Trash2, Save, Clock } from 'lucide-react';
+import { ArrowLeft, Plus, GripVertical, Trash2, Save, Clock, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppState } from '@/lib/AppContext';
+import { useSubscription } from '@/hooks/useSubscription';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 const AVAILABLE_STEPS = [
   'Check-in',
@@ -31,13 +40,19 @@ const STEP_DURATIONS: Record<string, number> = {
   'Overflow Practice': 5,
 };
 
+const FREE_RITUAL_CAP = 1;
+
 export default function MyRituals() {
   const navigate = useNavigate();
   const { state, saveCustomRitual } = useAppState();
+  const { isPremium } = useSubscription();
   const [building, setBuilding] = useState(false);
   const [name, setName] = useState('');
   const [steps, setSteps] = useState<string[]>([]);
   const [showPicker, setShowPicker] = useState(false);
+  const [showCapModal, setShowCapModal] = useState(false);
+
+  const atFreeCap = !isPremium && state.customRituals.length >= FREE_RITUAL_CAP;
 
   const addStep = (step: string) => {
     setSteps(prev => [...prev, step]);
@@ -48,8 +63,22 @@ export default function MyRituals() {
 
   const totalMinutes = steps.reduce((sum, s) => sum + (STEP_DURATIONS[s] || 5), 0);
 
+  const handleStartBuilding = () => {
+    if (atFreeCap) {
+      setShowCapModal(true);
+      return;
+    }
+    setBuilding(true);
+  };
+
   const save = () => {
     if (steps.length < 2 || !name.trim()) return;
+    // Defense-in-depth: re-check the cap at save time.
+    if (!isPremium && state.customRituals.length >= FREE_RITUAL_CAP) {
+      setBuilding(false);
+      setShowCapModal(true);
+      return;
+    }
     saveCustomRitual({ name, steps, durationEstimate: totalMinutes });
     setBuilding(false);
     setName('');
@@ -93,7 +122,15 @@ export default function MyRituals() {
             </div>
           )}
 
-          <Button onClick={() => setBuilding(true)} className="w-full"><Plus size={14} /> Build New Ritual</Button>
+          <Button onClick={handleStartBuilding} className="w-full">
+            <Plus size={14} /> Build New Ritual
+          </Button>
+
+          {!isPremium && (
+            <p className="text-center text-[11px] text-muted-foreground/70 pt-1">
+              {state.customRituals.length} of {FREE_RITUAL_CAP} on Free · Pro unlocks unlimited
+            </p>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
@@ -145,6 +182,40 @@ export default function MyRituals() {
           </div>
         </div>
       )}
+
+      {/* Free cap-hit modal — Pricing Spec Section 3 voice. */}
+      <Dialog open={showCapModal} onOpenChange={setShowCapModal}>
+        <DialogContent className="soul-glass-elevated border-primary/15 max-w-sm">
+          <DialogHeader className="space-y-2 text-center sm:text-center">
+            <DialogTitle className="font-heading text-xl text-foreground leading-snug">
+              One ritual is yours.
+              <br />
+              Unlimited is Pro.
+            </DialogTitle>
+            <DialogDescription className="text-sm leading-relaxed text-muted-foreground pt-1">
+              You've made one. It's enough for the practice to take root.
+              When you're ready for more — new rituals for different states,
+              different seasons — Pro unlocks all of them.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col gap-2 sm:flex-col sm:space-x-0">
+            <button
+              type="button"
+              onClick={() => { setShowCapModal(false); navigate('/profile/subscription'); }}
+              className="flex w-full min-h-[48px] items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-transform active:scale-[0.98]"
+            >
+              <Sparkles size={14} /> See Pro options →
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowCapModal(false)}
+              className="min-h-[44px] text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Not now
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
