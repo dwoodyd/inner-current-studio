@@ -36,9 +36,9 @@ const PRO_FEATURES = [
   'Custom Sigil generation per Current',
   'Resonance Library',
   'Practice Constellation',
-  'State-matched soundscapes  ·  Coming soon',
+  'State-matched soundscapes\u00a0·\u00a0Coming\u00a0soon',
   'Pattern Mirror — multi-month history',
-  'Wisdom Streams — full library  ·  Coming soon',
+  'Wisdom Streams — full library\u00a0·\u00a0Coming\u00a0soon',
   'Unlimited custom Rituals',
 ];
 
@@ -162,6 +162,9 @@ export default function Subscription() {
           {!slots.loading && lifetimeAvailable && slots.claimed != null && (
             <p className="text-xs text-muted-foreground">
               Founding Member · {slots.claimed} of {slots.total} lifetime slots claimed
+              {sub.status === 'owner' && (
+                <span className="text-muted-foreground/60"> · Owner accounts not counted</span>
+              )}
             </p>
           )}
         </motion.div>

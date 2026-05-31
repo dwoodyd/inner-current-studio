@@ -300,7 +300,7 @@ export const CURRENT_SPECS: Record<DomainKey, CurrentSpec> = {
   money: {
     slug: 'money', shortName: 'Money', tagline: 'Receive freely. Release the grip. Let it flow.', symbol: '💰', sigilBase: 'spiral',
     heroFraming: 'This is the territory of what flows in and what gets gripped tight. Sit with it. Notice what\'s true today. You don\'t have to fix anything.',
-    emptyState: 'This is the territory of what flows in and what gets gripped tight. Sit with it. Notice what\'s true today. You don\'t have to fix anything.',
+    emptyState: 'Money is just energy in motion. Start anywhere — a small noticing today is enough to begin softening the grip.',
     voiceVocabulary: ['receive', 'allow', 'let in', 'soften', 'flow'],
     voiceAvoid: ['manifest', 'attract', 'wealth mindset'],
     patternMirrorAngle: 'You sat with Money {n} times this week. You started {lowState} more often than {highState}. The belief that landed was: {belief}.',

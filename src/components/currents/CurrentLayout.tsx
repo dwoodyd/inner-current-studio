@@ -226,7 +226,7 @@ export default function CurrentLayout() {
 function NotASlug({ onBack }: { onBack: () => void }) {
   return (
     <div className="mx-auto max-w-lg p-6 text-center space-y-4">
-      <p className="text-sm text-muted-foreground">That current doesn\'t exist.</p>
+      <p className="text-sm text-muted-foreground">That current doesn't exist.</p>
       <button onClick={onBack} className="text-sm text-primary">Return to Currents</button>
     </div>
   );
