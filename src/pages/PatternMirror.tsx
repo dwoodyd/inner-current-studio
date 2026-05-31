@@ -177,6 +177,24 @@ export default function PatternMirror() {
             </div>
           </motion.div>
 
+          {/* Most recent — canonical retrospective using locked descriptions */}
+          {state.checkIns[0] && (() => {
+            const qs = emotionalToQuick[state.checkIns[0].state] ?? 'flat';
+            const def = STATE_DEFS[qs];
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.28 }}
+                className="soul-card-raised text-center space-y-2"
+              >
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">Most recent</p>
+                <p className="font-heading text-lg text-foreground">You were {def.label} today.</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{def.description}</p>
+              </motion.div>
+            );
+          })()}
+
           {/* Insight */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -192,6 +210,7 @@ export default function PatternMirror() {
               {analysis.mostCommon === 'contracted' && '"Contraction isn\'t failure — it\'s information. You\'re paying attention."'}
             </p>
           </motion.div>
+
         </>
       )}
     </div>
