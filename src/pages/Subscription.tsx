@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useFounderSlots } from '@/hooks/useFounderSlots';
 import { usePaddleCheckout } from '@/hooks/usePaddleCheckout';
 import { FOUNDING_PRICES, RETAIL_PRICES } from '@/lib/pricing';
+import { getPaddleEnv } from '@/lib/paddle';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -90,7 +91,9 @@ export default function Subscription() {
 
   const handleBillingPortal = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
+      const { data, error } = await supabase.functions.invoke('customer-portal', {
+        body: { environment: getPaddleEnv() },
+      });
       if (error || !data?.url) throw error;
       window.open(data.url, '_blank', 'noopener,noreferrer');
     } catch {
