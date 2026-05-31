@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, Sparkles, Clock } from 'lucide-react';
 import { STUDIOS } from '@/lib/studios/studios';
-import { DOMAINS } from '@/lib/domains';
+import { CURRENT_SPECS } from '@/lib/currents/spec';
 
 export default function StudiosHub() {
   const navigate = useNavigate();
