@@ -386,6 +386,54 @@ export type Database = {
         }
         Relationships: []
       }
+      founding_member_applications: {
+        Row: {
+          created_at: string
+          current_focus: string | null
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          practice_context: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+          why: string
+        }
+        Insert: {
+          created_at?: string
+          current_focus?: string | null
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          practice_context?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          why: string
+        }
+        Update: {
+          created_at?: string
+          current_focus?: string | null
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          practice_context?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          why?: string
+        }
+        Relationships: []
+      }
       future_pages: {
         Row: {
           content: string

@@ -244,6 +244,23 @@ export default function Subscription() {
               All 100 founding lifetime slots are claimed. Pro Monthly &amp; Annual remain at retail rates for new members.
             </div>
           )}
+
+          {/* Founding-member application CTA */}
+          {lifetimeAvailable && sub.detailedTier !== 'lifetime' && (
+            <button
+              type="button"
+              onClick={() => navigate('/founding-member')}
+              className="soul-glass w-full rounded-2xl px-5 py-4 text-left text-xs text-muted-foreground hover:bg-muted/10 transition-colors flex items-center justify-between gap-3"
+            >
+              <span>
+                <span className="block font-heading text-sm text-foreground">Apply to the Founding 100</span>
+                <span className="mt-1 block text-muted-foreground/80">
+                  Prefer a hand-reviewed entry? Tell us your story — we'll send a private founding-rate link if it's a fit.
+                </span>
+              </span>
+              <span className="shrink-0 text-primary/70">→</span>
+            </button>
+          )}
         </motion.div>
 
         {/* Compare expand */}

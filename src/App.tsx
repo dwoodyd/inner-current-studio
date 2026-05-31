@@ -63,6 +63,7 @@ const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Beta = lazy(() => import("@/pages/Beta"));
+const FoundingMember = lazy(() => import("@/pages/FoundingMember"));
 const OwnerAccess = lazy(() => import("@/pages/OwnerAccess"));
 const MoneyCurrent = lazy(() => import("@/pages/MoneyCurrent"));
 const MorningRitual = lazy(() => import("@/pages/MorningRitual"));
@@ -281,6 +282,7 @@ function AppRoutes() {
         {/* Notifications hidden for V1 — service worker self-unregister bug needs root-cause time. Page component preserved for V1.1 revival. */}
         <Route path="/profile/notifications" element={<Navigate to="/profile/subscription" replace />} />
         <Route path="/profile/subscription" element={<Subscription />} />
+        <Route path="/founding-member" element={<FoundingMember />} />
         <Route path="/profile/resonance" element={premium('the Resonance Library', <ResonanceLibrary />)} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
