@@ -46,6 +46,7 @@ const CurrentGuide = lazy(() => import("@/pages/CurrentGuide"));
 const PatternMirror = lazy(() => import("@/pages/PatternMirror"));
 const Notifications = lazy(() => import("@/pages/Notifications"));
 const Subscription = lazy(() => import("@/pages/Subscription"));
+const ResonanceLibrary = lazy(() => import("@/pages/ResonanceLibrary"));
 const Onboarding = lazy(() => import("@/pages/Onboarding"));
 const Auth = lazy(() => import("@/pages/Auth"));
 const About = lazy(() => import("@/pages/About"));
@@ -267,6 +268,7 @@ function AppRoutes() {
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/profile/subscription" element={<Subscription />} />
+        <Route path="/profile/resonance" element={<ResonanceLibrary />} />
         <Route path="/about" element={<About />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />

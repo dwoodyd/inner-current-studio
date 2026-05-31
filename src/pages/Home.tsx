@@ -8,6 +8,7 @@ import QuickCheckIn from '@/components/QuickCheckIn';
 import TodayFlowCard from '@/components/TodayFlowCard';
 import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
+import StateSoundscape from '@/components/StateSoundscape';
 import brandLogo from '@/assets/inner-wake-logo.png';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
@@ -203,6 +204,12 @@ export default function Home() {
         <motion.div variants={fadeUp}>
           <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
         </motion.div>
+
+        {/* State-matched soundscape (Wave A audio UI) */}
+        <motion.div variants={fadeUp}>
+          <StateSoundscape state={quickState || 'flat'} />
+        </motion.div>
+
 
         <motion.div variants={fadeUp}>
           <button

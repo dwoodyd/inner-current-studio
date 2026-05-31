@@ -3,7 +3,16 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
-import type { EmotionalState } from '@/lib/types';
+import { STATE_DEFS } from '@/lib/states';
+import type { EmotionalState, QuickState } from '@/lib/types';
+
+const emotionalToQuick: Record<EmotionalState, QuickState> = {
+  'shut-down': 'tight', raw: 'tight', tense: 'tight', discouraged: 'tight',
+  scattered: 'restless', doubtful: 'restless', restless: 'restless',
+  flat: 'flat', neutral: 'flat',
+  open: 'open', steady: 'open', hopeful: 'open',
+  uplifted: 'flowing', clear: 'flowing', energized: 'flowing', flowing: 'flowing',
+};
 
 const STATE_BUCKETS: { key: string; label: string; color: string; states: EmotionalState[] }[] = [
   { key: 'contracted', label: 'Contracted', color: 'bg-soul-dim', states: ['shut-down', 'raw', 'tense', 'discouraged'] },
