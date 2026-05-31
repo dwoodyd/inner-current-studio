@@ -14,6 +14,7 @@ import { BetaAccessGate } from "@/components/BetaAccessGate";
 import { useAppState } from "@/lib/AppContext";
 import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
+import { useCurrentsCloudSync } from "@/hooks/useCurrentsCloudSync";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
@@ -83,6 +84,8 @@ const CurrentsHub = lazy(() => import("@/pages/CurrentsHub"));
 const CurrentSpecPage = lazy(() => import("@/pages/currents/CurrentSpecPage"));
 const CurrentBeliefsPage = lazy(() => import("@/pages/currents/CurrentBeliefsPage"));
 const CurrentSequencePage = lazy(() => import("@/pages/currents/CurrentSequencePage"));
+const StudiosHub = lazy(() => import("@/pages/studios/StudiosHub"));
+const StudioRunner = lazy(() => import("@/pages/studios/StudioRunner"));
 const SelfHub = lazy(() => import("@/pages/domain/SelfHub"));
 const EnergyHub = lazy(() => import("@/pages/domain/EnergyHub"));
 const RelationshipsHub = lazy(() => import("@/pages/domain/RelationshipsHub"));
@@ -199,6 +202,7 @@ function AppRoutes() {
   const location = useLocation();
   const { state } = useAppState();
   useBetaTrialClaimer();
+  useCurrentsCloudSync();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
   const daily = (tool: GatedTool, element: JSX.Element) => <DailyLimitGate tool={tool}>{element}</DailyLimitGate>;
@@ -304,6 +308,8 @@ function AppRoutes() {
         <Route path="/currents/:slug" element={<CurrentSpecPage />} />
         <Route path="/currents/:slug/beliefs" element={<CurrentBeliefsPage />} />
         <Route path="/currents/:slug/sequence/:sequenceId" element={<CurrentSequencePage />} />
+        <Route path="/studios" element={<StudiosHub />} />
+        <Route path="/studios/:studioId" element={<StudioRunner />} />
         <Route path="/self" element={current('self', <SelfHub />)} />
         <Route path="/self/state" element={current('self', <SelfState />)} />
         <Route path="/self/affirmations" element={current('self', <SelfAffirmations />)} />

@@ -13,6 +13,7 @@ import CurrentSigil from '@/components/currents/CurrentSigil';
 import TodayBelief from '@/components/currents/TodayBelief';
 import PatternMirror from '@/components/currents/PatternMirror';
 import ResonanceLibrary from '@/components/currents/ResonanceLibrary';
+import ResonanceCardExport from '@/components/currents/ResonanceCardExport';
 import AmbientPlayer from '@/components/currents/AmbientPlayer';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';
@@ -194,6 +195,10 @@ export default function CurrentLayout() {
         <PatternMirror slug={slug} />
 
         <ResonanceLibrary slug={slug} />
+
+        <div className="flex justify-center pt-2">
+          <ResonanceCardExport slug={slug} />
+        </div>
 
         {/* Recent work */}
         {recentSequences.length > 0 && (

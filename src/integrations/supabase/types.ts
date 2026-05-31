@@ -98,6 +98,57 @@ export type Database = {
         }
         Relationships: []
       }
+      current_progress: {
+        Row: {
+          beliefs_landed_alive: string[]
+          beliefs_landed_true: string[]
+          created_at: string
+          current_streak: number
+          first_visited_at: string | null
+          id: string
+          last_practice_date: string | null
+          last_visited_at: string | null
+          longest_streak: number
+          practices_completed: number
+          sequences_completed: string[]
+          slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          beliefs_landed_alive?: string[]
+          beliefs_landed_true?: string[]
+          created_at?: string
+          current_streak?: number
+          first_visited_at?: string | null
+          id?: string
+          last_practice_date?: string | null
+          last_visited_at?: string | null
+          longest_streak?: number
+          practices_completed?: number
+          sequences_completed?: string[]
+          slug: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          beliefs_landed_alive?: string[]
+          beliefs_landed_true?: string[]
+          created_at?: string
+          current_streak?: number
+          first_visited_at?: string | null
+          id?: string
+          last_practice_date?: string | null
+          last_visited_at?: string | null
+          longest_streak?: number
+          practices_completed?: number
+          sequences_completed?: string[]
+          slug?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       custom_rituals: {
         Row: {
           created_at: string

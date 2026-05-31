@@ -61,6 +61,21 @@ export default function CurrentsHub() {
             );
           })}
         </div>
+
+        <motion.button
+          initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          onClick={() => navigate('/studios')}
+          className="soul-glass w-full text-left p-4 rounded-2xl hover:bg-muted/10 transition-colors flex items-center gap-3 border border-primary/10"
+        >
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 soul-glow-gold">
+            <span className="text-base">✶</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading text-base text-foreground tracking-tight">Studios</h3>
+            <p className="text-xs text-muted-foreground leading-snug">Longer arcs that weave several currents into one sitting.</p>
+          </div>
+          <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+        </motion.button>
       </div>
     </div>
   );
