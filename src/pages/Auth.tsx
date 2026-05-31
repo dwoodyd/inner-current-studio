@@ -6,7 +6,7 @@ import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
 import { ArrowRight, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
-import brandLogo from '@/assets/inner-wake-logo.png';
+import brandLogo from '@/assets/inner-wake-logo.svg';
 
 const INNER_WAKE_ICON = '/icon.svg';
 

@@ -9,7 +9,7 @@ import TodayFlowCard from '@/components/TodayFlowCard';
 import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
 import StateSoundscape from '@/components/StateSoundscape';
-import brandLogo from '@/assets/inner-wake-logo.png';
+import brandLogo from '@/assets/inner-wake-logo.svg';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {
@@ -30,17 +30,11 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const FAVICON_VERSION = '20260531a';
-const STATIC_FAVICON = `/favicon-64.png?v=${FAVICON_VERSION}`;
-const STATIC_SHORTCUT_ICON = `/favicon.ico?v=${FAVICON_VERSION}`;
-const STATIC_APPLE_ICON = `/apple-touch-icon.png?v=${FAVICON_VERSION}`;
-const FAVICON_GLOW_FRAMES = [
-  `/favicon-glow-1.png?v=${FAVICON_VERSION}`,
-  `/favicon-glow-2.png?v=${FAVICON_VERSION}`,
-  `/favicon-glow-3.png?v=${FAVICON_VERSION}`,
-  `/favicon-glow-2.png?v=${FAVICON_VERSION}`,
-  STATIC_FAVICON,
-];
+const FAVICON_VERSION = '20260531b';
+const STATIC_FAVICON = `/inner-wake-logo.svg?v=${FAVICON_VERSION}`;
+const STATIC_SHORTCUT_ICON = `/inner-wake-logo.svg?v=${FAVICON_VERSION}`;
+const STATIC_APPLE_ICON = `/inner-wake-logo.svg?v=${FAVICON_VERSION}`;
+const FAVICON_GLOW_FRAMES = [STATIC_FAVICON];
 
 const ritualRecommendations: Record<QuickState, { title: string; reason: string; route: string; guide: string }> = {
   tight: {
@@ -119,22 +113,20 @@ export default function Home() {
 
     const faviconLink = ensureHeadLink('link[data-runtime-favicon="true"]', {
       rel: 'icon',
-      type: 'image/png',
-      sizes: '64x64',
+      type: 'image/svg+xml',
       href: STATIC_FAVICON,
       'data-runtime-favicon': 'true',
     });
 
     ensureHeadLink('link[data-runtime-shortcut-icon="true"]', {
       rel: 'shortcut icon',
-      type: 'image/x-icon',
+      type: 'image/svg+xml',
       href: STATIC_SHORTCUT_ICON,
       'data-runtime-shortcut-icon': 'true',
     });
 
     ensureHeadLink('link[data-runtime-apple-touch-icon="true"]', {
       rel: 'apple-touch-icon',
-      sizes: '180x180',
       href: STATIC_APPLE_ICON,
       'data-runtime-apple-touch-icon': 'true',
     });
