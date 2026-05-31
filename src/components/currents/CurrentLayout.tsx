@@ -196,6 +196,10 @@ export default function CurrentLayout() {
 
         <ResonanceLibrary slug={slug} />
 
+        <div className="flex justify-center pt-2">
+          <ResonanceCardExport slug={slug} />
+        </div>
+
         {/* Recent work */}
         {recentSequences.length > 0 && (
           <section className="space-y-3">
