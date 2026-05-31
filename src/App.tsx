@@ -45,6 +45,7 @@ const ImagineIf = lazy(() => import("@/pages/ImagineIf"));
 const OverflowPractice = lazy(() => import("@/pages/OverflowPractice"));
 const MyCurrent = lazy(() => import("@/pages/MyCurrent"));
 const Profile = lazy(() => import("@/pages/Profile"));
+const ThemeSettings = lazy(() => import("@/pages/ThemeSettings"));
 const CurrentInsights = lazy(() => import("@/pages/CurrentInsights"));
 const MyRituals = lazy(() => import("@/pages/MyRituals"));
 const CurrentGuide = lazy(() => import("@/pages/CurrentGuide"));
