@@ -10,11 +10,16 @@
  *                  and the Resonance Library archive (sentence case, period per phrase)
  */
 import type { QuickState } from '@/lib/types';
-import orbTight from '@/assets/orb-tight.png';
-import orbRestless from '@/assets/orb-restless.png';
-import orbFlat from '@/assets/orb-flat.png';
-import orbOpen from '@/assets/orb-open.png';
-import orbFlowing from '@/assets/orb-flowing.png';
+import orbTightImg from '@/assets/orb-tight.png';
+import orbRestlessImg from '@/assets/orb-restless.png';
+import orbFlatImg from '@/assets/orb-flat.png';
+import orbOpenImg from '@/assets/orb-open.png';
+import orbFlowingImg from '@/assets/orb-flowing.png';
+import orbTightVid from '@/assets/orbs/orb-tight.mp4';
+import orbRestlessVid from '@/assets/orbs/orb-restless.mp4';
+import orbFlatVid from '@/assets/orbs/orb-flat.mp4';
+import orbOpenVid from '@/assets/orbs/orb-open.mp4';
+import orbFlowingVid from '@/assets/orbs/orb-flowing.mp4';
 
 export interface StateDef {
   id: QuickState;
