@@ -6,8 +6,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/integrations/supabase/client';
 import { Sigil } from '@/components/onboarding/Sigil';
+import PracticeConstellation from '@/components/PracticeConstellation';
 import { toast } from 'sonner';
-import { BarChart3, Layers, Sparkles, Activity, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart } from 'lucide-react';
+import { BarChart3, Layers, Sparkles, Activity, Archive, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -75,6 +76,7 @@ export default function Profile() {
       title: 'Insights',
       items: [
         { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns' },
+        { icon: Archive, label: 'Resonance Library', description: 'Every state, honored', to: '/profile/resonance' },
         { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', to: '/profile/insights' },
       ],
     },
@@ -130,25 +132,11 @@ export default function Profile() {
           </motion.div>
         )}
 
-        {/* Stats */}
-        <motion.div variants={fadeUp} className="grid grid-cols-3 gap-3">
-          {[
-            { label: 'Check-ins', value: totalCheckIns },
-            { label: 'This cycle', value: cycleReturns },
-            { label: 'Rituals', value: totalRituals },
-          ].map(({ label, value }, i) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.15 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="soul-glass-elevated text-center py-5 rounded-2xl"
-            >
-              <p className="text-xl font-heading font-semibold text-primary">{value}</p>
-              <p className="text-[10px] text-muted-foreground mt-1.5 tracking-wide uppercase">{label}</p>
-            </motion.div>
-          ))}
+        {/* Practice Constellation — replaces the numeric resets counter */}
+        <motion.div variants={fadeUp}>
+          <PracticeConstellation />
         </motion.div>
+
 
         {/* Sections */}
         <div className="space-y-4">
