@@ -1,12 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Send, Sparkles, Shield } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAppState } from '@/lib/AppContext';
 import { supabase } from '@/integrations/supabase/client';
 import { getPaddleEnv } from '@/lib/paddle';
 import { toast } from 'sonner';
+import { CURRENT_SPECS } from '@/lib/currents/spec';
+import { DOMAINS, type DomainKey } from '@/lib/domains';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,12 +36,18 @@ const STARTERS = [
 async function streamChat({
   messages,
   emotionalContext,
+  currentSlug,
+  voiceVocabulary,
+  voiceAvoid,
   onDelta,
   onDone,
   onError,
 }: {
   messages: Msg[];
   emotionalContext: string;
+  currentSlug?: DomainKey;
+  voiceVocabulary?: string[];
+  voiceAvoid?: string[];
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (msg: string) => void;
@@ -54,7 +62,7 @@ async function streamChat({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ messages, emotionalContext, environment: getPaddleEnv() }),
+    body: JSON.stringify({ messages, emotionalContext, environment: getPaddleEnv(), currentSlug, voiceVocabulary, voiceAvoid }),
   });
 
   if (!resp.ok) {
