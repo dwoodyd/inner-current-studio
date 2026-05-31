@@ -78,7 +78,7 @@ function WordReveal({
           style={{ animationDelay: `${delay + i * 100}ms` }}
         >
           {gold ? <em>{w}</em> : w}
-          {i < words.length - 1 ? "\u00a0" : ""}
+          {i < words.length - 1 ? " " : ""}
         </span>
       ))}
     </span>

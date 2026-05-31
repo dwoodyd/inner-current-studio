@@ -24,9 +24,9 @@ export const STUDIOS: Studio[] = [
   {
     id: 'returning',
     title: 'Returning',
-    subtitle: 'For when you\u2019ve been gone from yourself.',
+    subtitle: 'For when you\'ve been gone from yourself.',
     longDescription:
-      'A soft re-entry into your own life when nothing has been catastrophic, only quiet. Self \u2192 Energy \u2192 Health.',
+      'A soft re-entry into your own life when nothing has been catastrophic, only quiet. Self → Energy → Health.',
     estimatedMinutes: 15,
     steps: [
       { slug: 'self', sequenceId: 'self-first-light', framing: 'First: come back into the room of you.' },
@@ -40,7 +40,7 @@ export const STUDIOS: Studio[] = [
     title: 'Open Hands',
     subtitle: 'Less gripping. More receiving.',
     longDescription:
-      'Dissolving the quiet grip you\u2019ve been carrying without noticing. Money \u2192 Relationship.',
+      'Dissolving the quiet grip you\'ve been carrying without noticing. Money → Relationship.',
     estimatedMinutes: 15,
     steps: [
       { slug: 'money', sequenceId: 'money-morning-allowance', framing: 'Money first: open the channel to receive.' },
@@ -62,7 +62,7 @@ export const STUDIOS: Studio[] = [
       { slug: 'money', sequenceId: 'money-receiving-practice', framing: 'Sit with what it cost you to receive today.' },
       { slug: 'self', sequenceId: 'self-becoming', framing: 'Return to the self underneath everything.' },
     ],
-    closingReflection: 'All five currents have been touched. Notice the shape of you right now \u2014 nothing to fix.',
+    closingReflection: 'All five currents have been touched. Notice the shape of you right now — nothing to fix.',
   },
 ];
 

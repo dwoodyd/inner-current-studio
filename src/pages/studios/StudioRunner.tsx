@@ -40,7 +40,7 @@ export default function StudioRunner() {
   if (!studio) {
     return (
       <div className="mx-auto max-w-lg p-6 text-center space-y-4">
-        <p className="text-sm text-muted-foreground">That studio doesn\u2019t exist.</p>
+        <p className="text-sm text-muted-foreground">That studio doesn\'t exist.</p>
         <button onClick={() => navigate('/studios')} className="text-sm text-primary">Back to Studios</button>
       </div>
     );

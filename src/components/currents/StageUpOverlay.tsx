@@ -12,9 +12,9 @@ const STAGE_LABEL: Record<1 | 2 | 3 | 4, string> = {
   1: 'Seed', 2: 'Sprout', 3: 'Bloom', 4: 'Resonance',
 };
 const STAGE_BLESS: Record<1 | 2 | 3 | 4, string> = {
-  1: 'You\u2019ve planted it.',
+  1: 'You\'ve planted it.',
   2: 'Something is reaching for light.',
-  3: 'It\u2019s blooming through you.',
+  3: 'It\'s blooming through you.',
   4: 'You and this current have become one frequency.',
 };
 
@@ -93,7 +93,7 @@ export default function StageUpOverlay() {
                     <CurrentSigil base={spec.sigilBase} stage={event.toStage} size={200} glow={d.glow} />
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] uppercase tracking-[0.24em] text-primary/70">{spec.shortName} \u00b7 {STAGE_LABEL[event.toStage]}</p>
+                    <p className="text-[10px] uppercase tracking-[0.24em] text-primary/70">{spec.shortName} · {STAGE_LABEL[event.toStage]}</p>
                     <h2 className="font-heading text-2xl text-foreground tracking-tight">{STAGE_BLESS[event.toStage]}</h2>
                   </div>
                 </>

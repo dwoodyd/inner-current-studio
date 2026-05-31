@@ -87,7 +87,7 @@ export default function CurrentLayout() {
           <div className="space-y-2">
             <h1 className="font-heading text-3xl text-foreground tracking-tight">{spec.tagline}</h1>
             <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/60">
-              Sigil \u00b7 {STAGE_LABEL[stage]} \u00b7 {progress.practicesCompleted} practice{progress.practicesCompleted === 1 ? '' : 's'}
+              Sigil · {STAGE_LABEL[stage]} · {progress.practicesCompleted} practice{progress.practicesCompleted === 1 ? '' : 's'}
             </p>
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function CurrentLayout() {
             <div className="flex-1 space-y-0.5">
               <h3 className="font-heading text-base text-foreground tracking-tight">Belief Library</h3>
               <p className="text-xs text-muted-foreground leading-snug">
-                {spec.beliefs.length} starter beliefs \u00b7 {progress.beliefsLandedAsTrue.length + progress.beliefsLandedAsAlive.length} landed
+                {spec.beliefs.length} starter beliefs · {progress.beliefsLandedAsTrue.length + progress.beliefsLandedAsAlive.length} landed
               </p>
             </div>
             <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
@@ -226,7 +226,7 @@ export default function CurrentLayout() {
 function NotASlug({ onBack }: { onBack: () => void }) {
   return (
     <div className="mx-auto max-w-lg p-6 text-center space-y-4">
-      <p className="text-sm text-muted-foreground">That current doesn\u2019t exist.</p>
+      <p className="text-sm text-muted-foreground">That current doesn\'t exist.</p>
       <button onClick={onBack} className="text-sm text-primary">Return to Currents</button>
     </div>
   );

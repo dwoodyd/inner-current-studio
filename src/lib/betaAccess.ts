@@ -13,7 +13,7 @@ export const OWNER_PASSWORDS = ['OWNER-IW-2026', 'innerwake-owner-2026'];
 const normalizePastedSecret = (value: string): string =>
   value
     .trim()
-    .replace(/[\u2010-\u2015\u2212]/g, '-')
+    .replace(/[‐-―−]/g, '-')
     .replace(/\s+/g, '');
 
 export function isOwnerPassword(value: string): boolean {
