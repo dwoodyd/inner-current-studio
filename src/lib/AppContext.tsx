@@ -106,11 +106,11 @@ async function flushPendingCloudOps(userId: string) {
   for (const op of queue) {
     let result: { error: any } = { error: null };
     if (op.type === 'checkIn') {
-      result = await supabase.from('check_ins').insert({ user_id: userId, id: op.payload.id, state: op.payload.state, note: op.payload.note, created_at: op.payload.createdAt });
+      result = await supabase.from('check_ins').insert({ user_id: userId, state: op.payload.state, note: op.payload.note, created_at: op.payload.createdAt });
     } else if (op.type === 'todayFlow') {
       result = await upsertTodayFlow(userId, op.payload);
     } else if (op.type === 'momentumSession') {
-      result = await supabase.from('momentum_sessions').insert({ user_id: userId, id: op.payload.id, phrase: op.payload.phrase, duration: op.payload.duration, completed: op.payload.completed, created_at: op.payload.createdAt });
+      result = await supabase.from('momentum_sessions').insert({ user_id: userId, phrase: op.payload.phrase, duration: op.payload.duration, completed: op.payload.completed, created_at: op.payload.createdAt });
     }
     if (result.error && shouldQueueCloudError(result.error)) remaining.push(op);
   }
@@ -323,7 +323,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const checkIn: CheckIn = { id: generateId(), state: emotionalState, note, createdAt: new Date().toISOString() };
     optimistic(
       prev => ({ ...prev, checkIns: [checkIn, ...prev.checkIns] }),
-      () => supabase.from('check_ins').insert({ user_id: user!.id, id: checkIn.id, state: emotionalState, note, created_at: checkIn.createdAt }),
+      () => supabase.from('check_ins').insert({ user_id: user!.id, state: emotionalState, note, created_at: checkIn.createdAt }),
       'check-in',
       { type: 'checkIn', payload: checkIn }
     );
