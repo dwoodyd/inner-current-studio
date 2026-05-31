@@ -41,13 +41,16 @@ export default function CurrentsHub() {
         <div className="space-y-3">
           {ALL_DOMAIN_KEYS.map((key, i) => {
             const d = DOMAINS[key];
+            const isMoney = key === 'money';
             const isOpen = isPremium || freeCurrent === key || localFree === key;
             const isActiveFocus = !isPremium && (freeCurrent === key || localFree === key);
-            const badge = isPremium
-              ? null
-              : isActiveFocus
-                ? { label: 'Active focus', tone: 'active' as const }
-                : { label: 'Premium', tone: 'locked' as const };
+            const badge = !isMoney
+              ? { label: 'Coming soon', tone: 'soon' as const }
+              : isPremium
+                ? null
+                : isActiveFocus
+                  ? { label: 'Active focus', tone: 'active' as const }
+                  : { label: 'Premium', tone: 'locked' as const };
             return (
               <CurrentCard
                 key={key}
@@ -86,7 +89,7 @@ interface CardProps {
   d: DomainConfig;
   index: number;
   isOpen: boolean;
-  badge: { label: string; tone: 'active' | 'locked' } | null;
+  badge: { label: string; tone: 'active' | 'locked' | 'soon' } | null;
   onClick: () => void;
 }
 
@@ -111,7 +114,9 @@ function CurrentCard({ slug, d, index, isOpen, badge, onClick }: CardProps) {
             <span className={`rounded-full px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] font-medium ${
               badge.tone === 'active'
                 ? 'border border-primary/25 bg-primary/10 text-primary'
-                : 'border border-border/30 bg-muted/40 text-muted-foreground'
+                : badge.tone === 'soon'
+                  ? 'border border-amber-400/25 bg-amber-400/10 text-amber-300/90'
+                  : 'border border-border/30 bg-muted/40 text-muted-foreground'
             }`}>
               {badge.label}
             </span>
