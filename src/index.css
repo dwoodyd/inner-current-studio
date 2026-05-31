@@ -50,25 +50,52 @@
   }
 
   .light {
-    --background: 40 30% 96%;
-    --foreground: 220 20% 12%;
-    --card: 40 25% 98%;
-    --card-foreground: 220 20% 12%;
-    --popover: 40 25% 98%;
-    --popover-foreground: 220 20% 12%;
-    --primary: 42 65% 42%;
-    --primary-foreground: 40 30% 96%;
-    --secondary: 265 20% 60%;
-    --secondary-foreground: 220 20% 12%;
-    --muted: 40 15% 90%;
-    --muted-foreground: 220 10% 45%;
-    --accent: 265 15% 85%;
-    --accent-foreground: 220 20% 12%;
-    --border: 40 15% 85%;
-    --input: 40 15% 85%;
-    --ring: 42 65% 42%;
-    --soul-surface: 40 20% 94%;
-    --soul-surface-raised: 40 25% 97%;
+    --background: 40 30% 97%;
+    --foreground: 220 25% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 14%;
+    --primary: 38 70% 38%;
+    --primary-foreground: 40 30% 98%;
+    --secondary: 265 25% 45%;
+    --secondary-foreground: 40 30% 98%;
+    --muted: 40 20% 92%;
+    --muted-foreground: 220 12% 38%;
+    --accent: 265 20% 92%;
+    --accent-foreground: 220 25% 14%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 40 30% 98%;
+    --border: 220 15% 86%;
+    --input: 220 15% 86%;
+    --ring: 38 70% 38%;
+
+    --soul-gold: 38 70% 42%;
+    --soul-violet: 265 30% 50%;
+    --soul-blue: 210 55% 42%;
+    --soul-green: 160 40% 34%;
+    --soul-warm: 30 35% 30%;
+    --soul-dim: 210 18% 50%;
+    --soul-surface: 40 25% 95%;
+    --soul-surface-raised: 0 0% 100%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 25% 14%;
+    --sidebar-primary: 38 70% 38%;
+    --sidebar-primary-foreground: 40 30% 98%;
+    --sidebar-accent: 265 20% 92%;
+    --sidebar-accent-foreground: 220 25% 14%;
+    --sidebar-border: 220 15% 86%;
+    --sidebar-ring: 38 70% 38%;
+  }
+
+  .light .soul-card-raised {
+    box-shadow: 0 4px 24px hsl(220 20% 40% / 0.08), 0 1px 3px hsl(220 20% 40% / 0.05);
+  }
+
+  .light .soul-glass-elevated {
+    background: hsl(var(--card) / 0.7);
+    box-shadow: 0 8px 32px hsl(220 20% 40% / 0.08), 0 2px 8px hsl(220 20% 40% / 0.04), inset 0 1px 0 hsl(0 0% 100% / 0.6);
   }
 
   * {

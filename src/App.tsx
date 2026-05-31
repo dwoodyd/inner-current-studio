@@ -15,6 +15,7 @@ import { useAppState } from "@/lib/AppContext";
 import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
 import { useCurrentsCloudSync } from "@/hooks/useCurrentsCloudSync";
+import { ThemeProvider } from "@/hooks/useTheme";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
@@ -44,6 +45,7 @@ const ImagineIf = lazy(() => import("@/pages/ImagineIf"));
 const OverflowPractice = lazy(() => import("@/pages/OverflowPractice"));
 const MyCurrent = lazy(() => import("@/pages/MyCurrent"));
 const Profile = lazy(() => import("@/pages/Profile"));
+const ThemeSettings = lazy(() => import("@/pages/ThemeSettings"));
 const CurrentInsights = lazy(() => import("@/pages/CurrentInsights"));
 const MyRituals = lazy(() => import("@/pages/MyRituals"));
 const CurrentGuide = lazy(() => import("@/pages/CurrentGuide"));
@@ -277,6 +279,7 @@ function AppRoutes() {
         <Route path="/reflect/archive" element={<MyCurrent />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
+        <Route path="/profile/theme" element={<ThemeSettings />} />
         <Route path="/profile/rituals" element={<MyRituals />} />
         <Route path="/profile/guide" element={daily('current_guide', <CurrentGuide />)} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
@@ -374,18 +377,20 @@ function AppRoutes() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Sonner />
-      <BrowserRouter>
-        <BetaAccessGate>
-          <EnvironmentRedirectNotice />
-          <AuthProvider>
-            <AppProvider>
-              <AppRoutes />
-              <StageUpOverlay />
-            </AppProvider>
-          </AuthProvider>
-        </BetaAccessGate>
-      </BrowserRouter>
+      <ThemeProvider>
+        <Sonner />
+        <BrowserRouter>
+          <BetaAccessGate>
+            <EnvironmentRedirectNotice />
+            <AuthProvider>
+              <AppProvider>
+                <AppRoutes />
+                <StageUpOverlay />
+              </AppProvider>
+            </AuthProvider>
+          </BetaAccessGate>
+        </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
