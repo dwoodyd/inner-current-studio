@@ -10,6 +10,8 @@ import { DOMAINS, type DomainKey } from '@/lib/domains';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { useCurrentProgress } from '@/lib/currents/progress';
 import CurrentSigil from '@/components/currents/CurrentSigil';
+import TodayBelief from '@/components/currents/TodayBelief';
+import PatternMirror from '@/components/currents/PatternMirror';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';
 
@@ -94,6 +96,8 @@ export default function CurrentLayout() {
             <p className="text-sm text-muted-foreground leading-relaxed italic">"{spec.emptyState}"</p>
           </div>
         )}
+
+        <TodayBelief slug={slug} />
 
         {/* Guided Sequences */}
         <section className="space-y-3">
