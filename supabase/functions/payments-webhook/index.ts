@@ -90,8 +90,11 @@ async function handleSubscriptionCreated(data: any, env: PaddleEnv) {
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id,environment' });
 
+  // Do NOT hard-code is_founding_member here. Founder status is granted only
+  // via lifetime-founding purchase (see handleTransactionCompleted) or via the
+  // signup-window flag on profiles. Subscriptions should not flip that bit.
   await supabase.from('profiles')
-    .update({ subscription_tier: tier === 'free' ? 'premium' : tier, is_founding_member: true, updated_at: new Date().toISOString() })
+    .update({ subscription_tier: tier === 'free' ? 'premium' : tier, updated_at: new Date().toISOString() })
     .eq('user_id', userId);
 }
 
@@ -177,12 +180,18 @@ async function handleTransactionCompleted(data: any, env: PaddleEnv) {
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id,environment' });
 
+  // Only the founding lifetime price grants the Founding Member badge.
+  const isFoundingLifetime = priceId === 'iw_pro_lifetime_founding';
   await supabase.from('profiles')
-    .update({ subscription_tier: 'lifetime', is_founding_member: true, updated_at: new Date().toISOString() })
+    .update({
+      subscription_tier: 'lifetime',
+      ...(isFoundingLifetime ? { is_founding_member: true } : {}),
+      updated_at: new Date().toISOString(),
+    })
     .eq('user_id', userId);
 
-  // Claim a founding lifetime slot (only the founding price, only on live).
-  if (priceId === 'iw_pro_lifetime_founding') {
+  // Claim a founding lifetime slot (only the founding price).
+  if (isFoundingLifetime) {
     await supabase.from('founder_lifetime_slots').upsert({
       user_id: userId,
       paddle_subscription_id: `lifetime_${data.id}`,
