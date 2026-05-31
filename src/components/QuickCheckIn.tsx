@@ -18,14 +18,6 @@ const states = STATE_ORDER.map(id => ({
   hint: STATE_DEFS[id].tagline,
 }));
 
-// Legacy inline state list (now sourced from STATE_DEFS above):
-const _unused = [
-  { value: 'tight', label: 'Tight', emoji: '◉', hint: 'Contracted, holding on' },
-  { value: 'restless', label: 'Restless', emoji: '◈', hint: 'Scattered, unsettled' },
-  { value: 'flat', label: 'Flat', emoji: '○', hint: 'Neutral, still' },
-  { value: 'open', label: 'Open', emoji: '◎', hint: 'Receptive, softening' },
-  { value: 'flowing', label: 'Flowing', emoji: '✦', hint: 'Aligned, in the current' },
-];
 
 const pulseVariants: Record<QuickState, import('framer-motion').TargetAndTransition> = {
   tight: { scale: [1, 0.92, 1], transition: { duration: 1.8, repeat: Infinity, ease: 'easeInOut' } },
