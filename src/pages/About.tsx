@@ -161,8 +161,8 @@ export default function About() {
             transition={{ delay: 0.6, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="font-heading text-base text-foreground/80 italic leading-relaxed border-l-2 border-primary/20 pl-4"
           >
-            "You are not broken. You are not behind. You are simply a human being, being human.
-            Sometimes the next clear thought is only one breath away."
+            "No one figures this out once and stays figured out. The work isn't getting somewhere.
+            The work is the returning."
           </motion.blockquote>
           <p className="text-xs text-muted-foreground leading-relaxed">
             We don't believe in toxic positivity or aggressive motivation. Inner Wake meets you
