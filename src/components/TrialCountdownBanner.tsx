@@ -3,54 +3,78 @@ import { Sparkles, Clock } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 
 /**
- * Shows a slim banner reminding the user how many days remain in their trial.
- * Visibility rules:
- *  - Hidden if user already has paid access
- *  - Hidden if no active trial
- *  - For STANDARD trial: only shown in last 7 days
- *  - For BETA trial: always visible (Founder Trial badge), styled differently
+ * Top-of-app banner reflecting the three-tier pricing structure.
+ *
+ * States:
+ *  - Founder window active (Day 1–90): "Founder access · N days remaining · See pricing →"
+ *  - Post-window, on Free: "You're on Free. Your founding rate is reserved — lock it in →"
+ *  - Paid (any tier): hidden
+ *  - Legacy standard-trial final week: kept as a soft warning
  */
 export function TrialCountdownBanner() {
   const navigate = useNavigate();
-  const { hasPaidAccess, trialActive, trialType, trialDaysRemaining } = useSubscription();
+  const {
+    hasPaidAccess,
+    founderWindowActive,
+    founderDaysRemaining,
+    isFoundingMember,
+    trialActive,
+    trialType,
+    trialDaysRemaining,
+  } = useSubscription();
 
   if (hasPaidAccess) return null;
-  if (!trialActive || trialDaysRemaining == null) return null;
 
-  const isBeta = trialType === 'beta';
-  const isStandardLastWeek = !isBeta && trialDaysRemaining <= 7;
+  const goPricing = () => navigate('/profile/subscription');
 
-  if (!isBeta && !isStandardLastWeek) return null;
-
-  const dayLabel = trialDaysRemaining === 1 ? 'day' : 'days';
-
-  if (isBeta) {
+  // 1. Active 90-day founder window → headline pricing CTA
+  if (founderWindowActive && founderDaysRemaining != null) {
+    const dayLabel = founderDaysRemaining === 1 ? 'day' : 'days';
     return (
       <button
         type="button"
-        onClick={() => navigate('/profile/subscription')}
+        onClick={goPricing}
         className="flex w-full items-center justify-center gap-2 border-b border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-primary/90 transition-colors hover:bg-primary/15"
       >
         <Sparkles className="h-3 w-3" />
-        Founder Trial · {trialDaysRemaining} {dayLabel} left · $99 locks lifetime access
+        Founder access · {founderDaysRemaining} {dayLabel} remaining · See pricing →
       </button>
     );
   }
 
-  // Standard trial, final 7 days
-  const urgent = trialDaysRemaining <= 2;
-  return (
-    <button
-      type="button"
-      onClick={() => navigate('/profile/subscription')}
-      className={`flex w-full items-center justify-center gap-2 border-b px-4 py-2 text-[11px] uppercase tracking-[0.22em] transition-colors ${
-        urgent
-          ? 'border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/15'
-          : 'border-primary/20 bg-primary/10 text-primary/90 hover:bg-primary/15'
-      }`}
-    >
-      <Clock className="h-3 w-3" />
-      {trialDaysRemaining} {dayLabel} left in your full experience · Choose your path
-    </button>
-  );
+  // 2. Founding member, post-window, dropped to Free
+  if (isFoundingMember) {
+    return (
+      <button
+        type="button"
+        onClick={goPricing}
+        className="flex w-full items-center justify-center gap-2 border-b border-primary/20 bg-primary/5 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-primary/80 transition-colors hover:bg-primary/10"
+      >
+        <Sparkles className="h-3 w-3" />
+        You're on Free · Your founding rate is reserved — lock it in →
+      </button>
+    );
+  }
+
+  // 3. Legacy standard trial — keep the soft last-week warning
+  if (trialActive && trialType !== 'beta' && trialDaysRemaining != null && trialDaysRemaining <= 7) {
+    const urgent = trialDaysRemaining <= 2;
+    const dayLabel = trialDaysRemaining === 1 ? 'day' : 'days';
+    return (
+      <button
+        type="button"
+        onClick={goPricing}
+        className={`flex w-full items-center justify-center gap-2 border-b px-4 py-2 text-[11px] uppercase tracking-[0.22em] transition-colors ${
+          urgent
+            ? 'border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/15'
+            : 'border-primary/20 bg-primary/10 text-primary/90 hover:bg-primary/15'
+        }`}
+      >
+        <Clock className="h-3 w-3" />
+        {trialDaysRemaining} {dayLabel} left in your full experience · Choose your path
+      </button>
+    );
+  }
+
+  return null;
 }

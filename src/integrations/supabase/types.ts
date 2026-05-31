@@ -281,6 +281,30 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_lifetime_slots: {
+        Row: {
+          claimed_at: string
+          environment: string
+          id: string
+          paddle_subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          claimed_at?: string
+          environment?: string
+          id?: string
+          paddle_subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          claimed_at?: string
+          environment?: string
+          id?: string
+          paddle_subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       future_pages: {
         Row: {
           content: string
@@ -594,8 +618,10 @@ export type Database = {
           companion_sigil: string | null
           created_at: string
           display_name: string | null
+          founder_window_ends_at: string | null
           free_current: string | null
           id: string
+          is_founding_member: boolean
           onboarding_challenge: string | null
           onboarding_completed: boolean
           onboarding_reason: string | null
@@ -614,8 +640,10 @@ export type Database = {
           companion_sigil?: string | null
           created_at?: string
           display_name?: string | null
+          founder_window_ends_at?: string | null
           free_current?: string | null
           id?: string
+          is_founding_member?: boolean
           onboarding_challenge?: string | null
           onboarding_completed?: boolean
           onboarding_reason?: string | null
@@ -634,8 +662,10 @@ export type Database = {
           companion_sigil?: string | null
           created_at?: string
           display_name?: string | null
+          founder_window_ends_at?: string | null
           free_current?: string | null
           id?: string
+          is_founding_member?: boolean
           onboarding_challenge?: string | null
           onboarding_completed?: boolean
           onboarding_reason?: string | null
@@ -1056,6 +1086,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      founder_slots_remaining: { Args: never; Returns: number }
       grant_beta_trial: { Args: { user_uuid: string }; Returns: undefined }
       has_active_subscription: {
         Args: { check_env?: string; user_uuid: string }
