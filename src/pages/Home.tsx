@@ -197,31 +197,39 @@ export default function Home() {
           <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
         </motion.div>
 
-        {/* State-matched soundscape (Wave A audio UI) */}
-        <motion.div variants={fadeUp}>
-          <StateSoundscape state={quickState || 'flat'} />
-        </motion.div>
-
-
+        {/* Recommended now — surfaced immediately after check-in */}
         <motion.div variants={fadeUp}>
           <button
             onClick={() => navigate(recommendation.route)}
-            className="group w-full rounded-2xl p-4 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:p-5"
+            className="group relative w-full overflow-hidden rounded-2xl p-4 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated soul-glow-gold border border-primary/20 sm:p-5"
           >
-            <div className="flex items-start justify-between gap-4">
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full"
+              style={{ background: 'radial-gradient(circle, hsl(42 70% 60% / 0.18), transparent 70%)' }}
+              animate={{ scale: [1, 1.1, 1], opacity: [0.6, 0.9, 0.6] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <div className="relative flex items-start justify-between gap-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-primary">
                   <Sparkles size={16} />
                   <span className="text-[11px] uppercase tracking-[0.18em]">Recommended now</span>
                 </div>
-                <h2 className="font-heading text-xl font-medium text-foreground">{recommendation.title}</h2>
-                <p className="text-xs leading-relaxed text-muted-foreground">{recommendation.reason}</p>
+                <h2 className="font-heading text-xl font-medium text-foreground sm:text-2xl">{recommendation.title}</h2>
+                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">{recommendation.reason}</p>
                 <p className="text-[11px] leading-relaxed text-muted-foreground/70 italic">{recommendation.guide}</p>
               </div>
-              <ArrowRight size={18} className="mt-1 shrink-0 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+              <ArrowRight size={18} className="mt-1 shrink-0 text-primary/60 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
             </div>
           </button>
         </motion.div>
+
+        {/* State-matched soundscape (Wave A audio UI) */}
+        <motion.div variants={fadeUp}>
+          <StateSoundscape state={quickState || 'flat'} />
+        </motion.div>
+
 
         {/* Daily Rituals — Morning Awakening & Evening Settling */}
         <motion.div variants={fadeUp} className="space-y-3">
