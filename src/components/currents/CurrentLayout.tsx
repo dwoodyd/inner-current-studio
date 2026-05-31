@@ -193,6 +193,8 @@ export default function CurrentLayout() {
 
         <PatternMirror slug={slug} />
 
+        <ResonanceLibrary slug={slug} />
+
         {/* Recent work */}
         {recentSequences.length > 0 && (
           <section className="space-y-3">
