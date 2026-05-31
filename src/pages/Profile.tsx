@@ -86,10 +86,10 @@ export default function Profile() {
     {
       title: 'Account',
       items: [
-        { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
-        { icon: Volume2, label: 'Audio', description: 'Sound and haptics' },
+        { icon: Palette, label: 'Theme', description: 'Dark or light mode', soon: true },
+        { icon: Volume2, label: 'Audio', description: 'Sound and haptics', soon: true },
         { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', to: '/profile/subscription' },
-        { icon: Download, label: 'Export & Backup', description: 'Save your data' },
+        { icon: Download, label: 'Export & Backup', description: 'Save your data', soon: true },
         { icon: Info, label: 'About Inner Wake', description: 'Mission & philosophy', to: '/about' },
         { icon: Sparkles, label: 'About Soul Engineer', description: 'The ecosystem & DeWayne Woods', action: () => window.open('https://soulengineer.online', '_blank', 'noopener,noreferrer') },
       ],
@@ -156,13 +156,14 @@ export default function Profile() {
             <motion.section key={group.title} variants={fadeUp} className="space-y-2">
               <h2 className="px-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/60">{group.title}</h2>
               <div className="soul-glass overflow-hidden rounded-2xl divide-y divide-border/10">
-                {group.items.map(({ icon: Icon, label, description, to, action, accent, proLock }: any) => (
+                {group.items.map(({ icon: Icon, label, description, to, action, accent, proLock, soon }: any) => (
                   <motion.button
                     key={label}
                     variants={fadeUp}
+                    disabled={soon}
                     onClick={() => action ? action() : to && navigate(to)}
-                    className={`flex min-h-[54px] w-full items-center gap-3 px-4 py-3.5 transition-all duration-200 hover:bg-muted/10 active:scale-[0.99] sm:gap-4 sm:px-5 ${accent ? 'bg-primary/[0.03]' : ''}`}
-                    whileTap={{ scale: 0.99 }}
+                    className={`flex min-h-[54px] w-full items-center gap-3 px-4 py-3.5 transition-all duration-200 hover:bg-muted/10 active:scale-[0.99] sm:gap-4 sm:px-5 ${accent ? 'bg-primary/[0.03]' : ''} ${soon ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    whileTap={soon ? undefined : { scale: 0.99 }}
                   >
                     <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${accent ? 'border border-primary/15 bg-primary/10' : 'border border-border/20 bg-muted/30'}`}>
                       <Icon size={18} className={accent ? 'text-primary' : 'text-muted-foreground'} strokeWidth={1.5} />
@@ -172,13 +173,18 @@ export default function Profile() {
                       <br />
                       <span className="text-[11px] text-muted-foreground">{description}</span>
                     </div>
+                    {soon && (
+                      <span className="rounded-full border border-border/30 bg-muted/40 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] font-medium text-muted-foreground whitespace-nowrap">
+                        Soon
+                      </span>
+                    )}
                     {proLock && (
                       <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] font-medium text-primary whitespace-nowrap">
                         <Lock size={9} strokeWidth={2} />
                         {proLock}
                       </span>
                     )}
-                    {(to || action) && <ChevronRight size={14} className="shrink-0 text-muted-foreground/40" />}
+                    {(to || action) && !soon && <ChevronRight size={14} className="shrink-0 text-muted-foreground/40" />}
                   </motion.button>
                 ))}
               </div>
