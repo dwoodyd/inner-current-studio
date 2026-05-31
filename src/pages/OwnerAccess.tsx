@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, KeyRound, Lock, ShieldCheck } from 'lucide-react';
-import innerWakeIcon from '@/assets/inner-wake-icon.svg';
+import innerWakeIcon from '@/assets/master-mark.png';
 import {
   isOwnerPassword,
   unlockOwnerSession,
