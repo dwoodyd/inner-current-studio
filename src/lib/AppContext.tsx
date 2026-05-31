@@ -491,12 +491,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
     saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
     saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
-    saveResistanceEntry, saveThoughtShift,
+    saveResistanceEntry, saveThoughtShift, pendingSyncCount,
   }), [
     state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
     saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
     saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
-    saveResistanceEntry, saveThoughtShift,
+    saveResistanceEntry, saveThoughtShift, pendingSyncCount,
   ]);
 
   return (
