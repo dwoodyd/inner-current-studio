@@ -90,7 +90,9 @@ export default function PatternMirror() {
         </button>
         <div>
           <h1 className="font-heading text-lg font-semibold text-foreground">Pattern Mirror</h1>
-          <p className="text-[10px] text-muted-foreground">Your emotional rhythms, reflected</p>
+          <p className="text-[10px] text-muted-foreground">
+            {isPremium ? 'Your emotional rhythms, reflected' : 'Your last 7 days, reflected'}
+          </p>
         </div>
       </div>
 
@@ -222,6 +224,32 @@ export default function PatternMirror() {
           </motion.div>
 
         </>
+      )}
+
+      {/* Free → upsell to full history. Voice: one observation, one invitation. */}
+      {!isPremium && (
+        <motion.button
+          type="button"
+          onClick={() => navigate('/profile/subscription')}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="soul-glass-elevated w-full rounded-2xl border border-primary/15 px-5 py-5 text-left transition-all hover:bg-primary/[0.04] active:scale-[0.99]"
+        >
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10">
+              <Sparkles size={15} className="text-primary" strokeWidth={1.5} />
+            </div>
+            <div className="min-w-0 flex-1 space-y-1">
+              <p className="font-heading text-sm text-foreground leading-snug">
+                Your patterns go back further than this week.
+              </p>
+              <p className="text-xs text-primary inline-flex items-center gap-1">
+                See your full history with Pro <ArrowRight size={12} />
+              </p>
+            </div>
+          </div>
+        </motion.button>
       )}
     </div>
   );
