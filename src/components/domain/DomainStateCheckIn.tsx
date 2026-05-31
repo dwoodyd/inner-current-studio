@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
+import { recordPracticeFor } from '@/lib/currents/progress';
 
 export default function DomainStateCheckIn({ domain }: { domain: DomainConfig }) {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export default function DomainStateCheckIn({ domain }: { domain: DomainConfig })
     });
     setSaving(false);
     if (error) { toast.error('Could not save'); return; }
+    recordPracticeFor(domain.key);
     setDone(true);
     setTimeout(() => navigate(domain.route), 1400);
   };

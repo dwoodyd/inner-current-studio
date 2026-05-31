@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
+import { recordPracticeFor } from '@/lib/currents/progress';
 
 interface Sequence { id: string; title: string; lines: string[]; }
 
@@ -69,6 +70,7 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
           setPlaying(false);
           window.speechSynthesis?.cancel();
           toast.success('Meditation complete');
+          recordPracticeFor(domain.key);
           return 0;
         }
         return s - 1;
@@ -86,6 +88,7 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
     });
     if (error) { toast.error('Could not save'); return; }
     toast.success('Sequence saved');
+    recordPracticeFor(domain.key);
     setTitle(''); setLines([]); setTab('library'); load();
   };
 

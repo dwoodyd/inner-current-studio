@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
+import { recordPracticeFor } from '@/lib/currents/progress';
 
 interface Opening {
   id?: string; position: number;
@@ -43,6 +44,7 @@ export default function DomainOpenings({ domain }: { domain: DomainConfig }) {
       : await supabase.from('domain_openings').insert(payload).select().single();
     setSaving(false);
     if (error) { toast.error('Could not save'); return; }
+    recordPracticeFor(domain.key);
     setItems(prev => {
       const without = prev.filter(p => p.id !== data.id);
       return [...without, data as any].sort((a, b) => a.position - b.position);
