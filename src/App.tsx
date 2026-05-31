@@ -15,6 +15,7 @@ import { useAppState } from "@/lib/AppContext";
 import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
 import { useCurrentsCloudSync } from "@/hooks/useCurrentsCloudSync";
+import { ThemeProvider } from "@/hooks/useTheme";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
