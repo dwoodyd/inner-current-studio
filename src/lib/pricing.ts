@@ -17,6 +17,8 @@ export const PRICE_DISPLAY = {
   iw_pro_monthly_founding: { amount: '$4.99', period: '/mo', label: 'Founding Rate', retail: '$7.99/mo retail' },
   iw_pro_annual_founding: { amount: '$39', period: '/yr', label: 'Founding Rate', retail: '$59/yr retail · ≈ $3.25/mo' },
   iw_pro_lifetime_founding: { amount: '$99', period: ' one-time', label: 'Founder-only', retail: 'Retiring with the founding member program' },
+  iw_pro_monthly_retail: { amount: '$7.99', period: '/mo', label: 'Pro Monthly', retail: '' },
+  iw_pro_annual_retail: { amount: '$59', period: '/yr', label: 'Pro Annual · save 38%', retail: '≈ $4.92/mo' },
 } as const;
 
 // Map a price_id (stored on profiles/subscriptions) to a logical tier.
