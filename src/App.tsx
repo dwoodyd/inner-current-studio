@@ -48,7 +48,8 @@ const CurrentInsights = lazy(() => import("@/pages/CurrentInsights"));
 const MyRituals = lazy(() => import("@/pages/MyRituals"));
 const CurrentGuide = lazy(() => import("@/pages/CurrentGuide"));
 const PatternMirror = lazy(() => import("@/pages/PatternMirror"));
-const Notifications = lazy(() => import("@/pages/Notifications"));
+// Notifications page kept in repo for V1.1 revival; route redirects to Subscription for V1.
+// const Notifications = lazy(() => import("@/pages/Notifications"));
 const Subscription = lazy(() => import("@/pages/Subscription"));
 const ResonanceLibrary = lazy(() => import("@/pages/ResonanceLibrary"));
 const Onboarding = lazy(() => import("@/pages/Onboarding"));
