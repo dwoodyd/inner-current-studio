@@ -41,15 +41,14 @@ export default function CurrentsHub() {
         <div className="space-y-3">
           {ALL_DOMAIN_KEYS.map((key, i) => {
             const d = DOMAINS[key];
-            const isMoney = key === 'money';
-            const isOpen = isPremium || freeCurrent === key || localFree === key;
+            const isOpen = key === 'money' || isPremium || freeCurrent === key || localFree === key;
             const isActiveFocus = !isPremium && (freeCurrent === key || localFree === key);
-            const badge = !isMoney
-              ? { label: 'Coming soon', tone: 'soon' as const }
-              : isPremium
-                ? null
-                : isActiveFocus
-                  ? { label: 'Active focus', tone: 'active' as const }
+            const badge = isPremium
+              ? null
+              : isActiveFocus
+                ? { label: 'Active focus', tone: 'active' as const }
+                : key === 'money'
+                  ? null
                   : { label: 'Premium', tone: 'locked' as const };
             return (
               <CurrentCard
