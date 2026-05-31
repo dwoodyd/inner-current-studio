@@ -202,6 +202,7 @@ function AppRoutes() {
   const location = useLocation();
   const { state } = useAppState();
   useBetaTrialClaimer();
+  useCurrentsCloudSync();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
   const daily = (tool: GatedTool, element: JSX.Element) => <DailyLimitGate tool={tool}>{element}</DailyLimitGate>;
