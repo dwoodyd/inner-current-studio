@@ -10,7 +10,7 @@ export default function CurrentBeliefsPage() {
   const navigate = useNavigate();
 
   if (!slug || !(slug in DOMAINS)) {
-    return <div className="p-6 text-center text-sm text-muted-foreground">That current doesn\u2019t exist.</div>;
+    return <div className="p-6 text-center text-sm text-muted-foreground">That current doesn\'t exist.</div>;
   }
   const spec = CURRENT_SPECS[slug];
 

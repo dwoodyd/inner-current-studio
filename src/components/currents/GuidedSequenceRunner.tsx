@@ -42,7 +42,7 @@ export default function GuidedSequenceRunner() {
   const next = () => {
     if (last) {
       recordSequence(sequence.id);
-      toast('Practice complete.', { description: `${sequence.title} \u2014 added to your ${spec.shortName} current.` });
+      toast('Practice complete.', { description: `${sequence.title} — added to your ${spec.shortName} current.` });
       setIdx((i) => i + 1);
     } else {
       setIdx((i) => i + 1);
@@ -72,7 +72,7 @@ export default function GuidedSequenceRunner() {
           <motion.div key="done" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-center py-6">
             <CurrentSigil base={spec.sigilBase} stage={stage} size={180} glow={domain.glow} className="mx-auto" />
             <div className="space-y-2">
-              <p className="font-heading text-xl text-foreground">That\u2019s the practice.</p>
+              <p className="font-heading text-xl text-foreground">That\'s the practice.</p>
               <p className="text-sm text-muted-foreground max-w-[300px] mx-auto leading-relaxed">
                 Your {spec.shortName} sigil holds a little more of you now.
               </p>
@@ -222,7 +222,7 @@ function ReflectionStep({ step, value, onChange }: { step: Extract<SequenceStep,
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={5}
-        placeholder="Write what comes\u2026"
+        placeholder="Write what comes…"
         className="w-full rounded-xl bg-muted/15 border border-border/30 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/40 leading-relaxed"
       />
       {step.minChars && value.length < step.minChars && (

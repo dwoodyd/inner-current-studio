@@ -189,7 +189,7 @@ export default function Subscription() {
             period="forever"
             tagline="Begin the practice."
             features={FREE_FEATURES.slice(0, 6)}
-            cta={sub.detailedTier === 'free' ? 'You\u2019re on Free' : 'Continue free'}
+            cta={sub.detailedTier === 'free' ? 'You\'re on Free' : 'Continue free'}
             ctaDisabled={sub.detailedTier === 'free'}
             onCta={() => navigate('/')}
           />
