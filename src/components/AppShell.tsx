@@ -3,6 +3,7 @@ import BottomNav from './BottomNav';
 import OfflineBanner from './OfflineBanner';
 import { PaymentTestModeBanner } from './PaymentTestModeBanner';
 import { TrialCountdownBanner } from './TrialCountdownBanner';
+import { MigrationNoticeModal } from './MigrationNoticeModal';
 import { useAppState } from '@/lib/AppContext';
 
 export default function AppShell() {
@@ -30,6 +31,7 @@ export default function AppShell() {
         <Outlet />
       </main>
       {!hideBottomNav && <BottomNav />}
+      <MigrationNoticeModal />
     </div>
   );
 }
