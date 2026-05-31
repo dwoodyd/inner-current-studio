@@ -13,7 +13,7 @@ const FOCUS_OPTIONS = ['Self', 'Money', 'Energy', 'Relationships', 'Health'] as 
 export default function FoundingMember() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { slotsRemaining, loading: slotsLoading } = useFounderSlots();
+  const { remaining: slotsRemaining, loading: slotsLoading } = useFounderSlots();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
