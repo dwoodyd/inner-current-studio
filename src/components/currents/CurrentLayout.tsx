@@ -168,6 +168,8 @@ export default function CurrentLayout() {
           </button>
         </section>
 
+        <PatternMirror slug={slug} />
+
         {/* Recent work */}
         {recentSequences.length > 0 && (
           <section className="space-y-3">
