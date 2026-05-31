@@ -36,6 +36,8 @@ export default function CurrentsHub() {
           </p>
         </div>
 
+        <WeeklyDigest />
+
         <div className="space-y-3">
           {ALL_DOMAIN_KEYS.map((key, i) => {
             const d = DOMAINS[key];
