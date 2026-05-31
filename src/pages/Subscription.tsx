@@ -6,7 +6,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useAuth } from '@/hooks/useAuth';
 import { useFounderSlots } from '@/hooks/useFounderSlots';
 import { usePaddleCheckout } from '@/hooks/usePaddleCheckout';
-import { FOUNDING_PRICES } from '@/lib/pricing';
+import { FOUNDING_PRICES, RETAIL_PRICES } from '@/lib/pricing';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
