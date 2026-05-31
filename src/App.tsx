@@ -306,6 +306,8 @@ function AppRoutes() {
         <Route path="/currents/:slug" element={<CurrentSpecPage />} />
         <Route path="/currents/:slug/beliefs" element={<CurrentBeliefsPage />} />
         <Route path="/currents/:slug/sequence/:sequenceId" element={<CurrentSequencePage />} />
+        <Route path="/studios" element={<StudiosHub />} />
+        <Route path="/studios/:studioId" element={<StudioRunner />} />
         <Route path="/self" element={current('self', <SelfHub />)} />
         <Route path="/self/state" element={current('self', <SelfState />)} />
         <Route path="/self/affirmations" element={current('self', <SelfAffirmations />)} />
