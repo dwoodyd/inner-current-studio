@@ -86,13 +86,19 @@ export default function Auth() {
 
     try {
       if (mode === 'signup') {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: trimmedEmail,
           password: trimmedPassword,
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success('Account created. Welcome to Inner Wake.');
+        if (!data.session) {
+          toast.success('Check your email to confirm your account, then sign in.');
+          setMode('login');
+          setPassword('');
+        } else {
+          toast.success('Account created. Welcome to Inner Wake.');
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: trimmedEmail,
