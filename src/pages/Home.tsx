@@ -30,7 +30,7 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const FAVICON_VERSION = '20260416c';
+const FAVICON_VERSION = '20260531a';
 const STATIC_FAVICON = `/favicon-64.png?v=${FAVICON_VERSION}`;
 const STATIC_SHORTCUT_ICON = `/favicon.ico?v=${FAVICON_VERSION}`;
 const STATIC_APPLE_ICON = `/apple-touch-icon.png?v=${FAVICON_VERSION}`;
