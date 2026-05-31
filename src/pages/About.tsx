@@ -199,9 +199,9 @@ export default function About() {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Inner Wake is one of several apps in the Soul Engineer ecosystem, each built around a
             single practice. Continuary holds your work and continuity. Lifewoven weaves the daily
-            life. Inner Wake wakes the inner current. They’re separate apps — use one or use all —
-            but they’re built by the same hands with the same belief: that you are not broken, and
-            that small daily returns hold more power than effort.
+            life. Inner Wake wakes the inner current. They're separate apps — use one or use all —
+            but they're built by the same hands with the same belief: the work isn't getting
+            somewhere. The work is the returning.
           </p>
           <a
             href="https://soulengineer.online"

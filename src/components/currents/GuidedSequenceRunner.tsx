@@ -72,7 +72,7 @@ export default function GuidedSequenceRunner() {
           <motion.div key="done" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-center py-6">
             <CurrentSigil base={spec.sigilBase} stage={stage} size={180} glow={domain.glow} className="mx-auto" />
             <div className="space-y-2">
-              <p className="font-heading text-xl text-foreground">That\'s the practice.</p>
+              <p className="font-heading text-xl text-foreground">That's the practice.</p>
               <p className="text-sm text-muted-foreground max-w-[300px] mx-auto leading-relaxed">
                 Your {spec.shortName} sigil holds a little more of you now.
               </p>

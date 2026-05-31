@@ -31,7 +31,7 @@ export default function ResonanceLibrary({ slug }: { slug: DomainKey }) {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm text-foreground">{total} belief{total === 1 ? '' : 's'} landed</p>
-            <p className="text-xs text-muted-foreground">Open the full archive of what\'s become true and alive in you with Pro.</p>
+            <p className="text-xs text-muted-foreground">Open the full archive of what's become true and alive in you with Pro.</p>
           </div>
           <button
             onClick={() => navigate('/profile/subscription')}
