@@ -62,8 +62,7 @@ const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: C
 
         {/* Mid ring */}
         <motion.div
-          className={`absolute h-24 w-24 rounded-full border ${colors.outer} opacity-20 sm:h-30 sm:w-30`}
-          style={{ width: undefined }}
+          className={`absolute h-24 w-24 rounded-full border ${colors.outer} opacity-20 sm:h-[7.5rem] sm:w-[7.5rem]`}
           animate={{ scale: [1.04, 1, 1.04], opacity: [0.15, 0.3, 0.15] }}
           transition={{ duration: speed, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
         />
