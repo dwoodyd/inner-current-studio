@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
+import { recordPracticeFor } from '@/lib/currents/progress';
 
 interface Sequence { id: string; title: string; lines: string[]; }
 

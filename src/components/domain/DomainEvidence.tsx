@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
+import { recordPracticeFor } from '@/lib/currents/progress';
 
 interface Entry { id: string; category: string; entry_text: string; created_at: string; }
 
@@ -33,6 +34,7 @@ export default function DomainEvidence({ domain }: { domain: DomainConfig }) {
     });
     setSaving(false);
     if (error) { toast.error('Could not save'); return; }
+    recordPracticeFor(domain.key);
     setText(''); load();
   };
 

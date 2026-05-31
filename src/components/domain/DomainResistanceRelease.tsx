@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
+import { recordPracticeFor } from '@/lib/currents/progress';
 
 const CHARGE_LEVELS = [
   { value: 'intense', label: 'Intense', dot: 'bg-rose-500' },
@@ -38,6 +39,7 @@ export default function DomainResistanceRelease({ domain }: { domain: DomainConf
       });
       if (error) toast.error('Could not save');
     }
+    recordPracticeFor(domain.key);
     setPhase('done');
   };
 
