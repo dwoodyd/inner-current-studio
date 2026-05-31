@@ -148,6 +148,18 @@ export default function AdminDashboard() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-4 pb-28">
+        <button
+          onClick={() => navigate('/admin/founding')}
+          className="soul-glass w-full rounded-2xl px-4 py-3 flex items-center gap-3 hover:bg-card/60 transition-colors text-left"
+        >
+          <Crown size={18} className="text-primary" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">Founding-Member Applications</p>
+            <p className="text-[11px] text-muted-foreground">Review, approve, or reject hand-submitted entries.</p>
+          </div>
+          <span className="text-primary/60">→</span>
+        </button>
+
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
