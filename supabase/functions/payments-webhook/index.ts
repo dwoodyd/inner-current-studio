@@ -6,6 +6,16 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 );
 
+// Map a Paddle external_id to the canonical subscription tier we store on profiles.
+function priceIdToTier(priceId: string | undefined | null): 'premium' | 'lifetime' | 'free' {
+  if (!priceId) return 'free';
+  if (priceId.includes('lifetime') || priceId === 'premium_lifetime' || priceId === 'premium_lifetime_149') {
+    return 'lifetime';
+  }
+  if (priceId.includes('monthly') || priceId.includes('annual')) return 'premium';
+  return 'free';
+}
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
@@ -65,6 +75,7 @@ async function handleSubscriptionCreated(data: any, env: PaddleEnv) {
   const item = items[0];
   const priceId = item.price.importMeta?.externalId || item.price.id;
   const productId = item.product.importMeta?.externalId || item.product.id;
+  const tier = priceIdToTier(priceId);
 
   await supabase.from('subscriptions').upsert({
     user_id: userId,
@@ -79,9 +90,8 @@ async function handleSubscriptionCreated(data: any, env: PaddleEnv) {
     updated_at: new Date().toISOString(),
   }, { onConflict: 'user_id,environment' });
 
-  // Mark profile as premium
   await supabase.from('profiles')
-    .update({ subscription_tier: 'premium', updated_at: new Date().toISOString() })
+    .update({ subscription_tier: tier === 'free' ? 'premium' : tier, is_founding_member: true, updated_at: new Date().toISOString() })
     .eq('user_id', userId);
 }
 
@@ -98,12 +108,13 @@ async function handleSubscriptionUpdated(data: any, env: PaddleEnv) {
     })
     .eq('paddle_subscription_id', id)
     .eq('environment', env)
-    .select('user_id,current_period_end')
+    .select('user_id,current_period_end,price_id')
     .maybeSingle();
 
   if (sub?.user_id) {
     const periodStillOpen = !sub.current_period_end || new Date(sub.current_period_end) > new Date();
-    const tier = ['active', 'trialing'].includes(status) || (status === 'canceled' && periodStillOpen) ? 'premium' : 'free';
+    const active = ['active', 'trialing'].includes(status) || (status === 'canceled' && periodStillOpen);
+    const tier = active ? (priceIdToTier(sub.price_id) === 'free' ? 'premium' : priceIdToTier(sub.price_id)) : 'free';
     await supabase.from('profiles')
       .update({ subscription_tier: tier, updated_at: new Date().toISOString() })
       .eq('user_id', sub.user_id)
@@ -142,31 +153,40 @@ async function handleTransactionPaymentFailed(data: any, env: PaddleEnv) {
 }
 
 async function handleTransactionCompleted(data: any, env: PaddleEnv) {
-  // Handle one-time lifetime purchases (no subscription)
+  // Handle one-time lifetime purchases (no subscription).
   const { customerId, items, customData } = data;
   const userId = customData?.userId;
   if (!userId) return;
 
   const item = items[0];
   const priceId = item.price?.importMeta?.externalId || item.price?.id;
+  const tier = priceIdToTier(priceId);
 
-  // Lifetime: upsert as a permanent active subscription with no end date
-  if (priceId === 'premium_lifetime' || priceId === 'premium_lifetime_149') {
-    await supabase.from('subscriptions').upsert({
+  if (tier !== 'lifetime') return;
+
+  await supabase.from('subscriptions').upsert({
+    user_id: userId,
+    paddle_subscription_id: `lifetime_${data.id}`,
+    paddle_customer_id: customerId,
+    product_id: 'inner_wake_pro',
+    price_id: priceId,
+    status: 'active',
+    current_period_start: new Date().toISOString(),
+    current_period_end: null,
+    environment: env,
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'user_id,environment' });
+
+  await supabase.from('profiles')
+    .update({ subscription_tier: 'lifetime', is_founding_member: true, updated_at: new Date().toISOString() })
+    .eq('user_id', userId);
+
+  // Claim a founding lifetime slot (only the founding price, only on live).
+  if (priceId === 'iw_pro_lifetime_founding') {
+    await supabase.from('founder_lifetime_slots').upsert({
       user_id: userId,
       paddle_subscription_id: `lifetime_${data.id}`,
-      paddle_customer_id: customerId,
-      product_id: 'inner_wake_lifetime',
-      price_id: priceId,
-      status: 'active',
-      current_period_start: new Date().toISOString(),
-      current_period_end: null,
       environment: env,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'user_id,environment' });
-
-    await supabase.from('profiles')
-      .update({ subscription_tier: 'lifetime', updated_at: new Date().toISOString() })
-      .eq('user_id', userId);
+    }, { onConflict: 'user_id' });
   }
 }
