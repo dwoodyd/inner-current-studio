@@ -8,6 +8,8 @@ import { Component, lazy, Suspense, type ErrorInfo, type ReactNode } from "react
 import AppShell from "@/components/AppShell";
 import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotice";
 import { PremiumGate } from "@/components/PremiumGate";
+import { DailyLimitGate } from "@/components/DailyLimitGate";
+import type { GatedTool } from "@/hooks/useDailyLimit";
 import { BetaAccessGate } from "@/components/BetaAccessGate";
 import { useAppState } from "@/lib/AppContext";
 import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
@@ -195,6 +197,7 @@ function AppRoutes() {
   useBetaTrialClaimer();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
+  const daily = (tool: GatedTool, element: JSX.Element) => <DailyLimitGate tool={tool}>{element}</DailyLimitGate>;
 
   if (loading) {
     return (
@@ -236,17 +239,17 @@ function AppRoutes() {
         <Route path="/ritual/morning" element={<MorningRitual />} />
         <Route path="/ritual/evening" element={<EveningRitual />} />
         <Route path="/align" element={<Align />} />
-        <Route path="/align/wheel" element={<AlignmentWheel />} />
+        <Route path="/align/wheel" element={daily('alignment_wheel', <AlignmentWheel />)} />
         <Route path="/align/relief" element={<ReliefWheel />} />
         <Route path="/align/gather" element={<GatherFlow />} />
         <Route path="/align/momentum" element={<MomentumRing />} />
         <Route path="/reset" element={<Reset />} />
-        <Route path="/reset/ladder" element={<StateLadder />} />
-        <Route path="/reset/contrast" element={<ContrastReset />} />
+        <Route path="/reset/ladder" element={daily('reset', <StateLadder />)} />
+        <Route path="/reset/contrast" element={daily('reset', <ContrastReset />)} />
         <Route path="/reset/stillness" element={<StillnessTimer />} />
-        <Route path="/reset/breathwork" element={<Breathwork />} />
-        <Route path="/reset/resistance" element={<ResistanceRelease />} />
-        <Route path="/reset/quiet" element={<QuietMind />} />
+        <Route path="/reset/breathwork" element={daily('breathwork', <Breathwork />)} />
+        <Route path="/reset/resistance" element={daily('reset', <ResistanceRelease />)} />
+        <Route path="/reset/quiet" element={daily('reset', <QuietMind />)} />
         <Route path="/reset/quiet/present" element={<PresentMoment />} />
         <Route path="/reset/quiet/scan" element={<ResistanceScan />} />
         <Route path="/reset/quiet/offramp" element={<AnalyticalOfframp />} />
@@ -264,7 +267,7 @@ function AppRoutes() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
         <Route path="/profile/rituals" element={<MyRituals />} />
-        <Route path="/profile/guide" element={premium('the Current Guide', <CurrentGuide />)} />
+        <Route path="/profile/guide" element={daily('current_guide', <CurrentGuide />)} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
         <Route path="/profile/notifications" element={<Notifications />} />
         <Route path="/profile/subscription" element={<Subscription />} />

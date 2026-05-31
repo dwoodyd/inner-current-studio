@@ -125,6 +125,36 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_usage: {
+        Row: {
+          count: number
+          created_at: string
+          id: string
+          tool: string
+          updated_at: string
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          count?: number
+          created_at?: string
+          id?: string
+          tool: string
+          updated_at?: string
+          usage_date?: string
+          user_id: string
+        }
+        Update: {
+          count?: number
+          created_at?: string
+          id?: string
+          tool?: string
+          updated_at?: string
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       domain_evidence: {
         Row: {
           category: string
@@ -1100,6 +1130,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_daily_usage: { Args: { _tool: string }; Returns: number }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
