@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Sigil } from '@/components/onboarding/Sigil';
 import PracticeConstellation from '@/components/PracticeConstellation';
 import { toast } from 'sonner';
-import { BarChart3, Layers, Sparkles, Activity, Archive, Bell, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart, Lock } from 'lucide-react';
+import { BarChart3, Layers, Sparkles, Activity, Archive, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart, Lock } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -72,21 +72,20 @@ export default function Profile() {
       items: [
         { icon: Heart, label: hasCompanion ? 'Your companion' : 'Set up your companion', description: hasCompanion ? 'Sigil & first affirmation' : 'A 2-minute personal ritual', to: '/onboarding', accent: !hasCompanion },
         { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
-        { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals', proLock: proGated },
+        { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals', proLock: proGated ? 'Pro · unlimited' : null },
       ],
     },
     {
       title: 'Insights',
       items: [
-        { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns', proLock: proGated },
-        { icon: Archive, label: 'Resonance Library', description: 'Every state, honored', to: '/profile/resonance', proLock: proGated },
+        { icon: Activity, label: 'Pattern Mirror', description: 'Your emotional rhythms', to: '/profile/patterns', proLock: proGated ? 'Pro · full history' : null },
+        { icon: Archive, label: 'Resonance Library', description: 'Every state, honored', to: '/profile/resonance', proLock: proGated ? 'Pro' : null },
         { icon: BarChart3, label: 'Current Insights', description: 'Pattern visibility', to: '/profile/insights' },
       ],
     },
     {
       title: 'Account',
       items: [
-        { icon: Bell, label: 'Notifications', description: 'Gentle reminders', to: '/profile/notifications' },
         { icon: Palette, label: 'Theme', description: 'Dark or light mode' },
         { icon: Volume2, label: 'Audio', description: 'Sound and haptics' },
         { icon: CreditCard, label: 'Subscription', description: 'Plan and invoices', to: '/profile/subscription' },
@@ -174,9 +173,9 @@ export default function Profile() {
                       <span className="text-[11px] text-muted-foreground">{description}</span>
                     </div>
                     {proLock && (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] font-medium text-primary">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] font-medium text-primary whitespace-nowrap">
                         <Lock size={9} strokeWidth={2} />
-                        Pro
+                        {proLock}
                       </span>
                     )}
                     {(to || action) && <ChevronRight size={14} className="shrink-0 text-muted-foreground/40" />}

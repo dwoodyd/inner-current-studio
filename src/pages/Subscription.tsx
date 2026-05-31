@@ -35,9 +35,9 @@ const PRO_FEATURES = [
   'Custom Sigil generation per Current',
   'Resonance Library',
   'Practice Constellation',
-  'State-matched soundscapes',
+  'State-matched soundscapes  ·  Coming soon',
   'Pattern Mirror — multi-month history',
-  'Wisdom Streams — full library',
+  'Wisdom Streams — full library  ·  Coming soon',
   'Unlimited custom Rituals',
 ];
 

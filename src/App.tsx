@@ -274,10 +274,11 @@ function AppRoutes() {
         <Route path="/reflect/archive" element={<MyCurrent />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
-        <Route path="/profile/rituals" element={premium('unlimited custom Rituals', <MyRituals />)} />
+        <Route path="/profile/rituals" element={<MyRituals />} />
         <Route path="/profile/guide" element={daily('current_guide', <CurrentGuide />)} />
-        <Route path="/profile/patterns" element={premium('the Pattern Mirror history view', <PatternMirror />)} />
-        <Route path="/profile/notifications" element={<Notifications />} />
+        <Route path="/profile/patterns" element={<PatternMirror />} />
+        {/* Notifications hidden for V1 — service worker self-unregister bug needs root-cause time. Page component preserved for V1.1 revival. */}
+        <Route path="/profile/notifications" element={<Navigate to="/profile/subscription" replace />} />
         <Route path="/profile/subscription" element={<Subscription />} />
         <Route path="/profile/resonance" element={premium('the Resonance Library', <ResonanceLibrary />)} />
         <Route path="/about" element={<About />} />
