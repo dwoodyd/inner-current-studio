@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { STATE_DEFS } from '@/lib/states';
 import { SOUND_OPTIONS, startSound, stopSound, setVolume } from '@/lib/sounds';
 import type { QuickState } from '@/lib/types';
