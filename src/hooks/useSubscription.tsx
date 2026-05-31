@@ -150,8 +150,12 @@ export function useSubscription(): SubscriptionState {
 
     load();
 
+    // Unique channel name per mount to avoid StrictMode / re-mount races
+    // where Supabase reuses an already-subscribed channel and throws
+    // "cannot add postgres_changes callbacks after subscribe()".
+    const channelName = `sub-${user.id}-${Math.random().toString(36).slice(2, 10)}`;
     const channel = supabase
-      .channel(`sub-${user.id}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "subscriptions", filter: `user_id=eq.${user.id}` },
