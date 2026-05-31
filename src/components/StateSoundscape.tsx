@@ -60,7 +60,7 @@ export default function StateSoundscape({ state }: Props) {
           }`}
           aria-label={playing ? 'Pause soundscape' : 'Play soundscape'}
         >
-          {playing ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          {playing ? <Pause size={18} /> : <Play size={18} className="translate-x-[1px]" />}
           {playing && (
             <motion.span
               className="absolute inset-0 rounded-full border border-primary/30"
