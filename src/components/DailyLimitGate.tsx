@@ -15,12 +15,20 @@ interface DailyLimitGateProps {
  */
 export function DailyLimitGate({ tool, children }: DailyLimitGateProps) {
   const navigate = useNavigate();
-  const { loading, blocked, limit, isFree } = useDailyLimit(tool);
+  const { loading, blocked, limit, isFree, recordUse } = useDailyLimit(tool);
   const [open, setOpen] = useState(false);
+  const [recorded, setRecorded] = useState(false);
 
   useEffect(() => {
     if (!loading && blocked) setOpen(true);
   }, [loading, blocked]);
+
+  // Free users: count this entry once per mount when access is granted.
+  useEffect(() => {
+    if (loading || blocked || recorded || !isFree) return;
+    setRecorded(true);
+    recordUse();
+  }, [loading, blocked, recorded, isFree, recordUse]);
 
   if (loading) {
     return (
