@@ -1,12 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Send, Sparkles, Shield } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAppState } from '@/lib/AppContext';
 import { supabase } from '@/integrations/supabase/client';
 import { getPaddleEnv } from '@/lib/paddle';
 import { toast } from 'sonner';
+import { CURRENT_SPECS } from '@/lib/currents/spec';
+import { DOMAINS, type DomainKey } from '@/lib/domains';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,12 +36,18 @@ const STARTERS = [
 async function streamChat({
   messages,
   emotionalContext,
+  currentSlug,
+  voiceVocabulary,
+  voiceAvoid,
   onDelta,
   onDone,
   onError,
 }: {
   messages: Msg[];
   emotionalContext: string;
+  currentSlug?: DomainKey;
+  voiceVocabulary?: string[];
+  voiceAvoid?: string[];
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (msg: string) => void;
@@ -54,7 +62,7 @@ async function streamChat({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ messages, emotionalContext, environment: getPaddleEnv() }),
+    body: JSON.stringify({ messages, emotionalContext, environment: getPaddleEnv(), currentSlug, voiceVocabulary, voiceAvoid }),
   });
 
   if (!resp.ok) {
@@ -98,6 +106,7 @@ async function streamChat({
 
 export default function CurrentGuide() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const { state } = useAppState();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
@@ -105,6 +114,13 @@ export default function CurrentGuide() {
   const [showConsent, setShowConsent] = useState(false);
   const [pendingText, setPendingText] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const currentSlug = useMemo<DomainKey | undefined>(() => {
+    const raw = params.get('current');
+    return raw && raw in DOMAINS ? (raw as DomainKey) : undefined;
+  }, [params]);
+  const currentSpec = currentSlug ? CURRENT_SPECS[currentSlug] : undefined;
+  const currentDomain = currentSlug ? DOMAINS[currentSlug] : undefined;
 
   const hasConsented = (() => { try { return localStorage.getItem(AI_CONSENT_KEY) === 'true'; } catch { return false; } })();
 
@@ -161,6 +177,9 @@ export default function CurrentGuide() {
       await streamChat({
         messages: newMessages,
         emotionalContext,
+        currentSlug,
+        voiceVocabulary: currentSpec?.voiceVocabulary,
+        voiceAvoid: currentSpec?.voiceAvoid,
         onDelta: upsertAssistant,
         onDone: () => setIsLoading(false),
         onError: (msg) => { toast.error(msg); setIsLoading(false); },
@@ -183,8 +202,12 @@ export default function CurrentGuide() {
             <Sparkles size={14} className="text-primary" />
           </div>
           <div>
-            <h1 className="font-heading text-base font-semibold text-foreground">Current Guide</h1>
-            <p className="text-[10px] text-muted-foreground">Your inner companion</p>
+            <h1 className="font-heading text-base font-semibold text-foreground">
+              {currentDomain ? `${currentDomain.label} Guide` : 'Current Guide'}
+            </h1>
+            <p className="text-[10px] text-muted-foreground">
+              {currentSpec ? currentSpec.tagline : 'Your inner companion'}
+            </p>
           </div>
         </div>
       </div>

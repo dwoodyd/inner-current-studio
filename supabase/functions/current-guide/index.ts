@@ -85,7 +85,7 @@ serve(async (req) => {
       });
     }
 
-    const { messages, emotionalContext, environment = "live" } = body as Record<string, unknown>;
+    const { messages, emotionalContext, environment = "live", currentSlug, voiceVocabulary, voiceAvoid } = body as Record<string, unknown>;
 
     if (environment !== "sandbox" && environment !== "live") {
       return new Response(JSON.stringify({ error: "Invalid billing environment" }), {
@@ -151,6 +151,21 @@ serve(async (req) => {
       contextNote = `\n\nUser's recent emotional context: ${emotionalContext}`;
     }
 
+    // Per-current voice rails (additive — only when sent).
+    const ALLOWED_SLUGS = new Set(["money", "self", "energy", "relationships", "health"]);
+    let voiceNote = "";
+    if (typeof currentSlug === "string" && ALLOWED_SLUGS.has(currentSlug)) {
+      const vocab = Array.isArray(voiceVocabulary)
+        ? (voiceVocabulary as unknown[]).filter((v) => typeof v === "string" && (v as string).length < 60).slice(0, 20)
+        : [];
+      const avoid = Array.isArray(voiceAvoid)
+        ? (voiceAvoid as unknown[]).filter((v) => typeof v === "string" && (v as string).length < 60).slice(0, 20)
+        : [];
+      voiceNote = `\n\nThe user is working in the ${currentSlug} current. Tune the tone accordingly.`;
+      if (vocab.length) voiceNote += `\nLean into vocabulary like: ${vocab.join(", ")}.`;
+      if (avoid.length) voiceNote += `\nNever use these words or phrases: ${avoid.join(", ")}.`;
+    }
+
     // --- AI CALL ---
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -164,7 +179,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: SYSTEM_PROMPT + contextNote },
+          { role: "system", content: SYSTEM_PROMPT + contextNote + voiceNote },
           ...validatedMessages,
         ],
         stream: true,

@@ -5,7 +5,7 @@
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ChevronRight, BookOpen, Sparkles } from 'lucide-react';
+import { ArrowLeft, ChevronRight, BookOpen, Sparkles, MessageCircle } from 'lucide-react';
 import { DOMAINS, type DomainKey } from '@/lib/domains';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { useCurrentProgress } from '@/lib/currents/progress';
@@ -148,6 +148,24 @@ export default function CurrentLayout() {
               <p className="text-xs text-muted-foreground leading-snug">
                 {spec.beliefs.length} starter beliefs \u00b7 {progress.beliefsLandedAsTrue.length + progress.beliefsLandedAsAlive.length} landed
               </p>
+            </div>
+            <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
+          </motion.button>
+        </section>
+
+        {/* Tuned Guide entry */}
+        <section className="space-y-3">
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            onClick={() => navigate(`/guide?current=${slug}`)}
+            className="soul-glass-elevated w-full text-left p-4 rounded-2xl hover:bg-muted/10 transition-colors flex items-center gap-3"
+          >
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 soul-glow-gold">
+              <MessageCircle size={16} className="text-primary" />
+            </div>
+            <div className="flex-1 space-y-0.5">
+              <h3 className="font-heading text-base text-foreground tracking-tight">Talk to the {spec.shortName} Guide</h3>
+              <p className="text-xs text-muted-foreground leading-snug">A companion tuned to this current's voice.</p>
             </div>
             <ChevronRight size={14} className="text-muted-foreground/30 shrink-0" />
           </motion.button>
