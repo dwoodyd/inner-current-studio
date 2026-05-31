@@ -279,6 +279,7 @@ function AppRoutes() {
         <Route path="/reflect/archive" element={<MyCurrent />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/insights" element={<CurrentInsights />} />
+        <Route path="/profile/theme" element={<ThemeSettings />} />
         <Route path="/profile/rituals" element={<MyRituals />} />
         <Route path="/profile/guide" element={daily('current_guide', <CurrentGuide />)} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
