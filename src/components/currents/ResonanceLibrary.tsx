@@ -65,7 +65,7 @@ export default function ResonanceLibrary({ slug }: { slug: DomainKey }) {
   );
 }
 
-function Group({ label, tone, beliefs }: { label: string; tone: 'primary' | 'muted'; beliefs: ReturnType<typeof Array.prototype.filter> extends infer T ? any : never }) {
+function Group({ label, tone, beliefs }: { label: string; tone: 'primary' | 'muted'; beliefs: { id: string; startingThought: string; endingThought: string }[] }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
