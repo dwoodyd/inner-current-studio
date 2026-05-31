@@ -159,6 +159,22 @@
     box-shadow: 0 8px 32px hsl(220 20% 0% / 0.2), 0 2px 8px hsl(220 20% 0% / 0.1), inset 0 1px 0 hsl(var(--foreground) / 0.03);
   }
 
+  .iw-input {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 1rem;
+    border: 1px solid hsl(var(--border) / 0.4);
+    background: hsl(var(--card) / 0.6);
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+    color: hsl(var(--foreground));
+    backdrop-filter: blur(12px);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .iw-input::placeholder { color: hsl(var(--muted-foreground) / 0.5); }
+  .iw-input:focus { border-color: hsl(var(--primary) / 0.5); }
+
   .soul-ambient-gold {
     position: relative;
   }
