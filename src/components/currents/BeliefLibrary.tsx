@@ -2,10 +2,10 @@
 // lets user mark a belief as Landed (True) or Alive.
 // Pipes into the Current's progress (drives Sigil evolution).
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, Check, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import type { DomainKey } from '@/lib/domains';
 import { CURRENT_SPECS, type Belief } from '@/lib/currents/spec';
@@ -17,7 +17,17 @@ export default function BeliefLibrary({ slug }: Props) {
   const navigate = useNavigate();
   const spec = CURRENT_SPECS[slug];
   const { progress, landBelief } = useCurrentProgress(slug);
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [params] = useSearchParams();
+  const [openId, setOpenId] = useState<string | null>(params.get('focus'));
+  useEffect(() => {
+    const f = params.get('focus');
+    if (f) {
+      setOpenId(f);
+      setTimeout(() => {
+        document.getElementById(`belief-${f}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [params]);
 
   const landed = (b: Belief): 'true' | 'alive' | null =>
     progress.beliefsLandedAsAlive.includes(b.id) ? 'alive' :
@@ -42,7 +52,7 @@ export default function BeliefLibrary({ slug }: Props) {
           const isOpen = openId === b.id;
           const mark = landed(b);
           return (
-            <motion.div key={b.id} layout className="soul-glass rounded-xl overflow-hidden">
+            <motion.div key={b.id} id={`belief-${b.id}`} layout className="soul-glass rounded-xl overflow-hidden">
               <button
                 onClick={() => setOpenId(isOpen ? null : b.id)}
                 className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-muted/10 transition-colors"

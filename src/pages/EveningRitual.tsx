@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Moon } from 'lucide-react';
 import { BreathingOrb } from '@/components/onboarding/BreathingOrb';
 import { useAppState } from '@/lib/AppContext';
+import { useCurrentProgress } from '@/lib/currents/progress';
 
 const SOFTEN_KEY = (d: string) => `innerwake_evening_soften_${d}`;
 const today = () => new Date().toISOString().slice(0, 10);
@@ -21,6 +22,7 @@ const CLOSING_LINES = [
 export default function EveningRitual() {
   const navigate = useNavigate();
   const { updateTodayFlow } = useAppState();
+  const { recordPractice } = useCurrentProgress('money');
   const [step, setStep] = useState<Step>('exhale');
   const [softened, setSoftened] = useState('');
   const [breathSeconds, setBreathSeconds] = useState(36); // longer exhale cycles
@@ -50,6 +52,7 @@ export default function EveningRitual() {
       if (softened.trim()) localStorage.setItem(SOFTEN_KEY(today()), softened.trim());
     } catch {}
     updateTodayFlow({ reflectionCompleted: true });
+    recordPractice();
     navigate('/');
   };
 
