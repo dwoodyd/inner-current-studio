@@ -70,6 +70,7 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
           setPlaying(false);
           window.speechSynthesis?.cancel();
           toast.success('Meditation complete');
+          recordPracticeFor(domain.key);
           return 0;
         }
         return s - 1;
@@ -87,6 +88,7 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
     });
     if (error) { toast.error('Could not save'); return; }
     toast.success('Sequence saved');
+    recordPracticeFor(domain.key);
     setTitle(''); setLines([]); setTab('library'); load();
   };
 
