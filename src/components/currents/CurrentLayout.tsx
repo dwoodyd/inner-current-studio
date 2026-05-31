@@ -72,9 +72,12 @@ export default function CurrentLayout() {
       </div>
 
       <div className="relative mx-auto max-w-lg px-4 pt-10 pb-12 space-y-8 safe-top">
-        <button onClick={() => navigate('/currents')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
-          <ArrowLeft size={16} strokeWidth={1.5} /> Currents
-        </button>
+        <div className="flex items-center justify-between">
+          <button onClick={() => navigate('/currents')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
+            <ArrowLeft size={16} strokeWidth={1.5} /> Currents
+          </button>
+          <AmbientPlayer slug={slug} compact />
+        </div>
 
         {/* Hero */}
         <div className="text-center space-y-4">
