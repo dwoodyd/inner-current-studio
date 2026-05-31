@@ -7,7 +7,7 @@ const cards = [
   { label: 'Relief Wheel', icon: Sparkles, to: '/align', color: 'text-soul-violet' },
   { label: 'Contrast Reset', icon: RefreshCw, to: '/reset/contrast', color: 'text-soul-blue' },
   { label: 'Gather Flow', icon: Play, to: '/align', color: 'text-soul-green' },
-  { label: 'Future Pages', icon: BookOpen, to: '/reflect', color: 'text-soul-warm' },
+  { label: 'Future Self Pages', icon: BookOpen, to: '/reflect/future-pages', color: 'text-soul-warm' },
   { label: 'Stillness Timer', icon: Timer, to: '/reset/stillness', color: 'text-muted-foreground' },
 ];
 
