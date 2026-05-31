@@ -291,7 +291,8 @@ function AppRoutes() {
         <Route path="/refund" element={<Refund />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/founding" element={<FoundingApplications />} />
-        <Route path="/money" element={current('money', <MoneyCurrent />)} />
+        <Route path="/money" element={<Navigate to="/currents/money" replace />} />
+        <Route path="/money/hub" element={current('money', <MoneyCurrent />)} />
         <Route path="/money/state" element={current('money', <MoneyState />)} />
         <Route path="/money/deposit" element={current('money', <CurrentDeposit />)} />
         <Route path="/money/openings" element={current('money', <MoneyOpenings />)} />

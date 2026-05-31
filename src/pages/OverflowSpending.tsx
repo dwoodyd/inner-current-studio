@@ -68,7 +68,7 @@ export default function OverflowSpending() {
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-12 pb-8 space-y-7 safe-top">
-      <button onClick={() => navigate('/money')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+      <button onClick={() => navigate('/money/hub')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
         <ArrowLeft size={18} strokeWidth={1.5} />
         <span className="text-sm">Money Current</span>
       </button>
@@ -92,7 +92,7 @@ export default function OverflowSpending() {
               <button onClick={() => navigate('/money/evidence')} className="px-5 py-3 rounded-xl bg-primary/15 text-primary text-sm font-medium hover:bg-primary/25 transition-colors">
                 Notice evidence of support
               </button>
-              <button onClick={() => navigate('/money')} className="px-5 py-3 rounded-xl soul-glass text-sm text-foreground hover:bg-muted/10 transition-colors">
+              <button onClick={() => navigate('/money/hub')} className="px-5 py-3 rounded-xl soul-glass text-sm text-foreground hover:bg-muted/10 transition-colors">
                 Return to Money Current
               </button>
             </div>

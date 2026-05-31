@@ -17,7 +17,7 @@ export function PremiumGate({ children, domain, feature = 'this practice' }: Pre
   const hasFreeCurrentAccess = domain && freeCurrent === domain;
   const hasLocalFreeCurrentAccess = domain && state.onboarding.freeCurrent === domain;
 
-  if (isPremium || hasFreeCurrentAccess || hasLocalFreeCurrentAccess) return <>{children}</>;
+  if (isPremium || domain === 'money' || hasFreeCurrentAccess || hasLocalFreeCurrentAccess) return <>{children}</>;
 
   if (loading) {
     return (

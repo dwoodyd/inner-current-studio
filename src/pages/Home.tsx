@@ -10,6 +10,10 @@ import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
 import StateSoundscape from '@/components/StateSoundscape';
 import brandLogo from '@/assets/inner-wake-logo.svg';
+import { useAuth } from '@/hooks/useAuth';
+import { useSubscription } from '@/hooks/useSubscription';
+import { DOMAINS, type DomainKey } from '@/lib/domains';
+import { useWeeklyDigest } from '@/lib/currents/progress';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {
@@ -85,6 +89,21 @@ function ensureHeadLink(selector: string, attributes: Record<string, string>) {
 export default function Home() {
   const navigate = useNavigate();
   const { state, addCheckIn } = useAppState();
+  const { user } = useAuth();
+  const { freeCurrent } = useSubscription();
+  const digest = useWeeklyDigest();
+
+  const featuredCurrent = useMemo<DomainKey>(() => {
+    const accountAgeMs = user?.created_at ? Date.now() - new Date(user.created_at).getTime() : 0;
+    const isNew = accountAgeMs > 0 && accountAgeMs < 30 * 24 * 60 * 60 * 1000;
+    const localFree = state.onboarding.freeCurrent as DomainKey | undefined;
+    if (isNew) {
+      return (freeCurrent as DomainKey) || localFree || digest.topCurrent || 'money';
+    }
+    return digest.topCurrent || (freeCurrent as DomainKey) || localFree || 'money';
+  }, [user?.created_at, freeCurrent, state.onboarding.freeCurrent, digest.topCurrent]);
+
+  const featured = DOMAINS[featuredCurrent];
 
   // Derive last persisted state from most recent check-in.
   // Reactively syncs after cloud-state loads — no longer defaults to "flat" forever.
@@ -285,20 +304,20 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Money Current */}
+        {/* Featured Current */}
         <motion.div variants={fadeUp}>
           <button
-            onClick={() => navigate('/money')}
+            onClick={() => navigate(`/currents/${featured.key}`)}
             className="group w-full rounded-2xl p-4 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:p-5"
-            style={{ background: 'linear-gradient(135deg, hsl(42 65% 58% / 0.06), hsl(160 30% 40% / 0.04))' }}
+            style={{ background: featured.gradient }}
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">💰</span>
-                  <h2 className="font-heading text-lg font-medium text-foreground">Money Current</h2>
+                  <span className="text-lg">{featured.emoji}</span>
+                  <h2 className="font-heading text-lg font-medium text-foreground">{featured.label}</h2>
                 </div>
-                <p className="text-xs text-muted-foreground">Release resistance. Rehearse receiving.</p>
+                <p className="text-xs text-muted-foreground">{featured.tagline}</p>
               </div>
               <ChevronRight size={18} className="text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors" />
             </div>

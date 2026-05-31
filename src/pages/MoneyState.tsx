@@ -45,7 +45,7 @@ export default function MoneyState() {
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-12 pb-8 space-y-7 safe-top">
-      <button onClick={() => navigate('/money')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+      <button onClick={() => navigate('/money/hub')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
         <ArrowLeft size={18} strokeWidth={1.5} />
         <span className="text-sm">Money Current</span>
       </button>

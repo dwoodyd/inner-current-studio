@@ -740,6 +740,30 @@ export type Database = {
         }
         Relationships: []
       }
+      practices: {
+        Row: {
+          created_at: string
+          current_slug: string
+          id: string
+          practice_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_slug: string
+          id?: string
+          practice_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_slug?: string
+          id?: string
+          practice_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           companion_feeling: string | null

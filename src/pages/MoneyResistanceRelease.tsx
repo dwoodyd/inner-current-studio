@@ -73,7 +73,7 @@ export default function MoneyResistanceRelease() {
       </div>
 
       <div className="relative mx-auto max-w-lg px-4 pt-12 pb-8 space-y-6 safe-top">
-        <button onClick={() => navigate('/money')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+        <button onClick={() => navigate('/money/hub')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft size={18} strokeWidth={1.5} />
           <span className="text-sm">Money Current</span>
         </button>
@@ -207,7 +207,7 @@ export default function MoneyResistanceRelease() {
                 <button onClick={() => { setPhase('select'); setResistance(''); setBody(''); setChargeBefore(''); setChargeAfter(''); setSoftenedThought(''); }} className="px-4 py-2 rounded-xl text-sm bg-muted/20 text-muted-foreground hover:bg-muted/30 transition-all">
                   Release Another
                 </button>
-                <button onClick={() => navigate('/money')} className="px-4 py-2 rounded-xl text-sm soul-glass text-foreground hover:bg-muted/10 transition-all">
+                <button onClick={() => navigate('/money/hub')} className="px-4 py-2 rounded-xl text-sm soul-glass text-foreground hover:bg-muted/10 transition-all">
                   Done
                 </button>
               </div>
