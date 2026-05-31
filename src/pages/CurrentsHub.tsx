@@ -7,6 +7,7 @@ import { useAppState } from '@/lib/AppContext';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { useCurrentProgress } from '@/lib/currents/progress';
 import CurrentSigil from '@/components/currents/CurrentSigil';
+import WeeklyDigest from '@/components/currents/WeeklyDigest';
 
 const STAGE_LABEL: Record<1 | 2 | 3 | 4, string> = {
   1: 'Seed', 2: 'Sprout', 3: 'Bloom', 4: 'Resonance',
@@ -34,6 +35,8 @@ export default function CurrentsHub() {
             Each current is an area of life you can saturate, soften, and align. Your sigils grow as you practice.
           </p>
         </div>
+
+        <WeeklyDigest />
 
         <div className="space-y-3">
           {ALL_DOMAIN_KEYS.map((key, i) => {

@@ -12,6 +12,8 @@ import { useCurrentProgress } from '@/lib/currents/progress';
 import CurrentSigil from '@/components/currents/CurrentSigil';
 import TodayBelief from '@/components/currents/TodayBelief';
 import PatternMirror from '@/components/currents/PatternMirror';
+import ResonanceLibrary from '@/components/currents/ResonanceLibrary';
+import AmbientPlayer from '@/components/currents/AmbientPlayer';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';
 
@@ -70,9 +72,12 @@ export default function CurrentLayout() {
       </div>
 
       <div className="relative mx-auto max-w-lg px-4 pt-10 pb-12 space-y-8 safe-top">
-        <button onClick={() => navigate('/currents')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
-          <ArrowLeft size={16} strokeWidth={1.5} /> Currents
-        </button>
+        <div className="flex items-center justify-between">
+          <button onClick={() => navigate('/currents')} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
+            <ArrowLeft size={16} strokeWidth={1.5} /> Currents
+          </button>
+          <AmbientPlayer slug={slug} compact />
+        </div>
 
         {/* Hero */}
         <div className="text-center space-y-4">
@@ -187,6 +192,8 @@ export default function CurrentLayout() {
         </section>
 
         <PatternMirror slug={slug} />
+
+        <ResonanceLibrary slug={slug} />
 
         {/* Recent work */}
         {recentSequences.length > 0 && (
