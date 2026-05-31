@@ -367,6 +367,7 @@ const App = () => (
           <AuthProvider>
             <AppProvider>
               <AppRoutes />
+              <StageUpOverlay />
             </AppProvider>
           </AuthProvider>
         </BetaAccessGate>
