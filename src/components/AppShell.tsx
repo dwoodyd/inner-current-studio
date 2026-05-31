@@ -5,13 +5,26 @@ import { PaymentTestModeBanner } from './PaymentTestModeBanner';
 import { TrialCountdownBanner } from './TrialCountdownBanner';
 import { MigrationNoticeModal } from './MigrationNoticeModal';
 import { useAppState } from '@/lib/AppContext';
+import { STATE_DEFS } from '@/lib/states';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import type { QuickState } from '@/lib/types';
+
+const STATE_DOT_CLASS: Record<QuickState, string> = {
+  tight: 'bg-soul-warm shadow-[0_0_8px_hsl(var(--soul-warm))]',
+  restless: 'bg-soul-gold shadow-[0_0_8px_hsl(var(--soul-gold))]',
+  flat: 'bg-muted-foreground shadow-[0_0_8px_hsl(var(--muted-foreground))]',
+  open: 'bg-soul-blue shadow-[0_0_8px_hsl(var(--soul-blue))]',
+  flowing: 'bg-soul-green shadow-[0_0_8px_hsl(var(--soul-green))]',
+};
 
 export default function AppShell() {
   const location = useLocation();
   const { state } = useAppState();
   const hideBottomNav = location.pathname === '/reset/breathwork';
-  const latestState = state.checkIns[0]?.state ?? 'steady';
-  const stateLabel = latestState.replace('-', ' ');
+  const rawState = (state.checkIns[0]?.state ?? 'flat') as QuickState;
+  const currentState: QuickState = STATE_DEFS[rawState] ? rawState : 'flat';
+  const stateLabel = STATE_DEFS[currentState].label;
+  const dotClass = STATE_DOT_CLASS[currentState] ?? STATE_DOT_CLASS.flat;
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-background safe-x">
@@ -19,13 +32,22 @@ export default function AppShell() {
       <TrialCountdownBanner />
       <OfflineBanner />
       {!hideBottomNav && (
-        <Link
-          to="/"
-          aria-label={`Current state: ${stateLabel}. Update check-in.`}
-          className="fixed right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-40 grid h-10 w-10 place-items-center rounded-full border border-border/30 bg-card/80 shadow-[0_0_18px_hsl(var(--primary)/0.14)] backdrop-blur-xl transition-transform hover:scale-105"
-        >
-          <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary))]" />
-        </Link>
+        <TooltipProvider delayDuration={150}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to="/"
+                aria-label={`Your current state: ${stateLabel}. Tap to update check-in.`}
+                className="fixed right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-40 grid h-10 w-10 place-items-center rounded-full border border-border/30 bg-card/80 shadow-[0_0_18px_hsl(var(--primary)/0.14)] backdrop-blur-xl transition-transform hover:scale-105"
+              >
+                <span className={`h-2 w-2 rounded-full ${dotClass}`} />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="left" sideOffset={8}>
+              Your current state: {stateLabel}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
       <main className={`flex-1 overflow-y-auto ${hideBottomNav ? 'pb-0' : 'pb-32'}`}>
         <Outlet />

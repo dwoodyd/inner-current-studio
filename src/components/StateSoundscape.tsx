@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { STATE_DEFS } from '@/lib/states';
 import { SOUND_OPTIONS, startSound, stopSound, setVolume } from '@/lib/sounds';
 import type { QuickState } from '@/lib/types';
@@ -60,7 +60,7 @@ export default function StateSoundscape({ state }: Props) {
           }`}
           aria-label={playing ? 'Pause soundscape' : 'Play soundscape'}
         >
-          {playing ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          {playing ? <Pause size={18} /> : <Play size={18} className="translate-x-[1px]" />}
           {playing && (
             <motion.span
               className="absolute inset-0 rounded-full border border-primary/30"
