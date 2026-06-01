@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 interface OrbVideoProps {
   state?: QuickState;
   className?: string;
-  /** Pixel size for both width & height. Defaults to 96. */
+  /** Optional pixel size for both width & height. If omitted, the orb fills its parent. */
   size?: number;
 }
 
@@ -33,7 +33,7 @@ function preloadOrbVideos() {
 const OrbVideo = React.memo(function OrbVideo({
   state = 'flat',
   className,
-  size = 96,
+  size,
 }: OrbVideoProps) {
   const def = STATE_DEFS[state];
   const videoRef = useRef<HTMLVideoElement | null>(null);
