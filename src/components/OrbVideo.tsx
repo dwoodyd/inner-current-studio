@@ -121,7 +121,12 @@ const OrbVideo = React.memo(function OrbVideo({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
           className="absolute inset-0 h-full w-full rounded-full object-cover pointer-events-none"
-          style={{ width: size, height: size }}
+          style={{
+            width: size,
+            height: size,
+            transform: `scale(${state === 'tight' || state === 'restless' || state === 'flat' ? 1.4 : 1.18})`,
+            transformOrigin: 'center',
+          }}
         />
       </AnimatePresence>
     </div>
