@@ -1,42 +1,21 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Compass, Sparkles, Play, Target, ChevronRight } from 'lucide-react';
+import { Compass, ChevronRight } from 'lucide-react';
 
 const stagger = { animate: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
 
+// Relief / Gather / Momentum used to be standalone rituals; they now live as
+// stages *inside* the Alignment Wheel (Relief → Softening → Steadying →
+// Momentum). The hub only exposes the Wheel as the entry point.
 const modules = [
   {
     icon: Compass,
     title: 'Alignment Wheel',
-    description: 'A guided thought-shift ritual from resistance toward resonance.',
+    description: 'A guided thought-shift ritual from resistance toward resonance — relief, softening, steadying, momentum in one sitting.',
     gradient: 'from-soul-gold/15 to-soul-gold/5',
     iconColor: 'text-soul-gold',
     to: '/align/wheel',
-  },
-  {
-    icon: Sparkles,
-    title: 'Relief Wheel',
-    description: 'A gentler version for low-capacity moments.',
-    gradient: 'from-soul-violet/15 to-soul-violet/5',
-    iconColor: 'text-soul-violet',
-    to: '/align/relief',
-  },
-  {
-    icon: Play,
-    title: 'Gather Flow',
-    description: 'Build and play sequences of supportive, believable thoughts.',
-    gradient: 'from-soul-green/15 to-soul-green/5',
-    iconColor: 'text-soul-green',
-    to: '/align/gather',
-  },
-  {
-    icon: Target,
-    title: 'Momentum Ring',
-    description: 'A timed state-holding ritual to lock in your shift.',
-    gradient: 'from-soul-blue/15 to-soul-blue/5',
-    iconColor: 'text-soul-blue',
-    to: '/align/momentum',
   },
 ];
 
