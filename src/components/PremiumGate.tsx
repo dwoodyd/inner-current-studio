@@ -14,14 +14,14 @@ interface PremiumGateProps {
 export function PremiumGate({ children, domain, feature = 'this practice' }: PremiumGateProps) {
   const navigate = useNavigate();
   const { state } = useAppState();
-  const { loading, isPremium, freeCurrent } = useSubscription();
+  const { loading, isPremium, freeCurrent, status } = useSubscription();
   const hasFreeCurrentAccess = domain && freeCurrent === domain;
   const hasLocalFreeCurrentAccess = domain && state.onboarding.freeCurrent === domain;
+  const isOwner = status === 'owner';
 
-  // SOON currents are gated app-wide regardless of plan — the content isn't
-  // ready yet, so even Pro/Lifetime/Owner sees a respectful "coming soon" state
-  // instead of an empty shell.
-  if (isSoonDomain(domain)) {
+  // SOON currents are gated app-wide regardless of plan — except for the owner,
+  // who needs full preview access to validate content before launch.
+  if (isSoonDomain(domain) && !isOwner) {
     return (
       <div className="mx-auto flex min-h-[70dvh] max-w-md flex-col items-center justify-center px-5 text-center safe-top">
         <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-soul-gold/25 bg-soul-gold/10 text-soul-gold">
