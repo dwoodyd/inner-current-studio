@@ -283,8 +283,7 @@ function AppRoutes() {
         <Route path="/profile/rituals" element={<MyRituals />} />
         <Route path="/profile/guide" element={daily('current_guide', <CurrentGuide />)} />
         <Route path="/profile/patterns" element={<PatternMirror />} />
-        {/* Notifications hidden for V1 — service worker self-unregister bug needs root-cause time. Page component preserved for V1.1 revival. */}
-        <Route path="/profile/notifications" element={<Navigate to="/profile/subscription" replace />} />
+        {/* Notifications removed for V1. Page component + push.ts preserved in repo for V1.1 revival on the versioned SW. */}
         <Route path="/profile/subscription" element={<Subscription />} />
         <Route path="/founding-member" element={<FoundingMember />} />
         <Route path="/profile/resonance" element={premium('the Resonance Library', <ResonanceLibrary />)} />

@@ -1,6 +1,11 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
+
+// Currents whose content is NOT yet at parity with Money — surfaced as "Coming soon"
+// rather than sold as ready behind the paywall. Remove from this set once each
+// domain has its full affirmation/script/practice depth shipped.
+const SOON_DOMAINS = new Set<string>(['self', 'energy', 'relationships', 'health']);
 import { ALL_DOMAIN_KEYS, DOMAINS, type DomainKey, type DomainConfig } from '@/lib/domains';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';
@@ -19,13 +24,15 @@ export default function CurrentsHub() {
   const { state } = useAppState();
   const localFree = state.onboarding.freeCurrent;
 
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <div className="relative">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full"
           style={{ background: 'radial-gradient(circle, hsl(42 65% 58% / 0.06), transparent 70%)' }}
-          animate={{ scale: [1, 1.06, 1], opacity: [0.4, 0.7, 0.4] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }} />
+          animate={prefersReducedMotion ? { scale: 1, opacity: 0.5 } : { scale: [1, 1.06, 1], opacity: [0.4, 0.7, 0.4] }}
+          transition={prefersReducedMotion ? { duration: 0 } : { duration: 10, repeat: Infinity, ease: 'easeInOut' }} />
       </div>
 
       <div className="relative mx-auto max-w-lg px-4 pt-10 pb-10 space-y-6 safe-top sm:pt-12 sm:space-y-7">
@@ -41,15 +48,19 @@ export default function CurrentsHub() {
         <div className="space-y-3">
           {ALL_DOMAIN_KEYS.map((key, i) => {
             const d = DOMAINS[key];
-            const isOpen = key === 'money' || isPremium || freeCurrent === key || localFree === key;
             const isActiveFocus = !isPremium && (freeCurrent === key || localFree === key);
-            const badge = isPremium
-              ? null
-              : isActiveFocus
-                ? { label: 'Active focus', tone: 'active' as const }
-                : key === 'money'
-                  ? null
-                  : { label: 'Premium', tone: 'locked' as const };
+            const isSoon = SOON_DOMAINS.has(key);
+            // "Coming soon" currents are not openable yet, regardless of subscription.
+            const isOpen = !isSoon && (key === 'money' || isPremium || freeCurrent === key || localFree === key);
+            const badge = isSoon
+              ? { label: 'Coming soon', tone: 'soon' as const }
+              : isPremium
+                ? null
+                : isActiveFocus
+                  ? { label: 'Active focus', tone: 'active' as const }
+                  : key === 'money'
+                    ? null
+                    : { label: 'Premium', tone: 'locked' as const };
             return (
               <CurrentCard
                 key={key}
@@ -58,7 +69,10 @@ export default function CurrentsHub() {
                 index={i}
                 isOpen={isOpen}
                 badge={badge}
-                onClick={() => navigate(`/currents/${key}`)}
+                onClick={() => {
+                  if (isSoon) return;
+                  navigate(`/currents/${key}`);
+                }}
               />
             );
           })}
@@ -114,7 +128,7 @@ function CurrentCard({ slug, d, index, isOpen, badge, onClick }: CardProps) {
               badge.tone === 'active'
                 ? 'border border-primary/25 bg-primary/10 text-primary'
                 : badge.tone === 'soon'
-                  ? 'border border-amber-400/25 bg-amber-400/10 text-amber-300/90'
+                  ? 'border border-soul-gold/25 bg-soul-gold/10 text-soul-gold/90'
                   : 'border border-border/30 bg-muted/40 text-muted-foreground'
             }`}>
               {badge.label}
