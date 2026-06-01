@@ -202,33 +202,47 @@ export default function Subscription() {
           />
 
           {/* Pro */}
-          <TierCard
-            highlight
-            name={cadence === 'annual' ? 'Pro Annual' : 'Pro Monthly'}
-            price={
-              eligibleForFounding
-                ? (cadence === 'annual' ? '$39' : '$4.99')
-                : (cadence === 'annual' ? '$59' : '$7.99')
-            }
-            period={cadence === 'annual' ? '/yr' : '/mo'}
-            badge={eligibleForFounding ? 'Founding Rate' : undefined}
-            sub={
-              eligibleForFounding
-                ? (cadence === 'annual' ? '$59/yr retail · ≈ $3.25/mo' : '$7.99/mo retail')
-                : (cadence === 'annual' ? '≈ $4.92/mo · save 38%' : undefined)
-            }
-            tagline={eligibleForFounding ? 'Locked for life.' : 'Full Pro access.'}
-            features={PRO_FEATURES.slice(0, 6)}
-            cta={`${ctaVerb} Pro ${cadence === 'annual' ? 'Annual' : 'Monthly'}`}
-            ctaNote={
-              eligibleForFounding
-                ? (inFounderWindow ? 'No card now — founding rate locked for life.' : 'Founding rate locked for life.')
-                : 'Cancel anytime.'
-            }
-            onCta={() => startCheckout(proPriceId)}
-            ctaDisabled={sub.detailedTier === 'pro_annual' || sub.detailedTier === 'pro_monthly' || sub.detailedTier === 'lifetime'}
-            loading={checkout.loading}
-          />
+          {(() => {
+            const proOwned =
+              sub.detailedTier === 'pro_annual' ||
+              sub.detailedTier === 'pro_monthly' ||
+              sub.detailedTier === 'lifetime' ||
+              sub.status === 'owner';
+            const proCta = proOwned
+              ? (sub.detailedTier === 'lifetime' || sub.status === 'owner' ? 'Included in your plan' : 'Your plan')
+              : `${ctaVerb} Pro ${cadence === 'annual' ? 'Annual' : 'Monthly'}`;
+            return (
+              <TierCard
+                highlight
+                name={cadence === 'annual' ? 'Pro Annual' : 'Pro Monthly'}
+                price={
+                  eligibleForFounding
+                    ? (cadence === 'annual' ? '$39' : '$4.99')
+                    : (cadence === 'annual' ? '$59' : '$7.99')
+                }
+                period={cadence === 'annual' ? '/yr' : '/mo'}
+                badge={eligibleForFounding ? 'Founding Rate' : undefined}
+                sub={
+                  eligibleForFounding
+                    ? (cadence === 'annual' ? '$59/yr retail · ≈ $3.25/mo' : '$7.99/mo retail')
+                    : (cadence === 'annual' ? '≈ $4.92/mo · save 38%' : undefined)
+                }
+                tagline={eligibleForFounding ? 'Locked for life.' : 'Full Pro access.'}
+                features={PRO_FEATURES.slice(0, 6)}
+                cta={proCta}
+                ctaNote={
+                  proOwned
+                    ? undefined
+                    : eligibleForFounding
+                      ? (inFounderWindow ? 'No card now — founding rate locked for life.' : 'Founding rate locked for life.')
+                      : 'Cancel anytime.'
+                }
+                onCta={() => startCheckout(proPriceId)}
+                ctaDisabled={proOwned}
+                loading={checkout.loading}
+              />
+            );
+          })()}
 
           {/* Lifetime */}
           {lifetimeAvailable ? (
