@@ -69,11 +69,11 @@ const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: C
 
         {/* Living orb video */}
         <motion.div
-          className="relative h-20 w-20 sm:h-24 sm:w-24"
+          className="relative h-28 w-28 sm:h-36 sm:w-36"
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: speed, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <OrbVideo state={quickState} size={96} className="h-full w-full" />
+          <OrbVideo state={quickState} size={144} className="h-full w-full" />
         </motion.div>
 
       </div>
