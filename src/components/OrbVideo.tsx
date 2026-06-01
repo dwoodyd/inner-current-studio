@@ -124,7 +124,7 @@ const OrbVideo = React.memo(function OrbVideo({
           style={{
             width: size,
             height: size,
-            transform: `scale(${state === 'tight' || state === 'restless' || state === 'flat' ? 1.4 : 1.18})`,
+            transform: 'scale(1.4)',
             transformOrigin: 'center',
           }}
         />
