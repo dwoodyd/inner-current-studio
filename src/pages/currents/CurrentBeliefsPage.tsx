@@ -4,6 +4,8 @@ import { ArrowLeft } from 'lucide-react';
 import { DOMAINS, type DomainKey } from '@/lib/domains';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import BeliefLibrary from '@/components/currents/BeliefLibrary';
+import { PremiumGate } from '@/components/PremiumGate';
+import { isSoonDomain } from '@/lib/currents/soonDomains';
 
 export default function CurrentBeliefsPage() {
   const { slug } = useParams<{ slug: DomainKey }>();
@@ -11,6 +13,9 @@ export default function CurrentBeliefsPage() {
 
   if (!slug || !(slug in DOMAINS)) {
     return <div className="p-6 text-center text-sm text-muted-foreground">That current doesn't exist.</div>;
+  }
+  if (isSoonDomain(slug)) {
+    return <PremiumGate domain={slug}><div /></PremiumGate>;
   }
   const spec = CURRENT_SPECS[slug];
 
