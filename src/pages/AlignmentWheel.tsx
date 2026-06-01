@@ -153,13 +153,11 @@ export default function AlignmentWheel() {
         </motion.div>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="space-y-3">
           <button onClick={() => navigate('/align')} className="soul-btn-primary w-full">Return to Align</button>
-          <button onClick={() => navigate('/align/gather')} className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-3">
-            Turn into Gather Flow
-          </button>
         </motion.div>
       </div>
     );
   }
+
 
   return (
     <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-5 soul-ambient-gold overflow-hidden">

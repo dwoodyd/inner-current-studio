@@ -20,9 +20,9 @@ import { ThemeProvider } from "@/hooks/useTheme";
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
 const AlignmentWheel = lazy(() => import("@/pages/AlignmentWheel"));
-const ReliefWheel = lazy(() => import("@/pages/ReliefWheel"));
-const GatherFlow = lazy(() => import("@/pages/GatherFlow"));
-const MomentumRing = lazy(() => import("@/pages/MomentumRing"));
+// ReliefWheel, GatherFlow, MomentumRing — superseded by Alignment Wheel stages.
+// Routes now redirect to /align/wheel (see below); page modules retained in the
+// repo until V1.1 cleanup so deep links from share cards still resolve.
 const Reset = lazy(() => import("@/pages/Reset"));
 const StateLadder = lazy(() => import("@/pages/StateLadder"));
 const ContrastReset = lazy(() => import("@/pages/ContrastReset"));
@@ -193,11 +193,29 @@ class RouteErrorBoundary extends Component<
 }
 
 function RouteLoader() {
+  // A *present* loader: large centered pulse + a skeletal page silhouette so
+  // transitions never read as a broken or blank screen. F2 in the live walkthrough.
   return (
-    <div className="flex min-h-[50dvh] items-center justify-center bg-background">
-      <div className="h-10 w-10 rounded-full soul-glow-gold animate-pulse"
-        style={{ background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.3), hsl(var(--primary) / 0.08))' }}
-      />
+    <div className="relative flex min-h-[100dvh] flex-col items-center bg-background px-5 pt-20 safe-top">
+      <div className="relative mb-8 flex h-24 w-24 items-center justify-center">
+        <div
+          className="absolute inset-0 rounded-full soul-glow-gold animate-ping"
+          style={{ background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.25), transparent 70%)' }}
+        />
+        <div
+          className="relative h-16 w-16 rounded-full soul-glow-gold animate-pulse"
+          style={{ background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.45), hsl(var(--primary) / 0.1))' }}
+        />
+      </div>
+      <div className="w-full max-w-md space-y-3 opacity-60">
+        <div className="h-7 w-2/3 mx-auto rounded-md bg-muted/40 animate-pulse" />
+        <div className="h-4 w-1/2 mx-auto rounded bg-muted/30 animate-pulse" />
+        <div className="mt-6 space-y-3">
+          <div className="h-20 w-full rounded-2xl bg-muted/20 animate-pulse" />
+          <div className="h-20 w-full rounded-2xl bg-muted/20 animate-pulse" />
+          <div className="h-20 w-full rounded-2xl bg-muted/15 animate-pulse" />
+        </div>
+      </div>
     </div>
   );
 }
@@ -253,9 +271,11 @@ function AppRoutes() {
         <Route path="/ritual/evening" element={<EveningRitual />} />
         <Route path="/align" element={<Align />} />
         <Route path="/align/wheel" element={daily('alignment_wheel', <AlignmentWheel />)} />
-        <Route path="/align/relief" element={<ReliefWheel />} />
-        <Route path="/align/gather" element={<GatherFlow />} />
-        <Route path="/align/momentum" element={<MomentumRing />} />
+        {/* Legacy align stages — superseded by stages inside the Alignment Wheel.
+            Kept as redirects so old links / situation packs don't 404. */}
+        <Route path="/align/relief" element={<Navigate to="/align/wheel" replace />} />
+        <Route path="/align/gather" element={<Navigate to="/align/wheel" replace />} />
+        <Route path="/align/momentum" element={<Navigate to="/align/wheel" replace />} />
         <Route path="/reset" element={<Reset />} />
         <Route path="/reset/ladder" element={daily('reset', <StateLadder />)} />
         <Route path="/reset/contrast" element={daily('reset', <ContrastReset />)} />

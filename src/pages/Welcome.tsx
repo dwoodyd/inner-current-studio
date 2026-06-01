@@ -406,7 +406,7 @@ export default function Welcome() {
                 tagline: '$59/yr retail after beta · ≈ $3.25/mo',
                 bullets: [
                   'Everything in Free, unlimited',
-                  'All 5 Currents · custom Sigils',
+                  'Money current open · custom Sigils · more Currents rolling out',
                   'Resonance Library · Practice Constellation',
                   'Pattern Mirror — multi-month history',
                   'Save 35% vs monthly',

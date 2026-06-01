@@ -2,10 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
-// Currents whose content is NOT yet at parity with Money — surfaced as "Coming soon"
-// rather than sold as ready behind the paywall. Remove from this set once each
-// domain has its full affirmation/script/practice depth shipped.
-const SOON_DOMAINS = new Set<string>(['self', 'energy', 'relationships', 'health']);
+import { SOON_DOMAINS } from '@/lib/currents/soonDomains';
 import { ALL_DOMAIN_KEYS, DOMAINS, type DomainKey, type DomainConfig } from '@/lib/domains';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';

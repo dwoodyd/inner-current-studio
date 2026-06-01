@@ -32,7 +32,8 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   'Everything in Free, unlimited',
-  'All 5 Currents · Self · Energy · Relationship · Health',
+  'Money current — fully open today',
+  'Self, Energy, Relationships, Health\u00a0·\u00a0rolling out',
   'Custom Sigil generation per Current',
   'Resonance Library',
   'Practice Constellation',
@@ -201,50 +202,69 @@ export default function Subscription() {
           />
 
           {/* Pro */}
-          <TierCard
-            highlight
-            name={cadence === 'annual' ? 'Pro Annual' : 'Pro Monthly'}
-            price={
-              eligibleForFounding
-                ? (cadence === 'annual' ? '$39' : '$4.99')
-                : (cadence === 'annual' ? '$59' : '$7.99')
-            }
-            period={cadence === 'annual' ? '/yr' : '/mo'}
-            badge={eligibleForFounding ? 'Founding Rate' : undefined}
-            sub={
-              eligibleForFounding
-                ? (cadence === 'annual' ? '$59/yr retail · ≈ $3.25/mo' : '$7.99/mo retail')
-                : (cadence === 'annual' ? '≈ $4.92/mo · save 38%' : undefined)
-            }
-            tagline={eligibleForFounding ? 'Locked for life.' : 'Full Pro access.'}
-            features={PRO_FEATURES.slice(0, 6)}
-            cta={`${ctaVerb} Pro ${cadence === 'annual' ? 'Annual' : 'Monthly'}`}
-            ctaNote={
-              eligibleForFounding
-                ? (inFounderWindow ? 'No card now — founding rate locked for life.' : 'Founding rate locked for life.')
-                : 'Cancel anytime.'
-            }
-            onCta={() => startCheckout(proPriceId)}
-            ctaDisabled={sub.detailedTier === 'pro_annual' || sub.detailedTier === 'pro_monthly' || sub.detailedTier === 'lifetime'}
-            loading={checkout.loading}
-          />
+          {(() => {
+            const proOwned =
+              sub.detailedTier === 'pro_annual' ||
+              sub.detailedTier === 'pro_monthly' ||
+              sub.detailedTier === 'lifetime' ||
+              sub.status === 'owner';
+            const proCta = proOwned
+              ? (sub.detailedTier === 'lifetime' || sub.status === 'owner' ? 'Included in your plan' : 'Your plan')
+              : `${ctaVerb} Pro ${cadence === 'annual' ? 'Annual' : 'Monthly'}`;
+            return (
+              <TierCard
+                highlight
+                name={cadence === 'annual' ? 'Pro Annual' : 'Pro Monthly'}
+                price={
+                  eligibleForFounding
+                    ? (cadence === 'annual' ? '$39' : '$4.99')
+                    : (cadence === 'annual' ? '$59' : '$7.99')
+                }
+                period={cadence === 'annual' ? '/yr' : '/mo'}
+                badge={eligibleForFounding ? 'Founding Rate' : undefined}
+                sub={
+                  eligibleForFounding
+                    ? (cadence === 'annual' ? '$59/yr retail · ≈ $3.25/mo' : '$7.99/mo retail')
+                    : (cadence === 'annual' ? '≈ $4.92/mo · save 38%' : undefined)
+                }
+                tagline={eligibleForFounding ? 'Locked for life.' : 'Full Pro access.'}
+                features={PRO_FEATURES.slice(0, 6)}
+                cta={proCta}
+                ctaNote={
+                  proOwned
+                    ? undefined
+                    : eligibleForFounding
+                      ? (inFounderWindow ? 'No card now — founding rate locked for life.' : 'Founding rate locked for life.')
+                      : 'Cancel anytime.'
+                }
+                onCta={() => startCheckout(proPriceId)}
+                ctaDisabled={proOwned}
+                loading={checkout.loading}
+              />
+            );
+          })()}
 
           {/* Lifetime */}
           {lifetimeAvailable ? (
-            <TierCard
-              name="Pro Lifetime"
-              price="$99"
-              period=" one-time"
-              badge="Founder-only"
-              sub="Retiring with the founding member program"
-              tagline="One purchase. Lifetime."
-              features={LIFETIME_EXTRAS.slice(0, 6)}
-              cta="Lock in Lifetime $99"
-              ctaNote="One charge. Never billed again."
-              onCta={() => startCheckout(FOUNDING_PRICES.lifetime)}
-              ctaDisabled={sub.detailedTier === 'lifetime' || slots.soldOut}
-              loading={checkout.loading}
-            />
+            (() => {
+              const lifetimeOwned = sub.detailedTier === 'lifetime' || sub.status === 'owner';
+              return (
+                <TierCard
+                  name="Pro Lifetime"
+                  price="$99"
+                  period=" one-time"
+                  badge="Founder-only"
+                  sub="Retiring with the founding member program"
+                  tagline="One purchase. Lifetime."
+                  features={LIFETIME_EXTRAS.slice(0, 6)}
+                  cta={lifetimeOwned ? 'Your plan' : 'Lock in Lifetime $99'}
+                  ctaNote={lifetimeOwned ? undefined : 'One charge. Never billed again.'}
+                  onCta={() => startCheckout(FOUNDING_PRICES.lifetime)}
+                  ctaDisabled={lifetimeOwned || slots.soldOut}
+                  loading={checkout.loading}
+                />
+              );
+            })()
           ) : (
             <div className="soul-glass rounded-2xl px-5 py-6 text-center text-xs text-muted-foreground/70">
               All 100 founding lifetime slots are claimed. Pro Monthly &amp; Annual remain at retail rates for new members.

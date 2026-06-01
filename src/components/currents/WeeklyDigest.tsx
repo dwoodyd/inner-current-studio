@@ -6,6 +6,7 @@ import { Flame, ArrowRight } from 'lucide-react';
 import { ALL_DOMAIN_KEYS, DOMAINS, type DomainKey } from '@/lib/domains';
 import { useWeeklyDigest } from '@/lib/currents/progress';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
+import { SOON_DOMAINS } from '@/lib/currents/soonDomains';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';
 
@@ -15,9 +16,12 @@ export default function WeeklyDigest() {
   const { state } = useAppState();
   const localFree = state.onboarding.freeCurrent;
 
-  const available: DomainKey[] = isPremium
+  // Never nudge into a Current that's still "Coming soon" — the gate must hold
+  // from every entry point, including this digest.
+  const rawAvailable: DomainKey[] = isPremium
     ? [...ALL_DOMAIN_KEYS]
     : ['money', (freeCurrent || localFree || 'self') as DomainKey].filter((v, i, a) => a.indexOf(v) === i) as DomainKey[];
+  const available = rawAvailable.filter((k) => !SOON_DOMAINS.has(k));
 
   const digest = useWeeklyDigest(available);
   if (digest.totalPracticesThisWeek === 0 && !digest.leastTouched) return null;

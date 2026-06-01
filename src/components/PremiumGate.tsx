@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Sparkles } from 'lucide-react';
+import { Lock, Sparkles, Clock } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';
+import { isSoonDomain } from '@/lib/currents/soonDomains';
 
 interface PremiumGateProps {
   children: ReactNode;
@@ -17,6 +18,42 @@ export function PremiumGate({ children, domain, feature = 'this practice' }: Pre
   const hasFreeCurrentAccess = domain && freeCurrent === domain;
   const hasLocalFreeCurrentAccess = domain && state.onboarding.freeCurrent === domain;
 
+  // SOON currents are gated app-wide regardless of plan — the content isn't
+  // ready yet, so even Pro/Lifetime/Owner sees a respectful "coming soon" state
+  // instead of an empty shell.
+  if (isSoonDomain(domain)) {
+    return (
+      <div className="mx-auto flex min-h-[70dvh] max-w-md flex-col items-center justify-center px-5 text-center safe-top">
+        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-soul-gold/25 bg-soul-gold/10 text-soul-gold">
+          <Clock size={22} strokeWidth={1.5} />
+        </div>
+        <p className="mb-2 text-xs uppercase tracking-[0.28em] text-soul-gold/80">Coming soon</p>
+        <h1 className="font-heading text-2xl font-semibold text-foreground capitalize">
+          {domain} current
+        </h1>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          We're rolling out the {domain} current next. Money is fully open today — Self, Energy, Relationships and Health are on the way.
+        </p>
+        <div className="mt-7 flex w-full flex-col gap-3">
+          <button
+            type="button"
+            onClick={() => navigate('/currents/money')}
+            className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-transform active:scale-[0.98]"
+          >
+            Open the Money current
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/currents')}
+            className="min-h-[44px] text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Back to Currents
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (isPremium || domain === 'money' || hasFreeCurrentAccess || hasLocalFreeCurrentAccess) return <>{children}</>;
 
   if (loading) {
@@ -26,6 +63,7 @@ export function PremiumGate({ children, domain, feature = 'this practice' }: Pre
       </div>
     );
   }
+
 
   return (
     <div className="mx-auto flex min-h-[70dvh] max-w-md flex-col items-center justify-center px-5 text-center safe-top">

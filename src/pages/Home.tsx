@@ -60,15 +60,15 @@ const ritualRecommendations: Record<QuickState, { title: string; reason: string;
     guide: 'A steady baseline helps the app learn what “center” feels like for you.',
   },
   open: {
-    title: 'Gather Flow',
+    title: 'Alignment Wheel',
     reason: 'You’re receptive — gather believable words while the door is already open.',
-    route: '/align/gather',
+    route: '/align/wheel',
     guide: 'This is a strong moment for affirmation work that does not feel forced.',
   },
   flowing: {
-    title: 'Momentum Session',
+    title: 'Alignment Wheel',
     reason: 'You’re in the current — let one aligned sentence turn into movement.',
-    route: '/align/momentum',
+    route: '/align/wheel',
     guide: 'When flow appears, the best ritual is often short, embodied repetition.',
   },
 };
