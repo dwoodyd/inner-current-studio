@@ -271,9 +271,11 @@ function AppRoutes() {
         <Route path="/ritual/evening" element={<EveningRitual />} />
         <Route path="/align" element={<Align />} />
         <Route path="/align/wheel" element={daily('alignment_wheel', <AlignmentWheel />)} />
-        <Route path="/align/relief" element={<ReliefWheel />} />
-        <Route path="/align/gather" element={<GatherFlow />} />
-        <Route path="/align/momentum" element={<MomentumRing />} />
+        {/* Legacy align stages — superseded by stages inside the Alignment Wheel.
+            Kept as redirects so old links / situation packs don't 404. */}
+        <Route path="/align/relief" element={<Navigate to="/align/wheel" replace />} />
+        <Route path="/align/gather" element={<Navigate to="/align/wheel" replace />} />
+        <Route path="/align/momentum" element={<Navigate to="/align/wheel" replace />} />
         <Route path="/reset" element={<Reset />} />
         <Route path="/reset/ladder" element={daily('reset', <StateLadder />)} />
         <Route path="/reset/contrast" element={daily('reset', <ContrastReset />)} />
