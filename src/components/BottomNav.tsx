@@ -47,7 +47,7 @@ export default function BottomNav() {
                 />
               </motion.div>
               <span
-                className={`text-[10px] xs:text-[11px] font-medium leading-none transition-colors duration-150 ${
+                className={`text-[10px] sm:text-[11px] font-medium leading-none transition-colors duration-150 ${
                   isActive ? 'text-primary' : 'text-muted-foreground/50'
                 }`}
               >
