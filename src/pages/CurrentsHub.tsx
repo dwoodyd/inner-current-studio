@@ -17,9 +17,10 @@ const STAGE_LABEL: Record<1 | 2 | 3 | 4, string> = {
 
 export default function CurrentsHub() {
   const navigate = useNavigate();
-  const { isPremium, freeCurrent } = useSubscription();
+  const { isPremium, freeCurrent, status } = useSubscription();
   const { state } = useAppState();
   const localFree = state.onboarding.freeCurrent;
+  const isOwner = status === 'owner';
 
   const prefersReducedMotion = useReducedMotion();
 
