@@ -40,7 +40,7 @@ export default function QuickCheckIn({ selected, onSelect }: QuickCheckInProps) 
             <button
               key={value}
               onClick={() => onSelect(value)}
-              className={`relative flex min-h-[44px] flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 transition-colors duration-150 sm:min-h-[48px] ${
+              className={`relative flex min-h-[48px] flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-2 transition-colors duration-150 sm:min-h-[52px] ${
                 isSelected ? 'bg-primary/10' : 'hover:bg-muted/50 active:bg-muted/70'
               }`}
               aria-label={label}
@@ -60,7 +60,7 @@ export default function QuickCheckIn({ selected, onSelect }: QuickCheckInProps) 
               >
                 {emoji}
               </motion.span>
-              <span className={`relative text-[11px] font-medium leading-none ${isSelected ? 'text-primary' : 'text-muted-foreground'}`}>
+              <span className={`relative text-[10px] sm:text-[11px] font-medium leading-tight text-center ${isSelected ? 'text-primary' : 'text-muted-foreground'}`}>
                 {label}
               </span>
             </button>
