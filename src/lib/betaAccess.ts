@@ -7,6 +7,7 @@
 
 export const STORAGE_KEY = 'iw_beta_access_v1';
 export const BETA_TESTER_FLAG_KEY = 'iw_beta_tester_v1';
+export const OWNER_ACCESS_KEY = 'iw_owner_access_v1';
 export const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN'];
 export const OWNER_PASSWORDS = ['OWNER-IW-2026', 'innerwake-owner-2026'];
 
@@ -29,7 +30,19 @@ export function markBetaTester(): void {
 
 export function isBetaTester(): boolean {
   if (typeof window === 'undefined') return false;
-  try { return localStorage.getItem(BETA_TESTER_FLAG_KEY) === '1'; } catch { return false; }
+  try { return localStorage.getItem(BETA_TESTER_FLAG_KEY) === '1' && !hasOwnerAccess(); } catch { return false; }
+}
+
+export function hasOwnerAccess(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return (
+      sessionStorage.getItem(OWNER_ACCESS_KEY) === 'open' ||
+      localStorage.getItem(OWNER_ACCESS_KEY) === 'open'
+    );
+  } catch {
+    return false;
+  }
 }
 
 export function isGateUnlocked(): boolean {
@@ -50,10 +63,14 @@ export function unlockBetaSession(): void {
 
 export function unlockOwnerSession(opts: { persist?: boolean } = {}): void {
   try {
+    sessionStorage.removeItem(BETA_TESTER_FLAG_KEY);
+    localStorage.removeItem(BETA_TESTER_FLAG_KEY);
     if (opts.persist) {
       localStorage.setItem(STORAGE_KEY, 'open');
+      localStorage.setItem(OWNER_ACCESS_KEY, 'open');
     } else {
       sessionStorage.setItem(STORAGE_KEY, 'open');
+      sessionStorage.setItem(OWNER_ACCESS_KEY, 'open');
     }
   } catch {}
 }
@@ -61,4 +78,6 @@ export function unlockOwnerSession(opts: { persist?: boolean } = {}): void {
 export function clearGate(): void {
   try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
   try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  try { sessionStorage.removeItem(OWNER_ACCESS_KEY); } catch {}
+  try { localStorage.removeItem(OWNER_ACCESS_KEY); } catch {}
 }
