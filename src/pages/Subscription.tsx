@@ -32,7 +32,8 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
   'Everything in Free, unlimited',
-  'All 5 Currents · Self · Energy · Relationship · Health',
+  'Money current — fully open today',
+  'Self, Energy, Relationships, Health\u00a0·\u00a0rolling out',
   'Custom Sigil generation per Current',
   'Resonance Library',
   'Practice Constellation',
