@@ -19,14 +19,14 @@ export default function BottomNav() {
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="mx-auto flex max-w-lg items-center justify-around px-1 pt-1 pb-0.5">
+      <div className="mx-auto flex max-w-lg items-center justify-around px-0.5 pt-1 pb-0.5">
         {tabs.map(({ to, icon: Icon, label, match }) => {
           const isActive = match.some((path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path));
           return (
             <NavLink
               key={to}
               to={to}
-              className="relative flex flex-col items-center justify-center gap-0.5 min-w-[3rem] min-h-[44px] px-2 py-1"
+              className="relative flex flex-col items-center justify-center gap-0.5 min-w-0 flex-1 min-h-[44px] px-1 py-1"
               aria-label={label}
             >
               {isActive && (
@@ -47,7 +47,7 @@ export default function BottomNav() {
                 />
               </motion.div>
               <span
-                className={`text-[11px] font-medium transition-colors duration-150 ${
+                className={`text-[10px] xs:text-[11px] font-medium leading-none transition-colors duration-150 ${
                   isActive ? 'text-primary' : 'text-muted-foreground/50'
                 }`}
               >
