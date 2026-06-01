@@ -20,9 +20,9 @@ import { ThemeProvider } from "@/hooks/useTheme";
 const Home = lazy(() => import("@/pages/Home"));
 const Align = lazy(() => import("@/pages/Align"));
 const AlignmentWheel = lazy(() => import("@/pages/AlignmentWheel"));
-const ReliefWheel = lazy(() => import("@/pages/ReliefWheel"));
-const GatherFlow = lazy(() => import("@/pages/GatherFlow"));
-const MomentumRing = lazy(() => import("@/pages/MomentumRing"));
+// ReliefWheel, GatherFlow, MomentumRing — superseded by Alignment Wheel stages.
+// Routes now redirect to /align/wheel (see below); page modules retained in the
+// repo until V1.1 cleanup so deep links from share cards still resolve.
 const Reset = lazy(() => import("@/pages/Reset"));
 const StateLadder = lazy(() => import("@/pages/StateLadder"));
 const ContrastReset = lazy(() => import("@/pages/ContrastReset"));
