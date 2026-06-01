@@ -193,11 +193,29 @@ class RouteErrorBoundary extends Component<
 }
 
 function RouteLoader() {
+  // A *present* loader: large centered pulse + a skeletal page silhouette so
+  // transitions never read as a broken or blank screen. F2 in the live walkthrough.
   return (
-    <div className="flex min-h-[50dvh] items-center justify-center bg-background">
-      <div className="h-10 w-10 rounded-full soul-glow-gold animate-pulse"
-        style={{ background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.3), hsl(var(--primary) / 0.08))' }}
-      />
+    <div className="relative flex min-h-[100dvh] flex-col items-center bg-background px-5 pt-20 safe-top">
+      <div className="relative mb-8 flex h-24 w-24 items-center justify-center">
+        <div
+          className="absolute inset-0 rounded-full soul-glow-gold animate-ping"
+          style={{ background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.25), transparent 70%)' }}
+        />
+        <div
+          className="relative h-16 w-16 rounded-full soul-glow-gold animate-pulse"
+          style={{ background: 'radial-gradient(circle at 40% 35%, hsl(var(--primary) / 0.45), hsl(var(--primary) / 0.1))' }}
+        />
+      </div>
+      <div className="w-full max-w-md space-y-3 opacity-60">
+        <div className="h-7 w-2/3 mx-auto rounded-md bg-muted/40 animate-pulse" />
+        <div className="h-4 w-1/2 mx-auto rounded bg-muted/30 animate-pulse" />
+        <div className="mt-6 space-y-3">
+          <div className="h-20 w-full rounded-2xl bg-muted/20 animate-pulse" />
+          <div className="h-20 w-full rounded-2xl bg-muted/20 animate-pulse" />
+          <div className="h-20 w-full rounded-2xl bg-muted/15 animate-pulse" />
+        </div>
+      </div>
     </div>
   );
 }
