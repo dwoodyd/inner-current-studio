@@ -2,7 +2,6 @@ import { ReactNode, useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, KeyRound, Lock, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import innerWakeIcon from '@/assets/inner-wake-logo.svg';
 import {
   BETA_CODES,
   isOwnerPassword,
@@ -87,7 +86,19 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 w-full max-w-sm text-center"
       >
-        <img src={innerWakeIcon} alt="Inner Wake" className="mx-auto h-20 w-20 object-contain" />
+        <div className="mx-auto h-20 w-20 overflow-hidden rounded-full soul-glow-gold">
+          <video
+            src="/orb-beta.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            disablePictureInPicture
+            preload="auto"
+            aria-label="Inner Wake"
+            className="h-full w-full rounded-full object-cover"
+          />
+        </div>
         <p className="mt-7 text-xs uppercase tracking-[0.28em] text-primary/70">Private Beta</p>
         <h1 className="mt-3 font-heading text-4xl font-light leading-tight text-foreground">Inner Wake is opening quietly.</h1>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
