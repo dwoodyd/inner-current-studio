@@ -47,18 +47,21 @@ export default function CurrentsHub() {
           {ALL_DOMAIN_KEYS.map((key, i) => {
             const d = DOMAINS[key];
             const isActiveFocus = !isPremium && (freeCurrent === key || localFree === key);
-            const isSoon = SOON_DOMAINS.has(key);
-            // "Coming soon" currents are not openable yet, regardless of subscription.
-            const isOpen = !isSoon && (key === 'money' || isPremium || freeCurrent === key || localFree === key);
+            const isSoon = SOON_DOMAINS.has(key) && !isOwner;
+            // "Coming soon" currents are not openable yet, regardless of subscription —
+            // except for the owner, who needs preview access to validate content.
+            const isOpen = !isSoon && (key === 'money' || isPremium || isOwner || freeCurrent === key || localFree === key);
             const badge = isSoon
               ? { label: 'Coming soon', tone: 'soon' as const }
-              : isPremium
-                ? null
-                : isActiveFocus
-                  ? { label: 'Active focus', tone: 'active' as const }
-                  : key === 'money'
-                    ? null
-                    : { label: 'Premium', tone: 'locked' as const };
+              : SOON_DOMAINS.has(key) && isOwner
+                ? { label: 'Preview', tone: 'active' as const }
+                : isPremium || isOwner
+                  ? null
+                  : isActiveFocus
+                    ? { label: 'Active focus', tone: 'active' as const }
+                    : key === 'money'
+                      ? null
+                      : { label: 'Premium', tone: 'locked' as const };
             return (
               <CurrentCard
                 key={key}
