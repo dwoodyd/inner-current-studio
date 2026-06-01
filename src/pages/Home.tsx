@@ -196,11 +196,21 @@ export default function Home() {
         {/* Header */}
         <motion.div variants={fadeUp} className="text-center space-y-1.5 sm:space-y-2">
           <motion.div
-            className="mx-auto mb-2 flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl sm:mb-3 sm:h-20 sm:w-20"
+            className="mx-auto mb-2 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full soul-glow-gold sm:mb-3 sm:h-20 sm:w-20"
             animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <img src={brandLogo} alt="Inner Wake" className="h-full w-full object-cover rounded-2xl" />
+            <video
+              src="/orb-beta.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              disablePictureInPicture
+              preload="auto"
+              aria-hidden="true"
+              className="h-full w-full object-cover rounded-full"
+            />
           </motion.div>
           <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-light tracking-wide font-heading italic">Wake the inner current</p>
