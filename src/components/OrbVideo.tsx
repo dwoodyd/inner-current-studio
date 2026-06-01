@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 interface OrbVideoProps {
   state?: QuickState;
   className?: string;
-  /** Pixel size for both width & height. Defaults to 96. */
+  /** Optional pixel size for both width & height. If omitted, the orb fills its parent. */
   size?: number;
 }
 
@@ -33,7 +33,7 @@ function preloadOrbVideos() {
 const OrbVideo = React.memo(function OrbVideo({
   state = 'flat',
   className,
-  size = 96,
+  size,
 }: OrbVideoProps) {
   const def = STATE_DEFS[state];
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -81,10 +81,13 @@ const OrbVideo = React.memo(function OrbVideo({
     }
   }, [def.id]);
 
+  const hasExplicitSize = typeof size === 'number';
+  const wrapperStyle = hasExplicitSize ? { width: size, height: size } : undefined;
+
   return (
     <div
       className={cn('relative overflow-hidden rounded-full', className)}
-      style={{ width: size, height: size }}
+      style={wrapperStyle}
     >
       {/* Soft fallback shimmer while the video buffers */}
       <AnimatePresence>
@@ -106,8 +109,6 @@ const OrbVideo = React.memo(function OrbVideo({
           key={def.id}
           ref={videoRef}
           src={def.orbVideo}
-          width={size}
-          height={size}
           autoPlay
           loop
           muted
@@ -120,12 +121,10 @@ const OrbVideo = React.memo(function OrbVideo({
           animate={{ opacity: ready ? 1 : 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
-          className="absolute inset-0 h-full w-full rounded-full object-cover pointer-events-none"
+          className="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full object-cover object-center pointer-events-none"
           style={{
-            width: size,
-            height: size,
-            transform: 'scale(2.2)',
-            transformOrigin: 'center',
+            transform: 'translate(-50%, -50%) scale(1.6)',
+            transformOrigin: 'center center',
           }}
         />
       </AnimatePresence>
