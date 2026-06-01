@@ -246,20 +246,25 @@ export default function Subscription() {
 
           {/* Lifetime */}
           {lifetimeAvailable ? (
-            <TierCard
-              name="Pro Lifetime"
-              price="$99"
-              period=" one-time"
-              badge="Founder-only"
-              sub="Retiring with the founding member program"
-              tagline="One purchase. Lifetime."
-              features={LIFETIME_EXTRAS.slice(0, 6)}
-              cta="Lock in Lifetime $99"
-              ctaNote="One charge. Never billed again."
-              onCta={() => startCheckout(FOUNDING_PRICES.lifetime)}
-              ctaDisabled={sub.detailedTier === 'lifetime' || slots.soldOut}
-              loading={checkout.loading}
-            />
+            (() => {
+              const lifetimeOwned = sub.detailedTier === 'lifetime' || sub.status === 'owner';
+              return (
+                <TierCard
+                  name="Pro Lifetime"
+                  price="$99"
+                  period=" one-time"
+                  badge="Founder-only"
+                  sub="Retiring with the founding member program"
+                  tagline="One purchase. Lifetime."
+                  features={LIFETIME_EXTRAS.slice(0, 6)}
+                  cta={lifetimeOwned ? 'Your plan' : 'Lock in Lifetime $99'}
+                  ctaNote={lifetimeOwned ? undefined : 'One charge. Never billed again.'}
+                  onCta={() => startCheckout(FOUNDING_PRICES.lifetime)}
+                  ctaDisabled={lifetimeOwned || slots.soldOut}
+                  loading={checkout.loading}
+                />
+              );
+            })()
           ) : (
             <div className="soul-glass rounded-2xl px-5 py-6 text-center text-xs text-muted-foreground/70">
               All 100 founding lifetime slots are claimed. Pro Monthly &amp; Annual remain at retail rates for new members.
