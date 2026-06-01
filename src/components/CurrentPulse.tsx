@@ -32,15 +32,15 @@ const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: C
 
   return (
     <div className="flex flex-col items-center gap-2 sm:gap-3">
-      <div className={`relative grid h-32 w-32 place-items-center sm:h-40 sm:w-40 ${colors.glow}`}>
+      <div className={`relative grid h-36 w-36 place-items-center sm:h-44 sm:w-44 ${colors.glow}`}>
         {/* Ambient particles */}
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
             className={`absolute h-1.5 w-1.5 rounded-full ${colors.particle}`}
             animate={{
-              x: [0, Math.cos((i * Math.PI * 2) / 6) * 50, 0],
-              y: [0, Math.sin((i * Math.PI * 2) / 6) * 50, 0],
+              x: [0, Math.cos((i * Math.PI * 2) / 6) * 56, 0],
+              y: [0, Math.sin((i * Math.PI * 2) / 6) * 56, 0],
               opacity: [0, 0.6, 0],
               scale: [0.5, 1, 0.5],
             }}
@@ -53,30 +53,31 @@ const CurrentPulse = React.memo(function CurrentPulse({ quickState = 'flat' }: C
           />
         ))}
 
-        {/* Outer ring */}
+        {/* Outer ring — concentric with orb */}
         <motion.div
-          className={`absolute h-28 w-28 rounded-full border ${colors.outer} opacity-30 sm:h-36 sm:w-36`}
+          className={`absolute inset-0 rounded-full border ${colors.outer} opacity-30`}
           animate={{ scale: [1, 1.08, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: speed + 1, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* Mid ring */}
+        {/* Mid ring — concentric, slightly inset */}
         <motion.div
-          className={`absolute h-24 w-24 rounded-full border ${colors.outer} opacity-20 sm:h-[7.5rem] sm:w-[7.5rem]`}
+          className={`absolute inset-2 rounded-full border ${colors.outer} opacity-20`}
           animate={{ scale: [1.04, 1, 1.04], opacity: [0.15, 0.3, 0.15] }}
           transition={{ duration: speed, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
         />
 
-        {/* Living orb video */}
+        {/* Living orb video — fills the ring exactly */}
         <motion.div
-          className="relative h-28 w-28 sm:h-36 sm:w-36"
+          className="relative h-full w-full"
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: speed, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <OrbVideo state={quickState} size={144} className="h-full w-full" />
+          <OrbVideo state={quickState} className="h-full w-full" />
         </motion.div>
 
       </div>
+
       <motion.div
         key={quickState}
         initial={{ opacity: 0, y: 4 }}
