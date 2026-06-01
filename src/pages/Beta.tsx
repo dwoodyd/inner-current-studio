@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check, KeyRound, Sparkles } from 'lucide-react';
-import innerWakeIcon from '@/assets/inner-wake-logo.svg';
+
 
 const STORAGE_KEY = 'iw_beta_access_v1';
 const BETA_CODES = ['INNERWAKE-BETA', 'CURRENT20', 'QUIETRETURN'] as const;
@@ -45,14 +45,24 @@ export default function Beta() {
       </div>
 
       <section className="relative z-10 mx-auto flex max-w-md flex-col items-center px-5 pb-16 pt-14 text-center">
-        <motion.img
-          src={innerWakeIcon}
-          alt="Inner Wake"
-          className="h-20 w-20 object-contain"
+        <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        />
+          className="relative h-28 w-28 overflow-hidden rounded-full soul-glow-gold"
+        >
+          <video
+            src="/orb-beta.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            disablePictureInPicture
+            preload="auto"
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full rounded-full object-cover"
+          />
+        </motion.div>
         <p className="mt-7 text-xs uppercase tracking-[0.28em] text-primary/70">Private Beta</p>
         <h1 className="mt-3 font-heading text-4xl font-light leading-tight">
           A soft place to come back to.
