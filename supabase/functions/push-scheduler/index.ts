@@ -10,11 +10,25 @@ const corsHeaders = {
     'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-const VAPID_PUBLIC = Deno.env.get('VAPID_PUBLIC_KEY')!;
-const VAPID_PRIVATE = Deno.env.get('VAPID_PRIVATE_KEY')!;
-const VAPID_SUBJECT = Deno.env.get('VAPID_SUBJECT') || 'mailto:hello@innerwake.app';
+// Public VAPID key — matches src/lib/push.ts (safe to embed; it's served to the client).
+const DEFAULT_VAPID_PUBLIC =
+  'BMbnWNEhWEjRzwxSGbJD0TL_Wi3vC-u_vOVjUIcsuJRa97jDroq3h6M1ylvdBrT39m7Kt4RTxBLnFYHDzgJZiQ4';
 
-webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC, VAPID_PRIVATE);
+let vapidConfigured = false;
+function configureVapid(): { ok: true } | { ok: false; reason: string } {
+  if (vapidConfigured) return { ok: true };
+  const pub = Deno.env.get('VAPID_PUBLIC_KEY') || DEFAULT_VAPID_PUBLIC;
+  const priv = Deno.env.get('VAPID_PRIVATE_KEY');
+  const subject = Deno.env.get('VAPID_SUBJECT') || 'mailto:hello@innerwake.app';
+  if (!priv) return { ok: false, reason: 'VAPID_PRIVATE_KEY is not configured' };
+  try {
+    webpush.setVapidDetails(subject, pub, priv);
+    vapidConfigured = true;
+    return { ok: true };
+  } catch (e: any) {
+    return { ok: false, reason: e?.message ?? 'invalid VAPID configuration' };
+  }
+}
 
 const MORNING = [
   { title: 'Good morning', body: 'Before the day begins — where are you right now?' },
@@ -64,6 +78,17 @@ function nowHHMM(): string {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+
+  const vapid = configureVapid();
+  if (!vapid.ok) {
+    console.error('push-scheduler: VAPID not configured —', vapid.reason);
+    return new Response(JSON.stringify({ ok: false, error: vapid.reason }), {
+      status: 503,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+
 
   const admin = createClient(
     Deno.env.get('SUPABASE_URL')!,
