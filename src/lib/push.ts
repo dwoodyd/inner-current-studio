@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 // Public VAPID key — safe to expose in the client bundle.
 const VAPID_PUBLIC_KEY =
-  'BDl5RUS1cQKYB-WQ13SYMnFH3pY2zgvRIzPVzte-hmiXZryUuYORdGgCty8HT0bzGUWPoRz_G4qi9GxZ8SNFl7Y';
+  'BIN1hWRlphChG-huq1ocS7F6rxkDkgr43KUUZpJG-kDMeJyVqkr33IjNTneqNpKqIuD1X8Svas3FmWefS1EGouE';
 
 export interface PushPrefs {
   morning_reminder: boolean;
