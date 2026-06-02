@@ -10,7 +10,7 @@ const corsHeaders = {
 
 // Public VAPID key — matches src/lib/push.ts (safe to embed; it's served to the client).
 const DEFAULT_VAPID_PUBLIC =
-  'BMbnWNEhWEjRzwxSGbJD0TL_Wi3vC-u_vOVjUIcsuJRa97jDroq3h6M1ylvdBrT39m7Kt4RTxBLnFYHDzgJZiQ4';
+  'BDl5RUS1cQKYB-WQ13SYMnFH3pY2zgvRIzPVzte-hmiXZryUuYORdGgCty8HT0bzGUWPoRz_G4qi9GxZ8SNFl7Y';
 
 let vapidConfigured = false;
 function configureVapid(): { ok: true } | { ok: false; reason: string } {
