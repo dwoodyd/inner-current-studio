@@ -115,6 +115,11 @@ export default function Welcome() {
     setCentering(true);
   };
 
+  const startOnboarding = () => {
+    try { localStorage.removeItem(SEEN_KEY); } catch {}
+    setShowCinematic(true);
+  };
+
   if (showCinematic) {
     return (
       <InnerWakeOnboarding
@@ -191,10 +196,12 @@ export default function Welcome() {
             transition={{ duration: 0.9, delay: 0.3 }}
             className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
-            <Button asChild size="lg" className="bg-soul-gold text-background hover:bg-soul-gold/90 px-8">
-              <Link to="/auth">
-                Begin your practice <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
+            <Button
+              onClick={startOnboarding}
+              size="lg"
+              className="rounded-full bg-soul-gold text-background hover:bg-soul-gold/90 uppercase tracking-[0.18em] text-sm font-medium shadow-[0_8px_32px_hsl(42_65%_58%_/0.25)] hover:shadow-[0_12px_40px_hsl(42_65%_58%_/0.35)] transition-all px-10 py-6 h-auto"
+            >
+              BEGIN YOUR PRACTICE <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button asChild variant="ghost" size="lg">
               <a href="#currents">See the five Currents</a>
