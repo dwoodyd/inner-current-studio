@@ -115,6 +115,11 @@ export default function Welcome() {
     setCentering(true);
   };
 
+  const startOnboarding = () => {
+    try { localStorage.removeItem(SEEN_KEY); } catch {}
+    setShowCinematic(true);
+  };
+
   if (showCinematic) {
     return (
       <InnerWakeOnboarding
