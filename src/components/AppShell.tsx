@@ -1,4 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Sun, Moon } from 'lucide-react';
 import BottomNav from './BottomNav';
 import OfflineBanner from './OfflineBanner';
 import { PaymentTestModeBanner } from './PaymentTestModeBanner';
@@ -6,6 +7,7 @@ import { TrialCountdownBanner } from './TrialCountdownBanner';
 import { MigrationNoticeModal } from './MigrationNoticeModal';
 import { useAppState } from '@/lib/AppContext';
 import { STATE_DEFS } from '@/lib/states';
+import { useTheme } from '@/hooks/useTheme';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { QuickState } from '@/lib/types';
 
