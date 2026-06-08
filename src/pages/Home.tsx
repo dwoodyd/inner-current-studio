@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronRight, Moon, Sparkles, Sun } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
+import { useTheme } from '@/hooks/useTheme';
 import CurrentPulse from '@/components/CurrentPulse';
 import QuickCheckIn from '@/components/QuickCheckIn';
 import TodayFlowCard from '@/components/TodayFlowCard';
