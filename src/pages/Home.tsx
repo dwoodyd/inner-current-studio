@@ -90,6 +90,7 @@ function ensureHeadLink(selector: string, attributes: Record<string, string>) {
 export default function Home() {
   const navigate = useNavigate();
   const { state, addCheckIn } = useAppState();
+  const { resolved, setMode } = useTheme();
   const { user } = useAuth();
   const { freeCurrent } = useSubscription();
   const digest = useWeeklyDigest();
