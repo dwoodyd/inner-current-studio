@@ -17,6 +17,16 @@ import ResonanceCardExport from '@/components/currents/ResonanceCardExport';
 import AmbientPlayer from '@/components/currents/AmbientPlayer';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAppState } from '@/lib/AppContext';
+import softLightPhoto from '@/assets/photo-soft-light.jpg';
+import warmHandsPhoto from '@/assets/photo-warm-hands.jpg';
+
+const CURRENT_PHOTO: Record<string, string> = {
+  money: softLightPhoto,
+  mind: softLightPhoto,
+  body: warmHandsPhoto,
+  love: warmHandsPhoto,
+  spirit: softLightPhoto,
+};
 
 const STAGE_LABEL: Record<1 | 2 | 3 | 4, string> = {
   1: 'Seed', 2: 'Sprout', 3: 'Bloom', 4: 'Resonance',
@@ -80,15 +90,32 @@ export default function CurrentLayout() {
           <AmbientPlayer slug={slug} compact />
         </div>
 
-        {/* Hero */}
-        <div className="text-center space-y-4">
-          <p className="text-[10px] uppercase tracking-[0.28em] text-primary/70">{spec.shortName} Current</p>
-          <CurrentSigil base={spec.sigilBase} stage={stage} size={180} glow={domain.glow} className="mx-auto" />
-          <div className="space-y-2">
-            <h1 className="font-heading text-3xl text-foreground tracking-tight">{spec.tagline}</h1>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/60">
-              Sigil · {STAGE_LABEL[stage]} · {progress.practicesCompleted} practice{progress.practicesCompleted === 1 ? '' : 's'}
-            </p>
+        {/* Hero — photographic band with sigil layered above (sigil itself untouched) */}
+        <div className="relative -mx-4 overflow-hidden rounded-3xl">
+          <div className="relative h-44 w-full overflow-hidden sm:h-52">
+            <img
+              src={CURRENT_PHOTO[slug] || softLightPhoto}
+              alt=""
+              aria-hidden
+              width={1280}
+              height={768}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover opacity-80 dark:opacity-35"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: `linear-gradient(180deg, transparent 0%, ${domain.glow} 60%, hsl(var(--background)) 100%)` }}
+            />
+          </div>
+          <div className="relative -mt-20 px-4 text-center space-y-4 pb-1">
+            <p className="text-[10px] uppercase tracking-[0.28em] text-primary/80">{spec.shortName} Current</p>
+            <CurrentSigil base={spec.sigilBase} stage={stage} size={180} glow={domain.glow} className="mx-auto" />
+            <div className="space-y-2">
+              <h1 className="font-heading text-3xl text-foreground tracking-tight">{spec.tagline}</h1>
+              <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/60">
+                Sigil · {STAGE_LABEL[stage]} · {progress.practicesCompleted} practice{progress.practicesCompleted === 1 ? '' : 's'}
+              </p>
+            </div>
           </div>
         </div>
 

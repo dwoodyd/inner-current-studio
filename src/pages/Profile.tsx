@@ -10,6 +10,7 @@ import { Sigil } from '@/components/onboarding/Sigil';
 import PracticeConstellation from '@/components/PracticeConstellation';
 import { toast } from 'sonner';
 import { BarChart3, Layers, Sparkles, Activity, Archive, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart, Lock } from 'lucide-react';
+import warmHandsPhoto from '@/assets/photo-warm-hands.jpg';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -132,15 +133,30 @@ export default function Profile() {
         </motion.div>
 
         {hasCompanion && (
-          <motion.div variants={fadeUp} className="soul-glass-elevated rounded-2xl p-5 text-center overflow-hidden">
-            <Sigil
-              seed={state.onboarding.companionSigil || state.onboarding.companionName || 'Inner Wake'}
-              progress={sigilProgress}
-              size={132}
-              className="mx-auto"
-            />
-            <h2 className="mt-2 font-heading text-xl text-foreground">{state.onboarding.companionName || 'Your companion'}</h2>
-            <p className="mt-1 text-xs text-muted-foreground font-heading italic">Your sigil is awakening · {cycleReturns} return{cycleReturns === 1 ? '' : 's'} this cycle</p>
+          <motion.div variants={fadeUp} className="soul-glass-elevated relative rounded-3xl text-center overflow-hidden">
+            {/* Soft photographic band — sigil sits above, untouched */}
+            <div className="relative h-28 w-full overflow-hidden">
+              <img
+                src={warmHandsPhoto}
+                alt=""
+                aria-hidden
+                width={1280}
+                height={768}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover opacity-70 dark:opacity-40"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-card/40 to-card" />
+            </div>
+            <div className="relative -mt-16 px-5 pb-5">
+              <Sigil
+                seed={state.onboarding.companionSigil || state.onboarding.companionName || 'Inner Wake'}
+                progress={sigilProgress}
+                size={132}
+                className="mx-auto"
+              />
+              <h2 className="mt-2 font-heading text-xl text-foreground">{state.onboarding.companionName || 'Your companion'}</h2>
+              <p className="mt-1 text-xs text-muted-foreground font-heading italic">Your sigil is awakening · {cycleReturns} return{cycleReturns === 1 ? '' : 's'} this cycle</p>
+            </div>
           </motion.div>
         )}
 
