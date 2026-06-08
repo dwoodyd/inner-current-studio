@@ -75,42 +75,83 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
 
   return (
     <main className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-background px-5 py-10 text-foreground safe-x safe-top">
+      {/* Ambient luminous backdrop */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-1/4 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-secondary/20 blur-3xl" />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.4, ease: 'easeOut' }}
+          className="absolute left-1/2 top-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/[0.07] blur-[120px]"
+        />
+        <div className="absolute left-1/2 top-1/2 h-[22rem] w-[22rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/[0.05] blur-[80px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,transparent_0%,hsl(var(--background))_75%)]" />
       </div>
 
       <motion.section
-        initial={{ opacity: 0, y: 16 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 w-full max-w-sm text-center"
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 flex w-full max-w-[440px] flex-col items-center text-center"
       >
-        <div className="mx-auto h-20 w-20 overflow-hidden rounded-full soul-glow-gold">
-          <video
-            src="/orb-beta.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            disablePictureInPicture
-            preload="auto"
-            aria-label="Inner Wake"
-            className="h-full w-full rounded-full object-cover"
-          />
-        </div>
-        <p className="mt-7 text-xs uppercase tracking-[0.28em] text-primary/70">Private Beta</p>
-        <h1 className="mt-3 font-heading text-4xl font-light leading-tight text-foreground">Inner Wake is opening quietly.</h1>
-        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          Early access is invite-only while the first circle tests onboarding, installability, and the five Currents.
-        </p>
+        {/* Hero orb — glass-encased */}
+        <motion.div
+          initial={{ scale: 0.92, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          className="relative mb-10"
+        >
+          <div className="absolute inset-0 -m-8 rounded-full bg-primary/20 blur-3xl opacity-60 animate-pulse" style={{ animationDuration: '4s' }} />
+          <div className="relative h-32 w-32 rounded-full border border-foreground/10 bg-gradient-to-b from-foreground/[0.06] to-transparent p-2 backdrop-blur-2xl shadow-[0_20px_60px_-15px_hsl(var(--primary)/0.3)]">
+            <div className="h-full w-full overflow-hidden rounded-full border border-foreground/5 bg-background shadow-inner">
+              <video
+                src="/orb-beta.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                disablePictureInPicture
+                preload="auto"
+                aria-label="Inner Wake"
+                className="h-full w-full rounded-full object-cover"
+              />
+            </div>
+          </div>
+        </motion.div>
 
-        <form onSubmit={submit} className="mt-8 space-y-3 text-left">
-          <label htmlFor="beta-code" className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Beta access code
-          </label>
-          <div className="flex min-h-[52px] items-center gap-3 rounded-2xl border border-border/40 bg-card/60 px-4 backdrop-blur">
-            <KeyRound className="h-4 w-4 shrink-0 text-primary/70" />
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="text-[10px] font-medium uppercase tracking-[0.32em] text-primary/80"
+        >
+          Private Beta
+        </motion.p>
+        <motion.h1
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.32 }}
+          className="mt-4 font-heading text-[42px] font-light italic leading-[1.08] tracking-tight text-foreground"
+        >
+          Inner Wake is opening quietly.
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="mt-5 max-w-[340px] text-[15px] leading-relaxed text-muted-foreground/80"
+        >
+          Early access is invite-only while the first circle tests onboarding, installability, and the five Currents.
+        </motion.p>
+
+        <motion.form
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          onSubmit={submit}
+          className="mt-9 w-full max-w-[320px] space-y-3"
+        >
+          <div className="group relative">
+            <KeyRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within:text-primary" />
             <input
               id="beta-code"
               value={code}
@@ -119,39 +160,49 @@ export function BetaAccessGate({ children }: BetaAccessGateProps) {
                 setError('');
               }}
               placeholder="Enter invite code"
-              className="min-w-0 flex-1 bg-transparent py-4 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none"
+              aria-label="Beta access code"
+              className="h-[52px] w-full rounded-2xl border border-foreground/10 bg-foreground/[0.03] pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none backdrop-blur-xl transition-all focus:border-primary/40 focus:bg-foreground/[0.05] focus:ring-2 focus:ring-primary/15"
               autoComplete="off"
               autoCapitalize="characters"
             />
           </div>
-          {error && <p className="text-xs text-destructive">{error}</p>}
+          {error && <p className="text-xs text-destructive text-left">{error}</p>}
           <button
             type="submit"
-            className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-4 text-sm font-medium text-primary-foreground transition-transform active:scale-[0.98]"
+            className="group relative flex h-[52px] w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-primary text-sm font-semibold text-primary-foreground shadow-[0_8px_30px_-8px_hsl(var(--primary)/0.6)] transition-all hover:shadow-[0_12px_40px_-8px_hsl(var(--primary)/0.7)] active:scale-[0.98]"
           >
-            Enter Beta <ArrowRight className="h-4 w-4" />
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/15 to-transparent opacity-50" />
+            <span className="relative">Enter Beta</span>
+            <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </button>
-        </form>
+        </motion.form>
 
-        <p className="mt-6 text-xs leading-relaxed text-muted-foreground/70">
-          Recruiting 20 early testers for gentle feedback before public launch.
-        </p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="mt-10 flex flex-col items-center gap-5"
+        >
+          <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/45">
+            Recruiting 20 early testers
+          </p>
 
-        <div className="mt-4 flex flex-col items-center gap-2">
-          <button
-            type="button"
-            onClick={() => { setOwnerOpen(true); setOwnerError(''); setOwnerPw(''); setOwnerRemember(false); }}
-            className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground/60 hover:text-primary/80 transition-colors"
-          >
-            <Lock className="h-3 w-3" /> Owner access
-          </button>
-          <Link
-            to="/owner"
-            className="text-[11px] text-muted-foreground/50 hover:text-primary/70 transition-colors"
-          >
-            Open dedicated owner sign-in →
-          </Link>
-        </div>
+          <div className="flex flex-col items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => { setOwnerOpen(true); setOwnerError(''); setOwnerPw(''); setOwnerRemember(false); }}
+              className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground/55 transition-colors hover:text-primary/80"
+            >
+              <Lock className="h-3 w-3" /> Owner Access
+            </button>
+            <Link
+              to="/owner"
+              className="text-[11px] text-muted-foreground/40 transition-colors hover:text-primary/70"
+            >
+              Open dedicated owner sign-in →
+            </Link>
+          </div>
+        </motion.div>
       </motion.section>
 
       <AnimatePresence>
