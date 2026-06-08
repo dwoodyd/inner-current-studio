@@ -197,17 +197,6 @@ export default function Home() {
       >
         {/* Header */}
         <motion.div variants={fadeUp} className="relative text-center space-y-1.5 sm:space-y-2">
-          <button
-            onClick={() => setMode(resolved === 'dark' ? 'light' : 'dark')}
-            className="absolute right-0 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-border/20 bg-card/50 backdrop-blur-md transition-all duration-200 hover:bg-card/80 active:scale-95"
-            aria-label={resolved === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {resolved === 'dark' ? (
-              <Sun size={16} className="text-primary" />
-            ) : (
-              <Moon size={16} className="text-primary" />
-            )}
-          </button>
           <motion.div
             className="mx-auto mb-2 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full soul-glow-gold sm:mb-3 sm:h-20 sm:w-20"
             animate={{ scale: [1, 1.04, 1] }}
