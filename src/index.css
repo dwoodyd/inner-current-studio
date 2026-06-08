@@ -50,43 +50,44 @@
   }
 
   .light {
-    --background: 40 30% 97%;
-    --foreground: 220 25% 14%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 25% 14%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 14%;
-    --primary: 38 70% 38%;
-    --primary-foreground: 40 30% 98%;
-    --secondary: 265 25% 45%;
-    --secondary-foreground: 40 30% 98%;
-    --muted: 40 20% 92%;
-    --muted-foreground: 220 12% 38%;
-    --accent: 265 20% 92%;
-    --accent-foreground: 220 25% 14%;
+    /* Warm cream meditation palette — sand, peach, terracotta */
+    --background: 36 45% 94%;
+    --foreground: 24 32% 18%;
+    --card: 36 55% 97%;
+    --card-foreground: 24 32% 18%;
+    --popover: 36 55% 97%;
+    --popover-foreground: 24 32% 18%;
+    --primary: 20 62% 52%;
+    --primary-foreground: 36 50% 97%;
+    --secondary: 28 45% 72%;
+    --secondary-foreground: 24 32% 18%;
+    --muted: 34 30% 88%;
+    --muted-foreground: 25 18% 38%;
+    --accent: 28 55% 86%;
+    --accent-foreground: 24 32% 18%;
     --destructive: 0 65% 48%;
-    --destructive-foreground: 40 30% 98%;
-    --border: 220 15% 86%;
-    --input: 220 15% 86%;
-    --ring: 38 70% 38%;
+    --destructive-foreground: 36 50% 97%;
+    --border: 30 28% 82%;
+    --input: 30 28% 82%;
+    --ring: 20 62% 52%;
 
-    --soul-gold: 38 70% 42%;
-    --soul-violet: 265 30% 50%;
-    --soul-blue: 210 55% 42%;
-    --soul-green: 160 40% 34%;
-    --soul-warm: 30 35% 30%;
-    --soul-dim: 210 18% 50%;
-    --soul-surface: 40 25% 95%;
-    --soul-surface-raised: 0 0% 100%;
+    --soul-gold: 32 70% 48%;
+    --soul-violet: 280 30% 55%;
+    --soul-blue: 200 45% 48%;
+    --soul-green: 145 32% 40%;
+    --soul-warm: 22 55% 58%;
+    --soul-dim: 25 18% 50%;
+    --soul-surface: 34 38% 91%;
+    --soul-surface-raised: 36 60% 98%;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 25% 14%;
-    --sidebar-primary: 38 70% 38%;
-    --sidebar-primary-foreground: 40 30% 98%;
-    --sidebar-accent: 265 20% 92%;
-    --sidebar-accent-foreground: 220 25% 14%;
-    --sidebar-border: 220 15% 86%;
-    --sidebar-ring: 38 70% 38%;
+    --sidebar-background: 36 55% 97%;
+    --sidebar-foreground: 24 32% 18%;
+    --sidebar-primary: 20 62% 52%;
+    --sidebar-primary-foreground: 36 50% 97%;
+    --sidebar-accent: 28 55% 86%;
+    --sidebar-accent-foreground: 24 32% 18%;
+    --sidebar-border: 30 28% 82%;
+    --sidebar-ring: 20 62% 52%;
   }
 
   .light .soul-card-raised {
