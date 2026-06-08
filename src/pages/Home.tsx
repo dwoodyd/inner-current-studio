@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronRight, Moon, Sparkles, Sun } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
+import { useTheme } from '@/hooks/useTheme';
 import CurrentPulse from '@/components/CurrentPulse';
 import QuickCheckIn from '@/components/QuickCheckIn';
 import TodayFlowCard from '@/components/TodayFlowCard';
@@ -89,6 +90,7 @@ function ensureHeadLink(selector: string, attributes: Record<string, string>) {
 export default function Home() {
   const navigate = useNavigate();
   const { state, addCheckIn } = useAppState();
+  const { resolved, setMode } = useTheme();
   const { user } = useAuth();
   const { freeCurrent } = useSubscription();
   const digest = useWeeklyDigest();
@@ -194,7 +196,18 @@ export default function Home() {
         className="relative mx-auto max-w-lg px-4 pt-8 pb-6 space-y-4 safe-top sm:space-y-6 sm:pt-12"
       >
         {/* Header */}
-        <motion.div variants={fadeUp} className="text-center space-y-1.5 sm:space-y-2">
+        <motion.div variants={fadeUp} className="relative text-center space-y-1.5 sm:space-y-2">
+          <button
+            onClick={() => setMode(resolved === 'dark' ? 'light' : 'dark')}
+            className="absolute right-0 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-border/20 bg-card/50 backdrop-blur-md transition-all duration-200 hover:bg-card/80 active:scale-95"
+            aria-label={resolved === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {resolved === 'dark' ? (
+              <Sun size={16} className="text-primary" />
+            ) : (
+              <Moon size={16} className="text-primary" />
+            )}
+          </button>
           <motion.div
             className="mx-auto mb-2 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full soul-glow-gold sm:mb-3 sm:h-20 sm:w-20"
             animate={{ scale: [1, 1.04, 1] }}
