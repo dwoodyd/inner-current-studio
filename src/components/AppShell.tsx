@@ -22,6 +22,7 @@ const STATE_DOT_CLASS: Record<QuickState, string> = {
 export default function AppShell() {
   const location = useLocation();
   const { state } = useAppState();
+  const { resolved, setMode } = useTheme();
   const hideBottomNav = location.pathname === '/reset/breathwork';
   const rawState = (state.checkIns[0]?.state ?? 'flat') as QuickState;
   const currentState: QuickState = STATE_DEFS[rawState] ? rawState : 'flat';
