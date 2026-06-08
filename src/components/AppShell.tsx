@@ -35,22 +35,44 @@ export default function AppShell() {
       <TrialCountdownBanner />
       <OfflineBanner />
       {!hideBottomNav && (
-        <TooltipProvider delayDuration={150}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to="/"
-                aria-label={`Your current state: ${stateLabel}. Tap to update check-in.`}
-                className="fixed right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-40 grid h-10 w-10 place-items-center rounded-full border border-border/30 bg-card/80 shadow-[0_0_18px_hsl(var(--primary)/0.14)] backdrop-blur-xl transition-transform hover:scale-105"
-              >
-                <span className={`h-2 w-2 rounded-full ${dotClass}`} />
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="left" sideOffset={8}>
-              Your current state: {stateLabel}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <>
+          <TooltipProvider delayDuration={150}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setMode(resolved === 'dark' ? 'light' : 'dark')}
+                  className="fixed right-[3.25rem] top-[max(0.75rem,env(safe-area-inset-top))] z-40 flex h-10 w-10 items-center justify-center rounded-full border border-border/30 bg-card/80 shadow-[0_0_18px_hsl(var(--primary)/0.14)] backdrop-blur-xl transition-transform hover:scale-105"
+                  aria-label={resolved === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {resolved === 'dark' ? (
+                    <Sun size={16} className="text-primary" />
+                  ) : (
+                    <Moon size={16} className="text-primary" />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="left" sideOffset={8}>
+                {resolved === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider delayDuration={150}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/"
+                  aria-label={`Your current state: ${stateLabel}. Tap to update check-in.`}
+                  className="fixed right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-40 grid h-10 w-10 place-items-center rounded-full border border-border/30 bg-card/80 shadow-[0_0_18px_hsl(var(--primary)/0.14)] backdrop-blur-xl transition-transform hover:scale-105"
+                >
+                  <span className={`h-2 w-2 rounded-full ${dotClass}`} />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="left" sideOffset={8}>
+                Your current state: {stateLabel}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </>
       )}
       <main className={`flex-1 overflow-y-auto ${hideBottomNav ? 'pb-0' : 'pb-32'}`}>
         <Outlet />
