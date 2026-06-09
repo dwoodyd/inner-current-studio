@@ -255,7 +255,7 @@
   .soul-chip-active {
     @apply border-primary/40 text-primary;
     background: hsl(var(--primary) / 0.12);
-    box-shadow: 0 0 16px hsl(178 50% 54% / 0.18);
+    box-shadow: 0 0 16px hsl(42 54% 54% / 0.12);
   }
 
   .soul-chip-idle {
