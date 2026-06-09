@@ -6,36 +6,37 @@
 
 @layer base {
   :root {
-    /* Inner Wake — aqueous identity. Deep teal-black, aurora teal + violet, pale aqua ink. */
-    --background: 190 40% 6%;
-    --foreground: 170 30% 94%;
-    --card: 192 35% 9%;
-    --card-foreground: 170 30% 94%;
-    --popover: 192 35% 9%;
-    --popover-foreground: 170 30% 94%;
-    --primary: 178 50% 54%;
-    --primary-foreground: 190 40% 6%;
-    --secondary: 275 55% 71%;
-    --secondary-foreground: 190 40% 6%;
-    --muted: 192 22% 14%;
-    --muted-foreground: 195 12% 65%;
-    --accent: 275 40% 28%;
-    --accent-foreground: 170 30% 94%;
-    --destructive: 0 60% 55%;
-    --destructive-foreground: 170 30% 94%;
-    --border: 190 22% 18%;
-    --input: 190 22% 18%;
-    --ring: 178 50% 54%;
+    /* Inner Wake — warm-black + gold + Orb. House identity, dark-only by design.
+       Tokens locked from builder brief: ground #0C0B0A, raise #171411, gold #C8A24A, text #E7E1D6. */
+    --background: 30 9% 4%;
+    --foreground: 39 27% 87%;
+    --card: 24 15% 8%;
+    --card-foreground: 39 27% 87%;
+    --popover: 24 15% 8%;
+    --popover-foreground: 39 27% 87%;
+    --primary: 42 54% 54%;
+    --primary-foreground: 30 9% 4%;
+    --secondary: 265 22% 38%;
+    --secondary-foreground: 39 27% 87%;
+    --muted: 28 10% 13%;
+    --muted-foreground: 36 8% 60%;
+    --accent: 28 14% 18%;
+    --accent-foreground: 39 27% 87%;
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 39 27% 87%;
+    --border: 28 12% 16%;
+    --input: 28 12% 16%;
+    --ring: 42 54% 54%;
     --radius: 0.75rem;
 
-    --soul-gold: 178 50% 54%;
-    --soul-violet: 275 55% 71%;
-    --soul-blue: 195 65% 60%;
-    --soul-green: 165 45% 55%;
-    --soul-warm: 168 40% 78%;
-    --soul-dim: 195 15% 50%;
-    --soul-surface: 192 32% 11%;
-    --soul-surface-raised: 192 28% 15%;
+    --soul-gold: 42 54% 54%;
+    --soul-violet: 265 22% 48%;
+    --soul-blue: 210 35% 48%;
+    --soul-green: 160 28% 42%;
+    --soul-warm: 36 28% 82%;
+    --soul-dim: 30 10% 38%;
+    --soul-surface: 24 15% 9%;
+    --soul-surface-raised: 24 14% 12%;
 
     --sidebar-background: 192 35% 9%;
     --sidebar-foreground: 170 30% 94%;
