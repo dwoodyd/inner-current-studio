@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,44 +6,45 @@
 
 @layer base {
   :root {
-    --background: 220 20% 7%;
-    --foreground: 40 30% 90%;
-    --card: 220 18% 10%;
-    --card-foreground: 40 30% 90%;
-    --popover: 220 18% 10%;
-    --popover-foreground: 40 30% 90%;
-    --primary: 42 65% 58%;
-    --primary-foreground: 220 20% 7%;
-    --secondary: 265 25% 35%;
-    --secondary-foreground: 40 30% 90%;
-    --muted: 220 15% 15%;
-    --muted-foreground: 220 10% 55%;
-    --accent: 265 20% 25%;
-    --accent-foreground: 40 30% 90%;
-    --destructive: 0 60% 50%;
-    --destructive-foreground: 40 30% 90%;
-    --border: 220 15% 18%;
-    --input: 220 15% 18%;
-    --ring: 42 65% 58%;
+    /* Inner Wake — aqueous identity. Deep teal-black, aurora teal + violet, pale aqua ink. */
+    --background: 190 40% 6%;
+    --foreground: 170 30% 94%;
+    --card: 192 35% 9%;
+    --card-foreground: 170 30% 94%;
+    --popover: 192 35% 9%;
+    --popover-foreground: 170 30% 94%;
+    --primary: 178 50% 54%;
+    --primary-foreground: 190 40% 6%;
+    --secondary: 275 55% 71%;
+    --secondary-foreground: 190 40% 6%;
+    --muted: 192 22% 14%;
+    --muted-foreground: 195 12% 65%;
+    --accent: 275 40% 28%;
+    --accent-foreground: 170 30% 94%;
+    --destructive: 0 60% 55%;
+    --destructive-foreground: 170 30% 94%;
+    --border: 190 22% 18%;
+    --input: 190 22% 18%;
+    --ring: 178 50% 54%;
     --radius: 0.75rem;
 
-    --soul-gold: 42 65% 58%;
-    --soul-violet: 265 25% 45%;
-    --soul-blue: 210 40% 45%;
-    --soul-green: 160 30% 40%;
-    --soul-warm: 30 30% 85%;
-    --soul-dim: 210 20% 35%;
-    --soul-surface: 220 18% 12%;
-    --soul-surface-raised: 220 16% 16%;
+    --soul-gold: 178 50% 54%;
+    --soul-violet: 275 55% 71%;
+    --soul-blue: 195 65% 60%;
+    --soul-green: 165 45% 55%;
+    --soul-warm: 168 40% 78%;
+    --soul-dim: 195 15% 50%;
+    --soul-surface: 192 32% 11%;
+    --soul-surface-raised: 192 28% 15%;
 
-    --sidebar-background: 220 18% 10%;
-    --sidebar-foreground: 40 30% 90%;
-    --sidebar-primary: 42 65% 58%;
-    --sidebar-primary-foreground: 220 20% 7%;
-    --sidebar-accent: 265 20% 25%;
-    --sidebar-accent-foreground: 40 30% 90%;
-    --sidebar-border: 220 15% 18%;
-    --sidebar-ring: 42 65% 58%;
+    --sidebar-background: 192 35% 9%;
+    --sidebar-foreground: 170 30% 94%;
+    --sidebar-primary: 178 50% 54%;
+    --sidebar-primary-foreground: 190 40% 6%;
+    --sidebar-accent: 275 40% 28%;
+    --sidebar-accent-foreground: 170 30% 94%;
+    --sidebar-border: 190 22% 18%;
+    --sidebar-ring: 178 50% 54%;
 
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-size: 20px;
@@ -135,15 +136,18 @@
 
 @layer components {
   .font-heading {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 
   .soul-glow-gold {
-    box-shadow: 0 0 40px hsl(42 65% 58% / 0.15), 0 0 80px hsl(42 65% 58% / 0.05);
+    box-shadow: 0 0 40px hsl(178 50% 54% / 0.18), 0 0 80px hsl(178 50% 54% / 0.06);
   }
 
   .soul-glow-violet {
-    box-shadow: 0 0 40px hsl(265 25% 45% / 0.15), 0 0 80px hsl(265 25% 45% / 0.05);
+    box-shadow: 0 0 40px hsl(275 55% 71% / 0.18), 0 0 80px hsl(275 55% 71% / 0.06);
   }
 
   .soul-card {
@@ -178,11 +182,15 @@
   }
 
   .soul-gradient-gold {
-    background: linear-gradient(135deg, hsl(42 65% 58%), hsl(35 70% 45%));
+    background: linear-gradient(135deg, hsl(178 50% 54%), hsl(190 60% 42%));
   }
 
   .soul-gradient-violet {
-    background: linear-gradient(135deg, hsl(265 25% 45%), hsl(280 30% 35%));
+    background: linear-gradient(135deg, hsl(275 55% 71%), hsl(258 45% 52%));
+  }
+
+  .soul-gradient-aurora {
+    background: linear-gradient(120deg, hsl(178 50% 54% / 0.85) 0%, hsl(195 60% 55% / 0.6) 45%, hsl(275 55% 71% / 0.85) 100%);
   }
 
   .soul-glass {
@@ -223,7 +231,7 @@
     content: '';
     position: absolute;
     inset: -40%;
-    background: radial-gradient(ellipse at center, hsl(42 65% 58% / 0.06), transparent 70%);
+    background: radial-gradient(ellipse at center, hsl(178 50% 54% / 0.08), transparent 70%);
     pointer-events: none;
     z-index: -1;
   }
@@ -235,7 +243,7 @@
     content: '';
     position: absolute;
     inset: -40%;
-    background: radial-gradient(ellipse at center, hsl(265 25% 45% / 0.06), transparent 70%);
+    background: radial-gradient(ellipse at center, hsl(275 55% 71% / 0.08), transparent 70%);
     pointer-events: none;
     z-index: -1;
   }
@@ -250,7 +258,7 @@
   .soul-chip-active {
     @apply border-primary/40 text-primary;
     background: hsl(var(--primary) / 0.12);
-    box-shadow: 0 0 16px hsl(42 65% 58% / 0.1);
+    box-shadow: 0 0 16px hsl(178 50% 54% / 0.18);
   }
 
   .soul-chip-idle {
@@ -267,12 +275,12 @@
     background: linear-gradient(135deg, hsl(var(--primary) / 0.18), hsl(var(--primary) / 0.1));
     color: hsl(var(--primary));
     border: 1px solid hsl(var(--primary) / 0.15);
-    box-shadow: 0 2px 12px hsl(42 65% 58% / 0.08);
+    box-shadow: 0 2px 12px hsl(178 50% 54% / 0.14);
   }
 
   .soul-btn-primary:hover {
     background: linear-gradient(135deg, hsl(var(--primary) / 0.22), hsl(var(--primary) / 0.14));
-    box-shadow: 0 4px 20px hsl(42 65% 58% / 0.12);
+    box-shadow: 0 4px 20px hsl(178 50% 54% / 0.2);
   }
 
   .soul-btn-primary:disabled {
@@ -284,7 +292,7 @@
     @apply w-20 h-20 rounded-full flex items-center justify-center mx-auto;
     background: linear-gradient(135deg, hsl(var(--primary) / 0.12), hsl(var(--primary) / 0.06));
     border: 1px solid hsl(var(--primary) / 0.15);
-    box-shadow: 0 0 40px hsl(42 65% 58% / 0.1), 0 0 80px hsl(42 65% 58% / 0.04);
+    box-shadow: 0 0 40px hsl(178 50% 54% / 0.16), 0 0 80px hsl(275 55% 71% / 0.06);
   }
 
   .soul-progress-bar {

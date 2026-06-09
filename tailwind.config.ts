@@ -12,7 +12,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["'Cormorant Garamond'", "Georgia", "serif"],
+        heading: ["'Fraunces'", "Georgia", "serif"],
         body: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
       },
       colors: {
@@ -70,8 +70,8 @@ export default {
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "glow-shift": {
-          "0%, 100%": { boxShadow: "0 0 30px hsl(42 65% 58% / 0.1)" },
-          "50%": { boxShadow: "0 0 50px hsl(42 65% 58% / 0.25)" },
+          "0%, 100%": { boxShadow: "0 0 30px hsl(178 50% 54% / 0.14)" },
+          "50%": { boxShadow: "0 0 50px hsl(275 55% 71% / 0.28)" },
         },
       },
       animation: {

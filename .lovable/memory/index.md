@@ -1,12 +1,14 @@
 # Project Memory
 
 ## Core
-Inner Wake: premium emotional ritual PWA. Tagline: "Wake the Inner Current."
-Dark-first, Cormorant Garamond headings, Inter body.
-Primary gold (#c9943a), secondary violet, deep slate bg. No external copyrighted content.
-No Abraham-Hicks, no Vortex, no aggressive motivation language. All content must be original.
+Inner Wake: emotional alignment PWA. Job = FEEL. Living Orb is the companion (atmosphere, not a person).
+Aqueous identity — bg #0A1416, teal #4FC2C0 primary, violet #B98BE0 secondary, pale aqua #EAF4F2 ink.
+Fraunces (light/optical) headings, Inter body. NO Cormorant, NO amber/gold, NO warm-black palette (that's Soul Engineer — stay apart).
+Stay visually apart from LifeWoven: Inner Wake FLOWS (currents/aurora); LifeWoven CONSTRUCTS (loom/parchment).
+Warm cream light theme is the daytime alternate; dark aqueous is default.
+Orbs & sigils videos are vital — never modify them, only surrounding chrome.
+No Abraham-Hicks, no Vortex, no aggressive motivation language. Don't reuse the family's "no streaks / the returning" line verbatim.
 Local-first persistence via localStorage. Supabase-ready structure for future backend.
-REBRANDED from SoulCurrent → Inner Wake. No SoulCurrent references anywhere.
 
 ## Memories
 - [Brand rules](mem://design/brand) — Full brand positioning, tone, language guidelines
