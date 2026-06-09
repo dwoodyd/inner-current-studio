@@ -12,7 +12,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["'Cormorant Garamond'", "Georgia", "serif"],
+        heading: ["'Fraunces'", "Georgia", "serif"],
         body: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
       },
       colors: {
