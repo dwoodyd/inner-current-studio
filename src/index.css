@@ -292,7 +292,7 @@
     @apply w-20 h-20 rounded-full flex items-center justify-center mx-auto;
     background: linear-gradient(135deg, hsl(var(--primary) / 0.12), hsl(var(--primary) / 0.06));
     border: 1px solid hsl(var(--primary) / 0.15);
-    box-shadow: 0 0 40px hsl(42 65% 58% / 0.1), 0 0 80px hsl(42 65% 58% / 0.04);
+    box-shadow: 0 0 40px hsl(178 50% 54% / 0.16), 0 0 80px hsl(275 55% 71% / 0.06);
   }
 
   .soul-progress-bar {
