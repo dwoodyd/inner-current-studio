@@ -1,13 +1,13 @@
 # Project Memory
 
 ## Core
-Inner Wake: emotional alignment PWA. Job = FEEL. Living Orb is the companion (atmosphere, not a person).
-Aqueous identity — bg #0A1416, teal #4FC2C0 primary, violet #B98BE0 secondary, pale aqua #EAF4F2 ink.
-Fraunces (light/optical) headings, Inter body. NO Cormorant, NO amber/gold, NO warm-black palette (that's Soul Engineer — stay apart).
-Stay visually apart from LifeWoven: Inner Wake FLOWS (currents/aurora); LifeWoven CONSTRUCTS (loom/parchment).
-Warm cream light theme is the daytime alternate; dark aqueous is default.
-Orbs & sigils videos are vital — never modify them, only surrounding chrome.
-No Abraham-Hicks, no Vortex, no aggressive motivation language. Don't reuse the family's "no streaks / the returning" line verbatim.
+Inner Wake: emotional & energetic state-shifting PWA. Job = FEEL. Dark-only by design.
+House identity: warm-black + gold + the Orb. Bg #0C0B0A, raised #171411, gold #C8A24A, text #E7E1D6.
+Fraunces (light/optical) headings, Inter body. NO Cormorant.
+The Orb is the companion — atmospheric, responds (doesn't advise). No named human guide.
+Differentiate from siblings by ENGAGEMENT, not visuals: Inner Wake = experiential felt shift. LifeWoven catalogs the Emotional Guidance Scale; Inner Wake does NOT render a literal EGS chart.
+Orbs & sigils videos are vital — never modify them.
+No Abraham-Hicks, no Vortex, no aggressive motivation. Don't reuse the family's "no streaks / the returning" line verbatim. Vary pricing/founding-tier copy.
 Local-first persistence via localStorage. Supabase-ready structure for future backend.
 
 ## Memories
