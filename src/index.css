@@ -243,7 +243,7 @@
     content: '';
     position: absolute;
     inset: -40%;
-    background: radial-gradient(ellipse at center, hsl(265 25% 45% / 0.06), transparent 70%);
+    background: radial-gradient(ellipse at center, hsl(275 55% 71% / 0.08), transparent 70%);
     pointer-events: none;
     z-index: -1;
   }
