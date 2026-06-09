@@ -38,14 +38,14 @@
     --soul-surface: 24 15% 9%;
     --soul-surface-raised: 24 14% 12%;
 
-    --sidebar-background: 192 35% 9%;
-    --sidebar-foreground: 170 30% 94%;
-    --sidebar-primary: 178 50% 54%;
-    --sidebar-primary-foreground: 190 40% 6%;
-    --sidebar-accent: 275 40% 28%;
-    --sidebar-accent-foreground: 170 30% 94%;
-    --sidebar-border: 190 22% 18%;
-    --sidebar-ring: 178 50% 54%;
+    --sidebar-background: 24 15% 8%;
+    --sidebar-foreground: 39 27% 87%;
+    --sidebar-primary: 42 54% 54%;
+    --sidebar-primary-foreground: 30 9% 4%;
+    --sidebar-accent: 28 14% 18%;
+    --sidebar-accent-foreground: 39 27% 87%;
+    --sidebar-border: 28 12% 16%;
+    --sidebar-ring: 42 54% 54%;
 
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-size: 20px;
