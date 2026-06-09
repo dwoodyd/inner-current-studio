@@ -6,45 +6,46 @@
 
 @layer base {
   :root {
-    /* Inner Wake — aqueous identity. Deep teal-black, aurora teal + violet, pale aqua ink. */
-    --background: 190 40% 6%;
-    --foreground: 170 30% 94%;
-    --card: 192 35% 9%;
-    --card-foreground: 170 30% 94%;
-    --popover: 192 35% 9%;
-    --popover-foreground: 170 30% 94%;
-    --primary: 178 50% 54%;
-    --primary-foreground: 190 40% 6%;
-    --secondary: 275 55% 71%;
-    --secondary-foreground: 190 40% 6%;
-    --muted: 192 22% 14%;
-    --muted-foreground: 195 12% 65%;
-    --accent: 275 40% 28%;
-    --accent-foreground: 170 30% 94%;
-    --destructive: 0 60% 55%;
-    --destructive-foreground: 170 30% 94%;
-    --border: 190 22% 18%;
-    --input: 190 22% 18%;
-    --ring: 178 50% 54%;
+    /* Inner Wake — warm-black + gold + Orb. House identity, dark-only by design.
+       Tokens locked from builder brief: ground #0C0B0A, raise #171411, gold #C8A24A, text #E7E1D6. */
+    --background: 30 9% 4%;
+    --foreground: 39 27% 87%;
+    --card: 24 15% 8%;
+    --card-foreground: 39 27% 87%;
+    --popover: 24 15% 8%;
+    --popover-foreground: 39 27% 87%;
+    --primary: 42 54% 54%;
+    --primary-foreground: 30 9% 4%;
+    --secondary: 265 22% 38%;
+    --secondary-foreground: 39 27% 87%;
+    --muted: 28 10% 13%;
+    --muted-foreground: 36 8% 60%;
+    --accent: 28 14% 18%;
+    --accent-foreground: 39 27% 87%;
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 39 27% 87%;
+    --border: 28 12% 16%;
+    --input: 28 12% 16%;
+    --ring: 42 54% 54%;
     --radius: 0.75rem;
 
-    --soul-gold: 178 50% 54%;
-    --soul-violet: 275 55% 71%;
-    --soul-blue: 195 65% 60%;
-    --soul-green: 165 45% 55%;
-    --soul-warm: 168 40% 78%;
-    --soul-dim: 195 15% 50%;
-    --soul-surface: 192 32% 11%;
-    --soul-surface-raised: 192 28% 15%;
+    --soul-gold: 42 54% 54%;
+    --soul-violet: 265 22% 48%;
+    --soul-blue: 210 35% 48%;
+    --soul-green: 160 28% 42%;
+    --soul-warm: 36 28% 82%;
+    --soul-dim: 30 10% 38%;
+    --soul-surface: 24 15% 9%;
+    --soul-surface-raised: 24 14% 12%;
 
-    --sidebar-background: 192 35% 9%;
-    --sidebar-foreground: 170 30% 94%;
-    --sidebar-primary: 178 50% 54%;
-    --sidebar-primary-foreground: 190 40% 6%;
-    --sidebar-accent: 275 40% 28%;
-    --sidebar-accent-foreground: 170 30% 94%;
-    --sidebar-border: 190 22% 18%;
-    --sidebar-ring: 178 50% 54%;
+    --sidebar-background: 24 15% 8%;
+    --sidebar-foreground: 39 27% 87%;
+    --sidebar-primary: 42 54% 54%;
+    --sidebar-primary-foreground: 30 9% 4%;
+    --sidebar-accent: 28 14% 18%;
+    --sidebar-accent-foreground: 39 27% 87%;
+    --sidebar-border: 28 12% 16%;
+    --sidebar-ring: 42 54% 54%;
 
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-size: 20px;
@@ -143,11 +144,11 @@
   }
 
   .soul-glow-gold {
-    box-shadow: 0 0 40px hsl(178 50% 54% / 0.18), 0 0 80px hsl(178 50% 54% / 0.06);
+    box-shadow: 0 0 40px hsl(42 54% 54% / 0.18), 0 0 80px hsl(42 54% 54% / 0.06);
   }
 
   .soul-glow-violet {
-    box-shadow: 0 0 40px hsl(275 55% 71% / 0.18), 0 0 80px hsl(275 55% 71% / 0.06);
+    box-shadow: 0 0 40px hsl(265 22% 48% / 0.18), 0 0 80px hsl(265 22% 48% / 0.06);
   }
 
   .soul-card {
@@ -182,15 +183,11 @@
   }
 
   .soul-gradient-gold {
-    background: linear-gradient(135deg, hsl(178 50% 54%), hsl(190 60% 42%));
+    background: linear-gradient(135deg, hsl(42 54% 54%), hsl(36 60% 42%));
   }
 
   .soul-gradient-violet {
-    background: linear-gradient(135deg, hsl(275 55% 71%), hsl(258 45% 52%));
-  }
-
-  .soul-gradient-aurora {
-    background: linear-gradient(120deg, hsl(178 50% 54% / 0.85) 0%, hsl(195 60% 55% / 0.6) 45%, hsl(275 55% 71% / 0.85) 100%);
+    background: linear-gradient(135deg, hsl(265 22% 48%), hsl(278 28% 36%));
   }
 
   .soul-glass {
@@ -231,7 +228,7 @@
     content: '';
     position: absolute;
     inset: -40%;
-    background: radial-gradient(ellipse at center, hsl(178 50% 54% / 0.08), transparent 70%);
+    background: radial-gradient(ellipse at center, hsl(42 54% 54% / 0.06), transparent 70%);
     pointer-events: none;
     z-index: -1;
   }
@@ -243,7 +240,7 @@
     content: '';
     position: absolute;
     inset: -40%;
-    background: radial-gradient(ellipse at center, hsl(275 55% 71% / 0.08), transparent 70%);
+    background: radial-gradient(ellipse at center, hsl(265 22% 48% / 0.06), transparent 70%);
     pointer-events: none;
     z-index: -1;
   }
@@ -258,7 +255,7 @@
   .soul-chip-active {
     @apply border-primary/40 text-primary;
     background: hsl(var(--primary) / 0.12);
-    box-shadow: 0 0 16px hsl(178 50% 54% / 0.18);
+    box-shadow: 0 0 16px hsl(42 54% 54% / 0.12);
   }
 
   .soul-chip-idle {
@@ -275,12 +272,12 @@
     background: linear-gradient(135deg, hsl(var(--primary) / 0.18), hsl(var(--primary) / 0.1));
     color: hsl(var(--primary));
     border: 1px solid hsl(var(--primary) / 0.15);
-    box-shadow: 0 2px 12px hsl(178 50% 54% / 0.14);
+    box-shadow: 0 2px 12px hsl(42 54% 54% / 0.1);
   }
 
   .soul-btn-primary:hover {
     background: linear-gradient(135deg, hsl(var(--primary) / 0.22), hsl(var(--primary) / 0.14));
-    box-shadow: 0 4px 20px hsl(178 50% 54% / 0.2);
+    box-shadow: 0 4px 20px hsl(42 54% 54% / 0.16);
   }
 
   .soul-btn-primary:disabled {
@@ -292,7 +289,7 @@
     @apply w-20 h-20 rounded-full flex items-center justify-center mx-auto;
     background: linear-gradient(135deg, hsl(var(--primary) / 0.12), hsl(var(--primary) / 0.06));
     border: 1px solid hsl(var(--primary) / 0.15);
-    box-shadow: 0 0 40px hsl(178 50% 54% / 0.16), 0 0 80px hsl(275 55% 71% / 0.06);
+    box-shadow: 0 0 40px hsl(42 54% 54% / 0.12), 0 0 80px hsl(42 54% 54% / 0.04);
   }
 
   .soul-progress-bar {
