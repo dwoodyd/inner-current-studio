@@ -6,35 +6,36 @@
 
 @layer base {
   :root {
-    --background: 220 20% 7%;
-    --foreground: 40 30% 90%;
-    --card: 220 18% 10%;
-    --card-foreground: 40 30% 90%;
-    --popover: 220 18% 10%;
-    --popover-foreground: 40 30% 90%;
-    --primary: 42 65% 58%;
-    --primary-foreground: 220 20% 7%;
-    --secondary: 265 25% 35%;
-    --secondary-foreground: 40 30% 90%;
-    --muted: 220 15% 15%;
-    --muted-foreground: 220 10% 55%;
-    --accent: 265 20% 25%;
-    --accent-foreground: 40 30% 90%;
-    --destructive: 0 60% 50%;
-    --destructive-foreground: 40 30% 90%;
-    --border: 220 15% 18%;
-    --input: 220 15% 18%;
-    --ring: 42 65% 58%;
+    /* Inner Wake — aqueous identity. Deep teal-black, aurora teal + violet, pale aqua ink. */
+    --background: 190 40% 6%;
+    --foreground: 170 30% 94%;
+    --card: 192 35% 9%;
+    --card-foreground: 170 30% 94%;
+    --popover: 192 35% 9%;
+    --popover-foreground: 170 30% 94%;
+    --primary: 178 50% 54%;
+    --primary-foreground: 190 40% 6%;
+    --secondary: 275 55% 71%;
+    --secondary-foreground: 190 40% 6%;
+    --muted: 192 22% 14%;
+    --muted-foreground: 195 12% 65%;
+    --accent: 275 40% 28%;
+    --accent-foreground: 170 30% 94%;
+    --destructive: 0 60% 55%;
+    --destructive-foreground: 170 30% 94%;
+    --border: 190 22% 18%;
+    --input: 190 22% 18%;
+    --ring: 178 50% 54%;
     --radius: 0.75rem;
 
-    --soul-gold: 42 65% 58%;
-    --soul-violet: 265 25% 45%;
-    --soul-blue: 210 40% 45%;
-    --soul-green: 160 30% 40%;
-    --soul-warm: 30 30% 85%;
-    --soul-dim: 210 20% 35%;
-    --soul-surface: 220 18% 12%;
-    --soul-surface-raised: 220 16% 16%;
+    --soul-gold: 178 50% 54%;
+    --soul-violet: 275 55% 71%;
+    --soul-blue: 195 65% 60%;
+    --soul-green: 165 45% 55%;
+    --soul-warm: 168 40% 78%;
+    --soul-dim: 195 15% 50%;
+    --soul-surface: 192 32% 11%;
+    --soul-surface-raised: 192 28% 15%;
 
     --sidebar-background: 220 18% 10%;
     --sidebar-foreground: 40 30% 90%;
