@@ -211,7 +211,10 @@ async function handleTransactionCompleted(data: any, env: PaddleEnv) {
   const item = items?.[0];
   if (!item?.price) return;
 
-  const priceId = externalIdFrom(item.price);
+  let priceId = externalIdFrom(item.price);
+  if (!priceId && item.price?.id) {
+    priceId = await fetchExternalId(item.price.id, env);
+  }
   if (!priceId) {
     console.warn('Skipping transaction: missing price importMeta.externalId', {
       transactionId: data.id,
