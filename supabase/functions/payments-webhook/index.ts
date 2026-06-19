@@ -1,5 +1,19 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { verifyWebhook, EventName, type PaddleEnv } from '../_shared/paddle.ts';
+import { verifyWebhook, EventName, gatewayFetch, type PaddleEnv } from '../_shared/paddle.ts';
+
+// Transaction webhook payloads sometimes omit `import_meta` on the inlined
+// price object. Fetch the full price to recover the external_id.
+async function fetchExternalId(paddlePriceId: string, env: PaddleEnv): Promise<string | null> {
+  try {
+    const res = await gatewayFetch(env, `/prices/${paddlePriceId}`);
+    const json = await res.json();
+    const ext = json?.data?.import_meta?.external_id;
+    return typeof ext === 'string' && ext.length > 0 ? ext : null;
+  } catch (e) {
+    console.error('fetchExternalId failed', paddlePriceId, e);
+    return null;
+  }
+}
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
@@ -197,7 +211,10 @@ async function handleTransactionCompleted(data: any, env: PaddleEnv) {
   const item = items?.[0];
   if (!item?.price) return;
 
-  const priceId = externalIdFrom(item.price);
+  let priceId = externalIdFrom(item.price);
+  if (!priceId && item.price?.id) {
+    priceId = await fetchExternalId(item.price.id, env);
+  }
   if (!priceId) {
     console.warn('Skipping transaction: missing price importMeta.externalId', {
       transactionId: data.id,
