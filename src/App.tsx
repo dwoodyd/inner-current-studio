@@ -401,15 +401,13 @@ const App = () => (
       <ThemeProvider>
         <Sonner />
         <BrowserRouter>
-          <BetaAccessGate>
-            <EnvironmentRedirectNotice />
-            <AuthProvider>
-              <AppProvider>
-                <AppRoutes />
-                <StageUpOverlay />
-              </AppProvider>
-            </AuthProvider>
-          </BetaAccessGate>
+          <EnvironmentRedirectNotice />
+          <AuthProvider>
+            <AppProvider>
+              <AppRoutes />
+              <StageUpOverlay />
+            </AppProvider>
+          </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>
     </TooltipProvider>
