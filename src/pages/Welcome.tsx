@@ -197,11 +197,19 @@ export default function Welcome() {
             className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
             <Button
-              onClick={startOnboarding}
+              onClick={() => navigate('/auth')}
               size="lg"
               className="rounded-full bg-soul-gold text-background hover:bg-soul-gold/90 uppercase tracking-[0.18em] text-sm font-medium shadow-[0_8px_32px_hsl(42_65%_58%_/0.25)] hover:shadow-[0_12px_40px_hsl(42_65%_58%_/0.35)] transition-all px-10 py-6 h-auto"
             >
               BEGIN YOUR PRACTICE <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button
+              onClick={startOnboarding}
+              variant="ghost"
+              size="lg"
+              className="rounded-full uppercase tracking-[0.18em] text-xs font-medium"
+            >
+              Replay intro
             </Button>
             <Button asChild variant="ghost" size="lg">
               <a href="#currents">See the five Currents</a>
@@ -265,13 +273,13 @@ export default function Welcome() {
                 <p className="font-serif text-xl">Currents</p>
                 <p className="text-xs text-muted-foreground">Today’s practice field</p>
               </div>
-              <div className="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary">Preview</div>
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs text-primary select-none">Preview</span>
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {ALL_DOMAIN_KEYS.slice(0, 4).map((key) => {
                 const d = DOMAINS[key];
                 return (
-                  <div key={key} className="rounded-xl border border-border/50 bg-background/30 p-4" style={{ background: d.gradient }}>
+                  <div key={key} className="rounded-xl border border-border/50 bg-background/30 p-4 select-none" style={{ background: d.gradient }}>
                     <div className="flex items-center justify-between">
                       <span className="text-2xl">{d.emoji}</span>
                       <span className="h-2 w-2 rounded-full bg-primary/70" />
@@ -299,19 +307,22 @@ export default function Welcome() {
             {ALL_DOMAIN_KEYS.map((key, i) => {
               const d = DOMAINS[key];
               return (
-                <motion.div
+                <motion.button
                   key={key}
+                  type="button"
+                  onClick={() => navigate('/auth')}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-50px' }}
                   transition={{ duration: 0.6, delay: i * 0.08 }}
-                  className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-6 backdrop-blur transition-all hover:border-border"
+                  className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card/40 p-6 backdrop-blur transition-all hover:border-border text-left"
                   style={{ background: d.gradient }}
+                  aria-label={`${d.label} — sign up to open`}
                 >
                   <div className="text-3xl">{d.emoji}</div>
                   <h3 className="mt-4 font-serif text-xl">{d.label}</h3>
                   <p className="mt-2 text-sm text-muted-foreground">{d.tagline}</p>
-                </motion.div>
+                </motion.button>
               );
             })}
           </div>
