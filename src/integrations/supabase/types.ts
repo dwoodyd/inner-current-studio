@@ -518,6 +518,71 @@ export type Database = {
         }
         Relationships: []
       }
+      invite_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          label: string | null
+          max_uses: number | null
+          updated_at: string
+          uses: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          label?: string | null
+          max_uses?: number | null
+          updated_at?: string
+          uses?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          label?: string | null
+          max_uses?: number | null
+          updated_at?: string
+          uses?: number
+        }
+        Relationships: []
+      }
+      invite_redemptions: {
+        Row: {
+          id: string
+          invite_code_id: string
+          redeemed_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          invite_code_id: string
+          redeemed_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          invite_code_id?: string
+          redeemed_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invite_redemptions_invite_code_id_fkey"
+            columns: ["invite_code_id"]
+            isOneToOne: false
+            referencedRelation: "invite_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       momentum_sessions: {
         Row: {
           completed: boolean
@@ -1254,6 +1319,7 @@ export type Database = {
         Returns: boolean
       }
       increment_daily_usage: { Args: { _tool: string }; Returns: number }
+      redeem_invite_code: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
