@@ -10,7 +10,7 @@ import { EnvironmentRedirectNotice } from "@/components/EnvironmentRedirectNotic
 import { PremiumGate } from "@/components/PremiumGate";
 import { DailyLimitGate } from "@/components/DailyLimitGate";
 import type { GatedTool } from "@/hooks/useDailyLimit";
-import { BetaAccessGate } from "@/components/BetaAccessGate";
+
 import { useAppState } from "@/lib/AppContext";
 import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
@@ -401,15 +401,13 @@ const App = () => (
       <ThemeProvider>
         <Sonner />
         <BrowserRouter>
-          <BetaAccessGate>
-            <EnvironmentRedirectNotice />
-            <AuthProvider>
-              <AppProvider>
-                <AppRoutes />
-                <StageUpOverlay />
-              </AppProvider>
-            </AuthProvider>
-          </BetaAccessGate>
+          <EnvironmentRedirectNotice />
+          <AuthProvider>
+            <AppProvider>
+              <AppRoutes />
+              <StageUpOverlay />
+            </AppProvider>
+          </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>
     </TooltipProvider>
