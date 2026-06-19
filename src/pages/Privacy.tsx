@@ -17,7 +17,7 @@ const SELLER = 'DeWayne Woods, sole proprietor, operating the Inner Wake service
 const sections = [
   {
     title: '1. Who We Are (Data Controller)',
-    content: `Inner Wake is operated by ${SELLER}. We act as the data controller for the personal information we collect from you when you create an account and use the Inner Wake app. You can contact us about this notice at privacy@innerwake.live.`,
+    content: `Inner Wake is operated by ${SELLER}, with a principal place of business at 1041 Market St, San Diego, CA 92101, United States. We act as the data controller for the personal information we collect from you when you create an account and use the Inner Wake app. You can contact us about this notice at privacy@innerwake.live.`,
   },
   {
     title: '2. Categories of Personal Data We Collect',
