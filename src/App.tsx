@@ -251,6 +251,7 @@ function AppRoutes() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/refund" element={<Refund />} />
+        <Route path="/refunds" element={<Navigate to="/refund" replace />} />
         <Route path="*" element={<Navigate to="/welcome" replace />} />
       </Routes>
     </Suspense>
@@ -311,6 +312,7 @@ function AppRoutes() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/refund" element={<Refund />} />
+        <Route path="/refunds" element={<Navigate to="/refund" replace />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/founding" element={<FoundingApplications />} />
         <Route path="/money" element={<Navigate to="/currents/money" replace />} />
