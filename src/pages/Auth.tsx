@@ -92,6 +92,10 @@ export default function Auth() {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
+        // Fire-and-forget: add to newsletter audience. Never block signup on this.
+        supabase.functions
+          .invoke('newsletter-subscribe', { body: { email: trimmedEmail, source: 'signup' } })
+          .catch(() => {});
         if (!data.session) {
           toast.success('Check your email to confirm your account, then sign in.');
           setMode('login');

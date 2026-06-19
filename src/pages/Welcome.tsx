@@ -5,6 +5,7 @@ import { Activity, ArrowRight, Eye, Moon, Play, Shield, Sparkles, Timer, Wifi } 
 import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
+import NewsletterForm from '@/components/NewsletterForm';
 import innerWakeIcon from '@/assets/inner-wake-logo.svg';
 
 const SEEN_KEY = 'iw_cinematic_seen_v1';
@@ -219,6 +220,11 @@ export default function Welcome() {
           <p className="mt-6 text-xs text-muted-foreground">
             Free to start · Works offline · Installs as an app
           </p>
+        </section>
+
+        {/* Newsletter / early access */}
+        <section className="mt-16">
+          <NewsletterForm source="welcome-hero" />
         </section>
 
         {/* Instant practice hook */}
