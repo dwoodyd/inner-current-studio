@@ -15,7 +15,7 @@ const fadeUp = {
 const sections = [
   {
     title: '1. Who You Are Contracting With',
-    content: `Inner Wake (the "Service") is operated by DeWayne Woods, sole proprietor, trading as Inner Wake (the "Seller", "we", "our", or "us"). By creating an account, accessing the Service, or making a purchase, you ("you" or "User") enter into a binding agreement with the Seller on these Terms of Service (the "Terms"). If you do not agree, do not use the Service.`,
+    content: `Inner Wake (the "Service") is operated by DeWayne Woods, sole proprietor, trading as Inner Wake (the "Seller", "we", "our", or "us"), with a principal place of business at 1041 Market St, San Diego, CA 92101, United States. By creating an account, accessing the Service, or making a purchase, you ("you" or "User") enter into a binding agreement with the Seller on these Terms of Service (the "Terms"). If you do not agree, do not use the Service.`,
   },
   {
     title: '2. Eligibility and Authority',
