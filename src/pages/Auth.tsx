@@ -335,11 +335,7 @@ export default function Auth() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               >
-                <img
-                  src={orbLogoAsset.url}
-                  alt="Inner Wake"
-                  className="h-44 w-44 sm:h-52 sm:w-52 md:h-60 md:w-60 object-contain drop-shadow-2xl"
-                />
+                <BrandLogo size="md" />
                 <h1 className="font-heading text-2xl font-light tracking-tight text-foreground/90">
                   Inner Wake
                 </h1>
