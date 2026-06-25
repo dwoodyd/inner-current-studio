@@ -15,6 +15,14 @@ const STAGE_LABEL: Record<1 | 2 | 3 | 4, string> = {
   1: 'Seed', 2: 'Sprout', 3: 'Bloom', 4: 'Resonance',
 };
 
+const CURRENT_GROUND_NOTES: Record<DomainKey, string> = {
+  money: 'The inner posture around money shapes what you\'re able to receive.',
+  self: 'The story you carry about who you are shapes every other current.',
+  energy: 'The body is not a passenger. It holds the state.',
+  relationships: 'The patterns you bring to other people begin long before you speak.',
+  health: 'How you inhabit the body shapes what the body is able to hold.',
+};
+
 export default function CurrentsHub() {
   const navigate = useNavigate();
   const { isPremium, freeCurrent, status } = useSubscription();
@@ -36,8 +44,8 @@ export default function CurrentsHub() {
       <div className="relative mx-auto max-w-lg px-4 pt-10 pb-10 space-y-6 safe-top sm:pt-12 sm:space-y-7">
         <div className="text-center space-y-3">
           <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Currents</h1>
-          <p className="text-sm text-muted-foreground max-w-[320px] mx-auto leading-relaxed">
-            Each current is an area of life you can saturate, soften, and align. Your sigils grow as you practice.
+          <p className="text-sm text-muted-foreground max-w-[340px] mx-auto leading-relaxed">
+            Each current is an area of life where the inner ground shapes the outcome. Saturate it, soften it, align it. Your sigils grow as you return.
           </p>
         </div>
 
@@ -137,6 +145,7 @@ function CurrentCard({ slug, d, index, isOpen, badge, onClick }: CardProps) {
           )}
         </div>
         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-1">{d.tagline}</p>
+        <p className="text-[11px] text-muted-foreground/55 italic font-heading leading-snug line-clamp-2">{CURRENT_GROUND_NOTES[slug]}</p>
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
           {hasPracticed
             ? `${STAGE_LABEL[stage]} · ${progress.practicesCompleted} practice${progress.practicesCompleted === 1 ? '' : 's'}`

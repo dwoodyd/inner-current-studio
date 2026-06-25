@@ -13,6 +13,7 @@ const modules = [
     icon: Compass,
     title: 'Alignment Wheel',
     description: 'A guided thought-shift ritual from resistance toward resonance — relief, softening, steadying, momentum in one sitting.',
+    subtext: 'Works at the level of inner posture — the ground beneath the words.',
     gradient: 'from-soul-gold/15 to-soul-gold/5',
     iconColor: 'text-soul-gold',
     to: '/align/wheel',
@@ -37,7 +38,7 @@ export default function Align() {
       </motion.div>
 
       <motion.div className="space-y-3" variants={stagger} initial="initial" animate="animate">
-        {modules.map(({ icon: Icon, title, description, gradient, iconColor, to }) => (
+        {modules.map(({ icon: Icon, title, description, subtext, gradient, iconColor, to }) => (
           <motion.button
             key={title}
             variants={fadeUp}
@@ -50,6 +51,9 @@ export default function Align() {
             <div className="flex-1 space-y-1 min-w-0">
               <h3 className="font-heading text-base font-medium text-foreground">{title}</h3>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{description}</p>
+              {subtext && (
+                <p className="text-[11px] text-muted-foreground/55 italic font-heading leading-relaxed">{subtext}</p>
+              )}
             </div>
             <ChevronRight size={16} className="text-muted-foreground/30 shrink-0 group-hover:text-muted-foreground/60 transition-colors duration-150" />
           </motion.button>

@@ -30,8 +30,9 @@ const pulseVariants: Record<QuickState, import('framer-motion').TargetAndTransit
 export default function QuickCheckIn({ selected, onSelect }: QuickCheckInProps) {
   return (
     <div className="space-y-2">
-      <div className="px-1">
+      <div className="px-1 space-y-0.5">
         <p className="text-xs text-muted-foreground font-heading italic">How does your energy feel right now?</p>
+        <p className="text-[11px] text-muted-foreground/55 font-heading italic">What ground are you standing on right now?</p>
       </div>
       <div className="grid grid-cols-5 gap-1.5 rounded-2xl border border-border/30 bg-card p-1.5 sm:p-2">
         {states.map(({ value, label, emoji, hint }) => {

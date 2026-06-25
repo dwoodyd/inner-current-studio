@@ -10,7 +10,8 @@ import TodayFlowCard from '@/components/TodayFlowCard';
 import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
 import StateSoundscape from '@/components/StateSoundscape';
-import brandLogo from '@/assets/inner-wake-logo.svg';
+import brandLogo from '@/assets/inner-wake-orb-logo.png';
+import BTWOriginGate from '@/components/BTWOriginGate';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/hooks/useSubscription';
 import { DOMAINS, type DomainKey } from '@/lib/domains';
@@ -116,6 +117,10 @@ export default function Home() {
   }, [state.checkIns]);
 
   const [quickState, setQuickState] = useState<QuickState | undefined>(persistedQuickState);
+  const [showBtwGate, setShowBtwGate] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try { return localStorage.getItem('iw_btw_answer_v1') === null; } catch { return false; }
+  });
 
   // Keep local picker in sync when cloud check-ins arrive after first render.
   useEffect(() => {
@@ -173,6 +178,7 @@ export default function Home() {
 
   return (
     <div className="relative">
+      {showBtwGate && <BTWOriginGate onDone={() => setShowBtwGate(false)} />}
       {/* Ambient background orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div

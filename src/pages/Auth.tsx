@@ -6,9 +6,7 @@ import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
 import { ArrowRight, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
-import brandLogo from '@/assets/inner-wake-logo.svg';
-
-const INNER_WAKE_ICON = '/icon.svg';
+import brandLogo from '@/assets/inner-wake-orb-logo.png';
 
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
@@ -172,19 +170,18 @@ export default function Auth() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-sm flex flex-col items-center text-center gap-8"
+            className="relative w-full max-w-sm flex flex-col items-center text-center gap-7"
           >
-            <motion.div
-              className="h-24 w-24 rounded-full flex items-center justify-center"
-              style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.15), hsl(42 65% 58% / 0.03))' }}
-              animate={{ scale: [1, 1.06, 1] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <img src={brandLogo} alt="Inner Wake" className="h-16 w-16 object-contain" />
-            </motion.div>
+            <motion.img
+              src={brandLogo}
+              alt="Inner Wake"
+              className="h-44 w-44 object-contain"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            />
 
-            <div className="space-y-3">
-              <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
+            <div className="space-y-3 -mt-2">
               <p className="font-heading text-lg text-muted-foreground italic leading-relaxed">
                 When your mind won't quiet,<br />your emotions feel heavy,<br />or you've lost your center —
               </p>
@@ -325,24 +322,21 @@ export default function Auth() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-sm space-y-8"
+            className="relative w-full max-w-sm space-y-7"
           >
             {/* Logo */}
-            <div className="flex flex-col items-center gap-6 text-center">
-              <motion.div
-                className="h-20 w-20 rounded-full flex items-center justify-center"
-                style={{ background: 'radial-gradient(circle at 40% 35%, hsl(42 65% 58% / 0.15), hsl(42 65% 58% / 0.03))' }}
-                animate={{ scale: [1, 1.06, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <img src={INNER_WAKE_ICON} alt="Inner Wake" className="h-14 w-14 object-contain" />
-              </motion.div>
-              <div className="space-y-2">
-                <h1 className="font-heading text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
-                <p className="font-heading text-base font-light italic text-muted-foreground">
-                  {forgotMode ? (resetSent ? 'Check your email.' : 'Reset your password.') : mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
-                </p>
-              </div>
+            <div className="flex flex-col items-center gap-4 text-center">
+              <motion.img
+                src={brandLogo}
+                alt="Inner Wake"
+                className="h-36 w-36 object-contain"
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              />
+              <p className="font-heading text-base font-light italic text-muted-foreground">
+                {forgotMode ? (resetSent ? 'Check your email.' : 'Reset your password.') : mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
+              </p>
             </div>
 
             {/* Form */}
