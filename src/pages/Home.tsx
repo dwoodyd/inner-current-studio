@@ -178,6 +178,7 @@ export default function Home() {
 
   return (
     <div className="relative">
+      {showBtwGate && <BTWOriginGate onDone={() => setShowBtwGate(false)} />}
       {/* Ambient background orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
