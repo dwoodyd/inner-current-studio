@@ -287,7 +287,7 @@ export default function Auth() {
             >
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center">
-                  <img src={brandLogo} alt="" className="h-3 w-3 object-contain" />
+                  <img src={orbLogoAsset.url} alt="" className="h-3 w-3 object-contain" />
                 </div>
                 <p className="text-xs text-primary/60 uppercase tracking-widest">Inner Wake responds…</p>
               </div>
