@@ -333,14 +333,21 @@ export default function Auth() {
           >
             {/* Logo */}
             <div className="flex flex-col items-center gap-4 text-center">
-              <motion.img
-                src={brandLogo}
-                alt="Inner Wake"
-                className="h-36 w-36 object-contain"
+              <motion.div
+                className="flex flex-col items-center gap-2"
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              />
+              >
+                <img
+                  src={orbLogoAsset.url}
+                  alt="Inner Wake"
+                  className="h-36 w-36 object-contain"
+                />
+                <h1 className="font-heading text-2xl font-light tracking-tight text-foreground/90">
+                  Inner Wake
+                </h1>
+              </motion.div>
               <p className="font-heading text-base font-light italic text-muted-foreground">
                 {forgotMode ? (resetSent ? 'Check your email.' : 'Reset your password.') : mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
               </p>
