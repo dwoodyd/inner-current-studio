@@ -6,7 +6,7 @@ import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
 import { ArrowRight, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
-import orbLogoAsset from '@/assets/inner-wake-logo-transparent.png.asset.json';
+import BrandLogo from '@/components/BrandLogo';
 
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
@@ -178,11 +178,7 @@ export default function Auth() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
-              <img
-                src={orbLogoAsset.url}
-                alt="Inner Wake"
-                className="h-52 w-52 sm:h-60 sm:w-60 md:h-72 md:w-72 object-contain drop-shadow-2xl"
-              />
+              <BrandLogo size="lg" />
               <h1 className="font-heading text-3xl font-light tracking-tight text-foreground/90">
                 Inner Wake
               </h1>
@@ -287,7 +283,7 @@ export default function Auth() {
             >
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center">
-                  <img src={orbLogoAsset.url} alt="" className="h-3 w-3 object-contain" />
+                  <BrandLogo size="xs" alt="" withShadow={false} />
                 </div>
                 <p className="text-xs text-primary/60 uppercase tracking-widest">Inner Wake responds…</p>
               </div>
@@ -339,11 +335,7 @@ export default function Auth() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               >
-                <img
-                  src={orbLogoAsset.url}
-                  alt="Inner Wake"
-                  className="h-44 w-44 sm:h-52 sm:w-52 md:h-60 md:w-60 object-contain drop-shadow-2xl"
-                />
+                <BrandLogo size="md" />
                 <h1 className="font-heading text-2xl font-light tracking-tight text-foreground/90">
                   Inner Wake
                 </h1>
