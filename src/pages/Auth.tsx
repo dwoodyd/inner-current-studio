@@ -6,7 +6,7 @@ import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
 import { ArrowRight, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
-import brandLogo from '@/assets/inner-wake-orb-logo.svg';
+import orbLogoAsset from '@/assets/inner-wake-logo-transparent.png.asset.json';
 
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
@@ -172,14 +172,21 @@ export default function Auth() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-sm flex flex-col items-center text-center gap-7"
           >
-            <motion.img
-              src={brandLogo}
-              alt="Inner Wake"
-              className="h-44 w-44 object-contain"
+            <motion.div
+              className="flex flex-col items-center gap-3"
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            />
+            >
+              <img
+                src={orbLogoAsset.url}
+                alt="Inner Wake"
+                className="h-44 w-44 object-contain"
+              />
+              <h1 className="font-heading text-3xl font-light tracking-tight text-foreground/90">
+                Inner Wake
+              </h1>
+            </motion.div>
 
             <div className="space-y-3 -mt-2">
               <p className="font-heading text-lg text-muted-foreground italic leading-relaxed">
@@ -280,7 +287,7 @@ export default function Auth() {
             >
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center">
-                  <img src={brandLogo} alt="" className="h-3 w-3 object-contain" />
+                  <img src={orbLogoAsset.url} alt="" className="h-3 w-3 object-contain" />
                 </div>
                 <p className="text-xs text-primary/60 uppercase tracking-widest">Inner Wake responds…</p>
               </div>
@@ -326,14 +333,21 @@ export default function Auth() {
           >
             {/* Logo */}
             <div className="flex flex-col items-center gap-4 text-center">
-              <motion.img
-                src={brandLogo}
-                alt="Inner Wake"
-                className="h-36 w-36 object-contain"
+              <motion.div
+                className="flex flex-col items-center gap-2"
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              />
+              >
+                <img
+                  src={orbLogoAsset.url}
+                  alt="Inner Wake"
+                  className="h-36 w-36 object-contain"
+                />
+                <h1 className="font-heading text-2xl font-light tracking-tight text-foreground/90">
+                  Inner Wake
+                </h1>
+              </motion.div>
               <p className="font-heading text-base font-light italic text-muted-foreground">
                 {forgotMode ? (resetSent ? 'Check your email.' : 'Reset your password.') : mode === 'login' ? 'Welcome back.' : 'Begin your practice.'}
               </p>
