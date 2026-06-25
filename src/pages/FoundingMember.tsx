@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useFounderSlots } from '@/hooks/useFounderSlots';
 import { toast } from 'sonner';
-import innerWakeIcon from '@/assets/inner-wake-logo.svg';
+import innerWakeIcon from '@/assets/inner-wake-orb-logo.png';
 
 const FOCUS_OPTIONS = ['Self', 'Money', 'Energy', 'Relationships', 'Health'] as const;
 

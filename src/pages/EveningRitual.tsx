@@ -12,12 +12,9 @@ const today = () => new Date().toISOString().slice(0, 10);
 const STEPS = ['exhale', 'reflect', 'close'] as const;
 type Step = typeof STEPS[number];
 
-const CLOSING_LINES = [
-  "The day is done. You don't have to carry tomorrow.",
-  "What you couldn't finish today will be there. Let it rest.",
-  "You moved through. That's enough.",
-  "The current you returned to is still here. It will hold you while you sleep.",
-];
+// Evening practice mirrors the book's three movements: Review → Thank → Release.
+// Closing line "From the inside out" is intentional — keep exact.
+const CLOSING_LINE = 'Tomorrow you will begin again. From the inside out.';
 
 export default function EveningRitual() {
   const navigate = useNavigate();
@@ -40,7 +37,7 @@ export default function EveningRitual() {
     return () => clearTimeout(t);
   }, [step, breathSeconds]);
 
-  const closingLine = CLOSING_LINES[new Date().getDate() % CLOSING_LINES.length];
+  const closingLine = CLOSING_LINE;
 
   const next = () => {
     const i = STEPS.indexOf(step);
@@ -100,10 +97,12 @@ export default function EveningRitual() {
               className="flex flex-col items-center text-center space-y-6 pt-6"
             >
               <BreathingOrb size={220} hue={265} />
-              <div className="space-y-2">
-                <p className="font-heading text-2xl text-foreground">Exhale the day.</p>
-                <p className="text-sm text-muted-foreground italic font-heading max-w-xs">
-                  A longer exhale than your inhale. Let the orb pull you down.
+              <div className="space-y-2 max-w-sm">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-soul-violet/80">Step 1 · Review</p>
+                <p className="font-heading text-2xl text-foreground">Where were you today?</p>
+                <p className="text-sm text-muted-foreground italic font-heading">
+                  Not a performance review — just an honest look. Where were you on the ground, even briefly?
+                  Where did you drift? Where did you return?
                 </p>
                 <p className="text-[11px] text-muted-foreground/50 pt-2">
                   {breathSeconds > 0 ? `${breathSeconds}s` : 'Ready when you are.'}
@@ -127,10 +126,12 @@ export default function EveningRitual() {
               exit={{ opacity: 0, y: -12 }}
               className="space-y-5 pt-4"
             >
-              <div className="text-center space-y-2">
-                <p className="font-heading text-xl text-foreground">What softened today?</p>
-                <p className="text-xs text-muted-foreground italic font-heading max-w-xs mx-auto">
-                  Not what you fixed. Not what you got done. What loosened — even a little.
+              <div className="text-center space-y-2 max-w-sm mx-auto">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-soul-violet/80">Step 2 · Thank</p>
+                <p className="font-heading text-xl text-foreground">Name one thing.</p>
+                <p className="text-xs text-muted-foreground italic font-heading">
+                  Not a list — one specific moment from today that was evidence of a goodness you didn't manufacture.
+                  Receive it. Let it settle.
                 </p>
               </div>
               <textarea
@@ -170,12 +171,18 @@ export default function EveningRitual() {
                 <Moon size={22} className="text-soul-violet/80" />
               </motion.div>
               <div className="space-y-3 max-w-sm mx-auto">
-                <blockquote className="font-heading italic text-lg text-foreground/85 leading-relaxed">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-soul-violet/80">Step 3 · Release</p>
+                <p className="font-heading text-2xl text-foreground">Lay it down.</p>
+                <p className="text-sm text-muted-foreground leading-relaxed italic font-heading">
+                  Not by pretending today was more than it was. Not by carrying its weight into sleep.
+                  Simply by choosing to set it down. Tomorrow will have its own ground. Tonight, there is only rest.
+                </p>
+                <blockquote className="font-heading italic text-base text-foreground/85 leading-relaxed border-l-2 border-soul-violet/30 pl-4 text-left">
                   "{closingLine}"
                 </blockquote>
                 {softened.trim() && (
-                  <p className="text-xs text-muted-foreground/70 leading-relaxed pt-2">
-                    What softened: <span className="text-foreground/70">{softened.trim()}</span>
+                  <p className="text-xs text-muted-foreground/70 leading-relaxed pt-1">
+                    Today you named: <span className="text-foreground/70">{softened.trim()}</span>
                   </p>
                 )}
               </div>

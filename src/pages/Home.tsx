@@ -10,7 +10,7 @@ import TodayFlowCard from '@/components/TodayFlowCard';
 import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
 import StateSoundscape from '@/components/StateSoundscape';
-import brandLogo from '@/assets/inner-wake-logo.svg';
+import brandLogo from '@/assets/inner-wake-orb-logo.png';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/hooks/useSubscription';
 import { DOMAINS, type DomainKey } from '@/lib/domains';

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import brandLogo from '@/assets/inner-wake-logo.svg';
+import brandLogo from '@/assets/inner-wake-orb-logo.png';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');

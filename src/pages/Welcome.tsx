@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
 import NewsletterForm from '@/components/NewsletterForm';
-import innerWakeIcon from '@/assets/inner-wake-logo.svg';
+import innerWakeIcon from '@/assets/inner-wake-orb-logo.png';
 
 const SEEN_KEY = 'iw_cinematic_seen_v1';
 

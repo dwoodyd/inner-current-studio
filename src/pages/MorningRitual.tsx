@@ -103,10 +103,11 @@ export default function MorningRitual() {
               className="flex flex-col items-center text-center space-y-6 pt-6"
             >
               <BreathingOrb size={220} />
-              <div className="space-y-2">
-                <p className="font-heading text-2xl text-foreground">Inhale the day.</p>
-                <p className="text-sm text-muted-foreground italic font-heading max-w-xs">
-                  Four slow breaths. Let the orb lead.
+              <div className="space-y-2 max-w-sm">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-primary/70">Step 1 · Breath</p>
+                <p className="font-heading text-2xl text-foreground">Before anything.</p>
+                <p className="text-sm text-muted-foreground italic font-heading">
+                  Three slow breaths. Exhale longer than you inhale. Let the body soften before the day begins.
                 </p>
                 <p className="text-[11px] text-muted-foreground/50 pt-2">
                   {breathSeconds > 0 ? `${breathSeconds}s` : 'Ready when you are.'}
@@ -130,10 +131,12 @@ export default function MorningRitual() {
               exit={{ opacity: 0, y: -12 }}
               className="space-y-5 pt-4"
             >
-              <div className="text-center space-y-2">
-                <p className="font-heading text-xl text-foreground">One line for today.</p>
-                <p className="text-xs text-muted-foreground italic font-heading max-w-xs mx-auto">
-                  What do you want to carry with you? Keep it small. One sentence.
+              <div className="text-center space-y-2 max-w-sm mx-auto">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-primary/70">Step 2 · Remember</p>
+                <p className="font-heading text-xl text-foreground">What is actually true beneath today?</p>
+                <p className="text-xs text-muted-foreground italic font-heading">
+                  Let the answer come from somewhere deeper than this morning's worry or plan. Something like:
+                  <span className="text-foreground/70"> I am held. I begin from this ground.</span>
                 </p>
               </div>
               <textarea
@@ -164,10 +167,11 @@ export default function MorningRitual() {
               exit={{ opacity: 0, y: -12 }}
               className="space-y-5 pt-4"
             >
-              <div className="text-center space-y-2">
-                <p className="font-heading text-xl text-foreground">How does the day land?</p>
-                <p className="text-xs text-muted-foreground italic font-heading max-w-xs mx-auto">
-                  Don't analyze. Just notice.
+              <div className="text-center space-y-2 max-w-sm mx-auto">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-primary/70">Step 3 · Ask</p>
+                <p className="font-heading text-xl text-foreground">What state do I want to enter this day from?</p>
+                <p className="text-xs text-muted-foreground italic font-heading">
+                  Choose your current. Name your intention. Carry the ground, not just the words, into your morning.
                 </p>
               </div>
               <QuickCheckIn selected={picked} onSelect={setPicked} />
@@ -200,9 +204,9 @@ export default function MorningRitual() {
                 <Sun size={22} className="text-primary/70" />
               </motion.div>
               <div className="space-y-3 max-w-sm mx-auto">
-                <p className="font-heading text-2xl text-foreground">You're here.</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  The day will move. You don't have to grip it. Return to this line if you forget:
+                <p className="font-heading text-2xl text-foreground">The ground is set.</p>
+                <p className="text-sm text-muted-foreground leading-relaxed font-heading italic">
+                  Everything else follows from here.
                 </p>
                 {intention.trim() && (
                   <blockquote className="font-heading italic text-base text-foreground/80 border-l-2 border-primary/30 pl-4 text-left">

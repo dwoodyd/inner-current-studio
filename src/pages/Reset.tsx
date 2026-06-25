@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { BarChart3, RefreshCw, Timer, Shield, BrainCircuit, Wind, ChevronRight } from 'lucide-react';
 
 const tools = [
-  { icon: BarChart3, title: 'State Ladder', description: 'Identify your current emotional state and the next reachable one.', to: '/reset/ladder', color: 'text-soul-violet' },
-  { icon: RefreshCw, title: 'Contrast Reset', description: 'Fast, frictionless emotional redirection.', to: '/reset/contrast', color: 'text-soul-blue' },
-  { icon: Shield, title: 'Resistance Release', description: 'Identify, soften, and clear resistance without forcing positivity.', to: '/reset/resistance', color: 'text-soul-gold' },
-  { icon: BrainCircuit, title: 'Quiet the Mind', description: 'Tools for mental noise, thought loops, and inner overactivity.', to: '/reset/quiet', color: 'text-soul-gold' },
-  { icon: Timer, title: 'Stillness Timer', description: 'A simple breathing and stillness ritual.', to: '/reset/stillness', color: 'text-soul-warm' },
-  { icon: Wind, title: 'Breathwork', description: 'Guided breathing patterns with optional ambient soundscapes.', to: '/reset/breathwork', color: 'text-primary' },
+  { icon: BarChart3, title: 'State Ladder', description: 'Identify your current emotional state and the next reachable one.', subtext: 'The question is not: how do I feel the right thing? It\'s: what\'s the next reachable state from here?', to: '/reset/ladder', color: 'text-soul-violet' },
+  { icon: RefreshCw, title: 'Contrast Reset', description: 'Fast, frictionless emotional redirection.', subtext: 'Interrupt the drift before it becomes a departure.', to: '/reset/contrast', color: 'text-soul-blue' },
+  { icon: Shield, title: 'Resistance Release', description: 'Identify, soften, and clear resistance without forcing positivity.', subtext: 'You cannot change a ground you won\'t acknowledge. Start here.', to: '/reset/resistance', color: 'text-soul-gold' },
+  { icon: BrainCircuit, title: 'Quiet the Mind', description: 'Tools for mental noise, thought loops, and inner overactivity.', subtext: '', to: '/reset/quiet', color: 'text-soul-gold' },
+  { icon: Timer, title: 'Stillness Timer', description: 'A simple breathing and stillness ritual.', subtext: 'Thirty seconds of genuine interior quiet creates a space between stimulus and response.', to: '/reset/stillness', color: 'text-soul-warm' },
+  { icon: Wind, title: 'Breathwork', description: 'Guided breathing patterns with optional ambient soundscapes.', subtext: 'Breath connects the voluntary and involuntary. One deliberate exhale changes the inner posture.', to: '/reset/breathwork', color: 'text-primary' },
 ];
 
 export default function Reset() {
@@ -25,11 +25,11 @@ export default function Reset() {
           <RefreshCw size={20} className="text-soul-blue" strokeWidth={1.5} />
         </motion.div>
         <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">Reset</h1>
-        <p className="text-sm text-muted-foreground max-w-[260px] mx-auto">Locate, interrupt, soften, and clear resistance.</p>
+        <p className="text-sm text-muted-foreground max-w-[280px] mx-auto">The tools for entering the state — before you speak, act, or ask.</p>
       </div>
 
       <div className="space-y-3">
-        {tools.map(({ icon: Icon, title, description, to, color }, i) => (
+        {tools.map(({ icon: Icon, title, description, subtext, to, color }, i) => (
           <motion.button
             key={title}
             initial={{ opacity: 0, x: -10 }}
@@ -44,6 +44,9 @@ export default function Reset() {
             <div className="flex-1 space-y-1">
               <h3 className="font-heading text-base font-medium text-foreground tracking-tight">{title}</h3>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{description}</p>
+              {subtext && (
+                <p className="text-[11px] text-muted-foreground/55 italic font-heading leading-snug">{subtext}</p>
+              )}
             </div>
             <ChevronRight size={16} className="text-muted-foreground/30 shrink-0 group-hover:text-muted-foreground/60 transition-colors duration-150" />
           </motion.button>

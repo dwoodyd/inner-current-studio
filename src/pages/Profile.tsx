@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Sigil } from '@/components/onboarding/Sigil';
 import PracticeConstellation from '@/components/PracticeConstellation';
 import { toast } from 'sonner';
-import { BarChart3, Layers, Sparkles, Activity, Archive, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart, Lock } from 'lucide-react';
+import { BarChart3, Layers, Sparkles, Activity, Archive, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart, Lock, BookOpen, ExternalLink } from 'lucide-react';
 import warmHandsPhoto from '@/assets/photo-warm-hands.jpg';
 import {
   AlertDialog,
@@ -164,6 +164,53 @@ export default function Profile() {
         <motion.div variants={fadeUp}>
           <PracticeConstellation />
         </motion.div>
+
+        {/* Going Deeper — the philosophy behind the practice. Hidden / softened for BTW readers. */}
+        {(() => {
+          const isBtwReader = (() => { try { return localStorage.getItem('iw_btw_answer_v1') === 'yes'; } catch { return false; } })();
+          return (
+            <motion.section variants={fadeUp} className="space-y-2">
+              <h2 className="px-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/60">Going Deeper</h2>
+              <a
+                href="https://innerwake.live"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block soul-glass overflow-hidden rounded-2xl p-5 transition-all duration-200 hover:bg-muted/10 active:scale-[0.99]"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary/10">
+                    <BookOpen size={18} className="text-primary" strokeWidth={1.5} />
+                  </div>
+                  <div className="space-y-2 min-w-0">
+                    {isBtwReader ? (
+                      <>
+                        <h3 className="font-heading text-base text-foreground">You already know the book.</h3>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Keep returning. The daily practice is the territory you already entered.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="font-heading text-base text-foreground">The philosophy behind the practice.</h3>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          The ideas in this app have a longer home. <em className="italic">Before the Words</em> by DeWayne Woods is the book about the territory Inner Wake lives in — the place that exists before language, before the words you choose.
+                        </p>
+                        <p className="text-xs text-muted-foreground/80 leading-relaxed italic font-heading">
+                          If the practice is working and you want to understand why, the book is the why.
+                        </p>
+                        <span className="inline-flex items-center gap-1 pt-1 text-[11px] text-primary">
+                          Learn more about the book <ExternalLink size={11} />
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </a>
+            </motion.section>
+          );
+        })()}
+
+
 
 
         {/* Sections */}
