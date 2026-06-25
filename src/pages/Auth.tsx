@@ -6,7 +6,7 @@ import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
 import { ArrowRight, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
-import brandLogo from '@/assets/inner-wake-orb-logo.png';
+import brandLogo from '@/assets/inner-wake-orb-logo.svg';
 
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
