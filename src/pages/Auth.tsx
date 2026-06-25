@@ -332,9 +332,9 @@ export default function Auth() {
             className="relative w-full max-w-sm space-y-7"
           >
             {/* Logo */}
-            <div className="flex flex-col items-center gap-4 text-center">
+            <div className="flex flex-col items-center gap-5 text-center">
               <motion.div
-                className="flex flex-col items-center gap-2"
+                className="flex flex-col items-center gap-3"
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -342,7 +342,7 @@ export default function Auth() {
                 <img
                   src={orbLogoAsset.url}
                   alt="Inner Wake"
-                  className="h-36 w-36 object-contain"
+                  className="h-44 w-44 sm:h-52 sm:w-52 md:h-60 md:w-60 object-contain drop-shadow-2xl"
                 />
                 <h1 className="font-heading text-2xl font-light tracking-tight text-foreground/90">
                   Inner Wake
