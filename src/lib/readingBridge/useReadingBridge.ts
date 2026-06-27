@@ -89,6 +89,7 @@ export function useReadingBridge() {
     const next = bumpProgress(id);
     setProgress(next);
     trackBridgeEvent('bridge_chapter_selected', { chapter: id, visits: next.find(e => e.chapter === id)?.visits ?? 1 });
+    pushBridgeState({ chapter: id, opted_out: false, prompt_dismissed: true, progress: next });
   }, []);
 
   const optOut = useCallback(() => {
@@ -97,6 +98,7 @@ export function useReadingBridge() {
     write(PROMPT_DISMISSED_KEY, '1');
     setPromptDismissed(true);
     trackBridgeEvent('bridge_opted_out');
+    pushBridgeState({ chapter: null, opted_out: true, prompt_dismissed: true, progress: readProgress() });
   }, []);
 
   const dismissPrompt = useCallback(() => {
