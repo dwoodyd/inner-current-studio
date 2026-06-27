@@ -12,6 +12,8 @@ import DailyInsight from '@/components/DailyInsight';
 import StateSoundscape from '@/components/StateSoundscape';
 import brandLogo from '@/assets/inner-wake-orb-logo.png';
 import BTWOriginGate from '@/components/BTWOriginGate';
+import ReadingBridgePrompt from '@/components/ReadingBridgePrompt';
+import ReadingBridgeNote from '@/components/ReadingBridgeNote';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/hooks/useSubscription';
 import { DOMAINS, type DomainKey } from '@/lib/domains';

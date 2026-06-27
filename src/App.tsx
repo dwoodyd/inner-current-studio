@@ -66,6 +66,7 @@ const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Beta = lazy(() => import("@/pages/Beta"));
+const ReadingBridge = lazy(() => import("@/pages/ReadingBridge"));
 const FoundingMember = lazy(() => import("@/pages/FoundingMember"));
 const OwnerAccess = lazy(() => import("@/pages/OwnerAccess"));
 const MoneyCurrent = lazy(() => import("@/pages/MoneyCurrent"));
@@ -306,6 +307,7 @@ function AppRoutes() {
         <Route path="/profile/patterns" element={<PatternMirror />} />
         {/* Notifications removed for V1. Page component + push.ts preserved in repo for V1.1 revival on the versioned SW. */}
         <Route path="/profile/subscription" element={<Subscription />} />
+        <Route path="/reading-bridge" element={<ReadingBridge />} />
         <Route path="/founding-member" element={<FoundingMember />} />
         <Route path="/profile/resonance" element={premium('the Resonance Library', <ResonanceLibrary />)} />
         <Route path="/about" element={<About />} />
