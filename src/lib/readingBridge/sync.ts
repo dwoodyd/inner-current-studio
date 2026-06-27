@@ -29,17 +29,16 @@ export async function pushBridgeState(state: ReadingBridgeRemoteState): Promise<
   const userId = await getUserId();
   if (!userId) return;
   try {
-    await supabase.from('reading_bridge_state').upsert(
-      {
-        user_id: userId,
-        chapter: state.chapter,
-        opted_out: state.opted_out,
-        prompt_dismissed: state.prompt_dismissed,
-        progress: state.progress as unknown as object,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id' },
-    );
+    const row = {
+      user_id: userId,
+      chapter: state.chapter,
+      opted_out: state.opted_out,
+      prompt_dismissed: state.prompt_dismissed,
+      progress: state.progress,
+      updated_at: new Date().toISOString(),
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await supabase.from('reading_bridge_state').upsert(row as any, { onConflict: 'user_id' });
   } catch {
     /* swallow — local copy is canonical */
   }
@@ -49,12 +48,14 @@ export async function pushBridgeEvent(record: ReadingBridgeEventRecord): Promise
   const userId = await getUserId();
   if (!userId) return;
   try {
-    await supabase.from('reading_bridge_events').insert({
+    const row = {
       user_id: userId,
       event: record.event,
-      meta: (record.meta ?? null) as unknown as object | null,
+      meta: record.meta ?? null,
       created_at: new Date(record.ts).toISOString(),
-    });
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await supabase.from('reading_bridge_events').insert(row as any);
   } catch {
     /* swallow */
   }
@@ -92,7 +93,7 @@ export async function fetchAllBridgeStates(): Promise<Array<{
     .select('user_id, chapter, opted_out, prompt_dismissed, progress, updated_at')
     .order('updated_at', { ascending: false });
   if (error) throw error;
-  return (data ?? []) as Array<{
+  return ((data ?? []) as unknown) as Array<{
     user_id: string;
     chapter: ChapterId | null;
     opted_out: boolean;
