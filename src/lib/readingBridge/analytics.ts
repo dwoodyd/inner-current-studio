@@ -61,6 +61,11 @@ export function trackBridgeEvent(
   }
   list.push(record);
   safeWrite(list);
+  // Opportunistic mirror to the backend when signed in. Imported lazily to
+  // keep this module free of supabase coupling in non-browser contexts (tests).
+  if (typeof window !== 'undefined') {
+    import('./sync').then((m) => m.pushBridgeEvent(record)).catch(() => { /* ignore */ });
+  }
 }
 
 export function readBridgeEvents(): ReadingBridgeEventRecord[] {

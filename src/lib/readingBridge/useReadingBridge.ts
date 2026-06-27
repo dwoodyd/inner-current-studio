@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ChapterId } from './config';
 import { trackBridgeEvent } from './analytics';
+import { pushBridgeState } from './sync';
 
 const CHAPTER_KEY = 'iw_rb_chapter_v1';        // selected chapter id, or 'none' if user opted out
 const PROMPT_DISMISSED_KEY = 'iw_rb_prompt_v1'; // '1' = the Home prompt has been handled
