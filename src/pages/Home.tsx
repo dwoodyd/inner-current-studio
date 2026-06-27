@@ -351,6 +351,11 @@ export default function Home() {
           </button>
         </motion.div>
 
+        {/* Reading Bridge prompt — only shows after 3 sessions, until handled */}
+        <motion.div variants={fadeUp}>
+          <ReadingBridgePrompt />
+        </motion.div>
+
         {/* Daily Insight */}
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl p-4 soul-ambient-violet sm:p-5">
           <DailyInsight />
