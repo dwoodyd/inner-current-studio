@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ChapterId } from './config';
 import { trackBridgeEvent } from './analytics';
+import { pushBridgeState } from './sync';
 
 const CHAPTER_KEY = 'iw_rb_chapter_v1';        // selected chapter id, or 'none' if user opted out
 const PROMPT_DISMISSED_KEY = 'iw_rb_prompt_v1'; // '1' = the Home prompt has been handled
@@ -88,6 +89,7 @@ export function useReadingBridge() {
     const next = bumpProgress(id);
     setProgress(next);
     trackBridgeEvent('bridge_chapter_selected', { chapter: id, visits: next.find(e => e.chapter === id)?.visits ?? 1 });
+    pushBridgeState({ chapter: id, opted_out: false, prompt_dismissed: true, progress: next });
   }, []);
 
   const optOut = useCallback(() => {
@@ -96,6 +98,7 @@ export function useReadingBridge() {
     write(PROMPT_DISMISSED_KEY, '1');
     setPromptDismissed(true);
     trackBridgeEvent('bridge_opted_out');
+    pushBridgeState({ chapter: null, opted_out: true, prompt_dismissed: true, progress: readProgress() });
   }, []);
 
   const dismissPrompt = useCallback(() => {

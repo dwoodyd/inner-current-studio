@@ -14,6 +14,7 @@ import brandLogo from '@/assets/inner-wake-orb-logo.png';
 import BTWOriginGate from '@/components/BTWOriginGate';
 import ReadingBridgePrompt from '@/components/ReadingBridgePrompt';
 import ReadingBridgeNote from '@/components/ReadingBridgeNote';
+import ReadingBridgeReminder from '@/components/ReadingBridgeReminder';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/hooks/useSubscription';
 import { DOMAINS, type DomainKey } from '@/lib/domains';
@@ -355,6 +356,12 @@ export default function Home() {
         <motion.div variants={fadeUp}>
           <ReadingBridgePrompt />
         </motion.div>
+
+        {/* Reading Bridge re-engagement reminder — only after a dormant chapter */}
+        <motion.div variants={fadeUp}>
+          <ReadingBridgeReminder />
+        </motion.div>
+
 
         {/* Daily Insight */}
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl p-4 soul-ambient-violet sm:p-5">
