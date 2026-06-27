@@ -59,6 +59,7 @@ const Auth = lazy(() => import("@/pages/Auth"));
 const About = lazy(() => import("@/pages/About"));
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
 const FoundingApplications = lazy(() => import("@/pages/FoundingApplications"));
+const AdminReadingBridge = lazy(() => import("@/pages/AdminReadingBridge"));
 const Privacy = lazy(() => import("@/pages/Privacy"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Refund = lazy(() => import("@/pages/Refund"));
@@ -317,6 +318,7 @@ function AppRoutes() {
         <Route path="/refunds" element={<Navigate to="/refund" replace />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/founding" element={<FoundingApplications />} />
+        <Route path="/admin/reading-bridge" element={<AdminReadingBridge />} />
         <Route path="/money" element={<Navigate to="/currents/money" replace />} />
         <Route path="/money/hub" element={current('money', <MoneyCurrent />)} />
         <Route path="/money/state" element={current('money', <MoneyState />)} />
