@@ -12,6 +12,8 @@ import DailyInsight from '@/components/DailyInsight';
 import StateSoundscape from '@/components/StateSoundscape';
 import brandLogo from '@/assets/inner-wake-orb-logo.png';
 import BTWOriginGate from '@/components/BTWOriginGate';
+import ReadingBridgePrompt from '@/components/ReadingBridgePrompt';
+import ReadingBridgeNote from '@/components/ReadingBridgeNote';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/hooks/useSubscription';
 import { DOMAINS, type DomainKey } from '@/lib/domains';
@@ -234,6 +236,13 @@ export default function Home() {
           <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
         </motion.div>
 
+        {/* Reading Bridge — quiet acknowledgment when chapter ↔ state lines up */}
+        {quickState && (
+          <motion.div variants={fadeUp}>
+            <ReadingBridgeNote state={quickState} />
+          </motion.div>
+        )}
+
         {/* Recommended now — surfaced immediately after check-in */}
         <motion.div variants={fadeUp}>
           <button
@@ -340,6 +349,11 @@ export default function Home() {
               <ChevronRight size={18} className="text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors" />
             </div>
           </button>
+        </motion.div>
+
+        {/* Reading Bridge prompt — only shows after 3 sessions, until handled */}
+        <motion.div variants={fadeUp}>
+          <ReadingBridgePrompt />
         </motion.div>
 
         {/* Daily Insight */}

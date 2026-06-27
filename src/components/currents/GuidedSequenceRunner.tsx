@@ -12,6 +12,7 @@ import { DOMAINS, type DomainKey } from '@/lib/domains';
 import { CURRENT_SPECS, findSequence, findBelief, type SequenceStep } from '@/lib/currents/spec';
 import { useCurrentProgress } from '@/lib/currents/progress';
 import CurrentSigil from '@/components/currents/CurrentSigil';
+import ReadingBridgeNote from '@/components/ReadingBridgeNote';
 
 export default function GuidedSequenceRunner() {
   const { slug, sequenceId } = useParams<{ slug: DomainKey; sequenceId: string }>();
@@ -76,6 +77,9 @@ export default function GuidedSequenceRunner() {
               <p className="text-sm text-muted-foreground max-w-[300px] mx-auto leading-relaxed">
                 Your {spec.shortName} sigil holds a little more of you now.
               </p>
+            </div>
+            <div className="mx-auto max-w-[340px]">
+              <ReadingBridgeNote current={slug as DomainKey} dismissable />
             </div>
             <div className="flex gap-2 justify-center pt-2">
               <button onClick={() => navigate(`/currents/${slug}`)} className="px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm">Return to {spec.shortName}</button>
