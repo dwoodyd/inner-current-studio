@@ -50,10 +50,14 @@ export const CHAPTER_STATE_LINES: Record<ChapterId, StateLines> = {
   intro: {
     flat: "The Introduction names what you're in right now. The layer before the words is where the work actually lives.",
     restless: "The book you're reading starts here — in the exhaustion of doing everything right and still not landing. You're in the right place.",
+    tight: "The Introduction is about the posture beneath the words. Tight is one shape of that posture — and the layer the book is pointing to.",
+    any: "The Introduction is about the layer before the words. The state you just named is already at that layer.",
   },
   ch1: {
     tight: "Chapter 1 is about what you're carrying before you speak. Tight is that posture. The practice today works at that level.",
     restless: "You're reading about the orientation underneath the words. Restless is what it feels like when that orientation hasn't settled yet.",
+    flat: "Chapter 1 is about the ground beneath the words — the place flat lives. The practice today touches that ground.",
+    any: "Chapter 1 is about what you're carrying before you speak. Whatever you just named, that's the layer.",
   },
   ch2: {
     any: "Chapter 2 is about the state you just named. You're practicing what the book is teaching in real time.",
@@ -61,31 +65,48 @@ export const CHAPTER_STATE_LINES: Record<ChapterId, StateLines> = {
   ch3: {
     tight: "You're reading the chapter about praying from lack. Tight is that posture. Today's practice is about what it feels like to approach from somewhere else.",
     restless: "Chapter 3 names the restlessness of striving without ground. The practice today gives you ground.",
+    flat: "Chapter 3 is about what asking from lack feels like. Flat is one shape of it. The practice points back toward the ground.",
+    any: "Chapter 3 is about the posture you're asking from — and the state you just named is part of what shapes it.",
   },
   ch4: {
     flat: "Chapter 4 is about what gratitude feels like when it comes from flat. The book doesn't skip past that — it starts there.",
     open: "You're reading about the gratitude posture. Open is what it produces when it's real. Stay here.",
+    flowing: "Chapter 4's gratitude is what flowing actually sounds like from the inside. Stay in it.",
+    tight: "Chapter 4 is about gratitude that comes from somewhere other than tight. The practice today is one step in that direction.",
+    restless: "Chapter 4 is about thanking from before the answer arrives. Restless is what makes that hard — and exactly what the practice meets.",
   },
   ch5: {
     tight: "Chapter 5 is about the words that come out of tight. The practice today is about the ground those words come from.",
     flowing: "You're reading about words from settled ground. Flowing is what that sounds like. Stay in it.",
+    restless: "Chapter 5 is about words with weight. Restless tends to make them lighter. The practice slows you back to the ground.",
+    flat: "Chapter 5 names the way words go hollow when they come from flat. The practice today refills the ground beneath them.",
+    open: "Chapter 5 is about words that carry weight — open is the posture that lets them.",
   },
   ch6: {
     flat: "Chapter 6 is about what happens when flat is the pattern, not just today's feeling. The practice is one return in the right direction.",
     restless: "Chapter 6 names restless as a formation pattern — not a passing feeling. The return is the work.",
+    tight: "Chapter 6 is about how tight, repeated, becomes formation. The practice today is the small move that interrupts it.",
+    any: "Chapter 6 is about the formation line — how the state you keep occupying becomes the shape of you. The practice is one return.",
   },
   ch7: {
     tight: "Chapter 7 is about the move out of tight — living as someone who is already heard. The practice today is a step in that direction.",
     open: "You're reading about what Open becomes when it's fully inhabited. This is the chapter for where you are.",
     flowing: "Chapter 7 describes what you're in right now — living as heard. Stay in it and let the practice deepen it.",
+    restless: "Chapter 7 is about the settled posture restless is reaching for. The practice today is the closest shape of it.",
+    flat: "Chapter 7 describes the ground beneath flat — already heard, already held. The practice helps you stand on it.",
   },
   ch8: {
     restless: "Chapter 8 is about exactly where you are — drifted, restless, not quite back yet. The return is the practice. This is it.",
     flat: "You're reading the return chapter. Flat after drift is the normal pattern. The practice today is one movement back toward the ground.",
+    tight: "Chapter 8 is about returning to the ground — and tight is what holds you off it. One small return is enough.",
+    any: "Chapter 8 is about the return. Whatever state you just named, the practice today is one step back toward the ground.",
   },
   ch9: {
     open: "You're in the chapter about closing the gap. Open is the orientation that makes it possible. Stay here.",
     flowing: "Chapter 9 describes what you're experiencing right now — the gap narrowing. Let the practice hold it.",
+    tight: "Chapter 9 is about closing the gap between what you confess and what you live from. Tight is what widens it. The practice narrows it.",
+    flat: "Chapter 9 names the distance between word and ground. Flat is one shape of it — and the practice is the small narrowing.",
+    restless: "Chapter 9 is about the gap that restless lives inside. The practice today is one step toward closing it.",
   },
   bonus: {
     any: "You're in the daily practice section of the book. What you're doing here is the same practice from a different angle. They belong together.",
