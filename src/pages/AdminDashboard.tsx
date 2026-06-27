@@ -17,6 +17,7 @@ import {
   Trash2,
   Loader2,
   RefreshCw,
+  BookOpen,
 } from 'lucide-react';
 
 interface AdminUser {
