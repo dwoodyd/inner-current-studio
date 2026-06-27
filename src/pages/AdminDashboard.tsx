@@ -161,6 +161,20 @@ export default function AdminDashboard() {
           <span className="text-primary/60">→</span>
         </button>
 
+        <button
+          onClick={() => navigate('/admin/reading-bridge')}
+          className="soul-glass w-full rounded-2xl px-4 py-3 flex items-center gap-3 hover:bg-card/60 transition-colors text-left"
+        >
+          <BookOpen size={18} className="text-primary" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">Reading Bridge Analytics</p>
+            <p className="text-[11px] text-muted-foreground">Track open / completion / dismissal across the cohort.</p>
+          </div>
+          <span className="text-primary/60">→</span>
+        </button>
+
+
+
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           {[
