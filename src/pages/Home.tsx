@@ -236,6 +236,13 @@ export default function Home() {
           <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
         </motion.div>
 
+        {/* Reading Bridge — quiet acknowledgment when chapter ↔ state lines up */}
+        {quickState && (
+          <motion.div variants={fadeUp}>
+            <ReadingBridgeNote state={quickState} />
+          </motion.div>
+        )}
+
         {/* Recommended now — surfaced immediately after check-in */}
         <motion.div variants={fadeUp}>
           <button
