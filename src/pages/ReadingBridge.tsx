@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Check } from 'lucide-react';
+import { ArrowLeft, BookOpen, Check, Download, FileJson } from 'lucide-react';
 import { toast } from 'sonner';
 import { CHAPTERS, type ChapterId } from '@/lib/readingBridge/config';
 import { useReadingBridge } from '@/lib/readingBridge/useReadingBridge';
 import { trackBridgeEvent } from '@/lib/readingBridge/analytics';
+import { exportBridgeAsJSON, exportBridgeAsCSV } from '@/lib/readingBridge/export';
 
 export default function ReadingBridge() {
   const navigate = useNavigate();
@@ -119,7 +120,23 @@ export default function ReadingBridge() {
           })}
         </div>
 
-        <div className="pt-2">
+        <div className="pt-2 space-y-2">
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => { exportBridgeAsJSON(); toast('Export downloaded', { description: 'Your Reading Bridge journey as JSON.' }); }}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-xl border border-border/30 bg-card/30 px-4 text-xs font-medium text-muted-foreground hover:bg-muted/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              <FileJson size={13} aria-hidden="true" /> Export JSON
+            </button>
+            <button
+              type="button"
+              onClick={() => { exportBridgeAsCSV(); toast('Export downloaded', { description: 'Progress + events as CSV.' }); }}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-xl border border-border/30 bg-card/30 px-4 text-xs font-medium text-muted-foreground hover:bg-muted/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              <Download size={13} aria-hidden="true" /> Export CSV
+            </button>
+          </div>
           <button
             type="button"
             onClick={handleOptOut}
@@ -128,6 +145,7 @@ export default function ReadingBridge() {
             Not reading it — don't ask again
           </button>
         </div>
+
 
         <p className="px-2 text-center text-[11px] text-muted-foreground/55 italic font-heading">
           You can change this anytime from Profile.
