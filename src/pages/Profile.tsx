@@ -74,6 +74,7 @@ export default function Profile() {
         { icon: Heart, label: hasCompanion ? 'Your companion' : 'Set up your companion', description: hasCompanion ? 'Sigil & first affirmation' : 'A 2-minute personal ritual', to: '/onboarding', accent: !hasCompanion },
         { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
         { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals', proLock: proGated ? 'Pro · unlimited' : null },
+        { icon: BookOpen, label: 'Reading Bridge', description: 'Pair the app with the book', to: '/reading-bridge' },
       ],
     },
     {
