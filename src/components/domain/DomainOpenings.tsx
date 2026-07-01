@@ -30,7 +30,7 @@ export default function DomainOpenings({ domain }: { domain: DomainConfig }) {
     if (!user) return;
     (async () => {
       const { data } = await supabase.from('domain_openings')
-        .select('*').eq('user_id', user.id).eq('domain', domain.key).order('position');
+        .select('id, domain, desire, why_it_matters, desired_feeling, current_resistance, next_aligned_step, position').eq('user_id', user.id).eq('domain', domain.key).order('position');
       if (data) setItems(data as any);
     })();
   }, [user, domain.key]);

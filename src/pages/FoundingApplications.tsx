@@ -37,7 +37,7 @@ export default function FoundingApplications() {
     try {
       let query = supabase
         .from('founding_member_applications')
-        .select('*')
+        .select('id, user_id, name, email, current_focus, practice_context, why, status, notes, reviewed_at, reviewed_by, created_at, updated_at')
         .order('created_at', { ascending: false });
       if (filter !== 'all') query = query.eq('status', filter);
       const { data, error } = await query;

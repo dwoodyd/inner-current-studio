@@ -95,8 +95,8 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
     if (!user) return;
     const client = supabase as any;
     const [{ data: scriptData }, { data: progressData }] = await Promise.all([
-      client.from('reality_scripts').select('*').eq('user_id', user.id).eq('domain', domain.key).order('created_at', { ascending: false }),
-      client.from('reality_progress').select('*').eq('user_id', user.id).eq('domain', domain.key).maybeSingle(),
+      client.from('reality_scripts').select('id, domain, title, content, prompt, feeling_word, sensory_details, mode, status, revisit_at, created_at, updated_at').eq('user_id', user.id).eq('domain', domain.key).order('created_at', { ascending: false }),
+      client.from('reality_progress').select('id, domain, tier, current_streak, longest_streak, script_count, evidence_count, constellation_progress, last_scripted_at, created_at, updated_at').eq('user_id', user.id).eq('domain', domain.key).maybeSingle(),
     ]);
     setScripts((scriptData ?? []) as ScriptRow[]);
     if (progressData) setProgress(progressData as ProgressRow);
