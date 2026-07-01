@@ -41,7 +41,7 @@ export default function MoneyOpenings() {
     if (!user) return;
     supabase
       .from('money_openings')
-      .select('*')
+      .select('id, desire, why_it_matters, desired_feeling, current_resistance, next_aligned_step, position')
       .eq('user_id', user.id)
       .order('position', { ascending: true })
       .then(({ data }) => {

@@ -82,7 +82,7 @@ export function useCurrentsCloudSync() {
     (async () => {
       const { data, error } = await supabase
         .from('current_progress')
-        .select('*')
+        .select('user_id, slug, practices_completed, beliefs_landed_true, beliefs_landed_alive, sequences_completed, current_streak, longest_streak, last_practice_date, first_visited_at, last_visited_at')
         .eq('user_id', user.id);
       if (cancelled || error) return;
       const remoteBySlug = new Map<string, Row>();

@@ -20,7 +20,7 @@ export default function DomainEvidence({ domain }: { domain: DomainConfig }) {
 
   const load = async () => {
     if (!user) return;
-    const { data } = await supabase.from('domain_evidence').select('*')
+    const { data } = await supabase.from('domain_evidence').select('id, domain, category, entry_text, created_at')
       .eq('user_id', user.id).eq('domain', domain.key).order('created_at', { ascending: false });
     if (data) setEntries(data as any);
   };

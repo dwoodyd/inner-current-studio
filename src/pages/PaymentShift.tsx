@@ -36,7 +36,7 @@ export default function PaymentShift() {
     if (!user) return;
     supabase
       .from('payment_shifts')
-      .select('*')
+      .select('id, payment_name, what_it_supports, what_it_provided, from_steadiness, circulation_feeling, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(20)

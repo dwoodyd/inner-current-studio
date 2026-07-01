@@ -38,7 +38,7 @@ export default function EvidenceOfSupport() {
     if (!user) return;
     supabase
       .from('evidence_of_support')
-      .select('*')
+      .select('id, category, entry_text, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .then(({ data }) => {
