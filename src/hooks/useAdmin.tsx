@@ -10,23 +10,24 @@ const subs = new Set<() => void>();
 function fetchAdmin(userId: string): Promise<boolean> {
   if (cache && cache.userId === userId) return Promise.resolve(cache.isAdmin);
   if (inflight) return inflight;
-  inflight = supabase
-    .from('user_roles')
-    .select('role')
-    .eq('user_id', userId)
-    .eq('role', 'admin')
-    .maybeSingle()
-    .then(({ data }) => {
+  inflight = (async () => {
+    try {
+      const { data } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .maybeSingle();
       const isAdmin = !!data;
       cache = { userId, isAdmin };
-      inflight = null;
       subs.forEach((fn) => fn());
       return isAdmin;
-    })
-    .catch(() => {
-      inflight = null;
+    } catch {
       return false;
-    });
+    } finally {
+      inflight = null;
+    }
+  })();
   return inflight;
 }
 
