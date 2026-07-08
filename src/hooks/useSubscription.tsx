@@ -36,149 +36,202 @@ export interface SubscriptionState {
   priceId: string | null;
 }
 
+// Shared cache — many components read subscription state; collapse to one fetch.
+type CacheKey = string; // `${userId}:${env}:${ownerAccess}`
+let cachedKey: CacheKey | null = null;
+let cachedState: SubscriptionState | null = null;
+let inflight: Promise<SubscriptionState> | null = null;
+const subscribers = new Set<() => void>();
+
+function computeState(
+  sub: any,
+  profile: any,
+  adminRole: any,
+  ownerAccess: boolean,
+): SubscriptionState {
+  const isAdmin = !!adminRole;
+  const isOwner = ownerAccess || isAdmin;
+  const periodStillOpen = !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
+  const active =
+    sub &&
+    (["active", "trialing", "past_due"].includes(sub.status) ||
+      (sub.status === "canceled" && periodStillOpen)) &&
+    periodStillOpen;
+
+  const baseTier = (profile?.subscription_tier as SubscriptionState["tier"]) || "free";
+  const tier: SubscriptionState["tier"] = isOwner ? "lifetime" : baseTier;
+  const hasPaidAccess = isOwner || !!active || tier === "lifetime" || tier === "premium";
+
+  const trialEndsAt = profile?.trial_ends_at || null;
+  const trialActive = !isOwner && !!trialEndsAt && new Date(trialEndsAt) > new Date();
+  const trialDaysRemaining = trialEndsAt
+    ? Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null;
+  const trialType = (profile?.trial_type as "standard" | "beta") || null;
+  const founderEndsAt = profile?.founder_window_ends_at || null;
+  const founderWindowActive = !isOwner && !!founderEndsAt && new Date(founderEndsAt) > new Date();
+  const founderDaysRemaining = founderEndsAt
+    ? Math.max(0, Math.ceil((new Date(founderEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null;
+  const isFoundingMember = isOwner || !!profile?.is_founding_member;
+
+  let detailedTier: DetailedTier = "free";
+  if (isOwner || tier === "lifetime") detailedTier = "lifetime";
+  else if (tier === "premium" && sub?.price_id) {
+    const mapped = priceIdToTier(sub.price_id);
+    detailedTier = mapped === "free" ? "pro_monthly" : (mapped as DetailedTier);
+  } else if (founderWindowActive && trialType === "beta") detailedTier = "founder_trial";
+
+  return {
+    loading: false,
+    isPremium: hasPaidAccess || trialActive || founderWindowActive,
+    tier,
+    detailedTier,
+    freeCurrent: profile?.free_current || "money",
+    status: sub?.status || (isOwner ? "owner" : null),
+    cancelAtPeriodEnd: !!sub?.cancel_at_period_end,
+    currentPeriodEnd: sub?.current_period_end || null,
+    trialActive,
+    trialType,
+    trialEndsAt,
+    trialDaysRemaining,
+    founderWindowActive,
+    founderDaysRemaining,
+    isFoundingMember,
+    hasPaidAccess,
+    priceId: sub?.price_id || null,
+  };
+}
+
+async function loadState(userId: string, env: string, ownerAccess: boolean): Promise<SubscriptionState> {
+  const [{ data: sub }, { data: profile }, { data: adminRole }] = await Promise.all([
+    supabase
+      .from("subscriptions")
+      .select("status,cancel_at_period_end,current_period_end,product_id,price_id")
+      .eq("user_id", userId)
+      .eq("environment", env)
+      .maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("subscription_tier,free_current,trial_ends_at,trial_type,founder_window_ends_at,is_founding_member")
+      .eq("user_id", userId)
+      .maybeSingle(),
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle(),
+  ]);
+  return computeState(sub, profile, adminRole, ownerAccess);
+}
+
+function fetchShared(userId: string, env: string, ownerAccess: boolean): Promise<SubscriptionState> {
+  const key: CacheKey = `${userId}:${env}:${ownerAccess}`;
+  if (cachedKey === key && cachedState) return Promise.resolve(cachedState);
+  if (inflight) return inflight;
+  inflight = (async () => {
+    try {
+      const state = await loadState(userId, env, ownerAccess);
+      cachedKey = key;
+      cachedState = state;
+      subscribers.forEach((fn) => fn());
+      return state;
+    } finally {
+      inflight = null;
+    }
+  })();
+  return inflight;
+}
+
+let realtimeUserId: string | null = null;
+let realtimeChannel: ReturnType<typeof supabase.channel> | null = null;
+
+function ensureRealtime(userId: string, env: string, ownerAccess: boolean) {
+  if (realtimeUserId === userId && realtimeChannel) return;
+  if (realtimeChannel) {
+    supabase.removeChannel(realtimeChannel);
+    realtimeChannel = null;
+  }
+  realtimeUserId = userId;
+  const channelName = `sub-${userId}-${Math.random().toString(36).slice(2, 10)}`;
+  realtimeChannel = supabase
+    .channel(channelName)
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "subscriptions", filter: `user_id=eq.${userId}` },
+      () => {
+        cachedKey = null;
+        fetchShared(userId, env, ownerAccess);
+      }
+    )
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "profiles", filter: `user_id=eq.${userId}` },
+      () => {
+        cachedKey = null;
+        fetchShared(userId, env, ownerAccess);
+      }
+    )
+    .subscribe();
+}
+
 export function useSubscription(): SubscriptionState {
   const { user } = useAuth();
   const ownerAccess = hasOwnerAccess();
-  const [state, setState] = useState<SubscriptionState>({
-    loading: true,
-    isPremium: false,
-    tier: "free",
-    detailedTier: "free",
-    freeCurrent: null,
-    status: null,
-    cancelAtPeriodEnd: false,
-    currentPeriodEnd: null,
-    trialActive: false,
-    trialType: null,
-    trialEndsAt: null,
-    trialDaysRemaining: null,
-    founderWindowActive: false,
-    founderDaysRemaining: null,
-    isFoundingMember: false,
-    hasPaidAccess: false,
-    priceId: null,
+  const env = getPaddleEnv();
+  const key = user ? `${user.id}:${env}:${ownerAccess}` : null;
+
+  const [state, setState] = useState<SubscriptionState>(() => {
+    if (key && cachedKey === key && cachedState) return cachedState;
+    return {
+      loading: !!user,
+      isPremium: false,
+      tier: "free",
+      detailedTier: "free",
+      freeCurrent: null,
+      status: null,
+      cancelAtPeriodEnd: false,
+      currentPeriodEnd: null,
+      trialActive: false,
+      trialType: null,
+      trialEndsAt: null,
+      trialDaysRemaining: null,
+      founderWindowActive: false,
+      founderDaysRemaining: null,
+      isFoundingMember: false,
+      hasPaidAccess: false,
+      priceId: null,
+    };
   });
 
   useEffect(() => {
     if (!user) {
+      cachedKey = null;
+      cachedState = null;
+      if (realtimeChannel) {
+        supabase.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+        realtimeUserId = null;
+      }
       setState((s) => ({ ...s, loading: false }));
       return;
     }
 
-    const env = getPaddleEnv();
-    let cancelled = false;
-
-    async function load() {
-      try {
-        const [{ data: sub }, { data: profile }, { data: adminRole }] = await Promise.all([
-          supabase
-            .from("subscriptions")
-            .select("status,cancel_at_period_end,current_period_end,product_id,price_id")
-            .eq("user_id", user.id)
-            .eq("environment", env)
-            .maybeSingle(),
-          supabase
-            .from("profiles")
-            .select("subscription_tier,free_current,trial_ends_at,trial_type,founder_window_ends_at,is_founding_member")
-            .eq("user_id", user.id)
-            .maybeSingle(),
-          supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", user.id)
-            .eq("role", "admin")
-            .maybeSingle(),
-        ]);
-
-        if (cancelled) return;
-
-        const isAdmin = !!adminRole;
-        const isOwner = ownerAccess || isAdmin;
-        const periodStillOpen = !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
-        // Grace-period rule: active, trialing, past_due (Paddle retrying), and
-        // canceled-but-paid-through all keep premium access until period_end.
-        const active =
-          sub &&
-          (["active", "trialing", "past_due"].includes(sub.status) ||
-            (sub.status === "canceled" && periodStillOpen)) &&
-          periodStillOpen;
-
-        const baseTier = (profile?.subscription_tier as SubscriptionState["tier"]) || "free";
-        const tier: SubscriptionState["tier"] = isOwner ? "lifetime" : baseTier;
-        const hasPaidAccess = isOwner || !!active || tier === "lifetime" || tier === "premium";
-
-        // Trial / founder window calcs — admins skip the trial UI entirely
-        const trialEndsAt = profile?.trial_ends_at || null;
-        const trialActive = !isOwner && !!trialEndsAt && new Date(trialEndsAt) > new Date();
-        const trialDaysRemaining = trialEndsAt
-          ? Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-          : null;
-        const trialType = (profile?.trial_type as "standard" | "beta") || null;
-        const founderEndsAt = (profile as any)?.founder_window_ends_at || null;
-        const founderWindowActive = !isOwner && !!founderEndsAt && new Date(founderEndsAt) > new Date();
-        const founderDaysRemaining = founderEndsAt
-          ? Math.max(0, Math.ceil((new Date(founderEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-          : null;
-        const isFoundingMember = isOwner || !!(profile as any)?.is_founding_member;
-
-        // Derive detailed tier
-        let detailedTier: DetailedTier = "free";
-        if (isOwner || tier === "lifetime") detailedTier = "lifetime";
-        else if (tier === "premium" && sub?.price_id) {
-          const mapped = priceIdToTier(sub.price_id);
-          detailedTier = mapped === "free" ? "pro_monthly" : (mapped as DetailedTier);
-        } else if (founderWindowActive && trialType === "beta") detailedTier = "founder_trial";
-
-        setState({
-          loading: false,
-          isPremium: hasPaidAccess || trialActive || founderWindowActive,
-          tier,
-          detailedTier,
-          freeCurrent: profile?.free_current || "money",
-          status: sub?.status || (isOwner ? "owner" : null),
-          cancelAtPeriodEnd: !!sub?.cancel_at_period_end,
-          currentPeriodEnd: sub?.current_period_end || null,
-          trialActive,
-          trialType,
-          trialEndsAt,
-          trialDaysRemaining,
-          founderWindowActive,
-          founderDaysRemaining,
-          isFoundingMember,
-          hasPaidAccess,
-          priceId: sub?.price_id || null,
-        });
-      } catch (err) {
-        console.error("useSubscription load failed", err);
-        if (!cancelled) setState((s) => ({ ...s, loading: false }));
-      }
-    }
-
-    load();
-
-    // Unique channel name per mount to avoid StrictMode / re-mount races
-    // where Supabase reuses an already-subscribed channel and throws
-    // "cannot add postgres_changes callbacks after subscribe()".
-    const channelName = `sub-${user.id}-${Math.random().toString(36).slice(2, 10)}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "subscriptions", filter: `user_id=eq.${user.id}` },
-        () => load()
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "profiles", filter: `user_id=eq.${user.id}` },
-        () => load()
-      )
-      .subscribe();
+    let mounted = true;
+    const sync = () => {
+      if (!mounted) return;
+      if (cachedKey === key && cachedState) setState(cachedState);
+    };
+    subscribers.add(sync);
+    fetchShared(user.id, env, ownerAccess).then(sync);
+    ensureRealtime(user.id, env, ownerAccess);
 
     return () => {
-      cancelled = true;
-      supabase.removeChannel(channel);
+      mounted = false;
+      subscribers.delete(sync);
     };
-  }, [user, ownerAccess]);
+  }, [user, env, ownerAccess, key]);
 
   return state;
 }
