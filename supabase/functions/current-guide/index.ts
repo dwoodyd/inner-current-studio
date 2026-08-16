@@ -158,6 +158,21 @@ serve(async (req) => {
       });
     }
 
+    if (overBurstLimit(user.id)) {
+      return new Response(JSON.stringify({ error: "You're moving fast. Take a breath and try again in a moment." }), {
+        status: 429,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json", "Retry-After": "60" },
+      });
+    }
+
+    if (await overDailyLimit(user.id)) {
+      return new Response(JSON.stringify({ error: "You've reached today's Current Guide limit. It opens again tomorrow." }), {
+        status: 429,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
+
     if (!Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: "messages must be a non-empty array" }), {
         status: 400,
