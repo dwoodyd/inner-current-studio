@@ -398,8 +398,75 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
           </motion.div>
         )}
 
-        {/* ACT 6 — Paywall (soft) */}
+        {/* ACT 6 — Rhythm: reminder times + soft newsletter opt-in */}
         {act === 6 && (
+          <motion.div
+            key="act-6-rhythm"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.9, ease }}
+            className="relative z-10 w-full max-w-md space-y-7"
+          >
+            <div className="space-y-3 text-center">
+              <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Six</p>
+              <h2 className="font-heading text-3xl font-light text-foreground">
+                When should we meet?
+              </h2>
+              <p className="text-sm text-muted-foreground italic">
+                No streaks. No shame. Just an open door at the hour you choose.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <RhythmRow
+                label="Morning Awakening"
+                hint="A quiet invitation to begin"
+                enabled={morningOn}
+                onToggle={setMorningOn}
+                time={morningTime}
+                onTime={setMorningTime}
+              />
+              <RhythmRow
+                label="Evening Settling"
+                hint="A place to set the day down"
+                enabled={eveningOn}
+                onToggle={setEveningOn}
+                time={eveningTime}
+                onTime={setEveningTime}
+              />
+            </div>
+
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border/30 bg-card/40 px-5 py-4">
+              <input
+                type="checkbox"
+                checked={newsletterOptIn}
+                onChange={(e) => setNewsletterOptIn(e.target.checked)}
+                className="mt-1 h-4 w-4 accent-[hsl(var(--primary))]"
+              />
+              <span className="text-sm text-muted-foreground">
+                Send me soft notes from the practice — new rituals and reflections. No noise.
+              </span>
+            </label>
+
+            <button
+              onClick={saveRhythm}
+              disabled={savingRhythm}
+              className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all disabled:opacity-40 active:scale-[0.98]"
+            >
+              {savingRhythm ? "Setting your rhythm…" : "Set my rhythm"}
+            </button>
+            <button
+              onClick={() => setAct(7)}
+              className="w-full text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Not now
+            </button>
+          </motion.div>
+        )}
+
+        {/* ACT 7 — Paywall (soft) */}
+        {act === 7 && (
           <motion.div
             key="act-6"
             initial={{ opacity: 0, y: 24 }}
