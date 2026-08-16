@@ -31,7 +31,9 @@ export default function AppShell() {
   const dotClass = STATE_DOT_CLASS[currentState] ?? STATE_DOT_CLASS.flat;
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-background safe-x">
+    <div className="relative flex min-h-[100dvh] flex-col bg-background safe-x">
+      {/* The Field — the screen takes its color from the current being tended. */}
+      <div className="field-wash" aria-hidden="true" />
       <PaymentTestModeBanner />
       <TrialCountdownBanner />
       <OfflineBanner />
