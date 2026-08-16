@@ -5,7 +5,8 @@ import { ArrowRight, ChevronRight, Moon, Sparkles, Sun } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 import { useTheme } from '@/hooks/useTheme';
 import CurrentPulse from '@/components/CurrentPulse';
-import QuickCheckIn from '@/components/QuickCheckIn';
+import StateDial from '@/components/StateDial';
+import CurrentGlyph from '@/components/CurrentGlyph';
 import TodayFlowCard from '@/components/TodayFlowCard';
 import QuickLaunchCards from '@/components/QuickLaunchCards';
 import DailyInsight from '@/components/DailyInsight';
@@ -19,6 +20,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/hooks/useSubscription';
 import { DOMAINS, type DomainKey } from '@/lib/domains';
 import { useWeeklyDigest } from '@/lib/currents/progress';
+import { useFieldTint } from '@/lib/currentField';
+import { STATE_ORDER } from '@/lib/states';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {
@@ -110,6 +113,9 @@ export default function Home() {
   }, [user?.created_at, freeCurrent, state.onboarding.freeCurrent, digest.topCurrent]);
 
   const featured = DOMAINS[featuredCurrent];
+
+  // The Field — Home takes its color from the current you are tending most.
+  useFieldTint(featuredCurrent);
 
   // Derive last persisted state from most recent check-in.
   // Reactively syncs after cloud-state loads — no longer defaults to "flat" forever.
@@ -232,9 +238,20 @@ export default function Home() {
           <CurrentPulse quickState={quickState || 'flat'} />
         </motion.div>
 
-        {/* Check-in */}
-        <motion.div variants={fadeUp}>
-          <QuickCheckIn selected={quickState} onSelect={handleQuickCheckIn} />
+        {/* Check-in — move a weight, not a word */}
+        <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-4 py-4 sm:px-5">
+          <StateDial
+            steps={STATE_ORDER.length}
+            value={quickState ? STATE_ORDER.indexOf(quickState) : null}
+            onPreview={(i) => setQuickState(STATE_ORDER[i])}
+            onCommit={(i) => handleQuickCheckIn(STATE_ORDER[i])}
+            ariaLabel="Move the weight to where you are right now"
+            stopLabels={STATE_ORDER.map((s) => STATE_DEFS[s].label)}
+          />
+          <div className="mt-1 flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">
+            <span aria-hidden="true">held</span>
+            <span aria-hidden="true">moving</span>
+          </div>
         </motion.div>
 
         {/* Reading Bridge — quiet acknowledgment when chapter ↔ state lines up */}
@@ -342,7 +359,7 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">{featured.emoji}</span>
+                  <CurrentGlyph current={featured.key} size={22} className="field-text" />
                   <h2 className="font-heading text-lg font-medium text-foreground">{featured.label}</h2>
                 </div>
                 <p className="text-xs text-muted-foreground">{featured.tagline}</p>
