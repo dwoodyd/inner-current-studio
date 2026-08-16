@@ -9,6 +9,7 @@ import { ArrowLeft, ChevronRight, BookOpen, Sparkles, MessageCircle } from 'luci
 import { DOMAINS, type DomainKey } from '@/lib/domains';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { useCurrentProgress } from '@/lib/currents/progress';
+import { useFieldTint } from '@/lib/currentField';
 import CurrentSigil from '@/components/currents/CurrentSigil';
 import TodayBelief from '@/components/currents/TodayBelief';
 import PatternMirror from '@/components/currents/PatternMirror';
@@ -47,6 +48,9 @@ export default function CurrentLayout() {
   const { progress, stage, touch } = useCurrentProgress(slug);
 
   useEffect(() => { touch(); /* mark visit */ }, [touch]);
+
+  // The whole screen takes its color from this current.
+  useFieldTint(slug);
 
   const locked = !isPremium && slug !== 'money' && freeCurrent !== slug && localFree !== slug;
   if (locked) {

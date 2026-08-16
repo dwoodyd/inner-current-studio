@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Sparkles, Library, Wind, Target, BookOpen, ChevronRight, Feather } from 'lucide-react';
 import { DomainConfig } from '@/lib/domains';
+import CurrentGlyph from '@/components/CurrentGlyph';
 
 interface Props { domain: DomainConfig }
 
@@ -42,7 +43,7 @@ export default function DomainHub({ domain }: Props) {
             animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <span className="text-2xl">{domain.emoji}</span>
+            <CurrentGlyph current={domain.key} size={30} className={domain.accentClass} />
           </motion.div>
           <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">{domain.label}</h1>
           <p className="text-sm text-muted-foreground max-w-[300px] mx-auto leading-relaxed">{domain.tagline}</p>
