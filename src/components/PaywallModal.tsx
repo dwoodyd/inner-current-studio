@@ -48,7 +48,10 @@ export function PaywallModal({ open, onOpenChange, tool, limit, message }: Paywa
             {body}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="mt-6 flex flex-col gap-2.5 sm:flex-col">
+        <p className="mt-4 text-xs italic leading-relaxed text-primary/80">
+          Founding rate locked at $4.99/mo — no card today.
+        </p>
+        <DialogFooter className="mt-4 flex flex-col gap-2.5 sm:flex-col">
           <button
             type="button"
             onClick={() => {
