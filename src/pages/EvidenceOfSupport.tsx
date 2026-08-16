@@ -5,6 +5,7 @@ import { ArrowLeft, Plus, Sparkles, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import EmptyState from '@/components/EmptyState';
 
 const CATEGORIES = [
   { label: 'Money already present', emoji: '💰' },
@@ -168,10 +169,12 @@ export default function EvidenceOfSupport() {
         ))}
 
         {!loading && entries.length === 0 && (
-          <div className="text-center py-8">
-            <Sparkles size={24} className="text-soul-gold/30 mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground italic">Begin noticing what's already supporting you.</p>
-          </div>
+          <EmptyState
+            icon={Sparkles}
+            title="Support is already here"
+            message="Name one thing — small counts — that's holding you up right now."
+            invitation="Evidence gathers faster than doubt."
+          />
         )}
       </div>
     </div>

@@ -5,6 +5,7 @@ import { ArrowLeft, Plus, Play, Library, Pencil, Trash2, GripVertical, Pause, Ch
 import { useAppState } from '@/lib/AppContext';
 import { PlaybackSettings, type PlaybackConfig } from '@/components/gather/PlaybackSettings';
 import { startSound, stopSound, speakText, stopSpeech, setVolume } from '@/lib/sounds';
+import EmptyState from '@/components/EmptyState';
 
 const TIERS = ['Relief', 'Opening', 'Steadying', 'Expanding'] as const;
 
@@ -267,9 +268,12 @@ export default function GatherFlow() {
           ))}
 
           {state.gatheredSequences.length === 0 && (
-            <div className="text-center py-6">
-              <p className="font-heading text-sm italic text-muted-foreground/50">"Collect the thoughts that hold you together."</p>
-            </div>
+            <EmptyState
+              icon={Library}
+              title="Nothing gathered yet"
+              message="Collect the thoughts that hold you together — tap any line above to begin."
+              invitation="A sequence starts with one sentence."
+            />
           )}
         </motion.div>
       )}

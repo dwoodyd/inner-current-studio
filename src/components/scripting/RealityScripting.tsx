@@ -8,6 +8,7 @@ import { getPaddleEnv } from '@/lib/paddle';
 import { useAuth } from '@/hooks/useAuth';
 import { DomainConfig } from '@/lib/domains';
 import ConstellationProgress from './ConstellationProgress';
+import EmptyState from '@/components/EmptyState';
 
 type Mode = 'guided' | 'free' | 'blueprint';
 type View = 'hub' | 'new' | 'library' | 'detail';
@@ -264,7 +265,14 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
         <section className="text-center space-y-2"><h1 className="font-heading text-3xl text-foreground">Script library</h1><p className="text-sm text-muted-foreground">Revisit what you are rehearsing into form.</p></section>
         <button onClick={() => navigate(`${domain.route}/script/new`)} className="soul-btn-primary w-full flex items-center justify-center gap-2 rounded-2xl"><Plus size={16} /> New script</button>
         <div className="space-y-3">
-          {scripts.length === 0 && <p className="text-center text-sm text-muted-foreground/70 py-10">Your first scripted reality is waiting.</p>}
+          {scripts.length === 0 && (
+            <EmptyState
+              icon={Feather}
+              title="Your first scripted reality is waiting"
+              message="Write one scene as if it already happened — a few honest sentences is enough."
+              invitation="The page listens before the world does."
+            />
+          )}
           {scripts.map((script, i) => (
             <motion.article key={script.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }} className="soul-card rounded-2xl p-4 flex gap-3">
               <button onClick={() => navigate(`${domain.route}/script/${script.id}`)} className="flex-1 text-left space-y-1">
