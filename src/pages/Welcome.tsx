@@ -7,6 +7,7 @@ import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
 import NewsletterForm from '@/components/NewsletterForm';
 import innerWakeIcon from '@/assets/inner-wake-orb-logo.png';
+import CurrentGlyph from '@/components/CurrentGlyph';
 
 const SEEN_KEY = 'iw_cinematic_seen_v1';
 
@@ -287,7 +288,7 @@ export default function Welcome() {
                 return (
                   <div key={key} className="rounded-xl border border-border/50 bg-background/30 p-4 select-none" style={{ background: d.gradient }}>
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl">{d.emoji}</span>
+                      <CurrentGlyph current={key} size={26} className={d.accentClass} />
                       <span className="h-2 w-2 rounded-full bg-primary/70" />
                     </div>
                     <h3 className="mt-3 font-serif text-lg">{d.label}</h3>
@@ -325,7 +326,7 @@ export default function Welcome() {
                   style={{ background: d.gradient }}
                   aria-label={`${d.label} — sign up to open`}
                 >
-                  <div className="text-3xl">{d.emoji}</div>
+                  <CurrentGlyph current={key} size={34} className={d.accentClass} strokeWidth={1.2} />
                   <h3 className="mt-4 font-serif text-xl">{d.label}</h3>
                   <p className="mt-2 text-sm text-muted-foreground">{d.tagline}</p>
                 </motion.button>
