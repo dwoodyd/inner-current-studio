@@ -29,6 +29,10 @@
     --ring: 42 54% 54%;
     --radius: 0.75rem;
 
+    /* The Field — hue of whatever current is being tended. Set at runtime. */
+    --field-h: 42;
+    --field-s: 54%;
+
     --soul-gold: 42 54% 54%;
     --soul-violet: 265 22% 48%;
     --soul-blue: 210 35% 48%;
