@@ -86,11 +86,12 @@ export default function MyCurrent() {
 
       {/* Items */}
       {filtered.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="font-heading text-sm italic text-muted-foreground">
-            "Your inner library begins with one honest page."
-          </p>
-        </div>
+        <EmptyState
+          title="Nothing here yet — that's a fine place to start"
+          message="Everything you write, name, or soften lands in this library. One honest page is enough to open it."
+          invitation="Your inner library begins with one honest page."
+          action={{ label: 'Name how you feel', onClick: () => navigate('/') }}
+        />
       ) : (
         <div className="space-y-2">
           {filtered.map((item, i) => (

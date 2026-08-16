@@ -117,9 +117,13 @@ export default function MyRituals() {
               </motion.div>
             ))
           ) : (
-            <div className="text-center py-12">
-              <p className="font-heading text-sm italic text-muted-foreground">"Build a ritual that fits your real life."</p>
-            </div>
+            <EmptyState
+              icon={Clock}
+              title="Your first ritual starts here"
+              message="A ritual is just a few steps you can return to on an ordinary day — three minutes is enough."
+              invitation="Build one that fits your real life."
+              action={{ label: 'Build my first ritual', onClick: handleStartBuilding }}
+            />
           )}
 
           <Button onClick={handleStartBuilding} className="w-full">

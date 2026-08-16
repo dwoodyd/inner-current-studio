@@ -53,17 +53,12 @@ export default function ResonanceLibrary() {
       </div>
 
       {state.checkIns.length === 0 ? (
-        <div className="text-center py-20 space-y-3">
-          <motion.div
-            className="mx-auto h-14 w-14 rounded-full bg-primary/10"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          />
-          <p className="font-heading text-sm italic text-muted-foreground">
-            "The library fills as you check in."
-          </p>
-          <p className="text-xs text-muted-foreground/60">No check-ins yet. Name a state on Home to begin.</p>
-        </div>
+        <EmptyState
+          title="The library fills as you check in"
+          message="Every state you name is kept here, honored as itself — no scoring, no streaks."
+          invitation="Name one state and this page begins."
+          action={{ label: 'Check in now', onClick: () => navigate('/') }}
+        />
       ) : (
         <div className="space-y-6">
           {grouped.map(([day, entries], gi) => (
