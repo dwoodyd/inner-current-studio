@@ -932,16 +932,24 @@ export default function InnerWakeOnboarding({
             {chimesEnabled ? "chimes on" : "chimes off"}
           </button>
         )}
-        <div className="iw-progress-wrap">
+        <p className="iw-nav-hint">
+          {slide < TOTAL_SLIDES
+            ? "Tap anywhere, swipe, or press → to continue"
+            : "Press ← to go back, or skip intro"}
+        </p>
+        <div className="iw-progress-wrap" role="tablist" aria-label="Intro progress">
           {Array.from({ length: TOTAL_SLIDES }, (_, i) => (
             <button
               key={i}
+              role="tab"
+              aria-selected={slide === i + 1}
               className={`iw-progress-dot${slide === i + 1 ? " active" : ""}`}
               onClick={() => goTo(i + 1)}
-              aria-label={`Slide ${i + 1}`}
+              aria-label={`Go to step ${i + 1} of ${TOTAL_SLIDES}`}
             />
           ))}
         </div>
+
       </div>
     </div>
   );
