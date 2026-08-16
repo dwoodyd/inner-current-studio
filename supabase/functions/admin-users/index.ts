@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
       if (listError) throw listError;
 
       // Get all roles
-      const { data: allRoles } = await adminClient.from("user_roles").select("*");
+      const { data: allRoles } = await adminClient.from("user_roles").select("user_id, role");
 
       const enriched = (users || []).map((u) => ({
         id: u.id,

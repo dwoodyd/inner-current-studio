@@ -5,6 +5,7 @@ import OfflineBanner from './OfflineBanner';
 import { PaymentTestModeBanner } from './PaymentTestModeBanner';
 import { TrialCountdownBanner } from './TrialCountdownBanner';
 import { MigrationNoticeModal } from './MigrationNoticeModal';
+import InstallPrompt from './InstallPrompt';
 import { useAppState } from '@/lib/AppContext';
 import { STATE_DEFS } from '@/lib/states';
 import { useTheme } from '@/hooks/useTheme';
@@ -79,6 +80,7 @@ export default function AppShell() {
       </main>
       {!hideBottomNav && <BottomNav />}
       <MigrationNoticeModal />
+      <InstallPrompt />
     </div>
   );
 }

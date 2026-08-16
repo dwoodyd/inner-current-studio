@@ -1,7 +1,7 @@
 // ResonanceCardExport — renders a shareable card (sigil + landed
 // beliefs) into an SVG and triggers a PNG download.
 import { useState } from 'react';
-import { Download, Loader2 } from 'lucide-react';
+import { Share2, Loader2 } from 'lucide-react';
 import { DOMAINS, type DomainKey } from '@/lib/domains';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { useCurrentProgress, stageForCount } from '@/lib/currents/progress';
@@ -99,39 +99,58 @@ async function svgToPngBlob(svg: string, w = 1080, h = 1350): Promise<Blob> {
   return await new Promise<Blob>((res) => canvas.toBlob((b) => res(b!), 'image/png', 0.95));
 }
 
+function saveBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
 export default function ResonanceCardExport({ slug }: { slug: DomainKey }) {
   const { progress } = useCurrentProgress(slug);
   const [busy, setBusy] = useState(false);
+  const spec = CURRENT_SPECS[slug];
   const total = progress.beliefsLandedAsTrue.length + progress.beliefsLandedAsAlive.length;
 
-  async function download() {
+  async function shareCard() {
     setBusy(true);
     try {
-      const svg = buildSvg(slug);
-      const blob = await svgToPngBlob(svg);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `innerwake-${slug}-resonance.png`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      const blob = await svgToPngBlob(buildSvg(slug));
+      const filename = `innerwake-${slug}-sigil.png`;
+      const file = new File([blob], filename, { type: 'image/png' });
+      const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
+      if (nav.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: `My ${spec.shortName} Sigil`,
+            text: `My ${spec.shortName} Sigil — a practice I'm keeping. Inner Wake.`,
+          });
+          return;
+        } catch (e) {
+          if ((e as DOMException)?.name === 'AbortError') return;
+        }
+      }
+      saveBlob(blob, filename);
     } finally {
       setBusy(false);
     }
   }
 
-  if (total === 0 && progress.practicesCompleted < 4) return null;
+  if (total === 0 && progress.practicesCompleted < 1) return null;
 
   return (
     <button
-      onClick={download}
+      onClick={shareCard}
       disabled={busy}
       className="soul-glass inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground transition-colors"
     >
-      {busy ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
-      <span>{busy ? 'Rendering…' : 'Save Resonance Card'}</span>
+      {busy ? <Loader2 size={12} className="animate-spin" /> : <Share2 size={12} />}
+      <span>{busy ? 'Rendering…' : `Share your ${spec.shortName} Sigil`}</span>
     </button>
   );
 }

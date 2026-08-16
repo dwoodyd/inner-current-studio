@@ -9,6 +9,7 @@ import { Sigil } from "./Sigil";
 import { AmbientAudio, playChime } from "./AmbientAudio";
 import { Paywall } from "./Paywall";
 import TypingText from "@/components/TypingText";
+import { subscribeAndSync } from "@/lib/push";
 
 const CURRENTS = [
   { id: "money", name: "Money", essence: "Receiving with ease", hue: 42 },
@@ -56,6 +57,43 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
   const [chosenCurrent, setChosenCurrent] = useState<CurrentId | "">("");
   const [affirmation, setAffirmation] = useState<string>("");
   const [generating, setGenerating] = useState(false);
+  const [morningOn, setMorningOn] = useState(true);
+  const [morningTime, setMorningTime] = useState("07:30");
+  const [eveningOn, setEveningOn] = useState(true);
+  const [eveningTime, setEveningTime] = useState("21:00");
+  const [newsletterOptIn, setNewsletterOptIn] = useState(true);
+  const [savingRhythm, setSavingRhythm] = useState(false);
+
+  const saveRhythm = async () => {
+    setSavingRhythm(true);
+    try {
+      if (morningOn || eveningOn) {
+        if (typeof Notification !== "undefined" && Notification.permission === "default") {
+          try { await Notification.requestPermission(); } catch { /* ignore */ }
+        }
+        if (typeof Notification === "undefined" || Notification.permission === "granted") {
+          await subscribeAndSync({
+            morning_reminder: morningOn,
+            morning_time: morningTime,
+            evening_reflection: eveningOn,
+            evening_time: eveningTime,
+            gentle_returns: false,
+            return_interval_hours: 24,
+            affirmation_interval_minutes: 0,
+          });
+        }
+      }
+      if (newsletterOptIn && user?.email) {
+        await supabase.functions.invoke("newsletter-subscribe", {
+          body: { email: user.email, source: "onboarding" },
+        });
+      }
+    } catch { /* never block onboarding */ }
+    finally {
+      setSavingRhythm(false);
+      setAct(7);
+    }
+  };
 
   const current = CURRENTS.find((c) => c.id === chosenCurrent);
   const hue = current?.hue ?? 42;
@@ -398,8 +436,75 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
           </motion.div>
         )}
 
-        {/* ACT 6 — Paywall (soft) */}
+        {/* ACT 6 — Rhythm: reminder times + soft newsletter opt-in */}
         {act === 6 && (
+          <motion.div
+            key="act-6-rhythm"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.9, ease }}
+            className="relative z-10 w-full max-w-md space-y-7"
+          >
+            <div className="space-y-3 text-center">
+              <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Six</p>
+              <h2 className="font-heading text-3xl font-light text-foreground">
+                When should we meet?
+              </h2>
+              <p className="text-sm text-muted-foreground italic">
+                No streaks. No shame. Just an open door at the hour you choose.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <RhythmRow
+                label="Morning Awakening"
+                hint="A quiet invitation to begin"
+                enabled={morningOn}
+                onToggle={setMorningOn}
+                time={morningTime}
+                onTime={setMorningTime}
+              />
+              <RhythmRow
+                label="Evening Settling"
+                hint="A place to set the day down"
+                enabled={eveningOn}
+                onToggle={setEveningOn}
+                time={eveningTime}
+                onTime={setEveningTime}
+              />
+            </div>
+
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border/30 bg-card/40 px-5 py-4">
+              <input
+                type="checkbox"
+                checked={newsletterOptIn}
+                onChange={(e) => setNewsletterOptIn(e.target.checked)}
+                className="mt-1 h-4 w-4 accent-[hsl(var(--primary))]"
+              />
+              <span className="text-sm text-muted-foreground">
+                Send me soft notes from the practice — new rituals and reflections. No noise.
+              </span>
+            </label>
+
+            <button
+              onClick={saveRhythm}
+              disabled={savingRhythm}
+              className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all disabled:opacity-40 active:scale-[0.98]"
+            >
+              {savingRhythm ? "Setting your rhythm…" : "Set my rhythm"}
+            </button>
+            <button
+              onClick={() => setAct(7)}
+              className="w-full text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Not now
+            </button>
+          </motion.div>
+        )}
+
+        {/* ACT 7 — Paywall (soft) */}
+        {act === 7 && (
           <motion.div
             key="act-6"
             initial={{ opacity: 0, y: 24 }}
@@ -424,9 +529,9 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
       </AnimatePresence>
 
       {/* progress dots */}
-      {act > 0 && act < 6 && (
+      {act > 0 && act < 7 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
               key={i}
               className={`h-1 rounded-full transition-all ${
@@ -436,6 +541,43 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function RhythmRow({
+  label,
+  hint,
+  enabled,
+  onToggle,
+  time,
+  onTime,
+}: {
+  label: string;
+  hint: string;
+  enabled: boolean;
+  onToggle: (v: boolean) => void;
+  time: string;
+  onTime: (v: string) => void;
+}) {
+  return (
+    <div
+      className={`flex items-center justify-between gap-4 rounded-xl border px-5 py-4 transition-all ${
+        enabled ? "border-primary/40 bg-primary/5" : "border-border/30 bg-card/40"
+      }`}
+    >
+      <button type="button" onClick={() => onToggle(!enabled)} className="flex-1 text-left">
+        <div className="font-heading text-base text-foreground">{label}</div>
+        <div className="text-xs italic text-muted-foreground">{hint}</div>
+      </button>
+      <input
+        type="time"
+        value={time}
+        onChange={(e) => onTime(e.target.value)}
+        disabled={!enabled}
+        aria-label={`${label} time`}
+        className="rounded-lg border border-border/40 bg-background/60 px-3 py-2 text-sm text-foreground disabled:opacity-40"
+      />
     </div>
   );
 }

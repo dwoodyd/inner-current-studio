@@ -4,6 +4,7 @@ import { loadState, saveState, generateId } from './store';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { recordPracticeComplete } from '@/lib/practiceMilestone';
 import {
   validateOrError, checkInSchema, wheelSchema, gatheredSequenceSchema,
   momentumSessionSchema, futurePageSchema, imagineIfSchema, overflowSchema,
@@ -327,6 +328,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       'check-in',
       { type: 'checkIn', payload: checkIn }
     );
+    recordPracticeComplete();
   }, [user, optimistic]);
 
   const completeOnboarding = useCallback((data: { reason: string; style: string; challenge: string; companionName?: string; companionSigil?: string; freeCurrent?: string }) => {

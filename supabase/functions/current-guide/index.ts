@@ -42,6 +42,53 @@ When users describe themes that align with these concepts, you may reflect them 
 
 When the user shares their emotional state context, acknowledge it naturally and respond to their actual message. Keep responses under 150 words unless they ask for more depth.`;
 
+// --- Rate limiting ----------------------------------------------------------
+// Two layers: an in-memory burst limiter (per isolate) and a durable daily cap
+// stored in public.daily_usage so it survives cold starts.
+const BURST_WINDOW_MS = 60_000;
+const BURST_MAX = 12; // messages per minute per user
+const DAILY_MAX = 200; // messages per UTC day per user
+const burstHits = new Map<string, number[]>();
+
+function overBurstLimit(userId: string): boolean {
+  const now = Date.now();
+  const hits = (burstHits.get(userId) ?? []).filter((t) => now - t < BURST_WINDOW_MS);
+  hits.push(now);
+  burstHits.set(userId, hits);
+  if (burstHits.size > 5000) burstHits.clear(); // crude memory ceiling
+  return hits.length > BURST_MAX;
+}
+
+async function overDailyLimit(userId: string): Promise<boolean> {
+  try {
+    const admin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const today = new Date().toISOString().slice(0, 10);
+    const { data } = await admin
+      .from("daily_usage")
+      .select("id, count")
+      .eq("user_id", userId)
+      .eq("tool", "current_guide")
+      .eq("usage_date", today)
+      .maybeSingle();
+
+    const count = data?.count ?? 0;
+    if (count >= DAILY_MAX) return true;
+
+    if (data?.id) {
+      await admin.from("daily_usage").update({ count: count + 1, updated_at: new Date().toISOString() }).eq("id", data.id);
+    } else {
+      await admin.from("daily_usage").insert({ user_id: userId, tool: "current_guide", usage_date: today, count: 1 });
+    }
+    return false;
+  } catch (e) {
+    console.error("rate limit check failed", e);
+    return false; // fail open — burst limiter still applies
+  }
+}
+
 // Max payload sizes
 const MAX_MESSAGES = 50;
 const MAX_MESSAGE_LENGTH = 2000;
@@ -110,6 +157,21 @@ serve(async (req) => {
         headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
+
+    if (overBurstLimit(user.id)) {
+      return new Response(JSON.stringify({ error: "You're moving fast. Take a breath and try again in a moment." }), {
+        status: 429,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json", "Retry-After": "60" },
+      });
+    }
+
+    if (await overDailyLimit(user.id)) {
+      return new Response(JSON.stringify({ error: "You've reached today's Current Guide limit. It opens again tomorrow." }), {
+        status: 429,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: "messages must be a non-empty array" }), {
