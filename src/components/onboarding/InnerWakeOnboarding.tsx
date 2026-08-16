@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import "./InnerWakeOnboarding.css";
+import CurrentGlyph from "@/components/CurrentGlyph";
 
 /**
  * Inner Wake — Cinematic Pre-Signup Onboarding
@@ -115,6 +116,7 @@ const CURRENTS = [
   {
     icon: "💰",
     name: "Money",
+    glyph: "money" as const,
     tagline: "Receive freely. Release resistance.",
     color: "rgba(200,164,90,0.12)",
     borderColor: "rgba(200,164,90,0.2)",
@@ -124,6 +126,7 @@ const CURRENTS = [
   {
     icon: "🌱",
     name: "Self",
+    glyph: "self" as const,
     tagline: "Worth lives underneath the noise.",
     color: "rgba(139,195,74,0.08)",
     borderColor: "rgba(139,195,74,0.18)",
@@ -133,6 +136,7 @@ const CURRENTS = [
   {
     icon: "⚡",
     name: "Energy",
+    glyph: "energy" as const,
     tagline: "A body that feels alive, not managed.",
     color: "rgba(255,183,77,0.08)",
     borderColor: "rgba(255,183,77,0.18)",
@@ -142,6 +146,7 @@ const CURRENTS = [
   {
     icon: "🤝",
     name: "Relationship",
+    glyph: "relationships" as const,
     tagline: "Love that flows both ways.",
     color: "rgba(149,117,205,0.08)",
     borderColor: "rgba(149,117,205,0.18)",
@@ -151,6 +156,7 @@ const CURRENTS = [
   {
     icon: "🌿",
     name: "Health",
+    glyph: "health" as const,
     tagline: "Wholeness as home.",
     color: "rgba(102,187,106,0.08)",
     borderColor: "rgba(102,187,106,0.18)",
@@ -339,22 +345,8 @@ export default function InnerWakeOnboarding({
             data-phase={breathPhase}
             style={{ animation: "none" }}
           >
-            <span
-              style={{
-                fontFamily: serif,
-                fontSize: "1.6rem",
-                fontStyle: "italic",
-                color: "var(--ink)",
-                position: "relative",
-                zIndex: 2,
-                transition: "opacity 1800ms ease",
-                opacity: breathText ? 1 : 0,
-                minHeight: "1.5em",
-                textShadow: "0 0 24px rgba(200, 164, 90, 0.3)",
-              }}
-            >
-              {breathText}
-            </span>
+            {/* Before the words: the opening asks nothing verbal of you. */}
+            <span className="iw-breath-mark" data-phase={breathPhase} aria-hidden="true" />
           </div>
           {/* Breath counter */}
           <div
@@ -378,19 +370,12 @@ export default function InnerWakeOnboarding({
               transition: "all 1200ms ease",
             }}
           >
-            <h1
-              className="iw-headline"
-              style={{ fontSize: "clamp(2rem,5vw,3.6rem)" }}
+            <button
+              className="iw-cta iw-cta-wordless"
+              onClick={() => goTo(2)}
+              aria-label="Continue"
             >
-              You found <em>the quiet.</em>
-            </h1>
-            <p className="iw-subhead">
-              This is a different kind of space.
-              <br />
-              No goals. No grades. No performance.
-            </p>
-            <button className="iw-cta" onClick={() => goTo(2)}>
-              Step closer →
+              <span aria-hidden="true">→</span>
             </button>
           </div>
         </div>
@@ -474,6 +459,9 @@ export default function InnerWakeOnboarding({
                   background: c.color,
                   border: `1px solid ${c.borderColor}`,
                   borderRadius: 100,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
                   fontFamily: sans,
                   fontSize: "0.78rem",
                   color: "var(--ink)",
@@ -481,7 +469,7 @@ export default function InnerWakeOnboarding({
                   animation: slide === 3 ? `iwLineIn 600ms ease ${1.2 + i * 0.2}s forwards` : "none",
                 }}
               >
-                {c.icon} {c.name}
+                <><CurrentGlyph current={c.glyph} size={16} /> {c.name}</>
               </div>
             ))}
           </div>
@@ -497,7 +485,7 @@ export default function InnerWakeOnboarding({
       <section className={`iw-slide${slide === 4 ? " active" : ""}`}>
         <div style={{ textAlign: "center", position: "relative", zIndex: 2, maxWidth: 600 }}>
           <div className="iw-current-icon" style={{ marginBottom: "1rem" }}>
-            💰
+            <CurrentGlyph current="money" size={48} strokeWidth={1.1} />
           </div>
           <div className="iw-eyebrow">The Money Current</div>
           <h1
