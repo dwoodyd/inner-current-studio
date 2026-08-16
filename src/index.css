@@ -8,24 +8,24 @@
   :root {
     /* Inner Wake — warm-black + gold + Orb. House identity, dark-only by design.
        Tokens locked from builder brief: ground #0C0B0A, raise #171411, gold #C8A24A, text #E7E1D6. */
-    --background: 30 9% 4%;
-    --foreground: 39 27% 87%;
-    --card: 24 15% 8%;
-    --card-foreground: 39 27% 87%;
-    --popover: 24 15% 8%;
-    --popover-foreground: 39 27% 87%;
-    --primary: 42 54% 54%;
-    --primary-foreground: 30 9% 4%;
-    --secondary: 265 22% 38%;
-    --secondary-foreground: 39 27% 87%;
-    --muted: 28 10% 13%;
-    --muted-foreground: 36 8% 60%;
-    --accent: 28 14% 18%;
-    --accent-foreground: 39 27% 87%;
-    --destructive: 0 60% 50%;
-    --destructive-foreground: 39 27% 87%;
-    --border: 28 12% 16%;
-    --input: 28 12% 16%;
+    --background: 30 9% 5%;
+    --foreground: 39 27% 92%;
+    --card: 24 15% 9%;
+    --card-foreground: 39 27% 92%;
+    --popover: 24 15% 9%;
+    --popover-foreground: 39 27% 92%;
+    --primary: 42 58% 60%;
+    --primary-foreground: 30 9% 5%;
+    --secondary: 265 22% 42%;
+    --secondary-foreground: 39 27% 92%;
+    --muted: 28 10% 15%;
+    --muted-foreground: 36 12% 72%;
+    --accent: 28 14% 20%;
+    --accent-foreground: 39 27% 92%;
+    --destructive: 0 60% 55%;
+    --destructive-foreground: 39 27% 92%;
+    --border: 28 12% 20%;
+    --input: 28 12% 20%;
     --ring: 42 54% 54%;
     --radius: 0.75rem;
 
