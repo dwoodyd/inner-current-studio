@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
 import { recordPracticeFor } from '@/lib/currents/progress';
+import CurrentGlyph from '@/components/CurrentGlyph';
 
 const CHARGE_LEVELS = [
   { value: 'intense', label: 'Intense', dot: 'bg-rose-500' },
@@ -127,7 +128,7 @@ export default function DomainResistanceRelease({ domain }: { domain: DomainConf
 
         {phase === 'done' && (
           <motion.div key="done" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-4 py-12">
-            <div className="text-5xl">{domain.emoji}</div>
+            <div className="flex justify-center"><CurrentGlyph current={domain.key} size={54} className={domain.accentClass} strokeWidth={1.1} /></div>
             <h2 className="font-heading text-2xl text-foreground">Released, gently.</h2>
             <p className="text-sm text-muted-foreground">{before} → {after}</p>
             <div className="flex flex-col gap-2 pt-4">

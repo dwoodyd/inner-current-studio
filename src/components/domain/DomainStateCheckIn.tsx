@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
 import { recordPracticeFor } from '@/lib/currents/progress';
+import StateDial from '@/components/StateDial';
 
 export default function DomainStateCheckIn({ domain }: { domain: DomainConfig }) {
   const navigate = useNavigate();

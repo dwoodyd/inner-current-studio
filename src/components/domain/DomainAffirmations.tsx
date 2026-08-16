@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { DomainConfig } from '@/lib/domains';
 import { recordPracticeFor } from '@/lib/currents/progress';
+import CurrentGlyph from '@/components/CurrentGlyph';
 
 const DURATIONS = [
   { label: '3 min', seconds: 180 },
@@ -168,7 +169,7 @@ export default function DomainAffirmations({ domain }: { domain: DomainConfig })
 
           {phase === 'done' && (
             <motion.div key="done" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center space-y-6 pt-12">
-              <div className="text-5xl">{domain.emoji}</div>
+              <div className="flex justify-center"><CurrentGlyph current={domain.key} size={54} className={domain.accentClass} strokeWidth={1.1} /></div>
               <h2 className="font-heading text-2xl text-foreground">{count} affirmations absorbed</h2>
               <p className="text-sm text-muted-foreground">Let them keep working in you.</p>
               <div className="flex flex-col gap-2 pt-4">
