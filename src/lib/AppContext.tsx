@@ -327,6 +327,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       'check-in',
       { type: 'checkIn', payload: checkIn }
     );
+    recordPracticeComplete();
   }, [user, optimistic]);
 
   const completeOnboarding = useCallback((data: { reason: string; style: string; challenge: string; companionName?: string; companionSigil?: string; freeCurrent?: string }) => {
