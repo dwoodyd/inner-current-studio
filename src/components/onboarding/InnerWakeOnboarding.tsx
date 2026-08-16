@@ -233,10 +233,15 @@ export default function InnerWakeOnboarding({
         setBreathCount(0);
       }
 
-      if (i === 3) setShowBreathPrompt(true);
+      if (i === 3) {
+        // One full breath, then rest. The loop used to restart forever, which
+        // left the opening slide with no visible end.
+        setShowBreathPrompt(true);
+        return;
+      }
       timeout = setTimeout(() => {
-        i = (i + 1) % cycle.length;
-        if (i <= 3) run();
+        i += 1;
+        run();
       }, total > 0 ? total * 1000 : 2000);
     };
     const initial = setTimeout(run, 1200);
@@ -290,9 +295,20 @@ export default function InnerWakeOnboarding({
   const sans = "'DM Sans', system-ui, sans-serif";
   const serif = "'Cormorant Garamond', Georgia, serif";
 
+  // Tap/click anywhere (outside a real control) moves forward.
+  const advanceOnTap = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if ((e.target as HTMLElement).closest("button,a,input,textarea,select,[role='button']")) return;
+      if (slide >= TOTAL_SLIDES) return;
+      setSlide((s) => Math.min(s + 1, TOTAL_SLIDES));
+    },
+    [slide],
+  );
+
   return (
     <div
       className="iw-root"
+      onClick={advanceOnTap}
       style={{
         position: "fixed",
         inset: 0,
@@ -916,16 +932,24 @@ export default function InnerWakeOnboarding({
             {chimesEnabled ? "chimes on" : "chimes off"}
           </button>
         )}
-        <div className="iw-progress-wrap">
+        <p className="iw-nav-hint">
+          {slide < TOTAL_SLIDES
+            ? "Tap anywhere, swipe, or press → to continue"
+            : "Press ← to go back, or skip intro"}
+        </p>
+        <div className="iw-progress-wrap" role="tablist" aria-label="Intro progress">
           {Array.from({ length: TOTAL_SLIDES }, (_, i) => (
             <button
               key={i}
+              role="tab"
+              aria-selected={slide === i + 1}
               className={`iw-progress-dot${slide === i + 1 ? " active" : ""}`}
               onClick={() => goTo(i + 1)}
-              aria-label={`Slide ${i + 1}`}
+              aria-label={`Go to step ${i + 1} of ${TOTAL_SLIDES}`}
             />
           ))}
         </div>
+
       </div>
     </div>
   );
