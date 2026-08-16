@@ -77,7 +77,7 @@ export default function AppShell() {
           </TooltipProvider>
         </>
       )}
-      <main className={`flex-1 overflow-y-auto ${hideBottomNav ? 'pb-0' : 'pb-32'}`}>
+      <main className={`relative z-10 flex-1 overflow-y-auto ${hideBottomNav ? 'pb-0' : 'pb-32'}`}>
         <Outlet />
       </main>
       {!hideBottomNav && <BottomNav />}
