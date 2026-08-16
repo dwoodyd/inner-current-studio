@@ -233,10 +233,15 @@ export default function InnerWakeOnboarding({
         setBreathCount(0);
       }
 
-      if (i === 3) setShowBreathPrompt(true);
+      if (i === 3) {
+        // One full breath, then rest. The loop used to restart forever, which
+        // left the opening slide with no visible end.
+        setShowBreathPrompt(true);
+        return;
+      }
       timeout = setTimeout(() => {
-        i = (i + 1) % cycle.length;
-        if (i <= 3) run();
+        i += 1;
+        run();
       }, total > 0 ? total * 1000 : 2000);
     };
     const initial = setTimeout(run, 1200);
