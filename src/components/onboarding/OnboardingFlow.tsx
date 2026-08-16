@@ -9,6 +9,7 @@ import { Sigil } from "./Sigil";
 import { AmbientAudio, playChime } from "./AmbientAudio";
 import { Paywall } from "./Paywall";
 import TypingText from "@/components/TypingText";
+import { subscribeAndSync } from "@/lib/push";
 
 const CURRENTS = [
   { id: "money", name: "Money", essence: "Receiving with ease", hue: 42 },
@@ -56,6 +57,43 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
   const [chosenCurrent, setChosenCurrent] = useState<CurrentId | "">("");
   const [affirmation, setAffirmation] = useState<string>("");
   const [generating, setGenerating] = useState(false);
+  const [morningOn, setMorningOn] = useState(true);
+  const [morningTime, setMorningTime] = useState("07:30");
+  const [eveningOn, setEveningOn] = useState(true);
+  const [eveningTime, setEveningTime] = useState("21:00");
+  const [newsletterOptIn, setNewsletterOptIn] = useState(true);
+  const [savingRhythm, setSavingRhythm] = useState(false);
+
+  const saveRhythm = async () => {
+    setSavingRhythm(true);
+    try {
+      if (morningOn || eveningOn) {
+        if (typeof Notification !== "undefined" && Notification.permission === "default") {
+          try { await Notification.requestPermission(); } catch { /* ignore */ }
+        }
+        if (typeof Notification === "undefined" || Notification.permission === "granted") {
+          await subscribeAndSync({
+            morning_reminder: morningOn,
+            morning_time: morningTime,
+            evening_reflection: eveningOn,
+            evening_time: eveningTime,
+            gentle_returns: false,
+            return_interval_hours: 24,
+            affirmation_interval_minutes: 0,
+          });
+        }
+      }
+      if (newsletterOptIn && user?.email) {
+        await supabase.functions.invoke("newsletter-subscribe", {
+          body: { email: user.email, source: "onboarding" },
+        });
+      }
+    } catch { /* never block onboarding */ }
+    finally {
+      setSavingRhythm(false);
+      setAct(7);
+    }
+  };
 
   const current = CURRENTS.find((c) => c.id === chosenCurrent);
   const hue = current?.hue ?? 42;
