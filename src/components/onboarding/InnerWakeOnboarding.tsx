@@ -295,9 +295,20 @@ export default function InnerWakeOnboarding({
   const sans = "'DM Sans', system-ui, sans-serif";
   const serif = "'Cormorant Garamond', Georgia, serif";
 
+  // Tap/click anywhere (outside a real control) moves forward.
+  const advanceOnTap = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if ((e.target as HTMLElement).closest("button,a,input,textarea,select,[role='button']")) return;
+      if (slide >= TOTAL_SLIDES) return;
+      setSlide((s) => Math.min(s + 1, TOTAL_SLIDES));
+    },
+    [slide],
+  );
+
   return (
     <div
       className="iw-root"
+      onClick={advanceOnTap}
       style={{
         position: "fixed",
         inset: 0,
