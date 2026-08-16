@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
 
   const { data: subs, error } = await admin
     .from('push_subscriptions')
-    .select('*')
+    .select('id, user_id, endpoint, p256dh, auth_key, morning_reminder, morning_time, evening_reflection, evening_time, affirmation_interval_minutes, gentle_returns, return_interval_hours, active')
     .eq('active', true);
 
   if (error) {
