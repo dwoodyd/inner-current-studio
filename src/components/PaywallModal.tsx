@@ -24,7 +24,7 @@ export function PaywallModal({ open, onOpenChange, tool, limit, message }: Paywa
   const navigate = useNavigate();
   const body =
     message ??
-    `You've used your ${limit === 1 ? "one daily" : `${limit} daily`} ${tool} session. Inner Wake Pro opens it up — unlimited practice, all five Currents, and the deeper tools when you need them.`;
+    `You've met today's edge with ${tool} — ${limit === 1 ? "one session" : `${limit} sessions`} a day on the free path. Pro keeps the door open: unlimited practice, all five Currents, and the deeper tools whenever you reach for them.`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -41,8 +41,8 @@ export function PaywallModal({ open, onOpenChange, tool, limit, message }: Paywa
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
             <Sparkles size={20} />
           </div>
-          <DialogTitle className="font-heading text-2xl font-semibold text-foreground">
-            Come back tomorrow — or open more now
+          <DialogTitle className="font-heading text-2xl font-light leading-snug text-foreground">
+            This Current is waiting for you in Pro
           </DialogTitle>
           <DialogDescription className="text-sm leading-relaxed text-muted-foreground">
             {body}
