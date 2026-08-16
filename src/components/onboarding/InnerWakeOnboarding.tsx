@@ -114,7 +114,6 @@ function LineReveal({
 // ─── Current data ─────────────────────────────────────────────────────────────
 const CURRENTS = [
   {
-    icon: "💰",
     name: "Money",
     glyph: "money" as const,
     tagline: "Receive freely. Release resistance.",
@@ -124,7 +123,6 @@ const CURRENTS = [
       "Your relationship with money is an emotional one. This current helps you soften the grip, notice the stories, and open to flow.",
   },
   {
-    icon: "🌱",
     name: "Self",
     glyph: "self" as const,
     tagline: "Worth lives underneath the noise.",
@@ -134,7 +132,6 @@ const CURRENTS = [
       "Confidence isn't loud. Here you tend the quiet trust of being you — not performing, not proving. Just being.",
   },
   {
-    icon: "⚡",
     name: "Energy",
     glyph: "energy" as const,
     tagline: "A body that feels alive, not managed.",
@@ -144,7 +141,6 @@ const CURRENTS = [
       "Not productivity. Not optimization. Presence. The kind of vitality that comes when you stop running on empty.",
   },
   {
-    icon: "🤝",
     name: "Relationship",
     glyph: "relationships" as const,
     tagline: "Love that flows both ways.",
@@ -154,7 +150,6 @@ const CURRENTS = [
       "Belonging, boundaries, and the courage to be seen. This current is about the space between you and everyone else.",
   },
   {
-    icon: "🌿",
     name: "Health",
     glyph: "health" as const,
     tagline: "Wholeness as home.",
