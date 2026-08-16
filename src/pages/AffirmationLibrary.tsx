@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, Copy, BookOpen, Bell, BellOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { safeStorage } from '@/lib/platform';
+import EmptyState from '@/components/EmptyState';
 import {
   loadNotifPrefs, saveNotifPrefs, requestPermission,
   type NotificationPrefs,
@@ -167,10 +168,13 @@ export default function AffirmationLibrary() {
 
       {/* Saved Affirmations */}
       {affirmations.length === 0 ? (
-        <div className="text-center py-12 space-y-3">
-          <p className="text-muted-foreground text-sm">No saved affirmations yet.</p>
-          <p className="text-xs text-muted-foreground">Ask the <button onClick={() => navigate('/money/coach')} className="text-soul-gold underline">Affirmation Coach</button> for personalized affirmations, then save the ones that resonate.</p>
-        </div>
+        <EmptyState
+          icon={BookOpen}
+          title="Your library is still quiet"
+          message="Lines you save will live here, ready whenever you need one."
+          invitation="Start with one sentence you can almost believe."
+          action={{ label: 'Ask the Coach', onClick: () => navigate('/money/coach') }}
+        />
       ) : (
         <div className="space-y-2">
           <AnimatePresence>

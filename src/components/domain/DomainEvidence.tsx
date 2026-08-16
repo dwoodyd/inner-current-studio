@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
 import { recordPracticeFor } from '@/lib/currents/progress';
+import EmptyState from '@/components/EmptyState';
 
 interface Entry { id: string; category: string; entry_text: string; created_at: string; }
 
@@ -70,7 +71,14 @@ export default function DomainEvidence({ domain }: { domain: DomainConfig }) {
       </div>
 
       <div className="space-y-2">
-        {entries.length === 0 && <p className="text-center text-sm text-muted-foreground/60 py-8">Your first piece of evidence is waiting.</p>}
+        {entries.length === 0 && (
+          <EmptyState
+            icon={Plus}
+            title="Your first piece of evidence is waiting"
+            message="Notice one moment that already points toward what you want."
+            invitation="Proof builds quietly, one noticing at a time."
+          />
+        )}
         {entries.map((e, i) => {
           const cat = domain.evidenceCategories.find(c => c.value === e.category);
           return (
