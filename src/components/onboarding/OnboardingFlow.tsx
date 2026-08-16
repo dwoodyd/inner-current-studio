@@ -529,9 +529,9 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
       </AnimatePresence>
 
       {/* progress dots */}
-      {act > 0 && act < 6 && (
+      {act > 0 && act < 7 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
               key={i}
               className={`h-1 rounded-full transition-all ${
@@ -541,6 +541,43 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function RhythmRow({
+  label,
+  hint,
+  enabled,
+  onToggle,
+  time,
+  onTime,
+}: {
+  label: string;
+  hint: string;
+  enabled: boolean;
+  onToggle: (v: boolean) => void;
+  time: string;
+  onTime: (v: string) => void;
+}) {
+  return (
+    <div
+      className={`flex items-center justify-between gap-4 rounded-xl border px-5 py-4 transition-all ${
+        enabled ? "border-primary/40 bg-primary/5" : "border-border/30 bg-card/40"
+      }`}
+    >
+      <button type="button" onClick={() => onToggle(!enabled)} className="flex-1 text-left">
+        <div className="font-heading text-base text-foreground">{label}</div>
+        <div className="text-xs italic text-muted-foreground">{hint}</div>
+      </button>
+      <input
+        type="time"
+        value={time}
+        onChange={(e) => onTime(e.target.value)}
+        disabled={!enabled}
+        aria-label={`${label} time`}
+        className="rounded-lg border border-border/40 bg-background/60 px-3 py-2 text-sm text-foreground disabled:opacity-40"
+      />
     </div>
   );
 }
