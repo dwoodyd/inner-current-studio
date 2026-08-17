@@ -227,11 +227,15 @@
   position: absolute;
   top: max(1.15rem, env(safe-area-inset-top, 0px));
   left: max(1.15rem, env(safe-area-inset-left, 0px));
-  background: rgba(200, 164, 90, 0.08);
-  border: 1px solid rgba(200, 164, 90, 0.24);
-  color: var(--muted);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  /* Exits must clear 4.5:1 — they were the faintest things on screen. */
+  color: #EDEAE4;
   font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   letter-spacing: 0.14em;
   padding: 0.58rem 1.2rem;
   border-radius: 100px;
@@ -249,12 +253,15 @@
   top: 1.4rem;
   right: 1.6rem;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--quiet);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #D8D4CC;
   font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
   padding: 0.4rem 1rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   border-radius: 100px;
   cursor: pointer;
   transition: color 300ms, border-color 300ms;
@@ -481,10 +488,11 @@
 .iw-breath-count-label {
   display: block;
   margin-top: 0.2rem;
-  font-size: 0.55rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--quiet);
+  /* This label is the only signal the ritual is progressing, not stuck. */
+  color: #CFC9BE;
 }
 @keyframes iwGlowPulse {
   0%, 100% { transform: scale(1); opacity: 0.5; }

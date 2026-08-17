@@ -216,6 +216,13 @@ export default function InnerWakeOnboarding({
       setBreathPhase(phases[i]);
       const total = seconds[i];
       if (tones[i]) playChime(tones[i]);
+      // Haptics on the phase boundaries: the breath works face-down.
+      try {
+        const pattern = i === 0 ? 18 : i === 1 ? 10 : i === 2 ? [14, 60, 14] : 0;
+        if (pattern) navigator.vibrate?.(pattern as number | number[]);
+      } catch {
+        // haptics are a bonus, never a requirement
+      }
 
       clearInterval(countInterval);
       if (total > 0) {
