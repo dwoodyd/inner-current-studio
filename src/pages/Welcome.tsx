@@ -249,6 +249,12 @@ export default function Welcome() {
               <div>
                 <h2 className="font-serif text-2xl">Try a quiet return.</h2>
                 <p className="mt-2 text-sm text-muted-foreground">{centering ? centerPrompt : 'A small reset before you create an account.'}</p>
+                <a
+                  href="/center"
+                  className="mt-3 inline-flex min-h-[44px] items-center text-sm text-primary underline-offset-4 hover:underline"
+                >
+                  Open the bare center — nothing else on the page
+                </a>
               </div>
             </div>
           </div>
@@ -420,6 +426,7 @@ export default function Welcome() {
                   '1 daily Alignment Wheel · Breathwork · Reset',
                   '3 daily Current Guide reflections',
                   'Stillness Timer — unlimited',
+                  'Export everything you write, free — plain text, always',
                 ],
                 cta: 'Begin free',
               },
@@ -435,6 +442,7 @@ export default function Welcome() {
                   'Resonance Library · Practice Constellation',
                   'Pattern Mirror — multi-month history',
                   'Save 35% vs monthly',
+                  'Export everything you write, free — plain text, always',
                 ],
                 cta: 'Reserve Pro Annual',
                 highlight: true,
@@ -451,6 +459,7 @@ export default function Welcome() {
                   'Founding Member badge',
                   'Direct line to DeWayne (quarterly)',
                   'Free copy of Before the Words at release',
+                  'Export everything you write, free — plain text, always',
                 ],
                 cta: 'Lock in Lifetime $99',
               },
