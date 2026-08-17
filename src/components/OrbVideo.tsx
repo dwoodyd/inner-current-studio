@@ -86,8 +86,13 @@ const OrbVideo = React.memo(function OrbVideo({
 
   return (
     <div
-      className={cn('relative overflow-hidden rounded-full', className)}
-      style={wrapperStyle}
+      className={cn('relative overflow-hidden rounded-full isolate', className)}
+      style={{
+        ...wrapperStyle,
+        // border-radius alone doesn't always clip a transformed <video>;
+        // clip-path guarantees the circle on every engine.
+        clipPath: 'circle(50% at 50% 50%)',
+      }}
     >
       {/* Soft fallback shimmer while the video buffers */}
       <AnimatePresence>
