@@ -488,10 +488,11 @@
 .iw-breath-count-label {
   display: block;
   margin-top: 0.2rem;
-  font-size: 0.55rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--quiet);
+  /* This label is the only signal the ritual is progressing, not stuck. */
+  color: #CFC9BE;
 }
 @keyframes iwGlowPulse {
   0%, 100% { transform: scale(1); opacity: 0.5; }
