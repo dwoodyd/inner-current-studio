@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Flame, ArrowRight } from 'lucide-react';
 import { ALL_DOMAIN_KEYS, DOMAINS, type DomainKey } from '@/lib/domains';
+import CurrentGlyph from '@/components/CurrentGlyph';
 import { useWeeklyDigest } from '@/lib/currents/progress';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { SOON_DOMAINS } from '@/lib/currents/soonDomains';
