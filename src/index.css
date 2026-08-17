@@ -8,26 +8,30 @@
   :root {
     /* Inner Wake — warm-black + gold + Orb. House identity, dark-only by design.
        Tokens locked from builder brief: ground #0C0B0A, raise #171411, gold #C8A24A, text #E7E1D6. */
-    --background: 30 9% 4%;
-    --foreground: 39 27% 87%;
-    --card: 24 15% 8%;
-    --card-foreground: 39 27% 87%;
-    --popover: 24 15% 8%;
-    --popover-foreground: 39 27% 87%;
-    --primary: 42 54% 54%;
-    --primary-foreground: 30 9% 4%;
-    --secondary: 265 22% 38%;
-    --secondary-foreground: 39 27% 87%;
-    --muted: 28 10% 13%;
-    --muted-foreground: 36 8% 60%;
-    --accent: 28 14% 18%;
-    --accent-foreground: 39 27% 87%;
-    --destructive: 0 60% 50%;
-    --destructive-foreground: 39 27% 87%;
-    --border: 28 12% 16%;
-    --input: 28 12% 16%;
+    --background: 30 9% 5%;
+    --foreground: 39 27% 92%;
+    --card: 24 15% 9%;
+    --card-foreground: 39 27% 92%;
+    --popover: 24 15% 9%;
+    --popover-foreground: 39 27% 92%;
+    --primary: 42 58% 60%;
+    --primary-foreground: 30 9% 5%;
+    --secondary: 265 22% 42%;
+    --secondary-foreground: 39 27% 92%;
+    --muted: 28 10% 15%;
+    --muted-foreground: 36 12% 72%;
+    --accent: 28 14% 20%;
+    --accent-foreground: 39 27% 92%;
+    --destructive: 0 60% 55%;
+    --destructive-foreground: 39 27% 92%;
+    --border: 28 12% 20%;
+    --input: 28 12% 20%;
     --ring: 42 54% 54%;
     --radius: 0.75rem;
+
+    /* The Field — hue of whatever current is being tended. Set at runtime. */
+    --field-h: 42;
+    --field-s: 54%;
 
     --soul-gold: 42 54% 54%;
     --soul-violet: 265 22% 48%;
@@ -220,6 +224,47 @@
   }
   .iw-input::placeholder { color: hsl(var(--muted-foreground) / 0.5); }
   .iw-input:focus { border-color: hsl(var(--primary) / 0.5); }
+
+  /* The Field — a full-screen wash that takes its color from the current
+     being tended. It lifts the ground rather than darkening it, so text
+     contrast never drops. */
+  .field-wash {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 80% at 50% -10%, hsl(var(--field-h) var(--field-s) 52% / 0.16), transparent 62%),
+      radial-gradient(90% 70% at 12% 108%, hsl(var(--field-h) var(--field-s) 46% / 0.10), transparent 70%),
+      linear-gradient(180deg, hsl(var(--field-h) calc(var(--field-s) * 0.5) 8% / 0.55), transparent 45%);
+    transition: background 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .light .field-wash {
+    background:
+      radial-gradient(120% 80% at 50% -10%, hsl(var(--field-h) var(--field-s) 62% / 0.20), transparent 62%),
+      radial-gradient(90% 70% at 12% 108%, hsl(var(--field-h) var(--field-s) 58% / 0.14), transparent 70%);
+  }
+
+  /* Card / border tints that follow the field. */
+  .field-tint {
+    border-color: hsl(var(--field-h) var(--field-s) 58% / 0.22) !important;
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--field-h) var(--field-s) 55% / 0.08),
+      transparent 65%
+    );
+  }
+
+  .field-text {
+    color: hsl(var(--field-h) var(--field-s) 68%);
+  }
+
+  .field-glow {
+    box-shadow:
+      0 0 40px hsl(var(--field-h) var(--field-s) 55% / 0.18),
+      0 0 90px hsl(var(--field-h) var(--field-s) 55% / 0.07);
+  }
 
   .soul-ambient-gold {
     position: relative;

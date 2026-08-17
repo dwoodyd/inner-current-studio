@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { DomainConfig } from '@/lib/domains';
 import { recordPracticeFor } from '@/lib/currents/progress';
+import StateDial from '@/components/StateDial';
 
 export default function DomainStateCheckIn({ domain }: { domain: DomainConfig }) {
   const navigate = useNavigate();
@@ -46,17 +47,27 @@ export default function DomainStateCheckIn({ domain }: { domain: DomainConfig })
         ) : (
           <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
             <div className="text-center space-y-2">
-              <h1 className="font-heading text-2xl text-foreground">How are you with this current right now?</h1>
-              <p className="text-sm text-muted-foreground">Pick what is most true. There is no wrong answer.</p>
+              <h1 className="font-heading text-2xl text-foreground">Where are you with this current?</h1>
+              <p className="text-sm text-muted-foreground">Move the weight. No word required.</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {domain.states.map(s => (
-                <button key={s.value} onClick={() => setSelected(s.value)}
-                  className={`soul-card flex items-center gap-3 p-4 rounded-2xl transition-all ${selected === s.value ? 'ring-2 ring-primary bg-primary/5' : ''}`}>
-                  <span className="text-2xl">{s.emoji}</span>
-                  <span className="text-sm font-medium text-foreground">{s.label}</span>
-                </button>
-              ))}
+            <div className="soul-card rounded-2xl px-5 py-5">
+              <StateDial
+                steps={domain.states.length}
+                value={selected ? domain.states.findIndex(s => s.value === selected) : null}
+                onPreview={(i) => setSelected(domain.states[i].value)}
+                onCommit={(i) => setSelected(domain.states[i].value)}
+                ariaLabel={`Move the weight to where you are with the ${domain.label}`}
+                stopLabels={domain.states.map(s => s.label)}
+              />
+              <div className="mt-1 flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">
+                <span aria-hidden="true">closed</span>
+                <span aria-hidden="true">open</span>
+              </div>
+              {selected && (
+                <p className="mt-4 text-center font-heading text-lg text-foreground">
+                  {domain.states.find(s => s.value === selected)?.label}
+                </p>
+              )}
             </div>
             <textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Anything else? (optional)"
               className="w-full soul-card p-4 rounded-2xl bg-transparent text-sm text-foreground placeholder:text-muted-foreground/60 resize-none min-h-[100px] focus:outline-none focus:ring-2 focus:ring-primary/40" />

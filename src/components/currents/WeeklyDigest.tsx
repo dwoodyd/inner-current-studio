@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Flame, ArrowRight } from 'lucide-react';
 import { ALL_DOMAIN_KEYS, DOMAINS, type DomainKey } from '@/lib/domains';
+import CurrentGlyph from '@/components/CurrentGlyph';
 import { useWeeklyDigest } from '@/lib/currents/progress';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { SOON_DOMAINS } from '@/lib/currents/soonDomains';
@@ -56,7 +57,7 @@ export default function WeeklyDigest() {
         >
           <div className="w-8 h-8 rounded-full flex items-center justify-center"
                style={{ background: `radial-gradient(circle, ${nudgeDomain.glow}, transparent 70%)` }}>
-            <span className="text-sm">{nudgeSpec.symbol}</span>
+            <CurrentGlyph current={nudgeSlug} size={16} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">Gentle nudge</p>
