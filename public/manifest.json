@@ -4,8 +4,8 @@
   "description": "Wake the inner current. A premium ritual app for emotional alignment, relief, and clarity.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f1419",
-  "theme_color": "#0f1419",
+  "background_color": "#07070A",
+  "theme_color": "#07070A",
   "orientation": "portrait",
   "icons": [
     {
@@ -31,6 +31,14 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ten-second center",
+      "short_name": "Center",
+      "description": "Start a ten-second centering breath immediately.",
+      "url": "/center"
     }
   ]
 }

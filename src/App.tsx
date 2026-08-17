@@ -65,6 +65,7 @@ const Terms = lazy(() => import("@/pages/Terms"));
 const Refund = lazy(() => import("@/pages/Refund"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
+const Center = lazy(() => import('./pages/Center'));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Beta = lazy(() => import("@/pages/Beta"));
 const ReadingBridge = lazy(() => import("@/pages/ReadingBridge"));
@@ -245,6 +246,7 @@ function AppRoutes() {
   if (!user) {
     return (
       <Suspense fallback={<RouteLoader />}><Routes>
+        <Route path="/center" element={<Center />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/beta" element={<Beta />} />
         <Route path="/owner" element={<OwnerAccess />} />
@@ -258,6 +260,11 @@ function AppRoutes() {
       </Routes>
     </Suspense>
     );
+  }
+
+  // The ten-second center never waits behind onboarding.
+  if (location.pathname === '/center') {
+    return <Suspense fallback={<RouteLoader />}><Center /></Suspense>;
   }
 
   if (!state.onboarding.completed && location.pathname !== '/onboarding') {

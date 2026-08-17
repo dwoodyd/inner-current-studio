@@ -8,32 +8,35 @@
   :root {
     /* Inner Wake — warm-black + gold + Orb. House identity, dark-only by design.
        Tokens locked from builder brief: ground #0C0B0A, raise #171411, gold #C8A24A, text #E7E1D6. */
-    --background: 30 9% 5%;
-    --foreground: 39 27% 92%;
-    --card: 24 15% 9%;
-    --card-foreground: 39 27% 92%;
-    --popover: 24 15% 9%;
-    --popover-foreground: 39 27% 92%;
-    --primary: 42 58% 60%;
-    --primary-foreground: 30 9% 5%;
+    /* Ground: #07070A — near-black and neutral. No hue lives here; the
+       current you are tending supplies every colour on top of it. */
+    --background: 240 18% 3%;
+    --foreground: 40 12% 92%;
+    --card: 240 8% 7%;
+    --card-foreground: 40 12% 92%;
+    --popover: 240 8% 7%;
+    --popover-foreground: 40 12% 92%;
+    /* Accents drink from the field, so the app is the colour of the state. */
+    --primary: var(--field-h) var(--field-s) 60%;
+    --primary-foreground: 240 18% 3%;
     --secondary: 265 22% 42%;
     --secondary-foreground: 39 27% 92%;
-    --muted: 28 10% 15%;
-    --muted-foreground: 36 12% 72%;
-    --accent: 28 14% 20%;
-    --accent-foreground: 39 27% 92%;
+    --muted: 240 6% 13%;
+    --muted-foreground: 40 8% 74%;
+    --accent: 240 6% 17%;
+    --accent-foreground: 40 12% 92%;
     --destructive: 0 60% 55%;
-    --destructive-foreground: 39 27% 92%;
-    --border: 28 12% 20%;
-    --input: 28 12% 20%;
-    --ring: 42 54% 54%;
+    --destructive-foreground: 40 12% 92%;
+    --border: 240 6% 18%;
+    --input: 240 6% 18%;
+    --ring: var(--field-h) var(--field-s) 58%;
     --radius: 0.75rem;
 
     /* The Field — hue of whatever current is being tended. Set at runtime. */
     --field-h: 42;
     --field-s: 54%;
 
-    --soul-gold: 42 54% 54%;
+    --soul-gold: var(--field-h) var(--field-s) 58%;
     --soul-violet: 265 22% 48%;
     --soul-blue: 210 35% 48%;
     --soul-green: 160 28% 42%;

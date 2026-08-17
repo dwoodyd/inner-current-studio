@@ -15,15 +15,19 @@ export interface FieldHue {
   s: number;
 }
 
-/** House default — warm gold, the Inner Wake ground. */
-export const HOUSE_FIELD: FieldHue = { h: 42, s: 54 };
+/**
+ * House default — no current in hand. Barely tinted: the ground is neutral
+ * near-black (#07070A) and the currents own every hue.
+ */
+export const HOUSE_FIELD: FieldHue = { h: 38, s: 46 };
 
+/** The five currents, straight from the palette: gold is just one of five. */
 export const FIELD_HUES: Record<DomainKey, FieldHue> = {
-  money: { h: 42, s: 62 },
-  self: { h: 282, s: 40 },
-  energy: { h: 24, s: 72 },
-  relationships: { h: 342, s: 52 },
-  health: { h: 164, s: 42 },
+  money: { h: 38, s: 61 },          // #D4A24C
+  self: { h: 141, s: 38 },          // #6FBF8B
+  energy: { h: 25, s: 71 },         // #E08A4B
+  relationships: { h: 355, s: 56 }, // #D97A82
+  health: { h: 178, s: 37 },        // #5FB6B3
 };
 
 export function fieldFor(key?: DomainKey | null): FieldHue {
