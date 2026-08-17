@@ -9,6 +9,8 @@ import { useAppState } from '@/lib/AppContext';
 import { CURRENT_SPECS } from '@/lib/currents/spec';
 import { useCurrentProgress } from '@/lib/currents/progress';
 import CurrentSigil from '@/components/currents/CurrentSigil';
+import CurrentGlyph from '@/components/CurrentGlyph';
+import { FIELD_HUES } from '@/lib/currentField';
 import WeeklyDigest from '@/components/currents/WeeklyDigest';
 
 const STAGE_LABEL: Record<1 | 2 | 3 | 4, string> = {
@@ -125,12 +127,19 @@ function CurrentCard({ slug, d, index, isOpen, badge, onClick }: CardProps) {
       initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
       onClick={onClick}
       className={`group flex min-h-[88px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:min-h-[100px] sm:gap-4 sm:p-5 ${!isOpen ? 'opacity-70' : ''}`}
+      style={{
+        // Each current carries its own hue — the same hue the whole screen
+        // takes on once you step inside it.
+        borderColor: `hsl(${FIELD_HUES[slug].h} ${FIELD_HUES[slug].s}% 58% / 0.22)`,
+        backgroundImage: `linear-gradient(135deg, hsl(${FIELD_HUES[slug].h} ${FIELD_HUES[slug].s}% 55% / 0.10), transparent 62%)`,
+      }}
     >
       <div className="shrink-0 relative" style={{ width: 60, height: 60 }}>
         <CurrentSigil base={spec.sigilBase} stage={stage} size={60} glow={d.glow} />
       </div>
       <div className="flex-1 space-y-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
+          <CurrentGlyph current={slug} size={18} className={d.accentClass} />
           <h3 className="font-heading text-lg font-medium text-foreground tracking-tight">{d.label}</h3>
           {badge && (
             <span className={`rounded-full px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] font-medium ${
