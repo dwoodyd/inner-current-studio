@@ -56,7 +56,7 @@ export default function WeeklyDigest() {
         >
           <div className="w-8 h-8 rounded-full flex items-center justify-center"
                style={{ background: `radial-gradient(circle, ${nudgeDomain.glow}, transparent 70%)` }}>
-            <span className="text-sm">{nudgeSpec.symbol}</span>
+            <CurrentGlyph current={nudgeSlug} size={16} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">Gentle nudge</p>
