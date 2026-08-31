@@ -4,9 +4,9 @@ import { Compass, RefreshCw, Timer, Sparkles, BookOpen, Play } from 'lucide-reac
 
 const cards = [
   { label: 'Alignment Wheel', icon: Compass, to: '/align', color: 'text-soul-gold' },
-  { label: 'Relief Wheel', icon: Sparkles, to: '/align', color: 'text-soul-violet' },
+  { label: 'Imagine If', icon: Sparkles, to: '/reflect/imagine-if', color: 'text-soul-violet' },
   { label: 'Contrast Reset', icon: RefreshCw, to: '/reset/contrast', color: 'text-soul-blue' },
-  { label: 'Gather Flow', icon: Play, to: '/align', color: 'text-soul-green' },
+  { label: 'Reflect', icon: Play, to: '/reflect', color: 'text-soul-green' },
   { label: 'Future Self Pages', icon: BookOpen, to: '/reflect/future-pages', color: 'text-soul-warm' },
   { label: 'Stillness Timer', icon: Timer, to: '/reset/stillness', color: 'text-muted-foreground' },
 ];

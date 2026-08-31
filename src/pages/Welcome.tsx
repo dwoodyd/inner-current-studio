@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
 import NewsletterForm from '@/components/NewsletterForm';
+import BookAvailability from '@/components/BookAvailability';
 import innerWakeIcon from '@/assets/inner-wake-orb-logo.png';
 import CurrentGlyph from '@/components/CurrentGlyph';
 
@@ -458,7 +459,7 @@ export default function Welcome() {
                   'Never billed again',
                   'Founding Member badge',
                   'Direct line to DeWayne (quarterly)',
-                  'Free copy of Before the Words at release',
+                  'Reading Bridge: pair your practice with Before the Words',
                   'Export everything you write, free — plain text, always',
                 ],
                 cta: 'Lock in Lifetime $99',
@@ -509,6 +510,22 @@ export default function Welcome() {
             <Link to="/refund" className="underline hover:text-foreground">refund policy</Link> and{' '}
             <Link to="/terms" className="underline hover:text-foreground">terms</Link>.
           </p>
+        </section>
+
+        {/* The companion book — available now */}
+        <section className="mt-28 rounded-3xl border border-border/60 bg-card/40 p-8 backdrop-blur md:p-12">
+          <p className="text-[11px] uppercase tracking-[0.22em] text-soul-gold/80">The companion book</p>
+          <h2 className="mt-3 font-serif text-3xl md:text-4xl">
+            <span className="italic">Before the Words</span> is out now.
+          </h2>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            Inner Wake gives you the practice. The book gives you the philosophy underneath it —
+            the quiet before speech, the ground everything else moves from. Read it alongside the
+            app with the Reading Bridge, or on its own.
+          </p>
+          <div className="mt-6 max-w-md">
+            <BookAvailability compact note="by DeWayne Woods. Paperback and Kindle." />
+          </div>
         </section>
 
         {/* Final CTA */}

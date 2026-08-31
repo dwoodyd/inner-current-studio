@@ -49,7 +49,7 @@ const LIFETIME_EXTRAS = [
   'Founding Member badge',
   'Direct line to DeWayne — one note per quarter',
   '1-on-1 onboarding call with DeWayne',
-  'Free download of Before the Words when it releases',
+  'Reading Bridge: pair your practice with Before the Words',
 ];
 
 export default function Subscription() {

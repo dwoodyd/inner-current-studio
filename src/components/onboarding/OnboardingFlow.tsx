@@ -146,7 +146,9 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
   // Acts ----------------------------------------------------------------
   return (
     <div
-      className="relative flex min-h-[100dvh] flex-col items-center justify-center px-6 py-12 overflow-hidden"
+      /* Top padding reserves room for the fixed sound control so eyebrows and
+         headings never run beneath it; side padding keeps lines off the edge. */
+      className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-7 pb-12 pt-[max(5.5rem,calc(env(safe-area-inset-top,0px)+4.5rem))]"
       style={{
         background: `radial-gradient(ellipse at 50% 30%, hsl(${hue} 35% 12%), hsl(220 25% 5%) 70%)`,
       }}

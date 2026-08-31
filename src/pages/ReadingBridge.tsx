@@ -7,6 +7,7 @@ import { CHAPTERS, type ChapterId } from '@/lib/readingBridge/config';
 import { useReadingBridge } from '@/lib/readingBridge/useReadingBridge';
 import { trackBridgeEvent } from '@/lib/readingBridge/analytics';
 import { exportBridgeAsJSON, exportBridgeAsCSV } from '@/lib/readingBridge/export';
+import BookAvailability from '@/components/BookAvailability';
 
 export default function ReadingBridge() {
   const navigate = useNavigate();
@@ -146,6 +147,10 @@ export default function ReadingBridge() {
           </button>
         </div>
 
+        {/* Don't have the book yet? It's out now. */}
+        <div className="soul-glass rounded-2xl p-5">
+          <BookAvailability note="Don't have it yet? Paperback and Kindle, out now." />
+        </div>
 
         <p className="px-2 text-center text-[11px] text-muted-foreground/55 italic font-heading">
           You can change this anytime from Profile.

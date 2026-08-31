@@ -8,6 +8,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { supabase } from '@/integrations/supabase/client';
 import { Sigil } from '@/components/onboarding/Sigil';
 import PracticeConstellation from '@/components/PracticeConstellation';
+import BookAvailability from '@/components/BookAvailability';
 import { toast } from 'sonner';
 import { BarChart3, Layers, Sparkles, Activity, Archive, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart, Lock, BookOpen, ExternalLink } from 'lucide-react';
 import warmHandsPhoto from '@/assets/photo-warm-hands.jpg';
@@ -75,6 +76,7 @@ export default function Profile() {
         { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
         { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals', proLock: proGated ? 'Pro · unlimited' : null },
         { icon: BookOpen, label: 'Reading Bridge', description: 'Pair the app with the book', to: '/reading-bridge' },
+        { icon: Archive, label: 'Reflect', description: 'Future Pages, Imagine If & your private archive', to: '/reflect' },
       ],
     },
     {
@@ -172,12 +174,7 @@ export default function Profile() {
           return (
             <motion.section variants={fadeUp} className="space-y-2">
               <h2 className="px-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/60">Going Deeper</h2>
-              <a
-                href="https://innerwake.live"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block soul-glass overflow-hidden rounded-2xl p-5 transition-all duration-200 hover:bg-muted/10 active:scale-[0.99]"
-              >
+              <div className="soul-glass overflow-hidden rounded-2xl p-5">
                 <div className="flex items-start gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary/10">
                     <BookOpen size={18} className="text-primary" strokeWidth={1.5} />
@@ -199,14 +196,12 @@ export default function Profile() {
                         <p className="text-xs text-muted-foreground/80 leading-relaxed italic font-heading">
                           If the practice is working and you want to understand why, the book is the why.
                         </p>
-                        <span className="inline-flex items-center gap-1 pt-1 text-[11px] text-primary">
-                          Learn more about the book <ExternalLink size={11} />
-                        </span>
                       </>
                     )}
                   </div>
                 </div>
-              </a>
+                <BookAvailability compact className="mt-4" note="Available now — on soulengineer.online and Amazon." />
+              </div>
             </motion.section>
           );
         })()}

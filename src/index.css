@@ -128,11 +128,18 @@
     }
   }
 
-  /* Prevent serif headings from overflowing on narrow viewports */
+  /* Headings wrap between words, never inside them — no "car-/rying". */
   .font-heading {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
+    overflow-wrap: normal;
+    word-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+    -webkit-hyphens: none;
+    text-wrap: balance;
+  }
+  /* Only truly unbreakable strings (long URLs) may break. */
+  .font-heading:where(.break-anywhere) {
+    overflow-wrap: anywhere;
   }
 
   body {

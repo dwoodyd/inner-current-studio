@@ -53,6 +53,9 @@ const sections: { title: string; time: string; tools: MoneyTool[]; deep?: boolea
       { icon: Target, title: 'Money Openings', description: 'Clarify the desire that still feels alive.', to: '/money/openings' },
       { icon: Library, title: 'Library', description: 'Revisit the words that stayed.', to: '/money/library' },
       { icon: Leaf, title: 'Wealth Rhythm', description: 'Tend return without streak pressure.', to: '/money/wealth-rhythm' },
+      { icon: Sparkles, title: 'Overflow Practice', description: 'Spend from circulation, not fear.', to: '/money/overflow' },
+      { icon: Target, title: 'Aligned Action', description: 'One next step your body agrees with.', to: '/money/aligned-action' },
+      { icon: Timer, title: 'Affirmation Tracker', description: 'See which lines actually landed.', to: '/money/tracker' },
     ],
   },
 ];
