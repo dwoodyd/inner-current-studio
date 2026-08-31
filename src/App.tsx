@@ -12,7 +12,6 @@ import { DailyLimitGate } from "@/components/DailyLimitGate";
 import type { GatedTool } from "@/hooks/useDailyLimit";
 
 import { useAppState } from "@/lib/AppContext";
-import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
 import { useCurrentsCloudSync } from "@/hooks/useCurrentsCloudSync";
 import { ThemeProvider } from "@/hooks/useTheme";
@@ -225,7 +224,6 @@ function AppRoutes() {
   const { user, loading } = useAuth();
   const location = useLocation();
   const { state } = useAppState();
-  useBetaTrialClaimer();
   useCurrentsCloudSync();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
