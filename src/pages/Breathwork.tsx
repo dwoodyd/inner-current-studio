@@ -341,7 +341,7 @@ export default function Breathwork() {
                     </button>
                   ))}
                 </div>
-                <input type="range" min={0} max={100} value={volume * 100}
+                <input type="range" aria-label="Ambient volume" min={0} max={100} value={volume * 100}
                   onChange={e => setVolumeState(Number(e.target.value) / 100)}
                   className="w-full h-1 accent-primary bg-muted/30 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary"
                 />

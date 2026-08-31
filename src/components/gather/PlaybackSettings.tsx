@@ -56,6 +56,7 @@ export function PlaybackSettings({ config, onChange }: Props) {
             <VolumeX size={12} className="text-muted-foreground/40" />
             <input
               type="range"
+              aria-label="Playback volume"
               min={0}
               max={100}
               value={config.volume * 100}

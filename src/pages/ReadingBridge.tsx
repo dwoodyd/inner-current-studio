@@ -47,7 +47,7 @@ export default function ReadingBridge() {
         />
       </div>
 
-      <main className="relative mx-auto max-w-lg px-4 pt-10 pb-12 safe-top space-y-6">
+      <div className="relative mx-auto max-w-lg px-4 pt-10 pb-12 safe-top space-y-6">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -155,7 +155,7 @@ export default function ReadingBridge() {
         <p className="px-2 text-center text-[11px] text-muted-foreground/55 italic font-heading">
           You can change this anytime from Profile.
         </p>
-      </main>
+      </div>
     </div>
   );
 }

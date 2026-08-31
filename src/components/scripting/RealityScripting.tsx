@@ -249,9 +249,9 @@ export default function RealityScripting({ domain, view }: { domain: DomainConfi
             {['Scene', 'Feeling', 'Identity', 'Evidence'].map(item => <div key={item} className="rounded-xl bg-muted/30 p-3">{item}</div>)}
           </div>
         )}
-        <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Name this reality" className="w-full rounded-2xl border border-border/20 bg-card/40 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none" />
-        <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="I am here now. I can feel..." className="min-h-[220px] w-full rounded-2xl border border-border/20 bg-card/40 px-4 py-4 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none resize-none" />
-        <input value={feeling} onChange={e => setFeeling(e.target.value)} placeholder="One feeling word" className="w-full rounded-2xl border border-border/20 bg-card/40 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none" />
+        <input aria-label="Name this reality" value={title} onChange={e => setTitle(e.target.value)} placeholder="Name this reality" className="w-full rounded-2xl border border-border/20 bg-card/40 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none" />
+        <textarea aria-label="Your reality script" value={content} onChange={e => setContent(e.target.value)} placeholder="I am here now. I can feel..." className="min-h-[220px] w-full rounded-2xl border border-border/20 bg-card/40 px-4 py-4 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none resize-none" />
+        <input aria-label="One feeling word" value={feeling} onChange={e => setFeeling(e.target.value)} placeholder="One feeling word" className="w-full rounded-2xl border border-border/20 bg-card/40 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none" />
         {nudges.length > 0 && <div className="space-y-2">{nudges.map(n => <p key={n} className="text-xs text-primary/80 bg-primary/10 rounded-xl px-3 py-2">{n}</p>)}</div>}
         <button onClick={saveScript} disabled={saving || !content.trim()} className="soul-btn-primary w-full flex items-center justify-center gap-2 rounded-2xl disabled:opacity-40"><Save size={16} /> Crystallize script</button>
       </main>
