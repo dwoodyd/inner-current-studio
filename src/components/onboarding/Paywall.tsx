@@ -27,25 +27,43 @@ const INCLUDES = [
  * is to celebrate that window and route the user straight into their practice
  * — not to open checkout mid-onboarding. Pricing lives at /subscription.
  */
+const FOUNDER_WINDOW_DAYS = 90;
+
 export function Paywall({ companionName, chosenCurrent, onContinueFree }: PaywallProps) {
   const navigate = useNavigate();
-  const { trialDaysRemaining, founderDaysRemaining } = useSubscription();
-  const daysLeft = founderDaysRemaining ?? trialDaysRemaining ?? 90;
+  const { trialDaysRemaining, founderDaysRemaining, tier, isFoundingMember } = useSubscription();
+
+  /** Permanent access — nothing to count down. */
+  const hasForeverAccess = tier === "lifetime" || isFoundingMember;
+
+  // Never render a zero/negative window to a brand-new account: fall back to
+  // the full founder window until the backend value lands.
+  const rawDays = founderDaysRemaining ?? trialDaysRemaining ?? FOUNDER_WINDOW_DAYS;
+  const daysLeft = rawDays > 0 ? rawDays : FOUNDER_WINDOW_DAYS;
 
   return (
     <div className="space-y-7 text-center">
       <div className="space-y-3">
         <Sparkles className="h-6 w-6 text-primary mx-auto" />
         <p className="text-xs tracking-[0.3em] uppercase text-primary/70">
-          Founder Access · {daysLeft} days
+          {hasForeverAccess ? "Founding Member · Forever" : `Founder Access · ${daysLeft} days`}
         </p>
         <h2 className="font-heading text-3xl font-light text-foreground">
           All five Currents — open
         </h2>
         <p className="text-sm text-muted-foreground italic max-w-sm mx-auto">
           {companionName} will walk with you in{" "}
-          <span className="text-foreground">{chosenCurrent}</span> for free, always.
-          Your other Currents stay open for the next {daysLeft} days — no card needed.
+          <span className="text-foreground">{chosenCurrent}</span>
+          {hasForeverAccess ? (
+            <>
+              {" "}— and every other Current stays open for good. Full access, forever.
+            </>
+          ) : (
+            <>
+              {" "}for free, always. Your other Currents stay open for the next {daysLeft} days — no
+              card needed.
+            </>
+          )}
         </p>
       </div>
 
