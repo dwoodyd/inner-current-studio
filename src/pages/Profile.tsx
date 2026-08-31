@@ -8,6 +8,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { supabase } from '@/integrations/supabase/client';
 import { Sigil } from '@/components/onboarding/Sigil';
 import PracticeConstellation from '@/components/PracticeConstellation';
+import BookAvailability from '@/components/BookAvailability';
 import { toast } from 'sonner';
 import { BarChart3, Layers, Sparkles, Activity, Archive, Palette, Volume2, CreditCard, Download, LogOut, Trash2, ChevronRight, Info, Shield, Heart, Lock, BookOpen, ExternalLink } from 'lucide-react';
 import warmHandsPhoto from '@/assets/photo-warm-hands.jpg';
