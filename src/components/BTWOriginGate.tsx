@@ -116,11 +116,6 @@ export default function BTWOriginGate({ onDone }: BTWOriginGateProps) {
           </motion.div>
         )}
 
-        {false && (
-          <motion.div key="never">
-            <span />
-          </motion.div>
-        )}
 
         {phase === 'orient' && (
           <motion.div
