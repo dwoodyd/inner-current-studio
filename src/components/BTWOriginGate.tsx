@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, BookOpen } from 'lucide-react';
+import BookAvailability from '@/components/BookAvailability';
 
 const ANSWER_KEY = 'iw_btw_answer_v1';
 const ORIENT_SEEN_KEY = 'iw_btw_orient_seen_v1';
