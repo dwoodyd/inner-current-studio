@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Heart, Shield, Zap, Waves, Eye, Leaf } from 'lucide-react';
+import BookAvailability from '@/components/BookAvailability';
 
 const stagger = {
   hidden: {},
