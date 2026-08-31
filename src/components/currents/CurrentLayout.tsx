@@ -194,7 +194,7 @@ export default function CurrentLayout() {
         <section className="space-y-3">
           <motion.button
             whileTap={{ scale: 0.98 }}
-            onClick={() => navigate(`/guide?current=${slug}`)}
+            onClick={() => navigate(`/profile/guide?current=${slug}`)}
             className="soul-glass-elevated w-full text-left p-4 rounded-2xl hover:bg-muted/10 transition-colors flex items-center gap-3"
           >
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 soul-glow-gold">
