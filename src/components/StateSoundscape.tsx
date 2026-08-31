@@ -97,7 +97,7 @@ export default function StateSoundscape({ state }: Props) {
               <VolumeX size={12} className="text-muted-foreground/40" />
               <input
                 type="range"
-                aria-label="Soundscape volume"
+                
                 min={0}
                 max={1}
                 step={0.01}
