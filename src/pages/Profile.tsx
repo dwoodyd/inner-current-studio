@@ -173,12 +173,7 @@ export default function Profile() {
           return (
             <motion.section variants={fadeUp} className="space-y-2">
               <h2 className="px-1 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/60">Going Deeper</h2>
-              <a
-                href="https://innerwake.live"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block soul-glass overflow-hidden rounded-2xl p-5 transition-all duration-200 hover:bg-muted/10 active:scale-[0.99]"
-              >
+              <div className="soul-glass overflow-hidden rounded-2xl p-5">
                 <div className="flex items-start gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary/10">
                     <BookOpen size={18} className="text-primary" strokeWidth={1.5} />
@@ -204,7 +199,8 @@ export default function Profile() {
                     )}
                   </div>
                 </div>
-              </a>
+                <BookAvailability compact className="mt-4" note="Available now — on soulengineer.online and Amazon." />
+              </div>
             </motion.section>
           );
         })()}
