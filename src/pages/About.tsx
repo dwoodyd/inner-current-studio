@@ -186,6 +186,7 @@ export default function About() {
             Inner Wake gives you the practice. <em>Before the Words</em> gives you the philosophy.
             They were made together.
           </p>
+          <BookAvailability compact className="pt-2" note="Out now in paperback and Kindle." />
         </motion.div>
 
         {/* Soul Engineer Ecosystem */}
