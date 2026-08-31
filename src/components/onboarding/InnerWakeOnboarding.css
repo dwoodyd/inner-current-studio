@@ -318,8 +318,14 @@
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
-  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.55);
+  /* Must never run off the edges: wrap inside the safe content width. */
+  white-space: normal;
+  text-align: center;
+  width: min(24rem, calc(100vw - 2.5rem));
+  line-height: 1.5;
+  text-wrap: balance;
+  hyphens: none;
   pointer-events: none;
 }
 
