@@ -40,7 +40,8 @@ Deno.test('externalIdFrom returns null when the id is absent — never a raw pri
 Deno.test('only the founding lifetime price grants the Founding Member badge', () => {
   assertEquals(FOUNDING_LIFETIME_PRICE_ID, 'iw_pro_lifetime_founding');
   assertEquals(priceIdToTier(FOUNDING_LIFETIME_PRICE_ID), 'lifetime');
-  assertEquals('iw_pro_lifetime' === FOUNDING_LIFETIME_PRICE_ID, false);
+  const nonFounding: string = 'iw_pro_lifetime';
+  assertEquals(nonFounding === (FOUNDING_LIFETIME_PRICE_ID as string), false);
 });
 
 Deno.test('subscriptionGrantsAccess keeps access through dunning and paid-through cancels', () => {
