@@ -7,6 +7,7 @@ import { CHAPTERS, type ChapterId } from '@/lib/readingBridge/config';
 import { useReadingBridge } from '@/lib/readingBridge/useReadingBridge';
 import { trackBridgeEvent } from '@/lib/readingBridge/analytics';
 import { exportBridgeAsJSON, exportBridgeAsCSV } from '@/lib/readingBridge/export';
+import BookAvailability from '@/components/BookAvailability';
 
 export default function ReadingBridge() {
   const navigate = useNavigate();
