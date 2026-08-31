@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local env overrides (never commit — publishable tokens live in src/config/payments.ts)
+.env.production
+.env.development
+.env*.local
