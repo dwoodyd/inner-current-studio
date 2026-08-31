@@ -458,7 +458,7 @@ export default function Welcome() {
                   'Never billed again',
                   'Founding Member badge',
                   'Direct line to DeWayne (quarterly)',
-                  'Free copy of Before the Words at release',
+                  'Reading Bridge: pair your practice with Before the Words',
                   'Export everything you write, free — plain text, always',
                 ],
                 cta: 'Lock in Lifetime $99',
