@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DOMAINS, ALL_DOMAIN_KEYS } from '@/lib/domains';
 import InnerWakeOnboarding from '@/components/onboarding/InnerWakeOnboarding';
 import NewsletterForm from '@/components/NewsletterForm';
+import BookAvailability from '@/components/BookAvailability';
 import innerWakeIcon from '@/assets/inner-wake-orb-logo.png';
 import CurrentGlyph from '@/components/CurrentGlyph';
 
