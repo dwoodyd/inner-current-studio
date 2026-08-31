@@ -164,6 +164,7 @@ export default function MomentumRing() {
               ))}
             </div>
             <input
+              aria-label="Write your own phrase"
               value={customPhrase}
               onChange={e => setCustomPhrase(e.target.value)}
               placeholder="Or write your own…"
