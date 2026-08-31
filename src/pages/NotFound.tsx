@@ -27,7 +27,7 @@ const NotFound = () => {
         </p>
 
         <div className="mt-9 flex flex-wrap justify-center gap-3">
-          <Link to="/home" className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5">
+          <Link to="/" className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5">
             Return to your practice
             <ArrowRight size={15} />
           </Link>
