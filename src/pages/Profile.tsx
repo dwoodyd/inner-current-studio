@@ -75,6 +75,7 @@ export default function Profile() {
         { icon: Sparkles, label: 'Current Guide', description: 'AI emotional companion', to: '/profile/guide', accent: true },
         { icon: Layers, label: 'My Rituals', description: 'Custom ritual sequences', to: '/profile/rituals', proLock: proGated ? 'Pro · unlimited' : null },
         { icon: BookOpen, label: 'Reading Bridge', description: 'Pair the app with the book', to: '/reading-bridge' },
+        { icon: Archive, label: 'Reflect', description: 'Future Pages, Imagine If & your private archive', to: '/reflect' },
       ],
     },
     {
