@@ -19,7 +19,7 @@ const NotFound = () => {
           <div className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_14px_hsl(var(--primary))]" />
         </div>
 
-        <h1 className="font-heading text-[2.75rem] font-medium leading-tight text-foreground">
+        <h1 id="notfound-heading" className="font-heading text-[2.75rem] font-medium leading-tight text-foreground">
           This page is <em className="font-medium text-primary">quiet</em>.
         </h1>
         <p className="mx-auto mt-3 max-w-[26rem] font-heading text-xl italic leading-relaxed text-muted-foreground">
