@@ -107,6 +107,12 @@
   color: var(--ink);
   text-align: center;
   margin: 0;
+  /* Display type never breaks mid-word, on any width. */
+  hyphens: none;
+  -webkit-hyphens: none;
+  overflow-wrap: normal;
+  word-break: normal;
+  text-wrap: balance;
 }
 .iw-headline em {
   font-style: italic;
