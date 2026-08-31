@@ -200,9 +200,6 @@ export default function Profile() {
                         <p className="text-xs text-muted-foreground/80 leading-relaxed italic font-heading">
                           If the practice is working and you want to understand why, the book is the why.
                         </p>
-                        <span className="inline-flex items-center gap-1 pt-1 text-[11px] text-primary">
-                          Learn more about the book <ExternalLink size={11} />
-                        </span>
                       </>
                     )}
                   </div>
