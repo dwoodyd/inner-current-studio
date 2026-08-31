@@ -90,16 +90,20 @@ export function Paywall({ companionName, chosenCurrent, onContinueFree }: Paywal
           Begin in {chosenCurrent}
           <ArrowRight size={15} />
         </button>
-        <button
-          onClick={() => navigate("/profile/subscription")}
-          className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
-        >
-          See pricing & lock in the founding rate
-        </button>
+        {!hasForeverAccess && (
+          <button
+            onClick={() => navigate("/profile/subscription")}
+            className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+          >
+            See pricing & lock in the founding rate
+          </button>
+        )}
       </div>
 
       <p className="text-[11px] text-muted-foreground/60 italic">
-        No card now. Cancel anytime. Founding rate available throughout your access window.
+        {hasForeverAccess
+          ? "You're a Founding Member. Nothing expires."
+          : "No card now. Cancel anytime. Founding rate available throughout your access window."}
       </p>
     </div>
   );
