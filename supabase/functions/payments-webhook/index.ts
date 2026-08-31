@@ -1,5 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { verifyWebhook, EventName, gatewayFetch, type PaddleEnv } from '../_shared/paddle.ts';
+import { priceIdToTier, externalIdFrom, FOUNDING_LIFETIME_PRICE_ID } from './tiers.ts';
 
 // Transaction webhook payloads sometimes omit `import_meta` on the inlined
 // price object. Fetch the full price to recover the external_id.
@@ -19,27 +20,6 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 );
-
-// Map a canonical external_id (e.g. "iw_pro_monthly_founding") to the coarse
-// tier we store on profiles. Pattern match is intentional and safe because
-// every external_id we create includes 'lifetime' | 'annual' | 'monthly'.
-function priceIdToTier(priceId: string | undefined | null): 'premium' | 'lifetime' | 'free' {
-  if (!priceId) return 'free';
-  if (priceId.includes('lifetime') || priceId === 'premium_lifetime' || priceId === 'premium_lifetime_149') {
-    return 'lifetime';
-  }
-  if (priceId.includes('monthly') || priceId.includes('annual') || priceId.includes('yearly')) return 'premium';
-  return 'free';
-}
-
-// Extract the human-readable external_id Lovable set when creating the price.
-// If it's missing the row was created outside create_product/create_price and
-// we cannot reliably map it to a tier — skip and log instead of writing
-// a raw `pri_...` string that would silently break tier gating after publish.
-function externalIdFrom(meta: any): string | null {
-  const ext = meta?.importMeta?.externalId ?? meta?.import_meta?.external_id;
-  return typeof ext === 'string' && ext.length > 0 ? ext : null;
-}
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
@@ -241,7 +221,7 @@ async function handleTransactionCompleted(data: any, env: PaddleEnv) {
   }, { onConflict: 'paddle_subscription_id' });
 
   // Only the founding lifetime price grants the Founding Member badge.
-  const isFoundingLifetime = priceId === 'iw_pro_lifetime_founding';
+  const isFoundingLifetime = priceId === FOUNDING_LIFETIME_PRICE_ID;
   await supabase.from('profiles')
     .update({
       subscription_tier: 'lifetime',

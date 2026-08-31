@@ -1,6 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const clientToken = import.meta.env.VITE_PAYMENTS_CLIENT_TOKEN;
+import { PADDLE_CLIENT_TOKEN, PADDLE_ENV } from "@/config/payments";
+
+const clientToken = PADDLE_CLIENT_TOKEN;
 
 declare global {
   interface Window {
@@ -11,13 +13,13 @@ declare global {
 let paddleInitialized = false;
 
 export function getPaddleEnv(): "sandbox" | "live" {
-  return clientToken?.startsWith("test_") ? "sandbox" : "live";
+  return PADDLE_ENV;
 }
 
 export async function initializePaddle() {
   if (paddleInitialized) return;
   if (!clientToken) {
-    throw new Error("VITE_PAYMENTS_CLIENT_TOKEN is not set");
+    throw new Error("Paddle client token is not configured");
   }
 
   return new Promise<void>((resolve, reject) => {

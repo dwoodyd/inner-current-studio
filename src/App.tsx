@@ -12,7 +12,6 @@ import { DailyLimitGate } from "@/components/DailyLimitGate";
 import type { GatedTool } from "@/hooks/useDailyLimit";
 
 import { useAppState } from "@/lib/AppContext";
-import { useBetaTrialClaimer } from "@/hooks/useBetaTrialClaimer";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
 import { useCurrentsCloudSync } from "@/hooks/useCurrentsCloudSync";
 import { ThemeProvider } from "@/hooks/useTheme";
@@ -67,10 +66,8 @@ const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Welcome = lazy(() => import("@/pages/Welcome"));
 const Center = lazy(() => import('./pages/Center'));
 const NotFound = lazy(() => import("@/pages/NotFound"));
-const Beta = lazy(() => import("@/pages/Beta"));
 const ReadingBridge = lazy(() => import("@/pages/ReadingBridge"));
 const FoundingMember = lazy(() => import("@/pages/FoundingMember"));
-const OwnerAccess = lazy(() => import("@/pages/OwnerAccess"));
 const MoneyCurrent = lazy(() => import("@/pages/MoneyCurrent"));
 const MorningRitual = lazy(() => import("@/pages/MorningRitual"));
 const EveningRitual = lazy(() => import("@/pages/EveningRitual"));
@@ -227,7 +224,6 @@ function AppRoutes() {
   const { user, loading } = useAuth();
   const location = useLocation();
   const { state } = useAppState();
-  useBetaTrialClaimer();
   useCurrentsCloudSync();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
@@ -248,8 +244,8 @@ function AppRoutes() {
       <Suspense fallback={<RouteLoader />}><Routes>
         <Route path="/center" element={<Center />} />
         <Route path="/welcome" element={<Welcome />} />
-        <Route path="/beta" element={<Beta />} />
-        <Route path="/owner" element={<OwnerAccess />} />
+        <Route path="/beta" element={<Navigate to="/welcome" replace />} />
+        <Route path="/owner" element={<Navigate to="/auth" replace />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacy" element={<Privacy />} />
@@ -399,6 +395,7 @@ function AppRoutes() {
       </Route>
       <Route path="/welcome" element={<Navigate to="/" replace />} />
       <Route path="/beta" element={<Navigate to="/" replace />} />
+      <Route path="/owner" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
         <Route path="*" element={<NotFound />} />
       </Routes></Suspense>
