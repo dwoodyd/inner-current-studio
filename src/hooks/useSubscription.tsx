@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { getPaddleEnv } from "@/lib/paddle";
 import { priceIdToTier } from "@/lib/pricing";
-import { hasOwnerAccess } from "@/lib/betaAccess";
 
 export type DetailedTier =
   | "free"
@@ -178,7 +177,8 @@ function ensureRealtime(userId: string, env: string, ownerAccess: boolean) {
 
 export function useSubscription(): SubscriptionState {
   const { user } = useAuth();
-  const ownerAccess = hasOwnerAccess();
+  // Elevated access is decided server-side by the admin role in user_roles.
+  const ownerAccess = false;
   const env = getPaddleEnv();
   const key = user ? `${user.id}:${env}:${ownerAccess}` : null;
 
