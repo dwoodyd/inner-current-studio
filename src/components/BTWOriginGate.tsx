@@ -106,6 +106,19 @@ export default function BTWOriginGate({ onDone }: BTWOriginGateProps) {
             <p className="text-[11px] text-muted-foreground/50 italic font-heading">
               Both paths arrive at the same ground.
             </p>
+
+            {/* For the "new here" path: the book exists, and it's out now. */}
+            <BookAvailability
+              compact
+              className="text-left"
+              note="Not required — the practice stands on its own. It's here if you want the why."
+            />
+          </motion.div>
+        )}
+
+        {false && (
+          <motion.div key="never">
+            <span />
           </motion.div>
         )}
 
