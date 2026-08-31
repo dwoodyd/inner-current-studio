@@ -6,6 +6,10 @@
  * seconds, so there is no intro, no nav, no copy to read before it begins.
  * Haptics mark the inhale / hold / exhale boundaries so the practice works
  * with the screen dark and the phone face-down.
+ *
+ * It doubles as the iOS home-screen / shortcut surface: safe-area aware,
+ * no rubber-band scroll, screen kept awake for the breath, and a standalone
+ * launch never shows browser chrome affordances it can't honour.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -28,10 +32,26 @@ function buzz(pattern: number | number[]) {
   }
 }
 
+function isStandalone(): boolean {
+  if (typeof window === 'undefined') return false;
+  return (
+    window.matchMedia?.('(display-mode: standalone)').matches ||
+    (window.navigator as unknown as { standalone?: boolean }).standalone === true
+  );
+}
+
+const PHASE_LABEL: Record<Phase, string> = {
+  in: 'Breathing in',
+  hold: 'Holding',
+  out: 'Letting go',
+  done: 'Complete',
+};
+
 export default function Center() {
   const [phase, setPhase] = useState<Phase>('in');
   const [round, setRound] = useState(0);
   const timers = useRef<Array<ReturnType<typeof setTimeout>>>([]);
+  const standalone = useRef(isStandalone()).current;
 
   const clear = () => {
     timers.current.forEach(clearTimeout);
@@ -68,13 +88,52 @@ export default function Center() {
     return clear;
   }, [run, round]);
 
+  // Keep the screen awake while a breath is running (iOS 16.4+ / Android).
+  useEffect(() => {
+    let sentinel: { release: () => Promise<void> } | null = null;
+    let cancelled = false;
+    const request = async () => {
+      try {
+        const wl = (navigator as unknown as {
+          wakeLock?: { request: (t: 'screen') => Promise<{ release: () => Promise<void> }> };
+        }).wakeLock;
+        if (!wl) return;
+        const s = await wl.request('screen');
+        if (cancelled) void s.release();
+        else sentinel = s;
+      } catch {
+        /* wake lock is a bonus */
+      }
+    };
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') void request();
+    };
+    void request();
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      cancelled = true;
+      document.removeEventListener('visibilitychange', onVisible);
+      void sentinel?.release().catch(() => undefined);
+    };
+  }, []);
+
+  // No rubber-band scroll behind the breath while this page is mounted.
+  useEffect(() => {
+    const prev = document.body.style.overscrollBehaviorY;
+    document.body.style.overscrollBehaviorY = 'none';
+    return () => {
+      document.body.style.overscrollBehaviorY = prev;
+    };
+  }, []);
+
   const scale = phase === 'in' || phase === 'hold' ? 1 : phase === 'out' ? 0.42 : 0.62;
   const dur = phase === 'in' ? 4000 : phase === 'out' ? 4000 : 900;
 
   return (
     <main
-      className="relative flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-hidden bg-background px-6"
-      aria-label="Ten second center"
+      className="relative flex min-h-[100dvh] w-full select-none flex-col items-center justify-center overflow-hidden bg-background px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))]"
+      style={{ touchAction: 'manipulation' }}
+      aria-label="Ten second centering breath"
     >
       {/* The field itself — no words needed to know what it is asking. */}
       <div
@@ -88,7 +147,7 @@ export default function Center() {
 
       <div
         aria-hidden="true"
-        className="relative rounded-full"
+        className="relative rounded-full motion-reduce:transition-none"
         style={{
           width: 220,
           height: 220,
@@ -103,28 +162,28 @@ export default function Center() {
       />
 
       <div
+        role="status"
         aria-live="polite"
         className="mt-12 flex min-h-[44px] flex-col items-center gap-3 text-center"
       >
         {phase === 'done' ? (
           <>
             <button
+              type="button"
               onClick={() => setRound((r) => r + 1)}
-              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-border px-6 text-sm text-foreground transition-colors hover:bg-muted/40"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-border px-6 text-sm text-foreground transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Again
             </button>
             <Link
               to="/"
-              className="inline-flex min-h-[44px] items-center px-4 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              className="inline-flex min-h-[44px] items-center px-4 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Open Inner Wake
+              {standalone ? 'Open Inner Wake' : 'Open the full practice'}
             </Link>
           </>
         ) : (
-          <span className="sr-only">
-            {phase === 'in' ? 'Breathing in' : phase === 'hold' ? 'Holding' : 'Letting go'}
-          </span>
+          <span className="sr-only">{PHASE_LABEL[phase]}</span>
         )}
       </div>
     </main>
