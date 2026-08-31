@@ -140,8 +140,9 @@ export default function AffirmationTracker() {
 
       {/* I am affirming */}
       <div className="space-y-1">
-        <label className="text-sm italic text-muted-foreground">i am affirming:</label>
+        <label htmlFor="affirming-input" className="text-sm italic text-muted-foreground">i am affirming:</label>
         <input
+          id="affirming-input"
           value={affirming}
           onChange={e => setAffirming(e.target.value)}
           placeholder="e.g. I am a money magnet"
