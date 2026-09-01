@@ -17,18 +17,21 @@ export function DailyLimitGate({ tool, children }: DailyLimitGateProps) {
   const navigate = useNavigate();
   const { loading, blocked, limit, isFree, recordUse } = useDailyLimit(tool);
   const [open, setOpen] = useState(false);
-  const [recorded, setRecorded] = useState(false);
+  // Latch access the first time the gate finishes loading. Recording this
+  // visit increments the count, which would immediately flip `blocked` to
+  // true and swap the tool for the paywall mid-session — so once granted,
+  // access stays granted for this mount.
+  const grantedRef = useRef(false);
 
   useEffect(() => {
-    if (!loading && blocked) setOpen(true);
-  }, [loading, blocked]);
-
-  // Free users: count this entry once per mount when access is granted.
-  useEffect(() => {
-    if (loading || blocked || recorded || !isFree) return;
-    setRecorded(true);
-    recordUse();
-  }, [loading, blocked, recorded, isFree, recordUse]);
+    if (loading || grantedRef.current) return;
+    if (blocked) {
+      setOpen(true);
+    } else {
+      grantedRef.current = true;
+      if (isFree) recordUse();
+    }
+  }, [loading, blocked, isFree, recordUse]);
 
   if (loading) {
     return (
