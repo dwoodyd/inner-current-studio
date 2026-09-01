@@ -41,6 +41,10 @@ export function DailyLimitGate({ tool, children }: DailyLimitGateProps) {
     );
   }
 
+  if (grantedRef.current) {
+    return <>{children}</>;
+  }
+
   if (blocked) {
     return (
       <>
