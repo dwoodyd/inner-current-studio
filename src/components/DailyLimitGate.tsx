@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PaywallModal } from "@/components/PaywallModal";
 import { useDailyLimit, GatedTool, TOOL_LABELS } from "@/hooks/useDailyLimit";
