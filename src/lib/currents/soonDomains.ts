@@ -4,7 +4,7 @@
 // affirmation/script/practice depth ships.
 import type { DomainKey } from '@/lib/domains';
 
-export const SOON_DOMAINS = new Set<DomainKey>(['self', 'energy', 'relationships', 'health']);
+export const SOON_DOMAINS = new Set<DomainKey>([]);
 
 export function isSoonDomain(slug: string | undefined | null): boolean {
   if (!slug) return false;
