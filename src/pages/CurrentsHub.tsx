@@ -55,7 +55,7 @@ export default function CurrentsHub() {
         <WeeklyDigest />
 
         <motion.div className="space-y-3" variants={stagger(0.05)} initial="hidden" animate="show">
-          {ALL_DOMAIN_KEYS.map((key, i) => {
+          {ALL_DOMAIN_KEYS.map((key) => {
             const d = DOMAINS[key];
             const isActiveFocus = !isPremium && (freeCurrent === key || localFree === key);
             const isSoon = SOON_DOMAINS.has(key) && !isOwner;
