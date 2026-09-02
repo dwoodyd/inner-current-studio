@@ -174,6 +174,21 @@ const OrbVideo = React.memo(function OrbVideo({
           />
         </AnimatePresence>
       )}
+
+      {/* Ripple — a touch on the current spreads outward, then stills. */}
+      <AnimatePresence>
+        {ripples.map((id) => (
+          <motion.span
+            key={id}
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/40"
+            initial={{ opacity: 0.5, scale: 0.55 }}
+            animate={{ opacity: 0, scale: 1.15 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          />
+        ))}
+      </AnimatePresence>
     </div>
   );
 });
