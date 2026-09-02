@@ -3,6 +3,14 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bell, BellOff, Sun, Moon, Clock, RotateCcw, Sparkles } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 import { toast } from 'sonner';
 import { hasNotificationAPI } from '@/lib/platform';
 import {
@@ -23,9 +31,34 @@ import {
   sendTestPush,
 } from '@/lib/push';
 
+type SheetKind = 'morning' | 'evening' | 'return' | 'affirm';
+
+const RETURN_OPTIONS = [
+  { value: 2, label: 'Every 2 hours' },
+  { value: 4, label: 'Every 4 hours' },
+  { value: 8, label: 'Every 8 hours' },
+  { value: 12, label: 'Twice a day' },
+];
+
+const AFFIRM_OPTIONS = [
+  { value: 30, label: 'Every 30 minutes' },
+  { value: 60, label: 'Every hour' },
+  { value: 120, label: 'Every 2 hours' },
+  { value: 180, label: 'Every 3 hours' },
+];
+
+function formatTime(t: string): string {
+  const [h, m] = t.split(':').map(Number);
+  if (Number.isNaN(h) || Number.isNaN(m)) return t;
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hr = h % 12 === 0 ? 12 : h % 12;
+  return `${hr}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+
 export default function Notifications() {
   const navigate = useNavigate();
   const [prefs, setPrefs] = useState<NotificationPrefs>(loadNotifPrefs);
+  const [sheet, setSheet] = useState<SheetKind | null>(null);
   const [permissionState, setPermissionState] = useState<NotificationPermission>(
     hasNotificationAPI() ? Notification.permission : 'denied'
   );
@@ -184,12 +217,13 @@ export default function Notifications() {
                 {prefs.morningReminder && (
                   <div className="flex items-center gap-2 pl-7">
                     <Clock size={12} className="text-muted-foreground/50" />
-                    <input
-                      type="time"
-                      value={prefs.morningTime}
-                      onChange={e => update('morningTime', e.target.value)}
-                      className="bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 focus:outline-none focus:ring-1 focus:ring-primary/30"
-                    />
+                    <button
+                      onClick={() => setSheet('morning')}
+                      className="press bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 min-h-[36px] transition-colors hover:border-primary/30"
+                      aria-label={`Morning check-in time, ${formatTime(prefs.morningTime)}. Tap to change.`}
+                    >
+                      {formatTime(prefs.morningTime)}
+                    </button>
                     <button
                       onClick={() => testNotification('morning')}
                       className="text-[10px] text-primary/60 hover:text-primary ml-auto"
@@ -218,12 +252,13 @@ export default function Notifications() {
                 {prefs.eveningReflection && (
                   <div className="flex items-center gap-2 pl-7">
                     <Clock size={12} className="text-muted-foreground/50" />
-                    <input
-                      type="time"
-                      value={prefs.eveningTime}
-                      onChange={e => update('eveningTime', e.target.value)}
-                      className="bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 focus:outline-none focus:ring-1 focus:ring-primary/30"
-                    />
+                    <button
+                      onClick={() => setSheet('evening')}
+                      className="press bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 min-h-[36px] transition-colors hover:border-primary/30"
+                      aria-label={`Evening reflection time, ${formatTime(prefs.eveningTime)}. Tap to change.`}
+                    >
+                      {formatTime(prefs.eveningTime)}
+                    </button>
                     <button
                       onClick={() => testNotification('evening')}
                       className="text-[10px] text-primary/60 hover:text-primary ml-auto"
@@ -252,16 +287,13 @@ export default function Notifications() {
                 {prefs.gentleReturns && (
                   <div className="flex items-center gap-2 pl-7">
                     <Clock size={12} className="text-muted-foreground/50" />
-                    <select
-                      value={prefs.returnIntervalHours}
-                      onChange={e => update('returnIntervalHours', Number(e.target.value))}
-                      className="bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 focus:outline-none focus:ring-1 focus:ring-primary/30"
+                    <button
+                      onClick={() => setSheet('return')}
+                      className="press bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 min-h-[36px] transition-colors hover:border-primary/30"
+                      aria-label="Gentle return frequency. Tap to change."
                     >
-                      <option value={2}>Every 2 hours</option>
-                      <option value={4}>Every 4 hours</option>
-                      <option value={8}>Every 8 hours</option>
-                      <option value={12}>Twice a day</option>
-                    </select>
+                      {RETURN_OPTIONS.find(o => o.value === prefs.returnIntervalHours)?.label ?? 'Every 4 hours'}
+                    </button>
                     <button
                       onClick={() => testNotification('return')}
                       className="text-[10px] text-primary/60 hover:text-primary ml-auto"
@@ -290,16 +322,13 @@ export default function Notifications() {
                 {prefs.affirmationReminders && (
                   <div className="flex items-center gap-2 pl-7">
                     <Clock size={12} className="text-muted-foreground/50" />
-                    <select
-                      value={prefs.affirmationIntervalMinutes}
-                      onChange={e => update('affirmationIntervalMinutes', Number(e.target.value))}
-                      className="bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 focus:outline-none focus:ring-1 focus:ring-primary/30"
+                    <button
+                      onClick={() => setSheet('affirm')}
+                      className="press bg-muted/20 text-xs text-foreground rounded-lg px-3 py-1.5 border border-border/20 min-h-[36px] transition-colors hover:border-primary/30"
+                      aria-label="Affirmation reminder frequency. Tap to change."
                     >
-                      <option value={30}>Every 30 minutes</option>
-                      <option value={60}>Every hour</option>
-                      <option value={120}>Every 2 hours</option>
-                      <option value={180}>Every 3 hours</option>
-                    </select>
+                      {AFFIRM_OPTIONS.find(o => o.value === prefs.affirmationIntervalMinutes)?.label ?? 'Every hour'}
+                    </button>
                     <button
                       onClick={() => testNotification('affirm')}
                       className="text-[10px] text-primary/60 hover:text-primary ml-auto"
@@ -320,6 +349,75 @@ export default function Notifications() {
           )}
         </>
       )}
+
+      {/* Reminder-time picker — a bottom sheet with real gesture dismissal,
+          not a route swap. */}
+      <Drawer open={sheet !== null} onOpenChange={(open) => !open && setSheet(null)}>
+        <DrawerContent className="border-border/30 bg-card/95 backdrop-blur-xl">
+          <DrawerHeader className="text-center">
+            <DrawerTitle className="font-heading text-lg font-light text-foreground">
+              {sheet === 'morning' && 'Morning Check-In'}
+              {sheet === 'evening' && 'Evening Reflection'}
+              {sheet === 'return' && 'Gentle Return Nudges'}
+              {sheet === 'affirm' && 'Affirmation Reminders'}
+            </DrawerTitle>
+            <DrawerDescription className="text-xs text-muted-foreground">
+              {(sheet === 'morning' || sheet === 'evening') && 'Choose the quiet hour.'}
+              {(sheet === 'return' || sheet === 'affirm') && 'How often should we whisper?'}
+            </DrawerDescription>
+          </DrawerHeader>
+
+          <div className="px-6 pb-8 safe-bottom">
+            {(sheet === 'morning' || sheet === 'evening') && (
+              <div className="flex flex-col items-center gap-5">
+                <input
+                  type="time"
+                  value={sheet === 'morning' ? prefs.morningTime : prefs.eveningTime}
+                  onChange={(e) =>
+                    update(sheet === 'morning' ? 'morningTime' : 'eveningTime', e.target.value)
+                  }
+                  className="w-full max-w-[220px] rounded-2xl border border-border/30 bg-muted/20 px-4 py-3 text-center font-heading text-2xl text-foreground focus:outline-none focus:ring-1 focus:ring-primary/40"
+                />
+                <DrawerClose asChild>
+                  <button className="press min-h-[48px] w-full max-w-[220px] rounded-2xl bg-primary text-sm font-medium text-primary-foreground">
+                    Done
+                  </button>
+                </DrawerClose>
+              </div>
+            )}
+
+            {(sheet === 'return' || sheet === 'affirm') && (
+              <div className="mx-auto flex max-w-[280px] flex-col gap-2">
+                {(sheet === 'return' ? RETURN_OPTIONS : AFFIRM_OPTIONS).map((opt) => {
+                  const selected =
+                    sheet === 'return'
+                      ? prefs.returnIntervalHours === opt.value
+                      : prefs.affirmationIntervalMinutes === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      onClick={() => {
+                        update(
+                          sheet === 'return' ? 'returnIntervalHours' : 'affirmationIntervalMinutes',
+                          opt.value,
+                        );
+                        setSheet(null);
+                      }}
+                      className={`press min-h-[48px] rounded-2xl border px-4 text-sm transition-colors ${
+                        selected
+                          ? 'border-primary/40 bg-primary/10 text-primary'
+                          : 'border-border/20 bg-muted/10 text-foreground hover:border-primary/25'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { rise, stagger } from '@/lib/motion';
 import { ChevronRight } from 'lucide-react';
 
 import { SOON_DOMAINS } from '@/lib/currents/soonDomains';
@@ -53,8 +54,8 @@ export default function CurrentsHub() {
 
         <WeeklyDigest />
 
-        <div className="space-y-3">
-          {ALL_DOMAIN_KEYS.map((key, i) => {
+        <motion.div className="space-y-3" variants={stagger(0.05)} initial="hidden" animate="show">
+          {ALL_DOMAIN_KEYS.map((key) => {
             const d = DOMAINS[key];
             const isActiveFocus = !isPremium && (freeCurrent === key || localFree === key);
             const isSoon = SOON_DOMAINS.has(key) && !isOwner;
@@ -77,7 +78,6 @@ export default function CurrentsHub() {
                 key={key}
                 slug={key}
                 d={d}
-                index={i}
                 isOpen={isOpen}
                 badge={badge}
                 onClick={() => {
@@ -87,7 +87,7 @@ export default function CurrentsHub() {
               />
             );
           })}
-        </div>
+        </motion.div>
 
         <motion.button
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
@@ -111,20 +111,19 @@ export default function CurrentsHub() {
 interface CardProps {
   slug: DomainKey;
   d: DomainConfig;
-  index: number;
   isOpen: boolean;
   badge: { label: string; tone: 'active' | 'locked' | 'soon' } | null;
   onClick: () => void;
 }
 
-function CurrentCard({ slug, d, index, isOpen, badge, onClick }: CardProps) {
+function CurrentCard({ slug, d, isOpen, badge, onClick }: CardProps) {
   const spec = CURRENT_SPECS[slug];
   const { progress, stage } = useCurrentProgress(slug);
   const hasPracticed = progress.practicesCompleted > 0;
 
   return (
     <motion.button
-      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
+      variants={rise}
       onClick={onClick}
       className={`group flex min-h-[88px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:min-h-[100px] sm:gap-4 sm:p-5 ${!isOpen ? 'opacity-70' : ''}`}
       style={{
