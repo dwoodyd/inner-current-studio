@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { rise, stagger } from '@/lib/motion';
 import { ChevronRight } from 'lucide-react';
 
 import { SOON_DOMAINS } from '@/lib/currents/soonDomains';
