@@ -106,13 +106,28 @@ const OrbVideo = React.memo(function OrbVideo({
         clipPath: 'circle(50% at 50% 50%)',
       }}
     >
-      {/* Soft fallback shimmer while the video buffers */}
+      {/* Still-frame poster: shows instantly, and is the permanent fallback
+          if the device can't decode or fetch the clip (iOS Safari). */}
+      <img
+        src={def.orb}
+        alt=""
+        aria-hidden="true"
+        className="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full object-cover object-center pointer-events-none"
+        style={{
+          transform: 'translate(-50%, -50%) scale(1.6)',
+          transformOrigin: 'center center',
+          opacity: ready && !failed ? 0 : 1,
+          transition: 'opacity 0.6s ease-in-out',
+        }}
+      />
+
+      {/* Soft shimmer only while nothing has painted yet */}
       <AnimatePresence>
-        {!ready && (
+        {!ready && !failed && (
           <motion.div
             key="fallback"
             initial={{ opacity: 0.8 }}
-            animate={{ opacity: [0.55, 0.9, 0.55] }}
+            animate={{ opacity: [0.25, 0.5, 0.25] }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/25 via-soul-violet/20 to-soul-blue/20"
@@ -121,32 +136,37 @@ const OrbVideo = React.memo(function OrbVideo({
         )}
       </AnimatePresence>
 
-      <AnimatePresence mode="sync">
-        <motion.video
-          key={def.id}
-          ref={videoRef}
-          src={def.orbVideo}
-          autoPlay
-          loop
-          muted
-          playsInline
-          {...({ 'webkit-playsinline': 'true' } as Record<string, string>)}
-          disablePictureInPicture
-          preload="auto"
-          aria-hidden="true"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: ready ? 1 : 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-          className="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full object-cover object-center pointer-events-none"
-          style={{
-            transform: 'translate(-50%, -50%) scale(1.6)',
-            transformOrigin: 'center center',
-          }}
-        />
-      </AnimatePresence>
+      {!failed && (
+        <AnimatePresence mode="sync">
+          <motion.video
+            key={def.id}
+            ref={videoRef}
+            src={def.orbVideo}
+            poster={def.orb}
+            autoPlay
+            loop
+            muted
+            playsInline
+            {...({ 'webkit-playsinline': 'true' } as Record<string, string>)}
+            disablePictureInPicture
+            preload="metadata"
+            aria-hidden="true"
+            onError={() => setFailed(true)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: ready ? 1 : 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            className="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full object-cover object-center pointer-events-none"
+            style={{
+              transform: 'translate(-50%, -50%) scale(1.6)',
+              transformOrigin: 'center center',
+            }}
+          />
+        </AnimatePresence>
+      )}
     </div>
   );
 });
+
 
 export default OrbVideo;
