@@ -28,7 +28,7 @@ export function PaywallModal({ open, onOpenChange, tool, limit, message }: Paywa
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm rounded-3xl border-primary/15 bg-card/95 px-6 py-7 text-center">
+      <DialogContent className="shimmer-reveal max-w-sm rounded-3xl border-primary/15 bg-card/95 px-6 py-7 text-center">
         <button
           type="button"
           onClick={() => onOpenChange(false)}
