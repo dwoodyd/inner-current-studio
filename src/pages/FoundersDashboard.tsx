@@ -99,7 +99,7 @@ export default function FoundersDashboard() {
       </header>
 
       <motion.main
-        variants={stagger}
+        variants={stagger()}
         initial="hidden"
         animate="visible"
         className="mx-auto max-w-2xl space-y-4 px-4 py-6 pb-28"
