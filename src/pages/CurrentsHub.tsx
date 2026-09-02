@@ -78,7 +78,6 @@ export default function CurrentsHub() {
                 key={key}
                 slug={key}
                 d={d}
-                index={i}
                 isOpen={isOpen}
                 badge={badge}
                 onClick={() => {
@@ -112,13 +111,12 @@ export default function CurrentsHub() {
 interface CardProps {
   slug: DomainKey;
   d: DomainConfig;
-  index: number;
   isOpen: boolean;
   badge: { label: string; tone: 'active' | 'locked' | 'soon' } | null;
   onClick: () => void;
 }
 
-function CurrentCard({ slug, d, index, isOpen, badge, onClick }: CardProps) {
+function CurrentCard({ slug, d, isOpen, badge, onClick }: CardProps) {
   const spec = CURRENT_SPECS[slug];
   const { progress, stage } = useCurrentProgress(slug);
   const hasPracticed = progress.practicesCompleted > 0;
