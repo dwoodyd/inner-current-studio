@@ -1476,6 +1476,7 @@ export type Database = {
         Returns: number
       }
       founder_slots_remaining: { Args: never; Returns: number }
+      founders_dashboard: { Args: never; Returns: Json }
       grant_beta_trial: { Args: { user_uuid: string }; Returns: undefined }
       has_active_subscription: {
         Args: { check_env?: string; user_uuid: string }
