@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { Home, Compass, Waves, RefreshCw, User } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { spring } from '@/lib/motion';
 
 const tabs = [
   { to: '/', icon: Home, label: 'Home', match: ['/'] },
@@ -26,7 +27,7 @@ export default function BottomNav() {
             <NavLink
               key={to}
               to={to}
-              className="relative flex flex-col items-center justify-center gap-0.5 min-w-0 flex-1 min-h-[44px] px-1 py-1"
+              className="press relative flex flex-col items-center justify-center gap-0.5 min-w-0 flex-1 min-h-[44px] px-1 py-1"
               aria-label={label}
             >
               {isActive && (
@@ -38,7 +39,8 @@ export default function BottomNav() {
               )}
               <motion.div
                 animate={isActive ? { scale: 1, y: 0 } : { scale: 0.95, y: 0 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                whileTap={{ scale: 0.9 }}
+                transition={spring.press}
               >
                 <Icon
                   size={22}

@@ -96,9 +96,18 @@ const OrbVideo = React.memo(function OrbVideo({
   const hasExplicitSize = typeof size === 'number';
   const wrapperStyle = hasExplicitSize ? { width: size, height: size } : undefined;
 
+  // Touching the orb sends a soft ripple outward — the current answering back.
+  const [ripples, setRipples] = useState<number[]>([]);
+  const addRipple = () => {
+    const id = Date.now() + Math.random();
+    setRipples((r) => [...r, id]);
+    window.setTimeout(() => setRipples((r) => r.filter((x) => x !== id)), 1100);
+  };
+
   return (
     <div
       className={cn('relative overflow-hidden rounded-full isolate', className)}
+      onPointerDown={addRipple}
       style={{
         ...wrapperStyle,
         // border-radius alone doesn't always clip a transformed <video>;
@@ -106,6 +115,7 @@ const OrbVideo = React.memo(function OrbVideo({
         clipPath: 'circle(50% at 50% 50%)',
       }}
     >
+
       {/* Still-frame poster: shows instantly, and is the permanent fallback
           if the device can't decode or fetch the clip (iOS Safari). */}
       <img
@@ -164,6 +174,21 @@ const OrbVideo = React.memo(function OrbVideo({
           />
         </AnimatePresence>
       )}
+
+      {/* Ripple — a touch on the current spreads outward, then stills. */}
+      <AnimatePresence>
+        {ripples.map((id) => (
+          <motion.span
+            key={id}
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/40"
+            initial={{ opacity: 0.5, scale: 0.55 }}
+            animate={{ opacity: 0, scale: 1.15 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          />
+        ))}
+      </AnimatePresence>
     </div>
   );
 });

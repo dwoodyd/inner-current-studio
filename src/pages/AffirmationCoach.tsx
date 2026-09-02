@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Sparkles, MessageCircle, CalendarClock, Repeat, BookmarkPlus, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { getPaddleEnv } from '@/lib/paddle';
 
@@ -54,7 +54,6 @@ function extractAffirmations(content: string): string[] {
 
 export default function AffirmationCoach() {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -68,8 +67,8 @@ export default function AffirmationCoach() {
   const handleSaveAffirmation = useCallback((text: string) => {
     saveAffirmation(text);
     setSavedSet(new Set(getSavedAffirmations()));
-    toast({ title: 'Saved to library ✦', description: text.slice(0, 60) + '…' });
-  }, [toast]);
+    toast('Saved to library ✦', { description: text.slice(0, 60) + '…' });
+  }, []);
 
   const send = async (text: string) => {
     if (!text.trim() || isLoading) return;

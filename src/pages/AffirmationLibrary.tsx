@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, Copy, BookOpen, Bell, BellOff } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { safeStorage } from '@/lib/platform';
 import EmptyState from '@/components/EmptyState';
 import {
@@ -32,7 +32,6 @@ const DEFAULT_TIMES = ['09:00', '13:00', '18:00'];
 
 export default function AffirmationLibrary() {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [affirmations, setAffirmations] = useState<string[]>([]);
   const [reminders, setReminders] = useState<ReminderConfig>({ enabled: false, times: DEFAULT_TIMES });
 
@@ -47,19 +46,27 @@ export default function AffirmationLibrary() {
     const updated = affirmations.filter((_, i) => i !== index);
     setAffirmations(updated);
     localStorage.setItem(SAVED_KEY, JSON.stringify(updated));
-    toast({ title: 'Removed from library' });
+    toast('Removed from library', {
+      action: {
+        label: 'Undo',
+        onClick: () => {
+          setAffirmations(affirmations);
+          localStorage.setItem(SAVED_KEY, JSON.stringify(affirmations));
+        },
+      },
+    });
   };
 
   const copy = (text: string) => {
     navigator.clipboard?.writeText(text);
-    toast({ title: 'Copied ✦' });
+    toast('Copied ✦');
   };
 
   const toggleReminders = async () => {
     if (!reminders.enabled) {
       const perm = await requestPermission();
       if (perm !== 'granted') {
-        toast({ title: 'Permission needed', description: 'Enable notifications in your browser settings.' });
+        toast('Permission needed', { description: 'Enable notifications in your browser settings.' });
         return;
       }
       const np = loadNotifPrefs();
@@ -69,7 +76,7 @@ export default function AffirmationLibrary() {
     const updated = { ...reminders, enabled: !reminders.enabled };
     setReminders(updated);
     saveReminders(updated);
-    toast({ title: updated.enabled ? 'Affirmation reminders on ✦' : 'Reminders paused' });
+    toast(updated.enabled ? 'Affirmation reminders on ✦' : 'Reminders paused');
   };
 
   const updateTime = (index: number, value: string) => {
