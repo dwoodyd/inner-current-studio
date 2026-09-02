@@ -556,6 +556,7 @@ export default function Welcome() {
             >
                Replay opening ritual
             </button>
+            <Link to="/pricing" className="hover:text-foreground">Pricing</Link>
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
             <Link to="/terms" className="hover:text-foreground">Terms</Link>
             <Link to="/refund" className="hover:text-foreground">Refunds</Link>
