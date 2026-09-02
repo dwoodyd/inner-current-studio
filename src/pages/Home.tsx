@@ -219,15 +219,18 @@ export default function Home() {
           >
             <video
               src="/orb-beta.mp4"
+              poster="/logo-512.png"
               autoPlay
               loop
               muted
               playsInline
+              {...({ 'webkit-playsinline': 'true' } as Record<string, string>)}
               disablePictureInPicture
-              preload="auto"
+              preload="metadata"
               aria-hidden="true"
               className="h-full w-full object-cover rounded-full"
             />
+
           </motion.div>
           <h1 className="font-heading text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">Inner Wake</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-light tracking-wide font-heading italic">Wake the inner current</p>
