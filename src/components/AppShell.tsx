@@ -1,4 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { routeFade } from '@/lib/motion';
 import { Sun, Moon } from 'lucide-react';
 import BottomNav from './BottomNav';
 import OfflineBanner from './OfflineBanner';
