@@ -68,7 +68,7 @@ export default function AffirmationCoach() {
     saveAffirmation(text);
     setSavedSet(new Set(getSavedAffirmations()));
     toast('Saved to library ✦', { description: text.slice(0, 60) + '…' });
-  }, [toast]);
+  }, []);
 
   const send = async (text: string) => {
     if (!text.trim() || isLoading) return;
