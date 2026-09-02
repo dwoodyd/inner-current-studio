@@ -168,7 +168,7 @@ export default function CurrentRoom({ domain, room }: { domain: DomainConfig; ro
               </div>
 
               <motion.div
-                variants={stagger}
+                variants={stagger()}
                 initial="hidden"
                 animate="show"
                 className={section.deep ? 'grid gap-2.5' : 'grid grid-cols-2 gap-2.5'}
