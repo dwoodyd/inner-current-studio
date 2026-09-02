@@ -151,8 +151,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Stale-while-revalidate for images, fonts, media, manifest, icons.
-  if (/\.(png|jpg|jpeg|svg|webp|gif|woff2?|ttf|otf|ico|json|mp4|mp3|webm)$/i.test(url.pathname)) {
+  // Stale-while-revalidate for images, fonts, manifest, icons (never media).
+  if (/\.(png|jpg|jpeg|svg|webp|gif|woff2?|ttf|otf|ico|json)$/i.test(url.pathname)) {
     event.respondWith(
       caches.match(req).then((cached) => {
         const networked = fetch(req)
