@@ -107,7 +107,9 @@ export default function CurrentRoom({ domain, room }: { domain: DomainConfig; ro
             animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <CurrentGlyph current={domain.key} size={30} style={{ color: accent }} />
+            <span style={{ color: accent }} className="inline-flex">
+              <CurrentGlyph current={domain.key} size={30} />
+            </span>
           </motion.div>
           <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             {domain.label}
