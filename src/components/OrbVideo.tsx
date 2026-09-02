@@ -47,6 +47,7 @@ const OrbVideo = React.memo(function OrbVideo({
   const def = STATE_DEFS[state];
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     preloadOrbVideos();
@@ -54,7 +55,9 @@ const OrbVideo = React.memo(function OrbVideo({
 
   useEffect(() => {
     setReady(false);
+    setFailed(false);
   }, [def.id]);
+
 
   useEffect(() => {
     const v = videoRef.current;
