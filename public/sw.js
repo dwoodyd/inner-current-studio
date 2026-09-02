@@ -8,7 +8,7 @@
  * Bump SW_VERSION to invalidate all caches on the next visit.
  */
 
-const SW_VERSION = 'iw-v2';
+const SW_VERSION = 'iw-v3';
 const PRECACHE = `${SW_VERSION}-precache`;
 const RUNTIME = `${SW_VERSION}-runtime`;
 
@@ -82,7 +82,13 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
 
+  // iOS Safari fetches media with Range requests and cannot use a cached
+  // full 200 response — never intercept media or ranged requests.
+  if (req.headers.has('range')) return;
+  if (/\.(mp4|m4v|mov|webm|mp3|m4a|ogg|wav)$/i.test(new URL(req.url).pathname)) return;
+
   const url = new URL(req.url);
+
 
   // Google Fonts — stale-while-revalidate so type survives offline.
   if (url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com') {
