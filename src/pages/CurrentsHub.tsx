@@ -54,7 +54,7 @@ export default function CurrentsHub() {
 
         <WeeklyDigest />
 
-        <div className="space-y-3">
+        <motion.div className="space-y-3" variants={stagger(0.05)} initial="hidden" animate="show">
           {ALL_DOMAIN_KEYS.map((key, i) => {
             const d = DOMAINS[key];
             const isActiveFocus = !isPremium && (freeCurrent === key || localFree === key);
@@ -88,7 +88,7 @@ export default function CurrentsHub() {
               />
             );
           })}
-        </div>
+        </motion.div>
 
         <motion.button
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
@@ -125,7 +125,7 @@ function CurrentCard({ slug, d, index, isOpen, badge, onClick }: CardProps) {
 
   return (
     <motion.button
-      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
+      variants={rise}
       onClick={onClick}
       className={`group flex min-h-[88px] w-full items-center gap-3 rounded-2xl p-3.5 text-left transition-all duration-200 hover:bg-muted/10 active:scale-[0.98] soul-glass-elevated sm:min-h-[100px] sm:gap-4 sm:p-5 ${!isOpen ? 'opacity-70' : ''}`}
       style={{
