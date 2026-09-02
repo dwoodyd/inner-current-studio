@@ -3,6 +3,14 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bell, BellOff, Sun, Moon, Clock, RotateCcw, Sparkles } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 import { toast } from 'sonner';
 import { hasNotificationAPI } from '@/lib/platform';
 import {
@@ -23,9 +31,34 @@ import {
   sendTestPush,
 } from '@/lib/push';
 
+type SheetKind = 'morning' | 'evening' | 'return' | 'affirm';
+
+const RETURN_OPTIONS = [
+  { value: 2, label: 'Every 2 hours' },
+  { value: 4, label: 'Every 4 hours' },
+  { value: 8, label: 'Every 8 hours' },
+  { value: 12, label: 'Twice a day' },
+];
+
+const AFFIRM_OPTIONS = [
+  { value: 30, label: 'Every 30 minutes' },
+  { value: 60, label: 'Every hour' },
+  { value: 120, label: 'Every 2 hours' },
+  { value: 180, label: 'Every 3 hours' },
+];
+
+function formatTime(t: string): string {
+  const [h, m] = t.split(':').map(Number);
+  if (Number.isNaN(h) || Number.isNaN(m)) return t;
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hr = h % 12 === 0 ? 12 : h % 12;
+  return `${hr}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+
 export default function Notifications() {
   const navigate = useNavigate();
   const [prefs, setPrefs] = useState<NotificationPrefs>(loadNotifPrefs);
+  const [sheet, setSheet] = useState<SheetKind | null>(null);
   const [permissionState, setPermissionState] = useState<NotificationPermission>(
     hasNotificationAPI() ? Notification.permission : 'denied'
   );
