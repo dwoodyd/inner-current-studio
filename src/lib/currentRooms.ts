@@ -107,7 +107,6 @@ function sharedSections(domain: DomainConfig): RoomSection[] {
       deep: true,
       tools: [
         { icon: Feather, title: 'Reality Scripting', description: 'Write what your body can believe, then watch for the match.', to: `${r}/script` },
-        { icon: Library, title: 'Library', description: 'Revisit the words that stayed.', to: '/library' },
       ],
     },
   ];
