@@ -349,6 +349,75 @@ export default function Notifications() {
           )}
         </>
       )}
+
+      {/* Reminder-time picker — a bottom sheet with real gesture dismissal,
+          not a route swap. */}
+      <Drawer open={sheet !== null} onOpenChange={(open) => !open && setSheet(null)}>
+        <DrawerContent className="border-border/30 bg-card/95 backdrop-blur-xl">
+          <DrawerHeader className="text-center">
+            <DrawerTitle className="font-heading text-lg font-light text-foreground">
+              {sheet === 'morning' && 'Morning Check-In'}
+              {sheet === 'evening' && 'Evening Reflection'}
+              {sheet === 'return' && 'Gentle Return Nudges'}
+              {sheet === 'affirm' && 'Affirmation Reminders'}
+            </DrawerTitle>
+            <DrawerDescription className="text-xs text-muted-foreground">
+              {(sheet === 'morning' || sheet === 'evening') && 'Choose the quiet hour.'}
+              {(sheet === 'return' || sheet === 'affirm') && 'How often should we whisper?'}
+            </DrawerDescription>
+          </DrawerHeader>
+
+          <div className="px-6 pb-8 safe-bottom">
+            {(sheet === 'morning' || sheet === 'evening') && (
+              <div className="flex flex-col items-center gap-5">
+                <input
+                  type="time"
+                  value={sheet === 'morning' ? prefs.morningTime : prefs.eveningTime}
+                  onChange={(e) =>
+                    update(sheet === 'morning' ? 'morningTime' : 'eveningTime', e.target.value)
+                  }
+                  className="w-full max-w-[220px] rounded-2xl border border-border/30 bg-muted/20 px-4 py-3 text-center font-heading text-2xl text-foreground focus:outline-none focus:ring-1 focus:ring-primary/40"
+                />
+                <DrawerClose asChild>
+                  <button className="press min-h-[48px] w-full max-w-[220px] rounded-2xl bg-primary text-sm font-medium text-primary-foreground">
+                    Done
+                  </button>
+                </DrawerClose>
+              </div>
+            )}
+
+            {(sheet === 'return' || sheet === 'affirm') && (
+              <div className="mx-auto flex max-w-[280px] flex-col gap-2">
+                {(sheet === 'return' ? RETURN_OPTIONS : AFFIRM_OPTIONS).map((opt) => {
+                  const selected =
+                    sheet === 'return'
+                      ? prefs.returnIntervalHours === opt.value
+                      : prefs.affirmationIntervalMinutes === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      onClick={() => {
+                        update(
+                          sheet === 'return' ? 'returnIntervalHours' : 'affirmationIntervalMinutes',
+                          opt.value,
+                        );
+                        setSheet(null);
+                      }}
+                      className={`press min-h-[48px] rounded-2xl border px-4 text-sm transition-colors ${
+                        selected
+                          ? 'border-primary/40 bg-primary/10 text-primary'
+                          : 'border-border/20 bg-muted/10 text-foreground hover:border-primary/25'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
