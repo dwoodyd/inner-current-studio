@@ -80,8 +80,21 @@ export default function AppShell() {
         </>
       )}
       <main className={`relative z-10 flex-1 overflow-y-auto ${hideBottomNav ? 'pb-0' : 'pb-32'}`}>
-        <Outlet />
+        {/* Route change reads as a cross-fade, never a hard cut. */}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={location.pathname}
+            variants={routeFade}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+            className="min-h-full"
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
       </main>
+
       {!hideBottomNav && <BottomNav />}
       <MigrationNoticeModal />
       <InstallPrompt />
