@@ -11,10 +11,18 @@ interface OrbVideoProps {
   size?: number;
 }
 
-// Preload all orb videos once so swaps are instant + autoplay-safe on mobile.
+// Preload orb videos once so swaps are instant. Skipped on iOS/Safari, where
+// five simultaneous media elements starve the decoder and break playback.
 let preloaded = false;
+const isAppleWebkit = () =>
+  typeof navigator !== 'undefined' &&
+  /iP(hone|ad|od)/.test(navigator.userAgent) ||
+  (typeof navigator !== 'undefined' &&
+    /Safari/.test(navigator.userAgent) &&
+    !/Chrome|Chromium|Android/.test(navigator.userAgent));
+
 function preloadOrbVideos() {
-  if (preloaded || typeof document === 'undefined') return;
+  if (preloaded || typeof document === 'undefined' || isAppleWebkit()) return;
   preloaded = true;
   Object.values(STATE_DEFS).forEach((def) => {
     const v = document.createElement('video');
@@ -25,6 +33,7 @@ function preloadOrbVideos() {
     v.load();
   });
 }
+
 
 /**
  * Living Orb — loops the state-matched mp4 muted and autoplay.
