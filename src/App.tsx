@@ -405,9 +405,7 @@ function AppRoutes() {
       <Route path="/owner" element={<Navigate to="/" replace />} />
       <Route path="/auth" element={<Navigate to="/" replace />} />
         <Route path="*" element={<NotFound />} />
-      </Routes>
-        </AnimatePresence>
-      </Suspense>
+      </Routes></Suspense>
     </RouteErrorBoundary>
   );
 }
