@@ -272,8 +272,10 @@ function AppRoutes() {
 
   return (
     <RouteErrorBoundary resetKey={location.pathname}>
-      <Suspense fallback={<RouteLoader />}><Routes>
-        <Route path="/onboarding" element={<Onboarding />} />
+      <Suspense fallback={<RouteLoader />}>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/onboarding" element={<Onboarding />} />
         <Route element={<AppShell />}>
         <Route path="/" element={<Home />} />
         <Route path="/ritual/morning" element={<MorningRitual />} />
