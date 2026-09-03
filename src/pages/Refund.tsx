@@ -96,7 +96,19 @@ export default function Refund() {
           ))}
         </div>
 
-        <motion.div variants={fadeUp} className="text-center pt-4 pb-8">
+        <motion.div variants={fadeUp} className="text-center pt-4 pb-8 space-y-3">
+          <p className="text-xs text-muted-foreground/80">
+            Billing mechanics are governed by{' '}
+            <a
+              href="https://www.paddle.com/legal/checkout-buyer-terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:text-foreground"
+            >
+              Paddle's Buyer Terms
+            </a>
+            .
+          </p>
           <p className="text-[10px] text-muted-foreground/30">© 2026 DeWayne Woods · Inner Wake. All rights reserved.</p>
         </motion.div>
       </motion.div>

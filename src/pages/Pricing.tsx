@@ -119,6 +119,14 @@ export default function Pricing() {
           <Link to="/terms" className="underline underline-offset-4 hover:text-foreground">Terms</Link>
           <Link to="/refund" className="underline underline-offset-4 hover:text-foreground">Refund policy</Link>
           <Link to="/privacy" className="underline underline-offset-4 hover:text-foreground">Privacy</Link>
+          <a
+            href="https://www.paddle.com/legal/checkout-buyer-terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-4 hover:text-foreground"
+          >
+            Paddle Buyer Terms
+          </a>
           <Link to="/welcome" className="underline underline-offset-4 hover:text-foreground">Home</Link>
         </nav>
       </div>
