@@ -324,10 +324,10 @@ function AppRoutes() {
         <Route path="/refund" element={<Refund />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/refunds" element={<Navigate to="/refund" replace />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/founding" element={<FoundingApplications />} />
-        <Route path="/admin/founders" element={<FoundersDashboard />} />
-        <Route path="/admin/reading-bridge" element={<AdminReadingBridge />} />
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/founding" element={<AdminRoute><FoundingApplications /></AdminRoute>} />
+        <Route path="/admin/founders" element={<AdminRoute><FoundersDashboard /></AdminRoute>} />
+        <Route path="/admin/reading-bridge" element={<AdminRoute><AdminReadingBridge /></AdminRoute>} />
         <Route path="/money" element={<Navigate to="/currents/money" replace />} />
         <Route path="/money/hub" element={current('money', <MoneyCurrent />)} />
         <Route path="/money/state" element={current('money', <MoneyState />)} />
