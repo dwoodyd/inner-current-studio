@@ -56,6 +56,7 @@ const ResonanceLibrary = lazy(() => import("@/pages/ResonanceLibrary"));
 const Onboarding = lazy(() => import("@/pages/Onboarding"));
 const Auth = lazy(() => import("@/pages/Auth"));
 const About = lazy(() => import("@/pages/About"));
+import AdminRoute from "@/components/AdminRoute";
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
 const FoundingApplications = lazy(() => import("@/pages/FoundingApplications"));
 const FoundersDashboard = lazy(() => import("@/pages/FoundersDashboard"));
