@@ -307,11 +307,57 @@ export default function Subscription() {
           )}
         </motion.div>
 
+        {/* Change plan */}
+        {sub.hasPaidAccess && sub.status !== 'owner' && sub.detailedTier !== 'lifetime' && (
+          <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-5 py-4 space-y-3">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/70">Change plan</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {sub.detailedTier !== 'pro_annual' && (
+                <button
+                  type="button"
+                  disabled={checkout.loading}
+                  onClick={() => startCheckout(eligibleForFounding ? FOUNDING_PRICES.annual : RETAIL_PRICES.annual)}
+                  className="min-h-[44px] rounded-2xl border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary/15 disabled:opacity-50"
+                >
+                  Switch to Annual · save 35%
+                </button>
+              )}
+              {sub.detailedTier !== 'pro_monthly' && (
+                <button
+                  type="button"
+                  disabled={checkout.loading}
+                  onClick={() => startCheckout(eligibleForFounding ? FOUNDING_PRICES.monthly : RETAIL_PRICES.monthly)}
+                  className="min-h-[44px] rounded-2xl border border-border/40 bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/10 disabled:opacity-50"
+                >
+                  Switch to Monthly
+                </button>
+              )}
+              {lifetimeAvailable && (
+                <button
+                  type="button"
+                  disabled={checkout.loading}
+                  onClick={() => startCheckout(FOUNDING_PRICES.lifetime)}
+                  className="min-h-[44px] rounded-2xl border border-border/40 bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/10 disabled:opacity-50 sm:col-span-2"
+                >
+                  Upgrade to Lifetime · $99 one-time
+                </button>
+              )}
+            </div>
+            <p className="text-[11px] leading-snug text-muted-foreground/70">
+              Plan changes are handled by Paddle at checkout — your existing subscription is prorated or cancelled automatically. To cancel instead, use the billing portal below.
+            </p>
+          </motion.div>
+        )}
+
         {/* Trust strip */}
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-5 py-4 flex items-start gap-3">
           <ShieldCheck size={18} className="mt-0.5 shrink-0 text-primary" strokeWidth={1.5} />
           <p className="text-xs leading-relaxed text-muted-foreground">
-            Secure checkout · Cancel anytime · No hidden fees. Inner Wake never raises your founding rate, even when retail rises.
+            Secure checkout · Cancel anytime · 30-day money-back guarantee. Inner Wake never raises your founding rate, even when retail rises. See our{' '}
+            <button type="button" onClick={() => navigate('/refund')} className="underline underline-offset-4 hover:text-foreground">
+              refund policy
+            </button>
+            .
           </p>
         </motion.div>
 
@@ -328,6 +374,7 @@ export default function Subscription() {
             </button>
           </motion.div>
         )}
+
 
         <motion.div variants={fadeUp}>
           <a

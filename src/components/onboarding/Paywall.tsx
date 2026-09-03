@@ -103,8 +103,9 @@ export function Paywall({ companionName, chosenCurrent, onContinueFree }: Paywal
       <p className="text-[11px] text-muted-foreground/60 italic">
         {hasForeverAccess
           ? "You're a Founding Member. Nothing expires."
-          : "No card now. Cancel anytime. Founding rate available throughout your access window."}
+          : "No card now. Cancel anytime. 30-day money-back guarantee on all paid plans."}
       </p>
+
     </div>
   );
 }
