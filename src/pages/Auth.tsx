@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
-import { ArrowRight, Chrome, Users } from 'lucide-react';
+import { ArrowRight, Apple, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
 import BrandLogo from '@/components/BrandLogo';
 
@@ -36,6 +36,8 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [forgotMode, setForgotMode] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [linkSent, setLinkSent] = useState(false);
+  const [usePassword, setUsePassword] = useState(false);
   const attemptsRef = useRef<number[]>([]);
 
   const checkRateLimit = useCallback((): boolean => {
@@ -129,16 +131,42 @@ export default function Auth() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleOAuth = async (provider: 'google' | 'apple') => {
     if (!checkRateLimit()) return;
     setLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth('google', {
+      const { error } = await lovable.auth.signInWithOAuth(provider, {
         redirect_uri: window.location.origin,
       });
       if (error) throw error;
     } catch {
-      toast.error('Google sign-in is unavailable right now.');
+      toast.error(`${provider === 'google' ? 'Google' : 'Apple'} sign-in is unavailable right now.`);
+      setLoading(false);
+    }
+  };
+
+  const handleMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) return;
+    if (trimmedEmail.length > 255) { toast.error('Email is too long.'); return; }
+    if (!checkRateLimit()) return;
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: trimmedEmail,
+        options: { emailRedirectTo: window.location.origin },
+      });
+      if (error) throw error;
+      supabase.functions
+        .invoke('newsletter-subscribe', { body: { email: trimmedEmail, source: 'signup' } })
+        .catch(() => {});
+      setLinkSent(true);
+    } catch (err: any) {
+      const msg = err?.message?.toLowerCase() ?? '';
+      if (msg.includes('rate limit') || msg.includes('too many')) toast.error('Too many attempts. Please wait a moment.');
+      else toast.error('Unable to send your link. Please check the address and try again.');
+    } finally {
       setLoading(false);
     }
   };
@@ -374,64 +402,102 @@ export default function Auth() {
                   </div>
                 </form>
               )
+            ) : linkSent ? (
+              <div className="text-center space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  We sent a sign-in link to <span className="text-foreground">{email}</span>. Open it on this device to continue.
+                </p>
+                <button
+                  onClick={() => setLinkSent(false)}
+                  className="text-sm text-primary hover:text-primary/80 transition-colors py-3 min-h-[44px]"
+                >
+                  Use a different email
+                </button>
+              </div>
             ) : (
               <div className="space-y-4">
                 <button
                   type="button"
-                  onClick={handleGoogleSignIn}
+                  onClick={() => handleOAuth('google')}
                   disabled={loading}
                   className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl border border-border/30 bg-card/50 py-4 text-sm font-medium text-foreground transition-all duration-200 hover:bg-muted/10 disabled:opacity-40 active:scale-[0.98]"
                 >
                   <Chrome size={16} /> Continue with Google
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOAuth('apple')}
+                  disabled={loading}
+                  className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl border border-border/30 bg-card/50 py-4 text-sm font-medium text-foreground transition-all duration-200 hover:bg-muted/10 disabled:opacity-40 active:scale-[0.98]"
+                >
+                  <Apple size={16} /> Continue with Apple
                 </button>
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border/20" />
                   <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/50">or</span>
                   <div className="h-px flex-1 bg-border/20" />
                 </div>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder="Email"
-                    required
-                    className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
-                  />
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder="Password"
-                    required
-                    minLength={6}
-                    className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
-                  />
-                  </div>
-                  {mode === 'login' && (
+
+                {usePassword ? (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-3">
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        placeholder="Email"
+                        required
+                        className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
+                      />
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        placeholder="Password"
+                        required
+                        minLength={6}
+                        className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
+                      />
+                    </div>
                     <div className="text-right">
                       <button type="button" onClick={() => setForgotMode(true)} className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors py-1 min-h-[44px]">
                         Forgot password?
                       </button>
                     </div>
-                  )}
-                  <button type="submit" disabled={loading} className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20">
-                    {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
+                    <button type="submit" disabled={loading} className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20">
+                      {loading ? '…' : mode === 'login' ? 'Sign In' : 'Create Account'}
+                    </button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleMagicLink} className="space-y-4">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      placeholder="Email"
+                      required
+                      className="w-full rounded-xl border border-border/30 bg-card/50 px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/40 transition-colors backdrop-blur-sm"
+                    />
+                    <button type="submit" disabled={loading} className="w-full rounded-2xl bg-primary py-4 min-h-[48px] text-sm font-medium text-primary-foreground transition-all duration-200 disabled:opacity-40 active:scale-[0.98] hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center gap-2">
+                      {loading ? '…' : 'Continue with email'}
+                      {!loading && <ArrowRight size={15} />}
+                    </button>
+                    <p className="text-center text-[11px] text-muted-foreground/45">
+                      No password needed — we'll email you a secure sign-in link.
+                    </p>
+                  </form>
+                )}
+
+                <div className="text-center">
+                  <button
+                    onClick={() => setUsePassword(p => !p)}
+                    className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors py-3 min-h-[44px]"
+                  >
+                    {usePassword ? 'Use a sign-in link instead' : 'Use a password instead'}
                   </button>
-                </form>
+                </div>
               </div>
             )}
-
-            {/* Toggle */}
-            <div className="text-center">
-              <button
-                onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 py-3 min-h-[44px]"
-              >
-                {mode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
-              </button>
-            </div>
 
             {/* Privacy links */}
             <div className="flex items-center justify-center gap-4 pt-2">
