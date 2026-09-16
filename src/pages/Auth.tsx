@@ -36,6 +36,8 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [forgotMode, setForgotMode] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [linkSent, setLinkSent] = useState(false);
+  const [usePassword, setUsePassword] = useState(false);
   const attemptsRef = useRef<number[]>([]);
 
   const checkRateLimit = useCallback((): boolean => {
