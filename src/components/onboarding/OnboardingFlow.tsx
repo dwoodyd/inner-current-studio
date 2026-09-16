@@ -30,14 +30,6 @@ const CARRYING_OPTIONS = [
   "Old patterns repeating",
 ];
 
-const WANTING_OPTIONS = [
-  "Steadiness",
-  "Soft, alive presence",
-  "Trust in myself",
-  "Spaciousness around money",
-  "A felt-sense of being held",
-  "Quiet clarity",
-];
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -186,7 +178,7 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
             <motion.button
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 4, duration: 1.5 }}
+              transition={{ delay: 1.6, duration: 1 }}
               onClick={next}
               className="mt-12 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
             >
@@ -231,7 +223,7 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
               ))}
             </div>
             <button
-              onClick={next}
+              onClick={() => setAct(4)}
               disabled={!carrying}
               className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all disabled:opacity-20 active:scale-[0.98]"
             >
@@ -240,89 +232,6 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
           </motion.div>
         )}
 
-        {/* ACT 2 — What you want to feel */}
-        {act === 2 && (
-          <motion.div
-            key="act-2"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -24 }}
-            transition={{ duration: 0.8, ease }}
-            className="relative z-10 w-full max-w-md space-y-8"
-          >
-            <div className="text-center space-y-3">
-              <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Two</p>
-              <h2 className="font-heading text-3xl font-light text-foreground">
-                What do you want to feel instead?
-              </h2>
-              <p className="text-sm text-muted-foreground italic">
-                Not perfect. Just truer.
-              </p>
-            </div>
-            <div className="space-y-2">
-              {WANTING_OPTIONS.map((opt, i) => (
-                <motion.button
-                  key={opt}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  onClick={() => setWanting(opt)}
-                  className={`w-full text-left rounded-xl border px-5 py-4 text-sm font-light transition-all active:scale-[0.99] ${
-                    wanting === opt
-                      ? "border-primary/50 bg-primary/10 text-foreground"
-                      : "border-border/30 bg-card/40 text-muted-foreground hover:border-border/60"
-                  }`}
-                >
-                  {opt}
-                </motion.button>
-              ))}
-            </div>
-            <button
-              onClick={next}
-              disabled={!wanting}
-              className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all disabled:opacity-20 active:scale-[0.98]"
-            >
-              Continue
-            </button>
-          </motion.div>
-        )}
-
-        {/* ACT 3 — Meet your Current (name your companion) */}
-        {act === 3 && (
-          <motion.div
-            key="act-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease }}
-            className="relative z-10 w-full max-w-md space-y-8 flex flex-col items-center text-center"
-          >
-            <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Three</p>
-            <h2 className="font-heading text-3xl font-light text-foreground">
-              Meet your Current
-            </h2>
-            <p className="text-sm text-muted-foreground italic max-w-xs">
-              A presence that walks with you. Give it a name —
-              one word that feels true. You can change it later.
-            </p>
-            <BreathingOrb size={180} hue={42} intensity={companionName ? 1 : 0.6} />
-            <input
-              type="text"
-              value={companionName}
-              onChange={(e) => setCompanionName(e.target.value.slice(0, 24))}
-              placeholder="e.g. Stillness, Ember, Tide…"
-              className="w-full rounded-xl border border-border/30 bg-card/40 px-5 py-4 text-center text-lg font-heading italic text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/50 transition-colors"
-              autoFocus
-            />
-            <button
-              onClick={next}
-              disabled={companionName.trim().length < 2}
-              className="w-full rounded-2xl bg-primary py-4 text-sm font-medium text-primary-foreground transition-all disabled:opacity-20 active:scale-[0.98]"
-            >
-              This is my Current
-            </button>
-          </motion.div>
-        )}
 
         {/* ACT 4 — The Five Waters (choose your free Current) */}
         {act === 4 && (
@@ -335,7 +244,7 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
             className="relative z-10 w-full max-w-md space-y-8"
           >
             <div className="text-center space-y-3">
-              <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Four</p>
+              <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Two</p>
               <h2 className="font-heading text-3xl font-light text-foreground">
                 Five waters run through you.
               </h2>
@@ -350,7 +259,13 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08, duration: 0.4 }}
-                  onClick={() => setChosenCurrent(c.id)}
+                  onClick={() => {
+                    setChosenCurrent(c.id);
+                    // The companion and the felt-sense goal are derived from the
+                    // chosen Current so onboarding never asks for them outright.
+                    setCompanionName(c.name);
+                    setWanting(c.essence);
+                  }}
                   className={`flex items-center gap-4 rounded-xl border px-5 py-4 text-left transition-all active:scale-[0.99] ${
                     chosenCurrent === c.id
                       ? "border-primary/50 bg-primary/10"
@@ -397,12 +312,12 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
               }
             }}
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Five</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Three</p>
             <h2 className="font-heading text-3xl font-light text-foreground">
               Your sigil
             </h2>
             <p className="text-sm text-muted-foreground italic max-w-xs">
-              Born from your name and the {current?.name} Current.
+              Born from the {current?.name} Current and what you're carrying.
               No one else has this one.
             </p>
             <Sigil seed={companionName + chosenCurrent} hue={hue} size={220} />
@@ -449,7 +364,7 @@ export function OnboardingFlow({ onSkipPaywall }: OnboardingFlowProps) {
             className="relative z-10 w-full max-w-md space-y-7"
           >
             <div className="space-y-3 text-center">
-              <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Six</p>
+              <p className="text-xs tracking-[0.3em] uppercase text-primary/70">Act Four</p>
               <h2 className="font-heading text-3xl font-light text-foreground">
                 When should we meet?
               </h2>
