@@ -30,14 +30,6 @@ const CARRYING_OPTIONS = [
   "Old patterns repeating",
 ];
 
-const WANTING_OPTIONS = [
-  "Steadiness",
-  "Soft, alive presence",
-  "Trust in myself",
-  "Spaciousness around money",
-  "A felt-sense of being held",
-  "Quiet clarity",
-];
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
