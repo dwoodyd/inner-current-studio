@@ -129,16 +129,42 @@ export default function Auth() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleOAuth = async (provider: 'google' | 'apple') => {
     if (!checkRateLimit()) return;
     setLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth('google', {
+      const { error } = await lovable.auth.signInWithOAuth(provider, {
         redirect_uri: window.location.origin,
       });
       if (error) throw error;
     } catch {
-      toast.error('Google sign-in is unavailable right now.');
+      toast.error(`${provider === 'google' ? 'Google' : 'Apple'} sign-in is unavailable right now.`);
+      setLoading(false);
+    }
+  };
+
+  const handleMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) return;
+    if (trimmedEmail.length > 255) { toast.error('Email is too long.'); return; }
+    if (!checkRateLimit()) return;
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: trimmedEmail,
+        options: { emailRedirectTo: window.location.origin },
+      });
+      if (error) throw error;
+      supabase.functions
+        .invoke('newsletter-subscribe', { body: { email: trimmedEmail, source: 'signup' } })
+        .catch(() => {});
+      setLinkSent(true);
+    } catch (err: any) {
+      const msg = err?.message?.toLowerCase() ?? '';
+      if (msg.includes('rate limit') || msg.includes('too many')) toast.error('Too many attempts. Please wait a moment.');
+      else toast.error('Unable to send your link. Please check the address and try again.');
+    } finally {
       setLoading(false);
     }
   };
