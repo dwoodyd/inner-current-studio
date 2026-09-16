@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
 import { toast } from 'sonner';
-import { ArrowRight, Chrome, Users } from 'lucide-react';
+import { ArrowRight, Apple, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
 import BrandLogo from '@/components/BrandLogo';
 
