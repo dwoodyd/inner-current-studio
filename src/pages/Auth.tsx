@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { ArrowRight, Apple, Chrome, Users } from 'lucide-react';
 import TypingText from '@/components/TypingText';
 import BrandLogo from '@/components/BrandLogo';
+import { captureSignupIntent } from '@/lib/signupIntent';
 
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_ATTEMPTS = 5;
