@@ -420,6 +420,7 @@ const App = () => (
           <AuthProvider>
             <AppProvider>
               <AppRoutes />
+              <SignupIntentHandler />
               <StageUpOverlay />
             </AppProvider>
           </AuthProvider>

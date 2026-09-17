@@ -44,7 +44,7 @@ export default function Auth() {
   // Remember the plan / campaign the visitor arrived with, before any redirect.
   useEffect(() => {
     const intent = captureSignupIntent();
-    if (intent && intent.plan !== 'free') setPhase('auth');
+    if (intent && intent.plan !== 'free') { setMode('signup'); setPhase('auth'); }
   }, []);
 
   const checkRateLimit = useCallback((): boolean => {
