@@ -13,6 +13,7 @@ import type { GatedTool } from "@/hooks/useDailyLimit";
 
 import { useAppState } from "@/lib/AppContext";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
+import SignupIntentHandler from "@/components/SignupIntentHandler";
 import { useCurrentsCloudSync } from "@/hooks/useCurrentsCloudSync";
 import { ThemeProvider } from "@/hooks/useTheme";
 
@@ -420,6 +421,7 @@ const App = () => (
           <AuthProvider>
             <AppProvider>
               <AppRoutes />
+              <SignupIntentHandler />
               <StageUpOverlay />
             </AppProvider>
           </AuthProvider>

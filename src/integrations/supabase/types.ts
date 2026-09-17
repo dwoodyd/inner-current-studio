@@ -932,12 +932,15 @@ export type Database = {
           onboarding_reason: string | null
           onboarding_style: string | null
           onboarding_version: number
+          signup_plan: string | null
           subscription_tier: string
           trial_ends_at: string | null
           trial_started_at: string | null
           trial_type: string
           updated_at: string
           user_id: string
+          utm_content: string | null
+          utm_source: string | null
         }
         Insert: {
           companion_feeling?: string | null
@@ -954,12 +957,15 @@ export type Database = {
           onboarding_reason?: string | null
           onboarding_style?: string | null
           onboarding_version?: number
+          signup_plan?: string | null
           subscription_tier?: string
           trial_ends_at?: string | null
           trial_started_at?: string | null
           trial_type?: string
           updated_at?: string
           user_id: string
+          utm_content?: string | null
+          utm_source?: string | null
         }
         Update: {
           companion_feeling?: string | null
@@ -976,12 +982,15 @@ export type Database = {
           onboarding_reason?: string | null
           onboarding_style?: string | null
           onboarding_version?: number
+          signup_plan?: string | null
           subscription_tier?: string
           trial_ends_at?: string | null
           trial_started_at?: string | null
           trial_type?: string
           updated_at?: string
           user_id?: string
+          utm_content?: string | null
+          utm_source?: string | null
         }
         Relationships: []
       }
