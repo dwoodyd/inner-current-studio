@@ -41,6 +41,12 @@ export default function Auth() {
   const [usePassword, setUsePassword] = useState(false);
   const attemptsRef = useRef<number[]>([]);
 
+  // Remember the plan / campaign the visitor arrived with, before any redirect.
+  useEffect(() => {
+    const intent = captureSignupIntent();
+    if (intent && intent.plan !== 'free') setPhase('auth');
+  }, []);
+
   const checkRateLimit = useCallback((): boolean => {
     const now = Date.now();
     attemptsRef.current = attemptsRef.current.filter(t => now - t < RATE_LIMIT_WINDOW);
