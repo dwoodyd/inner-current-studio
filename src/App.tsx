@@ -14,6 +14,7 @@ import type { GatedTool } from "@/hooks/useDailyLimit";
 import { useAppState } from "@/lib/AppContext";
 import StageUpOverlay from "@/components/currents/StageUpOverlay";
 import SignupIntentHandler from "@/components/SignupIntentHandler";
+import CheckoutReconciler from "@/components/CheckoutReconciler";
 import { useCurrentsCloudSync } from "@/hooks/useCurrentsCloudSync";
 import { ThemeProvider } from "@/hooks/useTheme";
 
@@ -422,6 +423,7 @@ const App = () => (
             <AppProvider>
               <AppRoutes />
               <SignupIntentHandler />
+              <CheckoutReconciler />
               <StageUpOverlay />
             </AppProvider>
           </AuthProvider>
