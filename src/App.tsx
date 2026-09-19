@@ -423,6 +423,7 @@ const App = () => (
             <AppProvider>
               <AppRoutes />
               <SignupIntentHandler />
+              <CheckoutReconciler />
               <StageUpOverlay />
             </AppProvider>
           </AuthProvider>
