@@ -1,6 +1,22 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { gatewayFetch, type PaddleEnv } from '../_shared/paddle.ts';
-import { priceIdToTier, FOUNDING_LIFETIME_PRICE_ID } from '../payments-webhook/tiers.ts';
+
+// Mirrors supabase/functions/payments-webhook/tiers.ts (edge functions cannot
+// import across function folders).
+const FOUNDING_LIFETIME_PRICE_ID = 'iw_pro_lifetime_founding';
+
+function priceIdToTier(priceId: string | undefined | null): 'premium' | 'lifetime' | 'free' {
+  if (!priceId) return 'free';
+  if (
+    priceId.includes('lifetime') ||
+    priceId === 'premium_lifetime' ||
+    priceId === 'premium_lifetime_149'
+  ) return 'lifetime';
+  if (priceId.includes('monthly') || priceId.includes('annual') || priceId.includes('yearly')) {
+    return 'premium';
+  }
+  return 'free';
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
