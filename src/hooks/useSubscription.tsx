@@ -227,9 +227,17 @@ export function useSubscription(): SubscriptionState {
     fetchShared(user.id, env, ownerAccess).then(sync);
     ensureRealtime(user.id, env, ownerAccess);
 
+    // Manual refresh (e.g. after a checkout is reconciled server-side).
+    const onRefresh = () => {
+      cachedKey = null;
+      fetchShared(user.id, env, ownerAccess).then(sync);
+    };
+    window.addEventListener("iw:subscription-refresh", onRefresh);
+
     return () => {
       mounted = false;
       subscribers.delete(sync);
+      window.removeEventListener("iw:subscription-refresh", onRefresh);
     };
   }, [user, env, ownerAccess, key]);
 
