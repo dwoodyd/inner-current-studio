@@ -22,7 +22,11 @@ serve(async (req) => {
     });
   }
 
-  const response = await gatewayFetch(environment as PaddleEnv, `/prices?external_id=${encodeURIComponent(priceId)}`);
+  // status=active so archived duplicates can never be resolved.
+  const response = await gatewayFetch(
+    environment as PaddleEnv,
+    `/prices?status=active&external_id=${encodeURIComponent(priceId)}`,
+  );
   const data = await response.json();
 
   if (!data.data?.length) {
