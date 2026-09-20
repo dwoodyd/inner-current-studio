@@ -27,6 +27,8 @@ interface EvidenceEntry {
   created_at: string;
 }
 
+const PAGE_SIZE = 50;
+
 export default function EvidenceOfSupport() {
   const navigate = useNavigate();
   const { user } = useAuth();
