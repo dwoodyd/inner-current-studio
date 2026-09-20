@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
-import { AppState, CheckIn, TodayFlow, Wheel, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift } from './types';
+import { AppState, CheckIn, TodayFlow, Wheel, GatheredSequence, MomentumSession, FuturePage, ImagineIfEntry, OverflowEntry, CustomRitual, ResistanceEntry, ThoughtShift, Reflection } from './types';
 import { loadState, saveState, generateId } from './store';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -26,6 +26,7 @@ interface AppContextType {
   saveCustomRitual: (ritual: Omit<CustomRitual, 'id' | 'createdAt'>) => void;
   saveResistanceEntry: (entry: Omit<ResistanceEntry, 'id' | 'createdAt'>) => void;
   saveThoughtShift: (shift: Omit<ThoughtShift, 'id' | 'createdAt'>) => void;
+  saveReflection: (kind: Reflection['kind'], text: string) => void;
   pendingSyncCount: number;
 }
 
@@ -123,7 +124,7 @@ async function loadCloudState(userId: string): Promise<AppState | null> {
   try {
     const [
       profileRes, checkInsRes, wheelsRes, seqRes, momRes,
-      fpRes, iiRes, ofRes, crRes, reRes, tsRes, tfRes,
+      fpRes, iiRes, ofRes, crRes, reRes, tsRes, reflRes, tfRes,
     ] = await Promise.all([
       supabase.from('profiles').select('onboarding_completed, onboarding_reason, onboarding_style, onboarding_challenge, companion_name, companion_sigil, free_current').eq('user_id', userId).maybeSingle(),
       supabase.from('check_ins').select('id, state, note, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
@@ -136,6 +137,7 @@ async function loadCloudState(userId: string): Promise<AppState | null> {
       supabase.from('custom_rituals').select('id, name, steps, duration_estimate, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
       supabase.from('resistance_entries').select('id, trigger_type, body_location, charge_before, charge_after, clearing_mode, softened_statement, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
       supabase.from('thought_shifts').select('id, original_thought, charge_type, softer_statement, believable_statement, support_statement, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
+      supabase.from('reflections').select('id, kind, text, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
       supabase.from('today_flow').select('morning_ritual, reset_used, reflection_completed, momentum_completed, return_count').eq('user_id', userId).eq('flow_date', new Date().toISOString().slice(0, 10)).maybeSingle(),
     ]);
 
@@ -197,6 +199,9 @@ async function loadCloudState(userId: string): Promise<AppState | null> {
         id: r.id, originalThought: r.original_thought, chargeType: r.charge_type as any,
         softerStatement: r.softer_statement, believableStatement: r.believable_statement,
         supportStatement: r.support_statement, createdAt: r.created_at,
+      })),
+      reflections: (reflRes.data || []).map(r => ({
+        id: r.id, kind: r.kind as any, text: r.text, createdAt: r.created_at,
       })),
       todayFlow,
       lastVisit: new Date().toISOString(),
@@ -489,17 +494,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     );
   }, [user, optimistic]);
 
+  const saveReflection = useCallback((kind: Reflection['kind'], text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    const full: Reflection = { id: generateId(), kind, text: trimmed, createdAt: new Date().toISOString() };
+    optimistic(
+      prev => ({ ...prev, reflections: [full, ...(prev.reflections || [])] }),
+      () => supabase.from('reflections').insert({ user_id: user!.id, kind, text: trimmed }),
+      'reflection'
+    );
+  }, [user, optimistic]);
+
   // Memoize context value to prevent re-renders when callbacks haven't changed
   const contextValue = useMemo(() => ({
     state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
     saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
     saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
-    saveResistanceEntry, saveThoughtShift, pendingSyncCount,
+    saveResistanceEntry, saveThoughtShift, saveReflection, pendingSyncCount,
   }), [
     state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
     saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
     saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
-    saveResistanceEntry, saveThoughtShift, pendingSyncCount,
+    saveResistanceEntry, saveThoughtShift, saveReflection, pendingSyncCount,
   ]);
 
   return (
