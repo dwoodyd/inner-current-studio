@@ -27,7 +27,18 @@ export async function initializePaddle() {
     const onReady = () => {
       const environment = clientToken.startsWith("test_") ? "sandbox" : "production";
       window.Paddle.Environment.set(environment);
-      window.Paddle.Initialize({ token: clientToken });
+      window.Paddle.Initialize({
+        token: clientToken,
+        eventCallback: (event: any) => {
+          // Surface silent checkout failures (e.g. account not yet approved
+          // for live transactions) instead of only showing Paddle's generic
+          // "Something went wrong" overlay.
+          if (typeof event?.name === "string" && event.name.includes("error")) {
+            console.error("[paddle] checkout event", event.name, event.data ?? event);
+            window.dispatchEvent(new CustomEvent("iw:paddle-error", { detail: event }));
+          }
+        },
+      });
       paddleInitialized = true;
       resolve();
     };
