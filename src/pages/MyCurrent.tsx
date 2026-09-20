@@ -24,7 +24,8 @@ export default function MyCurrent() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [search, setSearch] = useState('');
 
-  type ArchiveItem = { type: string; title: string; date: string; preview?: string };
+  type ArchiveItem = { type: string; title: string; date: string; preview?: string; body?: string };
+  const [open, setOpen] = useState<ArchiveItem | null>(null);
 
   const items: ArchiveItem[] = [];
 
@@ -44,7 +45,16 @@ export default function MyCurrent() {
     state.overflowEntries.forEach(e => items.push({ type: 'Overflow', title: e.mode, date: e.createdAt, preview: e.entryText.slice(0, 60) }));
   }
   if (filter === 'all' || filter === 'checkins') {
-    state.checkIns.forEach(c => items.push({ type: 'Check-in', title: c.state, date: c.createdAt, preview: c.note }));
+    state.checkIns.forEach(c => items.push({ type: 'Check-in', title: c.state, date: c.createdAt, preview: c.note, body: c.note }));
+  }
+  if (filter === 'all' || filter === 'reflections') {
+    (state.reflections || []).forEach(r => items.push({
+      type: r.kind === 'morning' ? 'Morning intention' : 'Evening reflection',
+      title: r.kind === 'morning' ? 'Morning intention' : 'Evening reflection',
+      date: r.createdAt,
+      preview: r.text,
+      body: r.text,
+    }));
   }
 
   const filtered = search
