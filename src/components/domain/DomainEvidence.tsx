@@ -18,14 +18,42 @@ export default function DomainEvidence({ domain }: { domain: DomainConfig }) {
   const [category, setCategory] = useState(domain.evidenceCategories[0]?.value ?? '');
   const [text, setText] = useState('');
   const [saving, setSaving] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  // Paginated newest-first. Older entries stay on the server and stay reachable.
+  const fetchPage = async (page: number): Promise<Entry[]> => {
+    if (!user) return [];
+    const from = page * PAGE_SIZE;
+    const { data } = await supabase.from('domain_evidence').select('id, domain, category, entry_text, created_at')
+      .eq('user_id', user.id).eq('domain', domain.key)
+      .order('created_at', { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+    const rows = (data ?? []) as any as Entry[];
+    setHasMore(rows.length === PAGE_SIZE);
+    return rows;
+  };
 
   const load = async () => {
-    if (!user) return;
-    const { data } = await supabase.from('domain_evidence').select('id, domain, category, entry_text, created_at')
-      .eq('user_id', user.id).eq('domain', domain.key).order('created_at', { ascending: false });
-    if (data) setEntries(data as any);
+    const rows = await fetchPage(0);
+    setEntries(rows);
   };
   useEffect(() => { load(); }, [user, domain.key]);
+
+  const loadMore = async () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const page = Math.floor(entries.length / PAGE_SIZE);
+      const rows = await fetchPage(page);
+      setEntries(prev => {
+        const seen = new Set(prev.map(e => e.id));
+        return [...prev, ...rows.filter(r => !seen.has(r.id))];
+      });
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   const add = async () => {
     if (!text.trim() || !user) return;
