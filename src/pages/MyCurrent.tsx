@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Filter } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 type FilterType = 'all' | 'wheels' | 'sequences' | 'pages' | 'imagine' | 'overflow' | 'checkins' | 'reflections';
 
@@ -107,12 +108,14 @@ export default function MyCurrent() {
       ) : (
         <div className="space-y-2">
           {filtered.map((item, i) => (
-            <motion.div
+            <motion.button
               key={i}
+              type="button"
+              onClick={() => setOpen(item)}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className="soul-card space-y-1"
+              className="soul-card space-y-1 w-full text-left min-h-[44px] active:scale-[0.99] transition-transform"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] uppercase tracking-wider text-primary/60">{item.type}</span>
@@ -122,10 +125,28 @@ export default function MyCurrent() {
               </div>
               <p className="text-sm font-medium text-foreground capitalize">{item.title}</p>
               {item.preview && <p className="text-xs text-muted-foreground line-clamp-2">{item.preview}</p>}
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       )}
+
+      <Dialog open={!!open} onOpenChange={(v) => !v && setOpen(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-base capitalize">{open?.title}</DialogTitle>
+            <DialogDescription className="text-[11px] uppercase tracking-wider">
+              {open?.type} · {open ? new Date(open.date).toLocaleString() : ''}
+            </DialogDescription>
+          </DialogHeader>
+          {open?.body || open?.preview ? (
+            <p className="text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">
+              {open?.body || open?.preview}
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">No words were written with this one.</p>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
