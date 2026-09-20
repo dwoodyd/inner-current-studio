@@ -11,6 +11,8 @@ import EmptyState from '@/components/EmptyState';
 
 interface Entry { id: string; category: string; entry_text: string; created_at: string; }
 
+const PAGE_SIZE = 50;
+
 export default function DomainEvidence({ domain }: { domain: DomainConfig }) {
   const navigate = useNavigate();
   const { user } = useAuth();
