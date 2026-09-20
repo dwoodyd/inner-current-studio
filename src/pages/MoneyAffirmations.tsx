@@ -321,11 +321,11 @@ export default function MoneyAffirmations() {
             <button aria-label="Restart" onClick={reset} className="w-12 h-12 rounded-full bg-muted/20 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
               <RotateCcw size={18} />
             </button>
-            <button aria-label="Play" onClick={togglePause}
+            <button aria-label={paused ? "Resume" : "Pause"} onClick={togglePause}
               className="w-16 h-16 rounded-full bg-soul-gold/20 flex items-center justify-center text-soul-gold hover:bg-soul-gold/30 transition-colors">
               {paused ? <Play size={24} /> : <Pause size={24} />}
             </button>
-            <button onClick={() => { if (!paused) stopSpeech(); setVoiceEnabled(v => !v); }}
+            <button aria-label={voiceEnabled ? "Mute voice" : "Unmute voice"} onClick={() => { if (!paused) stopSpeech(); setVoiceEnabled(v => !v); }}
               className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${voiceEnabled ? 'bg-soul-gold/20 text-soul-gold' : 'bg-muted/20 text-muted-foreground'}`}>
               {voiceEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
             </button>

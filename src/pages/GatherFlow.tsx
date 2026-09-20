@@ -402,7 +402,7 @@ export default function GatherFlow() {
               className="text-muted-foreground disabled:opacity-20 transition-opacity duration-200">
               <ChevronLeft size={24} />
             </button>
-            <button aria-label="Pause"
+            <button aria-label={playing ? "Pause" : "Play"}
               onClick={togglePlay}
               className="w-14 h-14 rounded-full soul-glass-elevated flex items-center justify-center text-primary hover:scale-105 active:scale-95 transition-transform duration-200"
             >
