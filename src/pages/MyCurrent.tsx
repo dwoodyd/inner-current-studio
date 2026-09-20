@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Filter } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
 
-type FilterType = 'all' | 'wheels' | 'sequences' | 'pages' | 'imagine' | 'overflow' | 'checkins';
+type FilterType = 'all' | 'wheels' | 'sequences' | 'pages' | 'imagine' | 'overflow' | 'checkins' | 'reflections';
 
 const FILTER_LABELS: { value: FilterType; label: string }[] = [
   { value: 'all', label: 'All' },
+  { value: 'reflections', label: 'Reflections' },
   { value: 'wheels', label: 'Wheels' },
   { value: 'sequences', label: 'Sequences' },
   { value: 'pages', label: 'Pages' },
