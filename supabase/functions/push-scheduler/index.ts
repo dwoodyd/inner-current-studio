@@ -55,20 +55,16 @@ const AFFIRMS = [
 
 const pick = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
 
-interface Sub {
+interface DueSub {
   id: string;
   user_id: string;
   endpoint: string;
   p256dh: string;
   auth_key: string;
-  morning_reminder: boolean;
-  morning_time: string;
-  evening_reflection: boolean;
-  evening_time: string;
-  gentle_returns: boolean;
-  return_interval_hours: number;
-  affirmation_interval_minutes: number;
-  updated_at: string;
+  send_morning: boolean;
+  send_evening: boolean;
+  send_return: boolean;
+  send_affirm: boolean;
 }
 
 function nowHHMM(): string {
@@ -88,17 +84,16 @@ Deno.serve(async (req) => {
     });
   }
 
-
-
   const admin = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   );
 
-  const { data: subs, error } = await admin
-    .from('push_subscriptions')
-    .select('id, user_id, endpoint, p256dh, auth_key, morning_reminder, morning_time, evening_reflection, evening_time, affirmation_interval_minutes, gentle_returns, return_interval_hours, active')
-    .eq('active', true);
+  const minute = nowHHMM();
+
+  // The database selects only the subscriptions actually due this minute,
+  // so this stays O(due) instead of O(all members).
+  const { data: subs, error } = await admin.rpc('push_subscriptions_due', { _minute: minute });
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
@@ -107,37 +102,15 @@ Deno.serve(async (req) => {
     });
   }
 
-  const minute = nowHHMM();
-  const nowMs = Date.now();
   let dispatched = 0;
 
-  for (const s of (subs ?? []) as Sub[]) {
+  for (const s of (subs ?? []) as DueSub[]) {
     const toSend: { title: string; body: string; tag: string }[] = [];
 
-    if (s.morning_reminder && s.morning_time === minute) {
-      const m = pick(MORNING);
-      toSend.push({ ...m, tag: 'morning' });
-    }
-    if (s.evening_reflection && s.evening_time === minute) {
-      const m = pick(EVENING);
-      toSend.push({ ...m, tag: 'evening' });
-    }
-
-    const lastUpdate = new Date(s.updated_at).getTime();
-    const hoursSince = (nowMs - lastUpdate) / 3_600_000;
-
-    if (s.gentle_returns && s.return_interval_hours > 0 && hoursSince >= s.return_interval_hours) {
-      const m = pick(RETURNS);
-      toSend.push({ ...m, tag: 'return' });
-    }
-
-    if (s.affirmation_interval_minutes && s.affirmation_interval_minutes > 0) {
-      const minutesSince = (nowMs - lastUpdate) / 60_000;
-      if (minutesSince >= s.affirmation_interval_minutes) {
-        const m = pick(AFFIRMS);
-        toSend.push({ ...m, tag: 'affirm' });
-      }
-    }
+    if (s.send_morning) toSend.push({ ...pick(MORNING), tag: 'morning' });
+    if (s.send_evening) toSend.push({ ...pick(EVENING), tag: 'evening' });
+    if (s.send_return) toSend.push({ ...pick(RETURNS), tag: 'return' });
+    if (s.send_affirm) toSend.push({ ...pick(AFFIRMS), tag: 'affirm' });
 
     for (const msg of toSend) {
       try {
