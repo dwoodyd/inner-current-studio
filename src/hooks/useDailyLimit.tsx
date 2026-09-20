@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useSubscription } from "@/hooks/useSubscription";
+import { localDateKey } from "@/lib/utils";
 
 export type GatedTool =
   | "alignment_wheel"
@@ -24,7 +25,9 @@ export const TOOL_LABELS: Record<GatedTool, string> = {
 };
 
 function todayUTC(): string {
-  return new Date().toISOString().slice(0, 10);
+  // Local calendar date despite the legacy name — the daily limit resets at
+  // midnight in the member's own timezone, not UTC.
+  return localDateKey();
 }
 
 export interface DailyLimitState {

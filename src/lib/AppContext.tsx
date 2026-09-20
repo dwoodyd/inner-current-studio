@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { recordPracticeComplete } from '@/lib/practiceMilestone';
+import { localDateKey } from '@/lib/utils';
 import {
   validateOrError, checkInSchema, wheelSchema, gatheredSequenceSchema,
   momentumSessionSchema, futurePageSchema, imagineIfSchema, overflowSchema,
@@ -75,7 +76,7 @@ function shouldQueueCloudError(error: any) {
 
 // Helper: upsert today_flow for current user
 async function upsertTodayFlow(userId: string, updates: Partial<TodayFlow>) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateKey();
   const { data: existing, error: selectError } = await supabase
     .from('today_flow')
     .select('id')
@@ -207,7 +208,7 @@ async function loadCloudState(userId: string): Promise<(AppState & { historyHasM
   try {
     const [profileRes, tfRes, history] = await Promise.all([
       supabase.from('profiles').select('onboarding_completed, onboarding_reason, onboarding_style, onboarding_challenge, companion_name, companion_sigil, free_current').eq('user_id', userId).maybeSingle(),
-      supabase.from('today_flow').select('morning_ritual, reset_used, reflection_completed, momentum_completed, return_count').eq('user_id', userId).eq('flow_date', new Date().toISOString().slice(0, 10)).maybeSingle(),
+      supabase.from('today_flow').select('morning_ritual, reset_used, reflection_completed, momentum_completed, return_count').eq('user_id', userId).eq('flow_date', localDateKey()).maybeSingle(),
       loadHistoryPage(userId, 0),
     ]);
 

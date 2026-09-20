@@ -6,13 +6,11 @@ import { BreathingOrb } from '@/components/onboarding/BreathingOrb';
 import { useAppState } from '@/lib/AppContext';
 import { toast } from 'sonner';
 import { useCurrentProgress } from '@/lib/currents/progress';
+import { localDateKey } from '@/lib/utils';
 
 const SOFTEN_KEY = (d: string) => `innerwake_evening_soften_${d}`;
 // Local calendar date (not UTC) so the day boundary matches the member's clock.
-const today = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-};
+const today = () => localDateKey();
 
 const STEPS = ['exhale', 'reflect', 'close'] as const;
 type Step = typeof STEPS[number];

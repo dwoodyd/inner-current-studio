@@ -7,6 +7,7 @@ import QuickCheckIn from '@/components/QuickCheckIn';
 import { useAppState } from '@/lib/AppContext';
 import { toast } from 'sonner';
 import { useCurrentProgress } from '@/lib/currents/progress';
+import { localDateKey } from '@/lib/utils';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {
@@ -15,10 +16,19 @@ const quickToEmotional: Record<QuickState, EmotionalState> = {
 
 const INTENTION_KEY = (d: string) => `innerwake_morning_intention_${d}`;
 // Local calendar date (not UTC) so the day boundary matches the member's clock.
-const today = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-};
+const today = () => localDateKey();
+
+// Remove stale intention cache keys (including pre-fix UTC-dated ones) so old
+// entries never linger or get mistaken for today's.
+function pruneIntentionKeys() {
+  try {
+    const keep = INTENTION_KEY(today());
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('innerwake_morning_intention_') && k !== keep) localStorage.removeItem(k);
+    }
+  } catch {}
+}
 
 const STEPS = ['breath', 'intention', 'state', 'close'] as const;
 type Step = typeof STEPS[number];
@@ -34,6 +44,7 @@ export default function MorningRitual() {
 
   // Load any prior intention for today
   useEffect(() => {
+    pruneIntentionKeys();
     try {
       const prior = localStorage.getItem(INTENTION_KEY(today()));
       if (prior) setIntention(prior);

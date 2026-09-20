@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Minus, RotateCcw, Flame } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { localDateKey } from '@/lib/utils';
 
 const GOAL = 10000;
 const CELLS_PER_ROW = 10;
@@ -26,8 +27,8 @@ const MILESTONES = [
 function computeStreak(dates: string[]): number {
   if (dates.length === 0) return 0;
   const unique = [...new Set(dates)].sort().reverse();
-  const today = new Date().toISOString().slice(0, 10);
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const today = localDateKey();
+  const yesterday = localDateKey(new Date(Date.now() - 86400000));
   if (unique[0] !== today && unique[0] !== yesterday) return 0;
   let streak = 1;
   for (let i = 1; i < unique.length; i++) {
