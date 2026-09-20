@@ -196,6 +196,19 @@ export default function EvidenceOfSupport() {
           </div>
         ))}
 
+        {!loading && hasMore && (
+          <button
+            type="button"
+            onClick={loadMore}
+            disabled={loadingMore}
+            aria-label="Load older evidence"
+            className="w-full min-h-[44px] rounded-xl bg-muted/20 text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+          >
+            {loadingMore ? 'Gathering older entries…' : 'Load older evidence'}
+          </button>
+        )}
+
+
         {!loading && entries.length === 0 && (
           <EmptyState
             icon={Sparkles}
