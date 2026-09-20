@@ -367,7 +367,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const refresh = useCallback(() => {
     if (user) {
-      loadCloudState(user.id).then(s => { if (s) setState(s); });
+      loadCloudState(user.id).then(s => {
+        if (!s) return;
+        const { historyHasMore: more, ...next } = s;
+        setState(next); setHistoryPage(0); setHistoryHasMore(more);
+      });
     } else {
       setState(loadState());
     }
