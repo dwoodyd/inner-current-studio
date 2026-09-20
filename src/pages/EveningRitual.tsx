@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Moon } from 'lucide-react';
 import { BreathingOrb } from '@/components/onboarding/BreathingOrb';
 import { useAppState } from '@/lib/AppContext';
+import { toast } from 'sonner';
 import { useCurrentProgress } from '@/lib/currents/progress';
 
 const SOFTEN_KEY = (d: string) => `innerwake_evening_soften_${d}`;
@@ -22,7 +23,7 @@ const CLOSING_LINE = 'Tomorrow you will begin again. From the inside out.';
 
 export default function EveningRitual() {
   const navigate = useNavigate();
-  const { updateTodayFlow } = useAppState();
+  const { updateTodayFlow, saveReflection } = useAppState();
   const { recordPractice } = useCurrentProgress('money');
   const [step, setStep] = useState<Step>('exhale');
   const [softened, setSoftened] = useState('');
