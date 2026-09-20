@@ -44,6 +44,7 @@ export default function MorningRitual() {
 
   // Load any prior intention for today
   useEffect(() => {
+    pruneIntentionKeys();
     try {
       const prior = localStorage.getItem(INTENTION_KEY(today()));
       if (prior) setIntention(prior);
