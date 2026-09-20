@@ -21,7 +21,7 @@ const FILTER_LABELS: { value: FilterType; label: string }[] = [
 
 export default function MyCurrent() {
   const navigate = useNavigate();
-  const { state } = useAppState();
+  const { state, loadMoreHistory, historyHasMore, loadingMoreHistory } = useAppState();
   const [filter, setFilter] = useState<FilterType>('all');
   const [search, setSearch] = useState('');
 
