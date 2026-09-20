@@ -247,6 +247,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [state, setState] = useState<AppState>(loadState);
   const [cloudLoaded, setCloudLoaded] = useState(false);
+  const [historyPage, setHistoryPage] = useState(0);
+  const [historyHasMore, setHistoryHasMore] = useState(false);
+  const [loadingMoreHistory, setLoadingMoreHistory] = useState(false);
 
   // Load from cloud when user is available
   useEffect(() => {
@@ -257,12 +260,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     flushPendingCloudOps(user.id).finally(() => loadCloudState(user.id).then(cloudState => {
       if (cloudState) {
-        setState(cloudState);
-        debouncedSave(cloudState);
+        const { historyHasMore: more, ...next } = cloudState;
+        setState(next);
+        setHistoryPage(0);
+        setHistoryHasMore(more);
+        debouncedSave(next);
       }
       setCloudLoaded(true);
     }));
   }, [user?.id]);
+
+  // Fetch the next page of older history and append it. Nothing is discarded —
+  // every entry a member has ever written stays reachable.
+  const loadMoreHistory = useCallback(async () => {
+    if (!user || loadingMoreHistory || !historyHasMore) return;
+    setLoadingMoreHistory(true);
+    try {
+      const nextPage = historyPage + 1;
+      const slice = await loadHistoryPage(user.id, nextPage);
+      const { hasMore, ...lists } = slice;
+      setState(prev => {
+        const merged = { ...prev } as AppState;
+        (Object.keys(lists) as (keyof typeof lists)[]).forEach(key => {
+          const existing = (prev as any)[key] as { id: string }[] | undefined;
+          const incoming = lists[key] as unknown as { id: string }[];
+          const seen = new Set((existing || []).map(i => i.id));
+          (merged as any)[key] = [...(existing || []), ...incoming.filter(i => !seen.has(i.id))];
+        });
+        return merged;
+      });
+      setHistoryPage(nextPage);
+      setHistoryHasMore(hasMore);
+    } finally {
+      setLoadingMoreHistory(false);
+    }
+  }, [user, historyPage, historyHasMore, loadingMoreHistory]);
+
 
   // Pending-sync count exposed via context so banners can surface it.
   const [pendingSyncCount, setPendingSyncCount] = useState(0);
