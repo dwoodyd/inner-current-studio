@@ -29,6 +29,10 @@ interface AppContextType {
   saveReflection: (kind: Reflection['kind'], text: string) => void;
   cloudLoaded: boolean;
   pendingSyncCount: number;
+  /** Fetch the next page of older history and append it (nothing is truncated). */
+  loadMoreHistory: () => Promise<void>;
+  historyHasMore: boolean;
+  loadingMoreHistory: boolean;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
