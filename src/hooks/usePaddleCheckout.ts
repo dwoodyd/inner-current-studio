@@ -17,17 +17,21 @@ export function usePaddleCheckout() {
 
       try {
         window.Paddle.Checkout.open({
-        items: [{ priceId: paddlePriceId, quantity: 1 }],
-        customer: options.customerEmail ? { email: options.customerEmail } : undefined,
-        customData: options.userId ? { userId: options.userId } : undefined,
-        settings: {
-          displayMode: "overlay",
-          theme: "dark",
-          successUrl: options.successUrl || `${window.location.origin}/?checkout=success`,
-          allowLogout: false,
-          variant: "one-page",
-        },
-      });
+          items: [{ priceId: paddlePriceId, quantity: 1 }],
+          customer: options.customerEmail ? { email: options.customerEmail } : undefined,
+          customData: options.userId ? { userId: options.userId } : undefined,
+          settings: {
+            displayMode: "overlay",
+            theme: "dark",
+            successUrl: options.successUrl || `${window.location.origin}/?checkout=success`,
+            allowLogout: false,
+            variant: "one-page",
+          },
+        });
+      } catch (err) {
+        console.error("[paddle] Checkout.open rejected", err);
+        throw err;
+      }
     } finally {
       setLoading(false);
     }
