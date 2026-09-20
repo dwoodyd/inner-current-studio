@@ -314,7 +314,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       try {
         await flushPendingCloudOps(user.id);
         const s = await loadCloudState(user.id);
-        if (s) setState(s);
+        if (s) {
+          const { historyHasMore: more, ...next } = s;
+          setState(next);
+          setHistoryPage(0);
+          setHistoryHasMore(more);
+        }
       } finally {
         inFlight = false;
         refreshCount();
