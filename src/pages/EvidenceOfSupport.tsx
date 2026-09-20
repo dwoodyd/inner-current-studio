@@ -34,19 +34,45 @@ export default function EvidenceOfSupport() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [entryText, setEntryText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
-  useEffect(() => {
-    if (!user) return;
-    supabase
+  // Paginated newest-first — older evidence stays reachable, never truncated.
+  const fetchPage = async (page: number): Promise<EvidenceEntry[]> => {
+    if (!user) return [];
+    const from = page * PAGE_SIZE;
+    const { data } = await supabase
       .from('evidence_of_support')
       .select('id, category, entry_text, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
-        if (data) setEntries(data);
-        setLoading(false);
-      });
+      .range(from, from + PAGE_SIZE - 1);
+    const rows = data ?? [];
+    setHasMore(rows.length === PAGE_SIZE);
+    return rows;
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    fetchPage(0).then(rows => {
+      setEntries(rows);
+      setLoading(false);
+    });
   }, [user]);
+
+  const loadMore = async () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const rows = await fetchPage(Math.floor(entries.length / PAGE_SIZE));
+      setEntries(prev => {
+        const seen = new Set(prev.map(e => e.id));
+        return [...prev, ...rows.filter(r => !seen.has(r.id))];
+      });
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   const saveEntry = async () => {
     if (!user || !selectedCategory || !entryText.trim()) return;
