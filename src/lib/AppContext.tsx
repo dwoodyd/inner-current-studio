@@ -27,6 +27,7 @@ interface AppContextType {
   saveResistanceEntry: (entry: Omit<ResistanceEntry, 'id' | 'createdAt'>) => void;
   saveThoughtShift: (shift: Omit<ThoughtShift, 'id' | 'createdAt'>) => void;
   saveReflection: (kind: Reflection['kind'], text: string) => void;
+  cloudLoaded: boolean;
   pendingSyncCount: number;
 }
 
