@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Minus, RotateCcw, Flame } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { localDateKey } from '@/lib/utils';
 
 const GOAL = 10000;
 const CELLS_PER_ROW = 10;

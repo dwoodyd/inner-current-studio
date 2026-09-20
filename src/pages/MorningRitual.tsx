@@ -7,6 +7,7 @@ import QuickCheckIn from '@/components/QuickCheckIn';
 import { useAppState } from '@/lib/AppContext';
 import { toast } from 'sonner';
 import { useCurrentProgress } from '@/lib/currents/progress';
+import { localDateKey } from '@/lib/utils';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
 const quickToEmotional: Record<QuickState, EmotionalState> = {

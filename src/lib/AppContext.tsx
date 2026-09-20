@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { recordPracticeComplete } from '@/lib/practiceMilestone';
+import { localDateKey } from '@/lib/utils';
 import {
   validateOrError, checkInSchema, wheelSchema, gatheredSequenceSchema,
   momentumSessionSchema, futurePageSchema, imagineIfSchema, overflowSchema,
