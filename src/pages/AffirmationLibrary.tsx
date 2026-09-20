@@ -131,6 +131,8 @@ export default function AffirmationLibrary() {
             </div>
           </div>
           <button
+            aria-label="Toggle affirmation reminders"
+            aria-pressed={reminders.enabled}
             onClick={toggleReminders}
             className={`w-12 h-7 rounded-full transition-colors relative ${reminders.enabled ? 'bg-soul-gold/40' : 'bg-muted/30'}`}
           >

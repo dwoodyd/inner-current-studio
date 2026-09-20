@@ -138,7 +138,7 @@ export default function AdminDashboard() {
             <Shield size={20} className="text-primary" />
             <h1 className="font-heading text-lg font-semibold text-foreground">Admin Dashboard</h1>
           </div>
-          <button
+          <button aria-label="Refresh"
             onClick={fetchUsers}
             disabled={loading}
             className="ml-auto p-2 rounded-xl hover:bg-card/60 transition-colors"

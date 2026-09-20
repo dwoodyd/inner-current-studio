@@ -4,10 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Moon } from 'lucide-react';
 import { BreathingOrb } from '@/components/onboarding/BreathingOrb';
 import { useAppState } from '@/lib/AppContext';
+import { toast } from 'sonner';
 import { useCurrentProgress } from '@/lib/currents/progress';
 
 const SOFTEN_KEY = (d: string) => `innerwake_evening_soften_${d}`;
-const today = () => new Date().toISOString().slice(0, 10);
+// Local calendar date (not UTC) so the day boundary matches the member's clock.
+const today = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
 
 const STEPS = ['exhale', 'reflect', 'close'] as const;
 type Step = typeof STEPS[number];
@@ -18,7 +23,7 @@ const CLOSING_LINE = 'Tomorrow you will begin again. From the inside out.';
 
 export default function EveningRitual() {
   const navigate = useNavigate();
-  const { updateTodayFlow } = useAppState();
+  const { updateTodayFlow, saveReflection } = useAppState();
   const { recordPractice } = useCurrentProgress('money');
   const [step, setStep] = useState<Step>('exhale');
   const [softened, setSoftened] = useState('');
@@ -45,11 +50,14 @@ export default function EveningRitual() {
   };
 
   const finish = () => {
+    const text = softened.trim();
     try {
-      if (softened.trim()) localStorage.setItem(SOFTEN_KEY(today()), softened.trim());
+      if (text) localStorage.setItem(SOFTEN_KEY(today()), text);
     } catch {}
+    if (text) saveReflection('evening', text);
     updateTodayFlow({ reflectionCompleted: true });
     recordPractice();
+    toast.success(text ? 'Saved to your archive' : 'Evening practice complete');
     navigate('/');
   };
 

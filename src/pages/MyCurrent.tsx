@@ -4,11 +4,13 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Filter } from 'lucide-react';
 import { useAppState } from '@/lib/AppContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
-type FilterType = 'all' | 'wheels' | 'sequences' | 'pages' | 'imagine' | 'overflow' | 'checkins';
+type FilterType = 'all' | 'wheels' | 'sequences' | 'pages' | 'imagine' | 'overflow' | 'checkins' | 'reflections';
 
 const FILTER_LABELS: { value: FilterType; label: string }[] = [
   { value: 'all', label: 'All' },
+  { value: 'reflections', label: 'Reflections' },
   { value: 'wheels', label: 'Wheels' },
   { value: 'sequences', label: 'Sequences' },
   { value: 'pages', label: 'Pages' },
@@ -23,7 +25,8 @@ export default function MyCurrent() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [search, setSearch] = useState('');
 
-  type ArchiveItem = { type: string; title: string; date: string; preview?: string };
+  type ArchiveItem = { type: string; title: string; date: string; preview?: string; body?: string };
+  const [open, setOpen] = useState<ArchiveItem | null>(null);
 
   const items: ArchiveItem[] = [];
 
@@ -43,11 +46,20 @@ export default function MyCurrent() {
     state.overflowEntries.forEach(e => items.push({ type: 'Overflow', title: e.mode, date: e.createdAt, preview: e.entryText.slice(0, 60) }));
   }
   if (filter === 'all' || filter === 'checkins') {
-    state.checkIns.forEach(c => items.push({ type: 'Check-in', title: c.state, date: c.createdAt, preview: c.note }));
+    state.checkIns.forEach(c => items.push({ type: 'Check-in', title: c.state, date: c.createdAt, preview: c.note, body: c.note }));
+  }
+  if (filter === 'all' || filter === 'reflections') {
+    (state.reflections || []).forEach(r => items.push({
+      type: r.kind === 'morning' ? 'Morning intention' : 'Evening reflection',
+      title: r.kind === 'morning' ? 'Morning intention' : 'Evening reflection',
+      date: r.createdAt,
+      preview: r.text,
+      body: r.text,
+    }));
   }
 
   const filtered = search
-    ? items.filter(i => (i.title + i.preview).toLowerCase().includes(search.toLowerCase()))
+    ? items.filter(i => `${i.title} ${i.preview || ''}`.toLowerCase().includes(search.toLowerCase()))
     : items;
 
   filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -55,7 +67,7 @@ export default function MyCurrent() {
   return (
     <div className="mx-auto max-w-lg px-4 pt-6 pb-6 space-y-5">
       <div className="flex items-center gap-3">
-        <button onClick={() => navigate('/reflect')} className="text-muted-foreground p-2 -ml-2"><ArrowLeft size={20} /></button>
+        <button aria-label="Go back" onClick={() => navigate('/reflect')} className="text-muted-foreground p-2 -ml-2"><ArrowLeft size={20} /></button>
         <h1 className="font-heading text-lg font-semibold text-foreground">My Current</h1>
       </div>
 
@@ -96,12 +108,14 @@ export default function MyCurrent() {
       ) : (
         <div className="space-y-2">
           {filtered.map((item, i) => (
-            <motion.div
+            <motion.button
               key={i}
+              type="button"
+              onClick={() => setOpen(item)}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className="soul-card space-y-1"
+              className="soul-card space-y-1 w-full text-left min-h-[44px] active:scale-[0.99] transition-transform"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] uppercase tracking-wider text-primary/60">{item.type}</span>
@@ -111,10 +125,28 @@ export default function MyCurrent() {
               </div>
               <p className="text-sm font-medium text-foreground capitalize">{item.title}</p>
               {item.preview && <p className="text-xs text-muted-foreground line-clamp-2">{item.preview}</p>}
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       )}
+
+      <Dialog open={!!open} onOpenChange={(v) => !v && setOpen(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-base capitalize">{open?.title}</DialogTitle>
+            <DialogDescription className="text-[11px] uppercase tracking-wider">
+              {open?.type} · {open ? new Date(open.date).toLocaleString() : ''}
+            </DialogDescription>
+          </DialogHeader>
+          {open?.body || open?.preview ? (
+            <p className="text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">
+              {open?.body || open?.preview}
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">No words were written with this one.</p>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

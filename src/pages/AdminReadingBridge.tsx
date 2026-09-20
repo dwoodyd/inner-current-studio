@@ -120,7 +120,7 @@ export default function AdminReadingBridge() {
             <BookOpen size={20} className="text-primary" />
             <h1 className="font-heading text-lg font-semibold text-foreground">Reading Bridge Analytics</h1>
           </div>
-          <button onClick={load} disabled={loading} className="ml-auto p-2 rounded-xl hover:bg-card/60 transition-colors">
+          <button aria-label="Refresh" onClick={load} disabled={loading} className="ml-auto p-2 rounded-xl hover:bg-card/60 transition-colors">
             <RefreshCw size={16} className={`text-muted-foreground ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>

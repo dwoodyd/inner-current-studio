@@ -129,6 +129,13 @@ export interface ThoughtShift {
   createdAt: string;
 }
 
+export interface Reflection {
+  id: string;
+  kind: 'morning' | 'evening';
+  text: string;
+  createdAt: string;
+}
+
 export interface TodayFlow {
   morningRitual: boolean;
   resetUsed: boolean;
@@ -159,6 +166,7 @@ export interface AppState {
   customRituals: CustomRitual[];
   resistanceEntries: ResistanceEntry[];
   thoughtShifts: ThoughtShift[];
+  reflections?: Reflection[];
   todayFlow: TodayFlow;
   lastVisit: string;
 }

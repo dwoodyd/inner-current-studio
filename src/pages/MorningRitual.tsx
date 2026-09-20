@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Check, Sun } from 'lucide-react';
 import { BreathingOrb } from '@/components/onboarding/BreathingOrb';
 import QuickCheckIn from '@/components/QuickCheckIn';
 import { useAppState } from '@/lib/AppContext';
+import { toast } from 'sonner';
 import { useCurrentProgress } from '@/lib/currents/progress';
 import type { QuickState, EmotionalState } from '@/lib/types';
 
@@ -13,14 +14,18 @@ const quickToEmotional: Record<QuickState, EmotionalState> = {
 };
 
 const INTENTION_KEY = (d: string) => `innerwake_morning_intention_${d}`;
-const today = () => new Date().toISOString().slice(0, 10);
+// Local calendar date (not UTC) so the day boundary matches the member's clock.
+const today = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
 
 const STEPS = ['breath', 'intention', 'state', 'close'] as const;
 type Step = typeof STEPS[number];
 
 export default function MorningRitual() {
   const navigate = useNavigate();
-  const { addCheckIn, updateTodayFlow, state } = useAppState();
+  const { addCheckIn, updateTodayFlow, saveReflection, state } = useAppState();
   const { recordPractice } = useCurrentProgress('money');
   const [step, setStep] = useState<Step>('breath');
   const [intention, setIntention] = useState('');
@@ -49,12 +54,15 @@ export default function MorningRitual() {
   };
 
   const finish = () => {
+    const text = intention.trim();
     try {
-      if (intention.trim()) localStorage.setItem(INTENTION_KEY(today()), intention.trim());
+      if (text) localStorage.setItem(INTENTION_KEY(today()), text);
     } catch {}
-    if (picked) addCheckIn(quickToEmotional[picked]);
+    if (text) saveReflection('morning', text);
+    if (picked) addCheckIn(quickToEmotional[picked], text || undefined);
     updateTodayFlow({ morningRitual: true });
     recordPractice();
+    toast.success(text ? 'Saved to your archive' : 'Morning practice complete');
     navigate('/');
   };
 

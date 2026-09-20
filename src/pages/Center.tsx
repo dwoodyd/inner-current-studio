@@ -186,6 +186,16 @@ export default function Center() {
           <span className="sr-only">{PHASE_LABEL[phase]}</span>
         )}
       </div>
+
+      {/* One quiet way out, visible from the first frame — never louder than the breath. */}
+      {phase !== 'done' && (
+        <Link
+          to="/"
+          className="absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] inline-flex min-h-[44px] items-center px-4 text-xs text-muted-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          {standalone ? 'Open Inner Wake' : 'Open the full practice'}
+        </Link>
+      )}
     </main>
   );
 }

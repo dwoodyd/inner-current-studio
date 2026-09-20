@@ -228,7 +228,7 @@ function RouteLoader() {
 function AppRoutes() {
   const { user, loading } = useAuth();
   const location = useLocation();
-  const { state } = useAppState();
+  const { state, cloudLoaded } = useAppState();
   useCurrentsCloudSync();
   const current = (domain: string, element: JSX.Element) => <PremiumGate domain={domain}>{element}</PremiumGate>;
   const premium = (feature: string, element: JSX.Element) => <PremiumGate feature={feature}>{element}</PremiumGate>;
@@ -269,7 +269,17 @@ function AppRoutes() {
     return <Suspense fallback={<RouteLoader />}><Center /></Suspense>;
   }
 
-  if (!state.onboarding.completed && location.pathname !== '/onboarding') {
+  // Wait for the account to load before deciding — otherwise a returning member
+  // on a new device is bounced into onboarding they already finished.
+  if (!cloudLoaded && !state.onboarding.completed && location.pathname !== '/onboarding') {
+    return (
+      <div className="flex min-h-[100dvh] items-center justify-center bg-background">
+        <div className="h-12 w-12 rounded-full soul-glow-gold animate-pulse" />
+      </div>
+    );
+  }
+
+  if (cloudLoaded && !state.onboarding.completed && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
   }
 

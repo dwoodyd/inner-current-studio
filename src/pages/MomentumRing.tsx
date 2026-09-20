@@ -184,7 +184,7 @@ export default function MomentumRing() {
             <button onClick={() => setRunning(true)} className="soul-btn-primary flex-1 flex items-center justify-center gap-2">
               <Play size={16} /> Resume
             </button>
-            <button onClick={reset} className="px-4 py-3 text-muted-foreground hover:text-foreground transition-colors">
+            <button aria-label="Restart" onClick={reset} className="px-4 py-3 text-muted-foreground hover:text-foreground transition-colors">
               <RotateCcw size={16} />
             </button>
           </>
