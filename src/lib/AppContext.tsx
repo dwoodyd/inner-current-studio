@@ -592,11 +592,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
     saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
     saveResistanceEntry, saveThoughtShift, saveReflection, cloudLoaded, pendingSyncCount,
+    loadMoreHistory, historyHasMore, loadingMoreHistory,
   }), [
     state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
     saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
     saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
     saveResistanceEntry, saveThoughtShift, saveReflection, cloudLoaded, pendingSyncCount,
+    loadMoreHistory, historyHasMore, loadingMoreHistory,
   ]);
 
   return (
