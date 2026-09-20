@@ -21,7 +21,7 @@ const FILTER_LABELS: { value: FilterType; label: string }[] = [
 
 export default function MyCurrent() {
   const navigate = useNavigate();
-  const { state } = useAppState();
+  const { state, loadMoreHistory, historyHasMore, loadingMoreHistory } = useAppState();
   const [filter, setFilter] = useState<FilterType>('all');
   const [search, setSearch] = useState('');
 
@@ -127,7 +127,29 @@ export default function MyCurrent() {
               {item.preview && <p className="text-xs text-muted-foreground line-clamp-2">{item.preview}</p>}
             </motion.button>
           ))}
+
+          {historyHasMore && (
+            <button
+              type="button"
+              onClick={() => loadMoreHistory()}
+              disabled={loadingMoreHistory}
+              className="w-full min-h-[44px] rounded-xl bg-muted/20 text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+            >
+              {loadingMoreHistory ? 'Gathering older entries…' : 'Load older entries'}
+            </button>
+          )}
         </div>
+      )}
+
+      {filtered.length === 0 && historyHasMore && (
+        <button
+          type="button"
+          onClick={() => loadMoreHistory()}
+          disabled={loadingMoreHistory}
+          className="w-full min-h-[44px] rounded-xl bg-muted/20 text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+        >
+          {loadingMoreHistory ? 'Gathering older entries…' : 'Load older entries'}
+        </button>
       )}
 
       <Dialog open={!!open} onOpenChange={(v) => !v && setOpen(null)}>

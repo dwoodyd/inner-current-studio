@@ -29,6 +29,10 @@ interface AppContextType {
   saveReflection: (kind: Reflection['kind'], text: string) => void;
   cloudLoaded: boolean;
   pendingSyncCount: number;
+  /** Fetch the next page of older history and append it (nothing is truncated). */
+  loadMoreHistory: () => Promise<void>;
+  historyHasMore: boolean;
+  loadingMoreHistory: boolean;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -120,26 +124,91 @@ async function flushPendingCloudOps(userId: string) {
   writePending(userId, remaining);
 }
 
-// Load full state from Supabase for a user
-async function loadCloudState(userId: string): Promise<AppState | null> {
+// History is loaded a page at a time (newest first). Older entries stay on the
+// server and remain reachable through "load more" — never truncated away.
+export const HISTORY_PAGE_SIZE = 100;
+
+type HistorySlice = Pick<
+  AppState,
+  | 'checkIns' | 'wheels' | 'gatheredSequences' | 'momentumSessions' | 'futurePages'
+  | 'imagineIfEntries' | 'overflowEntries' | 'customRituals' | 'resistanceEntries'
+  | 'thoughtShifts' | 'reflections'
+> & { hasMore: boolean };
+
+export async function loadHistoryPage(userId: string, page: number): Promise<HistorySlice> {
+  const from = page * HISTORY_PAGE_SIZE;
+  const to = from + HISTORY_PAGE_SIZE - 1;
+  const [
+    checkInsRes, wheelsRes, seqRes, momRes,
+    fpRes, iiRes, ofRes, crRes, reRes, tsRes, reflRes,
+  ] = await Promise.all([
+    supabase.from('check_ins').select('id, state, note, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('wheels').select('id, title, center_text, segments, type, completion_status, created_at, updated_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('gathered_sequences').select('id, title, lines, playback_settings, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('momentum_sessions').select('id, phrase, duration, completed, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('future_pages').select('id, title, template, content, vibe_check, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('imagine_if_entries').select('id, category, text, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('overflow_entries').select('id, mode, resource_amount, entry_text, feeling_text, resistance_note, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('custom_rituals').select('id, name, steps, duration_estimate, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('resistance_entries').select('id, trigger_type, body_location, charge_before, charge_after, clearing_mode, softened_statement, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('thought_shifts').select('id, original_thought, charge_type, softer_statement, believable_statement, support_statement, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+    supabase.from('reflections').select('id, kind, text, created_at').eq('user_id', userId).order('created_at', { ascending: false }).range(from, to),
+  ]);
+
+  const pages = [checkInsRes, wheelsRes, seqRes, momRes, fpRes, iiRes, ofRes, crRes, reRes, tsRes, reflRes];
+  const hasMore = pages.some(p => (p.data?.length ?? 0) === HISTORY_PAGE_SIZE);
+
+  return {
+    hasMore,
+    checkIns: (checkInsRes.data || []).map(r => ({ id: r.id, state: r.state as any, note: r.note ?? undefined, createdAt: r.created_at })),
+    wheels: (wheelsRes.data || []).map(r => ({
+      id: r.id, title: r.title, centerText: r.center_text, segments: r.segments as any,
+      type: r.type as any, completionStatus: r.completion_status as any,
+      createdAt: r.created_at, updatedAt: r.updated_at,
+    })),
+    gatheredSequences: (seqRes.data || []).map(r => ({
+      id: r.id, title: r.title, lines: r.lines as any,
+      playbackSettings: r.playback_settings as any, createdAt: r.created_at,
+    })),
+    momentumSessions: (momRes.data || []).map(r => ({
+      id: r.id, phrase: r.phrase, duration: r.duration, completed: r.completed, createdAt: r.created_at,
+    })),
+    futurePages: (fpRes.data || []).map(r => ({
+      id: r.id, title: r.title, template: r.template, content: r.content,
+      vibeCheck: r.vibe_check as any, createdAt: r.created_at,
+    })),
+    imagineIfEntries: (iiRes.data || []).map(r => ({ id: r.id, category: r.category, text: r.text, createdAt: r.created_at })),
+    overflowEntries: (ofRes.data || []).map(r => ({
+      id: r.id, mode: r.mode, resourceAmount: r.resource_amount, entryText: r.entry_text,
+      feelingText: r.feeling_text, resistanceNote: r.resistance_note, createdAt: r.created_at,
+    })),
+    customRituals: (crRes.data || []).map(r => ({
+      id: r.id, name: r.name, steps: r.steps as any, durationEstimate: r.duration_estimate, createdAt: r.created_at,
+    })),
+    resistanceEntries: (reRes.data || []).map(r => ({
+      id: r.id, triggerType: r.trigger_type as any, bodyLocation: r.body_location as any,
+      chargeBefore: r.charge_before as any, chargeAfter: r.charge_after as any,
+      clearingMode: r.clearing_mode as any, softenedStatement: r.softened_statement ?? undefined,
+      createdAt: r.created_at,
+    })),
+    thoughtShifts: (tsRes.data || []).map(r => ({
+      id: r.id, originalThought: r.original_thought, chargeType: r.charge_type as any,
+      softerStatement: r.softer_statement, believableStatement: r.believable_statement,
+      supportStatement: r.support_statement, createdAt: r.created_at,
+    })),
+    reflections: (reflRes.data || []).map(r => ({
+      id: r.id, kind: r.kind as any, text: r.text, createdAt: r.created_at,
+    })),
+  };
+}
+
+// Load the newest page of state from Supabase for a user
+async function loadCloudState(userId: string): Promise<(AppState & { historyHasMore: boolean }) | null> {
   try {
-    const [
-      profileRes, checkInsRes, wheelsRes, seqRes, momRes,
-      fpRes, iiRes, ofRes, crRes, reRes, tsRes, reflRes, tfRes,
-    ] = await Promise.all([
+    const [profileRes, tfRes, history] = await Promise.all([
       supabase.from('profiles').select('onboarding_completed, onboarding_reason, onboarding_style, onboarding_challenge, companion_name, companion_sigil, free_current').eq('user_id', userId).maybeSingle(),
-      supabase.from('check_ins').select('id, state, note, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('wheels').select('id, title, center_text, segments, type, completion_status, created_at, updated_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('gathered_sequences').select('id, title, lines, playback_settings, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('momentum_sessions').select('id, phrase, duration, completed, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('future_pages').select('id, title, template, content, vibe_check, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('imagine_if_entries').select('id, category, text, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('overflow_entries').select('id, mode, resource_amount, entry_text, feeling_text, resistance_note, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('custom_rituals').select('id, name, steps, duration_estimate, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('resistance_entries').select('id, trigger_type, body_location, charge_before, charge_after, clearing_mode, softened_statement, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('thought_shifts').select('id, original_thought, charge_type, softer_statement, believable_statement, support_statement, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
-      supabase.from('reflections').select('id, kind, text, created_at').eq('user_id', userId).order('created_at', { ascending: false }),
       supabase.from('today_flow').select('morning_ritual, reset_used, reflection_completed, momentum_completed, return_count').eq('user_id', userId).eq('flow_date', new Date().toISOString().slice(0, 10)).maybeSingle(),
+      loadHistoryPage(userId, 0),
     ]);
 
     const profile = profileRes.data;
@@ -155,6 +224,8 @@ async function loadCloudState(userId: string): Promise<AppState | null> {
     // Note: returnCount intentionally not auto-incremented on cloud load.
     // It now reflects actual ritual/reset completions only (see Audit §6).
 
+    const { hasMore, ...slice } = history;
+
     return {
       onboarding: {
         completed: profile?.onboarding_completed ?? false,
@@ -165,47 +236,10 @@ async function loadCloudState(userId: string): Promise<AppState | null> {
         companionSigil: profile?.companion_sigil ?? undefined,
         freeCurrent: profile?.free_current ?? undefined,
       },
-      checkIns: (checkInsRes.data || []).map(r => ({ id: r.id, state: r.state as any, note: r.note ?? undefined, createdAt: r.created_at })),
-      wheels: (wheelsRes.data || []).map(r => ({
-        id: r.id, title: r.title, centerText: r.center_text, segments: r.segments as any,
-        type: r.type as any, completionStatus: r.completion_status as any,
-        createdAt: r.created_at, updatedAt: r.updated_at,
-      })),
-      gatheredSequences: (seqRes.data || []).map(r => ({
-        id: r.id, title: r.title, lines: r.lines as any,
-        playbackSettings: r.playback_settings as any, createdAt: r.created_at,
-      })),
-      momentumSessions: (momRes.data || []).map(r => ({
-        id: r.id, phrase: r.phrase, duration: r.duration, completed: r.completed, createdAt: r.created_at,
-      })),
-      futurePages: (fpRes.data || []).map(r => ({
-        id: r.id, title: r.title, template: r.template, content: r.content,
-        vibeCheck: r.vibe_check as any, createdAt: r.created_at,
-      })),
-      imagineIfEntries: (iiRes.data || []).map(r => ({ id: r.id, category: r.category, text: r.text, createdAt: r.created_at })),
-      overflowEntries: (ofRes.data || []).map(r => ({
-        id: r.id, mode: r.mode, resourceAmount: r.resource_amount, entryText: r.entry_text,
-        feelingText: r.feeling_text, resistanceNote: r.resistance_note, createdAt: r.created_at,
-      })),
-      customRituals: (crRes.data || []).map(r => ({
-        id: r.id, name: r.name, steps: r.steps as any, durationEstimate: r.duration_estimate, createdAt: r.created_at,
-      })),
-      resistanceEntries: (reRes.data || []).map(r => ({
-        id: r.id, triggerType: r.trigger_type as any, bodyLocation: r.body_location as any,
-        chargeBefore: r.charge_before as any, chargeAfter: r.charge_after as any,
-        clearingMode: r.clearing_mode as any, softenedStatement: r.softened_statement ?? undefined,
-        createdAt: r.created_at,
-      })),
-      thoughtShifts: (tsRes.data || []).map(r => ({
-        id: r.id, originalThought: r.original_thought, chargeType: r.charge_type as any,
-        softerStatement: r.softer_statement, believableStatement: r.believable_statement,
-        supportStatement: r.support_statement, createdAt: r.created_at,
-      })),
-      reflections: (reflRes.data || []).map(r => ({
-        id: r.id, kind: r.kind as any, text: r.text, createdAt: r.created_at,
-      })),
+      ...slice,
       todayFlow,
       lastVisit: new Date().toISOString(),
+      historyHasMore: hasMore,
     };
   } catch (err) {
     console.error('Failed to load cloud state:', err);
@@ -217,6 +251,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [state, setState] = useState<AppState>(loadState);
   const [cloudLoaded, setCloudLoaded] = useState(false);
+  const [historyPage, setHistoryPage] = useState(0);
+  const [historyHasMore, setHistoryHasMore] = useState(false);
+  const [loadingMoreHistory, setLoadingMoreHistory] = useState(false);
 
   // Load from cloud when user is available
   useEffect(() => {
@@ -227,12 +264,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     flushPendingCloudOps(user.id).finally(() => loadCloudState(user.id).then(cloudState => {
       if (cloudState) {
-        setState(cloudState);
-        debouncedSave(cloudState);
+        const { historyHasMore: more, ...next } = cloudState;
+        setState(next);
+        setHistoryPage(0);
+        setHistoryHasMore(more);
+        debouncedSave(next);
       }
       setCloudLoaded(true);
     }));
   }, [user?.id]);
+
+  // Fetch the next page of older history and append it. Nothing is discarded —
+  // every entry a member has ever written stays reachable.
+  const loadMoreHistory = useCallback(async () => {
+    if (!user || loadingMoreHistory || !historyHasMore) return;
+    setLoadingMoreHistory(true);
+    try {
+      const nextPage = historyPage + 1;
+      const slice = await loadHistoryPage(user.id, nextPage);
+      const { hasMore, ...lists } = slice;
+      setState(prev => {
+        const merged = { ...prev } as AppState;
+        (Object.keys(lists) as (keyof typeof lists)[]).forEach(key => {
+          const existing = (prev as any)[key] as { id: string }[] | undefined;
+          const incoming = lists[key] as unknown as { id: string }[];
+          const seen = new Set((existing || []).map(i => i.id));
+          (merged as any)[key] = [...(existing || []), ...incoming.filter(i => !seen.has(i.id))];
+        });
+        return merged;
+      });
+      setHistoryPage(nextPage);
+      setHistoryHasMore(hasMore);
+    } finally {
+      setLoadingMoreHistory(false);
+    }
+  }, [user, historyPage, historyHasMore, loadingMoreHistory]);
+
 
   // Pending-sync count exposed via context so banners can surface it.
   const [pendingSyncCount, setPendingSyncCount] = useState(0);
@@ -251,7 +318,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       try {
         await flushPendingCloudOps(user.id);
         const s = await loadCloudState(user.id);
-        if (s) setState(s);
+        if (s) {
+          const { historyHasMore: more, ...next } = s;
+          setState(next);
+          setHistoryPage(0);
+          setHistoryHasMore(more);
+        }
       } finally {
         inFlight = false;
         refreshCount();
@@ -286,7 +358,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (local.checkIns.length > 0 || local.wheels.length > 0) {
       migrateToCloud(user.id, local).then(() => {
         try { localStorage.setItem(migrationKey, 'true'); } catch {}
-        loadCloudState(user.id).then(s => { if (s) setState(s); });
+        loadCloudState(user.id).then(s => {
+          if (!s) return;
+          const { historyHasMore: more, ...next } = s;
+          setState(next); setHistoryPage(0); setHistoryHasMore(more);
+        });
       });
     } else {
       try { localStorage.setItem(migrationKey, 'true'); } catch {}
@@ -295,7 +371,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const refresh = useCallback(() => {
     if (user) {
-      loadCloudState(user.id).then(s => { if (s) setState(s); });
+      loadCloudState(user.id).then(s => {
+        if (!s) return;
+        const { historyHasMore: more, ...next } = s;
+        setState(next); setHistoryPage(0); setHistoryHasMore(more);
+      });
     } else {
       setState(loadState());
     }
@@ -512,11 +592,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
     saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
     saveResistanceEntry, saveThoughtShift, saveReflection, cloudLoaded, pendingSyncCount,
+    loadMoreHistory, historyHasMore, loadingMoreHistory,
   }), [
     state, refresh, addCheckIn, completeOnboarding, updateTodayFlow,
     saveWheel, saveGatheredSequence, saveMomentumSession, saveFuturePage,
     saveImagineIfEntry, saveOverflowEntry, saveCustomRitual,
     saveResistanceEntry, saveThoughtShift, saveReflection, cloudLoaded, pendingSyncCount,
+    loadMoreHistory, historyHasMore, loadingMoreHistory,
   ]);
 
   return (
