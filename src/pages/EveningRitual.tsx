@@ -6,6 +6,7 @@ import { BreathingOrb } from '@/components/onboarding/BreathingOrb';
 import { useAppState } from '@/lib/AppContext';
 import { toast } from 'sonner';
 import { useCurrentProgress } from '@/lib/currents/progress';
+import { localDateKey } from '@/lib/utils';
 
 const SOFTEN_KEY = (d: string) => `innerwake_evening_soften_${d}`;
 // Local calendar date (not UTC) so the day boundary matches the member's clock.
