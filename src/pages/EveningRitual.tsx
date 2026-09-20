@@ -49,11 +49,14 @@ export default function EveningRitual() {
   };
 
   const finish = () => {
+    const text = softened.trim();
     try {
-      if (softened.trim()) localStorage.setItem(SOFTEN_KEY(today()), softened.trim());
+      if (text) localStorage.setItem(SOFTEN_KEY(today()), text);
     } catch {}
+    if (text) saveReflection('evening', text);
     updateTodayFlow({ reflectionCompleted: true });
     recordPractice();
+    toast.success(text ? 'Saved to your archive' : 'Evening practice complete');
     navigate('/');
   };
 

@@ -53,12 +53,15 @@ export default function MorningRitual() {
   };
 
   const finish = () => {
+    const text = intention.trim();
     try {
-      if (intention.trim()) localStorage.setItem(INTENTION_KEY(today()), intention.trim());
+      if (text) localStorage.setItem(INTENTION_KEY(today()), text);
     } catch {}
-    if (picked) addCheckIn(quickToEmotional[picked]);
+    if (text) saveReflection('morning', text);
+    if (picked) addCheckIn(quickToEmotional[picked], text || undefined);
     updateTodayFlow({ morningRitual: true });
     recordPractice();
+    toast.success(text ? 'Saved to your archive' : 'Morning practice complete');
     navigate('/');
   };
 
