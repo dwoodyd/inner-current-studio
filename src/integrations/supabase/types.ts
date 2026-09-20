@@ -1533,6 +1533,20 @@ export type Database = {
         }
         Returns: number
       }
+      push_subscriptions_due: {
+        Args: { _minute: string }
+        Returns: {
+          auth_key: string
+          endpoint: string
+          id: string
+          p256dh: string
+          send_affirm: boolean
+          send_evening: boolean
+          send_morning: boolean
+          send_return: boolean
+          user_id: string
+        }[]
+      }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {
