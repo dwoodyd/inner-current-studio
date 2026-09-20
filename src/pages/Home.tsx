@@ -126,10 +126,18 @@ export default function Home() {
   }, [state.checkIns]);
 
   const [quickState, setQuickState] = useState<QuickState | undefined>(persistedQuickState);
+  // Only ask newcomers. Anyone with practice history never sees this question.
   const [showBtwGate, setShowBtwGate] = useState(() => {
     if (typeof window === 'undefined') return false;
     try { return localStorage.getItem('iw_btw_answer_v1') === null; } catch { return false; }
   });
+  useEffect(() => {
+    if (!showBtwGate) return;
+    if (state.checkIns.length > 0) {
+      try { localStorage.setItem('iw_btw_answer_v1', 'skipped-existing-member'); } catch {}
+      setShowBtwGate(false);
+    }
+  }, [state.checkIns.length, showBtwGate]);
 
   // Keep local picker in sync when cloud check-ins arrive after first render.
   useEffect(() => {
