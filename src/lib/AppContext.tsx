@@ -354,7 +354,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (local.checkIns.length > 0 || local.wheels.length > 0) {
       migrateToCloud(user.id, local).then(() => {
         try { localStorage.setItem(migrationKey, 'true'); } catch {}
-        loadCloudState(user.id).then(s => { if (s) setState(s); });
+        loadCloudState(user.id).then(s => {
+          if (!s) return;
+          const { historyHasMore: more, ...next } = s;
+          setState(next); setHistoryPage(0); setHistoryHasMore(more);
+        });
       });
     } else {
       try { localStorage.setItem(migrationKey, 'true'); } catch {}
