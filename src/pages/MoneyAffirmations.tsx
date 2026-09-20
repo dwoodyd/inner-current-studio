@@ -318,10 +318,10 @@ export default function MoneyAffirmations() {
 
           {/* Controls */}
           <div className="flex items-center gap-6">
-            <button onClick={reset} className="w-12 h-12 rounded-full bg-muted/20 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+            <button aria-label="Restart" onClick={reset} className="w-12 h-12 rounded-full bg-muted/20 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
               <RotateCcw size={18} />
             </button>
-            <button onClick={togglePause}
+            <button aria-label="Play" onClick={togglePause}
               className="w-16 h-16 rounded-full bg-soul-gold/20 flex items-center justify-center text-soul-gold hover:bg-soul-gold/30 transition-colors">
               {paused ? <Play size={24} /> : <Pause size={24} />}
             </button>

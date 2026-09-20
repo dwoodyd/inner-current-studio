@@ -399,10 +399,10 @@ export default function Breathwork() {
           </AnimatePresence>
 
           <div className="flex items-center gap-6">
-            <button onClick={stopSession} className="text-muted-foreground hover:text-foreground transition-colors">
+            <button aria-label="Restart" onClick={stopSession} className="text-muted-foreground hover:text-foreground transition-colors">
               <RotateCcw size={20} />
             </button>
-            <button onClick={togglePause}
+            <button aria-label="Play" onClick={togglePause}
               className="w-14 h-14 rounded-full soul-glass-elevated flex items-center justify-center text-primary hover:scale-105 active:scale-95 transition-transform duration-200">
               {paused ? <Play size={20} /> : <Pause size={20} />}
             </button>

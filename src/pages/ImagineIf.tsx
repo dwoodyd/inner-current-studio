@@ -105,7 +105,7 @@ export default function ImagineIf() {
           <motion.div key={category + promptIdx} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
             <div className="text-center space-y-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground capitalize">{category.replace('-', ' ')}</p>
-              <button onClick={shuffle} className="text-muted-foreground/40 hover:text-muted-foreground"><RefreshCw size={12} /></button>
+              <button aria-label="Refresh" onClick={shuffle} className="text-muted-foreground/40 hover:text-muted-foreground"><RefreshCw size={12} /></button>
             </div>
 
             <p className="font-heading text-lg text-center text-primary italic leading-relaxed px-2">{currentPrompt}</p>

@@ -240,7 +240,7 @@ export default function DomainGatherFlow({ domain }: { domain: DomainConfig }) {
               <p className="text-xs text-muted-foreground">{idx + 1} / {playLines.length} · looping</p>
               <div className="flex items-center justify-center gap-3">
                 <button onClick={() => setIdx(i => (i - 1 + playLines.length) % playLines.length)} className="soul-card p-3 rounded-full"><ChevronLeft size={20} className="text-muted-foreground" /></button>
-                <button onClick={togglePlay} className="soul-glass-elevated p-5 rounded-full">
+                <button aria-label="Pause" onClick={togglePlay} className="soul-glass-elevated p-5 rounded-full">
                   {playing ? <Pause size={22} className={domain.accentClass} /> : <Play size={22} className={domain.accentClass} />}
                 </button>
                 <button onClick={() => setIdx(i => (i + 1) % playLines.length)} className="soul-card p-3 rounded-full"><ChevronRight size={20} className="text-muted-foreground" /></button>

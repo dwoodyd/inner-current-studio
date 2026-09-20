@@ -103,7 +103,7 @@ export default function FoundingApplications() {
             <ArrowLeft size={20} className="text-foreground/70" />
           </button>
           <h1 className="font-heading text-lg font-semibold text-foreground">Founding Applications</h1>
-          <button
+          <button aria-label="Refresh"
             onClick={fetchRows}
             disabled={loading}
             className="ml-auto p-2 rounded-xl hover:bg-card/60 transition-colors"

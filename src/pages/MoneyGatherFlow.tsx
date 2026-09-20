@@ -250,7 +250,7 @@ export default function MoneyGatherFlow() {
             <p className="text-xs text-muted-foreground">{playIndex + 1} / {buildLines.length}</p>
             <div className="flex items-center gap-6">
               <button onClick={() => setPlayIndex(p => Math.max(0, p - 1))}><ChevronLeft size={22} className="text-muted-foreground hover:text-foreground" /></button>
-              <button onClick={togglePlay} className="w-14 h-14 rounded-full bg-soul-gold/20 flex items-center justify-center text-soul-gold hover:bg-soul-gold/30 transition-colors">
+              <button aria-label="Pause" onClick={togglePlay} className="w-14 h-14 rounded-full bg-soul-gold/20 flex items-center justify-center text-soul-gold hover:bg-soul-gold/30 transition-colors">
                 {playing ? <Pause size={22} /> : <Play size={22} />}
               </button>
               <button onClick={() => setPlayIndex(p => Math.min(buildLines.length - 1, p + 1))}><ChevronRight size={22} className="text-muted-foreground hover:text-foreground" /></button>
