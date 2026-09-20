@@ -15,7 +15,8 @@ export function usePaddleCheckout() {
       await initializePaddle();
       const paddlePriceId = await getPaddlePriceId(options.priceId);
 
-      window.Paddle.Checkout.open({
+      try {
+        window.Paddle.Checkout.open({
         items: [{ priceId: paddlePriceId, quantity: 1 }],
         customer: options.customerEmail ? { email: options.customerEmail } : undefined,
         customData: options.userId ? { userId: options.userId } : undefined,
