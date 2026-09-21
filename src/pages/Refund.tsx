@@ -54,7 +54,7 @@ export default function Refund() {
 
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-5 py-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Inner Wake is operated by DeWayne Woods. Purchases are processed by our Merchant of Record,
+            Inner Wake is operated by Soul Engineer. Purchases are processed by our Merchant of Record,
             Paddle.com Market Limited. This page explains how refunds work.
           </p>
         </motion.div>
@@ -85,7 +85,7 @@ export default function Refund() {
             </a>
             .
           </p>
-          <p className="text-[10px] text-muted-foreground/30">© 2026 DeWayne Woods · Inner Wake. All rights reserved.</p>
+          <p className="text-[10px] text-muted-foreground/30">© 2026 Soul Engineer · Inner Wake. All rights reserved.</p>
         </motion.div>
       </motion.div>
     </div>

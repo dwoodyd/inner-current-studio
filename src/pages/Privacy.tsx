@@ -54,7 +54,7 @@ export default function Privacy() {
 
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-5 py-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            This Privacy Notice explains how DeWayne Woods, operating the Inner Wake service, collects, uses,
+            This Privacy Notice explains how Soul Engineer, operating the Inner Wake service, collects, uses,
             and protects your personal data when you use the app or website.
           </p>
         </motion.div>
@@ -73,7 +73,7 @@ export default function Privacy() {
         </div>
 
         <motion.div variants={fadeUp} className="text-center pt-4 pb-8">
-          <p className="text-[10px] text-muted-foreground/30">© 2026 DeWayne Woods · Inner Wake. All rights reserved.</p>
+          <p className="text-[10px] text-muted-foreground/30">© 2026 Soul Engineer · Inner Wake. All rights reserved.</p>
         </motion.div>
       </motion.div>
     </div>

@@ -73,7 +73,7 @@ export default function Terms() {
         </div>
 
         <motion.div variants={fadeUp} className="text-center pt-4 pb-8">
-          <p className="text-[10px] text-muted-foreground/30">© 2026 DeWayne Woods · Inner Wake. All rights reserved.</p>
+          <p className="text-[10px] text-muted-foreground/30">© 2026 Soul Engineer · Inner Wake. All rights reserved.</p>
         </motion.div>
       </motion.div>
     </div>

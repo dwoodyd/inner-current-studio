@@ -126,7 +126,7 @@ function renderPage(shell: string, page: Page): string {
 <p>Last updated: ${esc(LEGAL_UPDATED)}</p>
 <p>${esc(page.intro)}</p>
 ${page.body}
-<footer><p>© 2026 DeWayne Woods · Inner Wake. Purchases are processed by Paddle.com Market Limited, our Merchant of Record.</p></footer>
+<footer><p>© 2026 Soul Engineer · Inner Wake. Purchases are processed by Paddle.com Market Limited, our Merchant of Record.</p></footer>
 </main>
 `;
 
