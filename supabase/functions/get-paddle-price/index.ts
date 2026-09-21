@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { gatewayFetch, type PaddleEnv } from '../_shared/paddle.ts';
+import { allow, clientIp } from '../_shared/rateLimit.ts';
 
 const responseHeaders = {
   headers: {
@@ -12,6 +13,14 @@ const responseHeaders = {
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, responseHeaders);
+  }
+
+  // Burst limiter: 30 lookups per minute per IP.
+  if (!allow(`gpp:${clientIp(req)}`, 30, 60_000)) {
+    return new Response(JSON.stringify({ error: "Too many requests. Try again shortly." }), {
+      status: 429,
+      ...responseHeaders,
+    });
   }
 
   const { priceId, environment } = await req.json();
