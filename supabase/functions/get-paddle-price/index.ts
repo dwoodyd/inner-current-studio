@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   // Burst limiter: 30 lookups per minute per IP.
-  if (!await allowShared(`gpp:${clientIp(req)}`, 30, 60_000)) {
+  if (!await allowShared(`gpp:${clientIp(req)}`, 30, 60)) {
     return new Response(JSON.stringify({ error: "Too many requests. Try again shortly." }), {
       status: 429,
       ...responseHeaders,
