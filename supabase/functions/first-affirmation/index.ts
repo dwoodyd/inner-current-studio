@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { allow, clientIp } from '../_shared/rateLimit.ts';
+import { allowShared, clientIp } from '../_shared/rateLimit.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -23,7 +23,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  if (!allow('first-affirmation:' + clientIp(req), 10, 60_000)) {
+  if (!await allowShared('first-affirmation:' + clientIp(req), 10, 60)) {
     return new Response(JSON.stringify({ error: 'Too many requests. Please try again in a moment.' }), {
       status: 429,
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' },

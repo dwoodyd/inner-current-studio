@@ -1,6 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { gatewayFetch, type PaddleEnv } from '../_shared/paddle.ts';
-import { allow, clientIp } from '../_shared/rateLimit.ts';
+import { allowShared, clientIp } from '../_shared/rateLimit.ts';
 
 // Mirrors supabase/functions/payments-webhook/tiers.ts (edge functions cannot
 // import across function folders).
@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
   // Burst limiter: 20 reconciliation attempts per minute per IP.
-  if (!allow(`rc:${clientIp(req)}`, 20, 60_000)) {
+  if (!await allowShared(`rc:${clientIp(req)}`, 20, 60_000)) {
     return json({ error: 'Too many requests. Try again shortly.' }, 429);
   }
 

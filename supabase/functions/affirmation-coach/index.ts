@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { allow, clientIp } from '../_shared/rateLimit.ts';
+import { allowShared, clientIp } from '../_shared/rateLimit.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
@@ -54,7 +54,7 @@ async function hasPremiumAccess(userId: string, environment: string) {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  if (!allow('affirmation-coach:' + clientIp(req), 20, 60_000)) {
+  if (!await allowShared('affirmation-coach:' + clientIp(req), 20, 60)) {
     return new Response(JSON.stringify({ error: 'Too many requests. Please try again in a moment.' }), {
       status: 429,
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' },

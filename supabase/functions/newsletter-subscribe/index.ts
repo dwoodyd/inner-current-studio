@@ -1,5 +1,5 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
-import { allow, clientIp } from '../_shared/rateLimit.ts';
+import { allowShared, clientIp } from '../_shared/rateLimit.ts';
 import { z } from 'npm:zod@3.23.8';
 
 const AUDIENCE_ID = '859bea40-a95c-468d-baf9-8697922e68a6';
@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  if (!allow('newsletter-subscribe:' + clientIp(req), 5, 60_000)) {
+  if (!await allowShared('newsletter-subscribe:' + clientIp(req), 5, 60)) {
     return new Response(JSON.stringify({ error: 'Too many requests. Please try again in a moment.' }), {
       status: 429,
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' },
