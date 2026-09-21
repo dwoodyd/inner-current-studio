@@ -68,6 +68,15 @@ type Page = {
 
 const PAGES: Page[] = [
   {
+    route: 'welcome',
+    title: 'Inner Wake — A quiet practice space for emotional clarity',
+    description:
+      'Inner Wake is a premium ritual app for emotional clarity. Start free or choose a monthly, annual, or lifetime plan.',
+    heading: 'Inner Wake',
+    intro: 'A quiet practice space for emotional clarity. Start free, then upgrade only if the practice earns it.',
+    body: `<section><h2>Simple, honest pricing</h2>${pricingHtml()}</section>`,
+  },
+  {
     route: 'terms',
     title: 'Terms of Service — Inner Wake',
     description:
@@ -126,7 +135,7 @@ function renderPage(shell: string, page: Page): string {
 <p>Last updated: ${esc(LEGAL_UPDATED)}</p>
 <p>${esc(page.intro)}</p>
 ${page.body}
-<footer><p>© 2026 Soul Engineer · Inner Wake. Purchases are processed by Paddle.com Market Limited, our Merchant of Record.</p></footer>
+<footer><p>© 2026 DeWayne Woods · Soul Engineer · Inner Wake. Purchases are processed by Paddle.com Market Limited, our Merchant of Record.</p></footer>
 </main>
 `;
 
@@ -147,6 +156,12 @@ export function prerenderLegalPages(): Plugin {
         const dir = path.join(outDir, page.route);
         fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(path.join(dir, 'index.html'), renderPage(shell, page), 'utf8');
+      }
+      // The public root redirects to /welcome in the app, so give non-JS
+      // crawlers the same complete public pricing content at both URLs.
+      const welcome = PAGES.find((p) => p.route === 'welcome');
+      if (welcome) {
+        fs.writeFileSync(shellPath, renderPage(shell, { ...welcome, route: '' }), 'utf8');
       }
       // /refunds is an alias route in the SPA router.
       const refunds = PAGES.find((p) => p.route === 'refund');

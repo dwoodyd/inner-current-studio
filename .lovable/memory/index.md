@@ -13,6 +13,7 @@ Differentiate from siblings by ENGAGEMENT, not visuals: Inner Wake = experientia
 Orbs & sigils videos are vital — never modify them.
 No Abraham-Hicks, no Vortex, no aggressive motivation. Don't reuse the family's "no streaks / the returning" line verbatim. Vary pricing/founding-tier copy.
 Local-first persistence via localStorage. Supabase-ready structure for future backend.
+Legal seller name: DeWayne Woods, doing business as Soul Engineer and operating Inner Wake.
 
 ## Memories
 - [Brand rules](mem://design/brand) — Full brand positioning, tone, language guidelines

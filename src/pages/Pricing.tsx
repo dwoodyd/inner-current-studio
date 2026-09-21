@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Check, ShieldCheck } from 'lucide-react';
-import { PRICING_TIERS } from '@/content/legal';
+import { PRICING_MOR_NOTE, PRICING_TIERS } from '@/content/legal';
 
 /**
  * Public pricing page — reachable without an account.
@@ -64,11 +64,7 @@ export default function Pricing() {
         <section className="soul-glass flex items-start gap-3 rounded-2xl px-5 py-4">
           <ShieldCheck size={18} className="mt-0.5 shrink-0 text-primary" strokeWidth={1.5} aria-hidden="true" />
           <p className="text-xs leading-relaxed text-muted-foreground">
-            Inner Wake is operated by Soul Engineer. Our order process is conducted by our online
-            reseller <strong className="font-medium text-foreground">Paddle.com Market Limited</strong>, the Merchant of
-            Record for all orders. Paddle handles checkout, billing, sales tax, invoices, refunds, and buyer support.
-            Subscriptions renew automatically at the then-current price until cancelled; cancel any time from your
-            profile or at paddle.net.
+            {PRICING_MOR_NOTE}
           </p>
         </section>
 
