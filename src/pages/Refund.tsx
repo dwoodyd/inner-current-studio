@@ -12,32 +12,7 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const sections = [
-  {
-    title: '30-day money-back guarantee',
-    content: `We offer a 30-day money-back guarantee on all paid Inner Wake plans (monthly, annual, and lifetime). If Inner Wake is not the right fit, you can request a full refund within 30 days of your original purchase date — no explanation required.`,
-  },
-  {
-    title: 'How to request a refund',
-    content: `All purchases are processed by our reseller and Merchant of Record, Paddle.com Market Limited. To request a refund, visit https://paddle.net and look up your order using the email address you used at checkout, then submit a refund request. You can also email us at support@innerwake.live and we will help coordinate the request with Paddle on your behalf.`,
-  },
-  {
-    title: 'How long refunds take',
-    content: `Once approved, refunds are typically processed by Paddle within 3–10 business days. The exact timing depends on your payment method and bank. You will receive an email confirmation from Paddle when the refund is issued.`,
-  },
-  {
-    title: 'Subscriptions and renewals',
-    content: `You can cancel a subscription at any time from your Profile screen or directly through Paddle's customer portal at paddle.net. Cancelling stops future renewals; you keep access until the end of the current billing period. If a renewal charge happens unexpectedly, contact us within 30 days of the renewal date and we will refund it under this policy.`,
-  },
-  {
-    title: 'Lifetime plans',
-    content: `Lifetime plans are also covered by the 30-day money-back guarantee from the date of purchase.`,
-  },
-  {
-    title: 'Questions',
-    content: `If you are unsure whether you qualify or you need help, email support@innerwake.live and we will respond within 2 business days.`,
-  },
-];
+const sections = REFUND_SECTIONS;
 
 export default function Refund() {
   const navigate = useNavigate();
