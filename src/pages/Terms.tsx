@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles } from 'lucide-react';
-import { TERMS_SECTIONS } from '@/content/legal';
+import { LEGAL_UPDATED, TERMS_INTRO, TERMS_SECTIONS } from '@/content/legal';
 
 const stagger = {
   hidden: {},
@@ -49,13 +49,12 @@ export default function Terms() {
             <Sparkles size={18} className="text-primary/60" />
           </div>
           <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">Terms of Service</h1>
-          <p className="text-xs text-muted-foreground/60">Last updated: May 4, 2026</p>
+          <p className="text-xs text-muted-foreground/60">Last updated: {LEGAL_UPDATED}</p>
         </motion.div>
 
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-5 py-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Welcome to Inner Wake. These Terms govern your use of the Service. Please read them carefully
-            before creating an account or making a purchase.
+            {TERMS_INTRO}
           </p>
         </motion.div>
 
@@ -73,7 +72,7 @@ export default function Terms() {
         </div>
 
         <motion.div variants={fadeUp} className="text-center pt-4 pb-8">
-          <p className="text-[10px] text-muted-foreground/30">© 2026 Soul Engineer · Inner Wake. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground/60">© 2026 DeWayne Woods · Soul Engineer · Inner Wake.</p>
         </motion.div>
       </motion.div>
     </div>

@@ -11,10 +11,10 @@
 
 export type LegalSection = { title: string; content: string };
 
-export const LEGAL_UPDATED = 'May 4, 2026';
+export const LEGAL_UPDATED = 'September 21, 2026';
 
 const SELLER =
-  'Soul Engineer, operating the Inner Wake service (the "Seller", "we", "our", or "us")';
+  'DeWayne Woods, doing business as Soul Engineer and operating the Inner Wake service (the "Seller", "we", "our", or "us")';
 
 export const TERMS_INTRO =
   'Welcome to Inner Wake. These Terms govern your use of the Service. Please read them carefully before creating an account or making a purchase.';
@@ -22,7 +22,7 @@ export const TERMS_INTRO =
 export const TERMS_SECTIONS: LegalSection[] = [
   {
     title: '1. Who You Are Contracting With',
-    content: `Inner Wake (the "Service") is operated by Soul Engineer, trading as Inner Wake (the "Seller", "we", "our", or "us"), with a principal place of business at 1041 Market St, San Diego, CA 92101, United States. By creating an account, accessing the Service, or making a purchase, you ("you" or "User") enter into a binding agreement with the Seller on these Terms of Service (the "Terms"). If you do not agree, do not use the Service.`,
+    content: `Inner Wake (the "Service") is operated by DeWayne Woods, doing business as Soul Engineer and Inner Wake (the "Seller", "we", "our", or "us"), with a principal place of business at 1041 Market St, San Diego, CA 92101, United States. By creating an account, accessing the Service, or making a purchase, you ("you" or "User") enter into a binding agreement with the Seller on these Terms of Service (the "Terms"). If you do not agree, do not use the Service.`,
   },
   {
     title: '2. Eligibility and Authority',
@@ -99,7 +99,7 @@ export const TERMS_SECTIONS: LegalSection[] = [
 ];
 
 export const PRIVACY_INTRO =
-  'This Privacy Notice explains how Soul Engineer, operating the Inner Wake service, collects, uses, and protects your personal data when you use the app or website.';
+  'This Privacy Notice explains how DeWayne Woods, doing business as Soul Engineer and operating the Inner Wake service, collects, uses, and protects your personal data when you use the app or website.';
 
 export const PRIVACY_SECTIONS: LegalSection[] = [
   {
@@ -161,7 +161,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
 ];
 
 export const REFUND_INTRO =
-  'Inner Wake is operated by Soul Engineer. Purchases are processed by our Merchant of Record, Paddle.com Market Limited. This page explains how refunds work.';
+  'Inner Wake is operated by DeWayne Woods, doing business as Soul Engineer. Purchases are processed by our Merchant of Record, Paddle.com Market Limited. This page explains how refunds work.';
 
 export const REFUND_SECTIONS: LegalSection[] = [
   {
@@ -248,4 +248,4 @@ export const PRICING_TIERS: PricingTier[] = [
 ];
 
 export const PRICING_MOR_NOTE =
-  'Inner Wake is operated by Soul Engineer. Our order process is conducted by our online reseller Paddle.com Market Limited, the Merchant of Record for all orders. Paddle handles checkout, billing, sales tax, invoices, refunds, and buyer support. Subscriptions renew automatically at the then-current price until cancelled; cancel any time from your profile or at paddle.net.';
+  'Inner Wake is operated by DeWayne Woods, doing business as Soul Engineer. Our order process is conducted by our online reseller Paddle.com Market Limited, the Merchant of Record for all orders. Paddle handles checkout, billing, sales tax, invoices, refunds, and buyer support. Subscriptions renew automatically at the then-current price until cancelled; cancel any time from your profile or at paddle.net.';

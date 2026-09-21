@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles } from 'lucide-react';
-import { REFUND_SECTIONS } from '@/content/legal';
+import { LEGAL_UPDATED, REFUND_INTRO, REFUND_SECTIONS } from '@/content/legal';
 
 const stagger = {
   hidden: {},
@@ -49,13 +49,12 @@ export default function Refund() {
             <Sparkles size={18} className="text-primary/60" />
           </div>
           <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">Refund Policy</h1>
-          <p className="text-xs text-muted-foreground/60">Last updated: May 4, 2026</p>
+          <p className="text-xs text-muted-foreground/60">Last updated: {LEGAL_UPDATED}</p>
         </motion.div>
 
         <motion.div variants={fadeUp} className="soul-glass rounded-2xl px-5 py-4">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Inner Wake is operated by Soul Engineer. Purchases are processed by our Merchant of Record,
-            Paddle.com Market Limited. This page explains how refunds work.
+            {REFUND_INTRO}
           </p>
         </motion.div>
 
@@ -85,7 +84,7 @@ export default function Refund() {
             </a>
             .
           </p>
-          <p className="text-[10px] text-muted-foreground/30">© 2026 Soul Engineer · Inner Wake. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground/60">© 2026 DeWayne Woods · Soul Engineer · Inner Wake.</p>
         </motion.div>
       </motion.div>
     </div>
