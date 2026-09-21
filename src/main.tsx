@@ -6,6 +6,10 @@ import { startNotificationScheduler } from "./lib/notifications";
 import { toast } from "sonner";
 
 
+// Static, crawler-readable copy baked into the legal/pricing routes at build
+// time (see prerender.ts). Once React takes over, remove it.
+document.getElementById("crawlable-content")?.remove();
+
 createRoot(document.getElementById("root")!).render(<App />);
 
 // Start notification scheduler if enabled
