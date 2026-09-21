@@ -46,6 +46,11 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
+  // Burst limiter: 20 reconciliation attempts per minute per IP.
+  if (!allow(`rc:${clientIp(req)}`, 20, 60_000)) {
+    return json({ error: 'Too many requests. Try again shortly.' }, 429);
+  }
+
   try {
     // Identify the caller from their JWT — we only ever grant access to them.
     const authHeader = req.headers.get('Authorization') ?? '';
