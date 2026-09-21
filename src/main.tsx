@@ -4,6 +4,10 @@ import "./index.css";
 import "./hooks/useTheme"; // side-effect: apply persisted theme before first paint
 import { startNotificationScheduler } from "./lib/notifications";
 import { toast } from "sonner";
+import { enforceFrameAncestors } from "./lib/frameGuard";
+
+// Clickjacking guard — runs before anything renders.
+enforceFrameAncestors();
 
 
 // Static, crawler-readable copy baked into the legal/pricing routes at build
