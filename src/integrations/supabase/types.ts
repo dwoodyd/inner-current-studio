@@ -1048,6 +1048,24 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          count: number
+          key: string
+          window_start: string
+        }
+        Insert: {
+          count?: number
+          key: string
+          window_start?: string
+        }
+        Update: {
+          count?: number
+          key?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       reading_bridge_events: {
         Row: {
           created_at: string
@@ -1533,6 +1551,7 @@ export type Database = {
         }
         Returns: number
       }
+      purge_rate_limits: { Args: never; Returns: undefined }
       push_subscriptions_due: {
         Args: { _minute: string }
         Returns: {
@@ -1546,6 +1565,10 @@ export type Database = {
           send_return: boolean
           user_id: string
         }[]
+      }
+      rate_limit_hit: {
+        Args: { _key: string; _max: number; _window_seconds: number }
+        Returns: boolean
       }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
