@@ -1,5 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { gatewayFetch, type PaddleEnv } from '../_shared/paddle.ts';
+import { allow, clientIp } from '../_shared/rateLimit.ts';
 
 // Mirrors supabase/functions/payments-webhook/tiers.ts (edge functions cannot
 // import across function folders).
