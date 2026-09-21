@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Check, ShieldCheck } from 'lucide-react';
+import { PRICING_TIERS } from '@/content/legal';
 
 /**
  * Public pricing page — reachable without an account.

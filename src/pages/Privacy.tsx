@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles } from 'lucide-react';
+import { PRIVACY_SECTIONS } from '@/content/legal';
 
 const stagger = {
   hidden: {},
