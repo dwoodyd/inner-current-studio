@@ -491,7 +491,7 @@ export default function Welcome() {
         </section>
 
         <footer className="mt-20 flex flex-col items-center justify-between gap-3 text-xs text-muted-foreground sm:flex-row">
-          <p>© {new Date().getFullYear()} Inner Wake. A quiet practice.</p>
+          <p>© {new Date().getFullYear()} DeWayne Woods · Soul Engineer · Inner Wake.</p>
           <div className="flex items-center gap-4">
             <button
               type="button"

@@ -132,7 +132,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
   },
   {
     title: '8. Data Retention',
-    content: `We keep your account and practice data for as long as your account is active. If you delete your account from the Profile screen, all personal data tied to your account is permanently removed from our active systems within 30 days, and from routine backups within 90 days. Data we are legally required to keep (for example, billing records held by Paddle for tax purposes) is retained for the legally required period and then deleted.`,
+    content: `We keep account, profile, and practice data while your account remains active so we can provide the Service. Support correspondence is retained for up to 24 months after the request is closed, and essential security and access logs are retained for up to 12 months. If you delete your account from the Profile screen, personal data tied to your account is permanently removed from our active systems within 30 days and from routine backups within 90 days. Paddle retains billing, transaction, tax, refund, and chargeback records under its own privacy notice and applicable legal requirements. We retain any records that we are legally required to keep only for the required period, after which they are deleted or anonymized.`,
   },
   {
     title: '9. Your Rights',
