@@ -1,55 +1,12 @@
 import { Link } from 'react-router-dom';
 import { Check, ShieldCheck } from 'lucide-react';
+import { PRICING_TIERS } from '@/content/legal';
 
 /**
  * Public pricing page — reachable without an account.
  * Amounts here must match the live Paddle catalog.
  */
-const TIERS = [
-  {
-    name: 'Free',
-    price: '$0',
-    period: 'forever',
-    tagline: 'One practice a day, no card required.',
-    features: [
-      'Daily emotional check-in',
-      'One guided practice per day',
-      'The Center breathing room',
-      'Your own private history',
-    ],
-  },
-  {
-    name: 'Pro · Monthly',
-    price: '$4.99',
-    period: 'per month',
-    note: 'Founding rate · $7.99/mo once the founding window closes',
-    tagline: 'Every current, every ritual, unlimited.',
-    highlight: true,
-    features: [
-      'Unlimited practices, all five Currents',
-      'Guided sequences and reality scripting',
-      'AI affirmation coach and current guide',
-      'Reminders, exports, and full history',
-      'Cancel anytime',
-    ],
-  },
-  {
-    name: 'Pro · Annual',
-    price: '$39',
-    period: 'per year',
-    note: 'Founding rate · $59/yr once the founding window closes',
-    tagline: 'Everything in Pro, about $3.25 a month.',
-    features: ['Everything in Pro Monthly', 'Two months free vs. monthly', 'Cancel anytime'],
-  },
-  {
-    name: 'Lifetime',
-    price: '$99',
-    period: 'one-time',
-    note: 'Founding 100 only — retiring when the slots fill',
-    tagline: 'One charge. Never billed again.',
-    features: ['Everything in Pro, permanently', 'Founding Member badge', 'All future Currents included'],
-  },
-];
+const TIERS = PRICING_TIERS;
 
 export default function Pricing() {
   return (
